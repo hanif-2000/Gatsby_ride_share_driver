@@ -1,0 +1,10 @@
+const String SESSION_TOKEN = 'session_token';
+const String IS_LOGGED_IN = 'is_logged_in';
+const String CURRENCY = 'currency';
+const String ORDER_ID = 'orderId';
+const String USER_ID = 'user_id';
+const String FCM_TOKEN = 'fcm_token';
+const String ORDER_STATUS = 'order_status';
+const String DRIVER_ID = 'driver_id';
+const String SESSION_STATUS_ORDER = 'sessionStatusOrder';
+const String SESSION_CATEGORY_ID = 'sessionCategoryId';

@@ -1,0 +1,128 @@
+import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
+import 'package:appkey_taxiapp_driver/features/order/data/models/detail_driver_response.dart';
+import 'package:appkey_taxiapp_driver/features/order/data/models/detail_order_response_model.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail_response.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
+import 'package:dio/dio.dart';
+
+import '../../../../core/utility/injection.dart';
+import '../../../../core/utility/session_helper.dart';
+import '../models/create_order_response_model.dart';
+import '../models/driver_location_response_model.dart';
+import '../models/get_status_response.dart';
+import '../models/status_oder_response_model.dart';
+
+abstract class OrderDataSource {
+  Future<ChangeStatusesponseModel> changeStatus(FormData formData);
+  Future<UpdateStatusOrderResponseModel> updateStatusOrder(FormData formData);
+  Future<GetStatusResponseModel> getStatusOrder();
+  Future<OrderDetail> getDetailOrder(String orderId);
+  Future<DriverDetail> getDriverDetail();
+  Future<DriverLocationResponseModel> getDriverLocation();
+}
+
+class OrderDataSourceImplementation implements OrderDataSource {
+  final Dio dio;
+
+  OrderDataSourceImplementation({required this.dio});
+
+  @override
+  Future<ChangeStatusesponseModel> changeStatus(FormData formData) async {
+    String url = 'api/webservice/driver/set-status';
+    dio.withToken();
+    try {
+      final response = await dio.post(
+        url,
+        data: formData,
+      );
+      final model = ChangeStatusesponseModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UpdateStatusOrderResponseModel> updateStatusOrder(
+      FormData formData) async {
+    String url = 'api/webservice/driver/update-status';
+    dio.withToken();
+    try {
+      final response = await dio.post(
+        url,
+        data: formData,
+      );
+      final model = UpdateStatusOrderResponseModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<GetStatusResponseModel> getStatusOrder() async {
+    final session = locator<Session>();
+    String orderId = session.orderId;
+    String url = 'api/webservice/driver/order-status?id=$orderId';
+    dio.withToken();
+    try {
+      final response = await dio.get(
+        url,
+      );
+      final model = GetStatusResponseModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<OrderDetail> getDetailOrder(String orderId) async {
+    String url = 'api/webservice//getOrder?id=$orderId';
+    dio.withToken();
+    try {
+      final response = await dio.get(
+        url,
+      );
+      final model = OrderDetailResponseModel.fromJson(response.data);
+      return model.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<DriverDetail> getDriverDetail() async {
+    final session = locator<Session>();
+    String driverId = session.driverId;
+    String url = 'api/webservice//driver-profile?id_driver=$driverId';
+    dio.withToken();
+    try {
+      final response = await dio.get(
+        url,
+      );
+      final model = DriverDetailResponseModel.fromJson(response.data);
+      return model.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<DriverLocationResponseModel> getDriverLocation() async {
+    final session = locator<Session>();
+    String driverId = session.driverId;
+    String url = 'api/webservice/driver_location?id_driver=$driverId';
+    dio.withToken();
+    try {
+      final response = await dio.get(
+        url,
+      );
+      final model = DriverLocationResponseModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
