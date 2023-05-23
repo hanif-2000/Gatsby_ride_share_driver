@@ -5,78 +5,78 @@ import '../types/fonts.dart';
 
 TextStyle labelAppBar = const TextStyle(
         fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
 TextStyle labelTitleAppBar = const TextStyle(
         fontSize: 9.0, color: Colors.white, fontWeight: FontWeight.normal)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
 TextStyle distanceTextStyle = const TextStyle(
         fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.normal)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
-TextStyle selectPamyemntStyle = const TextStyle(
+TextStyle selectPaymentStyle = const TextStyle(
         fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.w300)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
 TextStyle paymentLabelStyle = const TextStyle(
         fontSize: 16.0, color: Colors.black, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
 TextStyle txtButtonStyle = const TextStyle(
         fontSize: 15.0, color: Colors.white, fontWeight: FontWeight.w400)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 TextStyle txtButtonCancelStyle = const TextStyle(
         fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 TextStyle txtButtonProfileStyle = const TextStyle(
         fontSize: 18.0, color: whiteColor, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 
 TextStyle searchBarInputTextStyle =
     const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)
-        .useHiraginoKakuW3Font();
+        .usePoppinsW4Font();
 
 TextStyle searchBarHintTextStyle =
-    const TextStyle(fontSize: 14.0).useHiraginoKakuW3Font();
+    const TextStyle(fontSize: 14.0).usePoppinsW4Font();
 
 TextStyle priceTextStyle = const TextStyle(
         fontSize: 20.0, fontWeight: FontWeight.bold, color: primaryColor)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 
 TextStyle formLabelStyle = const TextStyle(
         fontSize: fontMedium, color: Colors.black, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW3Font();
+    .usePoppinsW4Font();
 
 TextStyle formTextFieldStyle =
-    const TextStyle(fontSize: 14, color: Colors.black).useHiraginoKakuW6Font();
+    const TextStyle(fontSize: 14, color: Colors.black).usePoppinsW6Font();
 
 TextStyle blactStyle =
-    const TextStyle(fontSize: 12, color: Colors.black).useHiraginoKakuW6Font();
+    const TextStyle(fontSize: 12, color: Colors.black).usePoppinsW6Font();
 
 TextStyle titleStyle = const TextStyle(
         fontSize: fontExtraLarge,
         color: Colors.black,
         fontWeight: FontWeight.bold)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 
 TextStyle appBarStyle(Color? textColor) =>
     TextStyle(fontSize: 16.0, color: textColor ?? Colors.white)
-        .useHiraginoKakuW6Font();
+        .usePoppinsW6Font();
 TextStyle formLabelHeaderStyle = const TextStyle(
         fontSize: fontMedium, color: Colors.black, fontWeight: FontWeight.bold)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 TextStyle versionAppHeadTextStyle = const TextStyle(
         fontSize: 18.0, fontWeight: FontWeight.bold, color: blackColor)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 TextStyle versionAppTextStyle = const TextStyle(
         fontSize: 16.0, fontWeight: FontWeight.bold, color: greyBlackColor)
-    .useHiraginoKakuW6Font();
+    .usePoppinsW6Font();
 TextStyle titlePlatStyle =
-    const TextStyle(fontSize: 16, color: Colors.black).useHiraginoKakuW6Font();
+    const TextStyle(fontSize: 16, color: Colors.black).usePoppinsW6Font();
 
 TextStyle titleModelStyle =
-    const TextStyle(fontSize: 14, color: Colors.black).useHiraginoKakuW6Font();
+    const TextStyle(fontSize: 14, color: Colors.black).usePoppinsW6Font();
 
 TextStyle titleNameStyle =
-    const TextStyle(fontSize: 13, color: Colors.black).useHiraginoKakuW3Font();
+    const TextStyle(fontSize: 13, color: Colors.black).usePoppinsW4Font();

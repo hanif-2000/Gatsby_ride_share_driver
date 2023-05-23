@@ -38,17 +38,16 @@ class CommonDialog extends StatelessWidget {
                     title != null
                         ? Text(
                             title!,
-                            style: TextStyle(
-                                fontFamily: 'Hiragino Kaku',
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22),
                             textAlign: TextAlign.center,
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     Text(
                       msg,
                       style:
-                          TextStyle(fontFamily: 'Hiragino Kaku', fontSize: 20),
+                          const TextStyle(fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -61,7 +60,7 @@ class CommonDialog extends StatelessWidget {
             ),
             Container(
               height: 200 * 0.3,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: whiteColor,
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(35),
@@ -74,9 +73,8 @@ class CommonDialog extends StatelessWidget {
                   onTap == null
                       ? GestureDetector(
                           child: Text(appLoc.ok,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: primaryColor,
-                                  fontFamily: 'Hiragino Kaku',
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15)),
                           onTap: () {
@@ -85,9 +83,8 @@ class CommonDialog extends StatelessWidget {
                         )
                       : GestureDetector(
                           child: Text(appLoc.ok,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: primaryColor,
-                                  fontFamily: 'Hiragino Kaku',
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15)),
                           onTap: onTap,

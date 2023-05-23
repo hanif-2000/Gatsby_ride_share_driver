@@ -48,13 +48,13 @@ extension DialogButtonStyles on ButtonStyle {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         textStyle: const TextStyle(
                 fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)
-            .useHiraginoKakuW6Font(),
+            .usePoppinsW6Font(),
         primary: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       );
   ButtonStyle textButtonStyle(Color color) => TextButton.styleFrom(
         textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-            .useHiraginoKakuW6Font(),
+            .usePoppinsW6Font(),
         primary: color,
       );
 }

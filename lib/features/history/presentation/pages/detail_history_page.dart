@@ -115,7 +115,6 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                             appLoc.startingpoint,
                                             maxLines: 1,
                                             style: const TextStyle(
-                                                fontFamily: 'Hiragino Kaku',
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
@@ -125,9 +124,9 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           child: Text(widget.item.startAddress,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontFamily: 'Hiragino Kaku',
-                                                  fontWeight: FontWeight.w300,
+                                              style: const TextStyle(
+
+                                                  fontWeight: FontWeight.w400,
                                                   fontSize: 14)),
                                         ),
                                       ],
@@ -147,8 +146,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                               color: whiteColor,
                               child: Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: Icon(
                                       Icons.location_on,
@@ -168,8 +167,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           child: Text(
                                             appLoc.destination,
                                             maxLines: 1,
-                                            style: TextStyle(
-                                                fontFamily: 'Hiragino Kaku',
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
@@ -179,8 +177,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           child: Text(widget.item.endAddress,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontFamily: 'Hiragino Kaku',
+                                              style: const TextStyle(
+
                                                   fontWeight: FontWeight.w300,
                                                   fontSize: 14)),
                                         ),
@@ -206,8 +204,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                             mediumVerticalSpacing(),
                             Text(
                               appLoc.paymentmethod,
-                              style: TextStyle(
-                                  fontFamily: 'Yu Ghotic',
+                              style: const TextStyle(
+
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
                             ),
@@ -235,7 +233,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                             children: [
                               Container(
                                 height: constraints.maxHeight * 0.65,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: whiteColor,
                                   border: Border(
                                       bottom: BorderSide(
@@ -253,8 +251,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(appLoc.distance,
-                                            style: TextStyle(
-                                                fontFamily: 'Yu Ghotic',
+                                            style: const TextStyle(
+
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergeDistanceTxt(
@@ -268,8 +266,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(appLoc.typeoftaxi,
-                                            style: TextStyle(
-                                                fontFamily: 'Yu Ghotic',
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergeTypeTaxi(
@@ -283,8 +280,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(appLoc.price,
-                                            style: TextStyle(
-                                                fontFamily: 'Yu Ghotic',
+                                            style: const TextStyle(
+
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergePriceTxt(
@@ -300,16 +297,16 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(appLoc.total,
-                                        style: TextStyle(
-                                            fontFamily: 'Yu Ghotic',
+                                        style: const TextStyle(
+
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                             color: primaryColor)),
                                     Text(
                                         mergePriceTxt(
                                             widget.item.total.toString()),
-                                        style: TextStyle(
-                                            fontFamily: 'Yu Ghotic',
+                                        style: const TextStyle(
+
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                             color: primaryColor)),

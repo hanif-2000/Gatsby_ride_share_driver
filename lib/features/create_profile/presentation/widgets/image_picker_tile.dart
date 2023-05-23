@@ -31,7 +31,7 @@ class ImagePickerTile extends StatelessWidget {
             style: const TextStyle(
               fontSize: 14,
               color: greyA2A0A8,
-            ).useHiraginoMaruW4Font(),
+            ).usePoppinsW4Font(),
           ),
         ],
       ),

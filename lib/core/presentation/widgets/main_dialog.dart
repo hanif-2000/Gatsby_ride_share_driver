@@ -69,7 +69,7 @@ class MainDialog extends StatelessWidget {
                                     fontSize: 14,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)
-                                .useHiraginoKakuW6Font(),
+                                .usePoppinsW6Font(),
                           ),
                         )
                       : SizedBox(
@@ -81,7 +81,7 @@ class MainDialog extends StatelessWidget {
                                     fontSize: 18,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)
-                                .useHiraginoKakuW6Font(),
+                                .usePoppinsW6Font(),
                           ))),
                   const Divider(),
                   Padding(
@@ -102,7 +102,7 @@ class MainDialog extends StatelessWidget {
                                         fontSize: 13,
                                         color: greyBlackColor,
                                         fontWeight: FontWeight.bold)
-                                    .useHiraginoKakuW6Font(),
+                                    .usePoppinsW6Font(),
                               ),
                               // const SizedBox(height: 5),
                               Row(
@@ -120,7 +120,7 @@ class MainDialog extends StatelessWidget {
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)
-                                          .useHiraginoKakuW6Font(),
+                                          .usePoppinsW6Font(),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -134,7 +134,7 @@ class MainDialog extends StatelessWidget {
                                         fontSize: 13,
                                         color: greyBlackColor,
                                         fontWeight: FontWeight.bold)
-                                    .useHiraginoKakuW6Font(),
+                                    .usePoppinsW6Font(),
                               ),
                               // const SizedBox(height: 5),
                               Row(
@@ -155,7 +155,7 @@ class MainDialog extends StatelessWidget {
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)
-                                          .useHiraginoKakuW6Font(),
+                                          .usePoppinsW6Font(),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -181,7 +181,7 @@ class MainDialog extends StatelessWidget {
                                               fontSize: 30,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)
-                                          .useHiraginoKakuW6Font(),
+                                          .usePoppinsW6Font(),
                                       maxLines: 1,
                                     ),
                                   )
@@ -208,7 +208,7 @@ class MainDialog extends StatelessWidget {
                                             fontSize: 15,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold)
-                                        .useHiraginoKakuW6Font(),
+                                        .usePoppinsW6Font(),
                                   ),
                                   event: () {
                                     onDecline!();
@@ -228,7 +228,7 @@ class MainDialog extends StatelessWidget {
                                             fontSize: 15,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold)
-                                        .useHiraginoKakuW6Font(),
+                                        .usePoppinsW6Font(),
                                   ),
                                   event: () {
                                     onAccept!();
@@ -253,7 +253,7 @@ class MainDialog extends StatelessWidget {
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)
-                                  .useHiraginoKakuW6Font(),
+                                  .usePoppinsW6Font(),
                             ),
                             bgColor: primaryColor,
                           ),

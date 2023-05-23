@@ -29,7 +29,7 @@ class CustomDropDown extends StatelessWidget {
             style: const TextStyle(
               fontSize: 14,
               color: grey7D7979,
-            ).useHiraginoMaruW4Font(),
+            ).usePoppinsW4Font(),
           ),
           icon: const Icon(
             Icons.expand_more_outlined,
@@ -40,7 +40,7 @@ class CustomDropDown extends StatelessWidget {
           underline: null,
           style: const TextStyle(
             color: grey7D7979,
-          ).useHiraginoMaruW4Font(),
+          ).usePoppinsW4Font(),
           onChanged: (newValue) {
             onChange!(newValue!);
           },

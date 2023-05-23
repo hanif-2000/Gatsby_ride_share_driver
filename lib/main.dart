@@ -85,7 +85,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: primaryColor,
           ),
-          unselectedWidgetColor: grey7c7c7c
+          unselectedWidgetColor: grey7c7c7c,
+          fontFamily: 'Poppins',
         ),
         navigatorObservers: [routeObserver],
         localizationsDelegates: const [

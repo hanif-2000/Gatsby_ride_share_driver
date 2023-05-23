@@ -7,6 +7,7 @@ import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_provider.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/widgets/image_picker_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
@@ -72,21 +73,36 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
           child: Column(
             children: [
               largeVerticalSpacing(),
-              Text(
-                appLoc.personalDetail,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ).useHiraginoKakuW6Font(),
+              Text(appLoc.personalDetail,
+                  textAlign: TextAlign.center,
+                  style: formTextFieldStyle.copyWith(fontSize: 24)),
+              largeVerticalSpacing(),
+              SizedBox(
+                height: 136,
+                width: 136,
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      'assets/icons/profile/ic_personal_detail.png',
+                      height: 136,
+                      width: 136,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: (){
+                          ///TODO: add personal image here
+                        },
+                        child: SvgPicture.asset(
+                          'assets/icons/profile/ic_add_image.svg',
+                          height: 40,
+                          width: 40,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              // largeVerticalSpacing(),
-              // SvgPicture.asset(
-              //   'assets/icons/profile/ic_vehicle_detail.svg',
-              //   height: 136,
-              //   width: 136,
-              // ),
               largeVerticalSpacing(),
               Row(
                 children: [

@@ -40,6 +40,7 @@ import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import 'change_status_state.dart';
 
+
 class HomeProvider with ChangeNotifier {
   //Constructor
   final GetProfile getProfile;
@@ -59,6 +60,7 @@ class HomeProvider with ChangeNotifier {
   CustomerDetailModel? _customerDetailModel;
   OrderDetail? _orderDetail;
   late bool _isOnline = false;
+  late ProjectType _projectType = ProjectType.requests;
   // late bool _isOrderExist = false;
 
   late GoogleMapController googleMapController;
@@ -74,11 +76,17 @@ class HomeProvider with ChangeNotifier {
   bool get isOnline => _isOnline;
   CustomerDetailModel? get customerDetailModel => _customerDetailModel;
   OrderDetail? get orderDetail => _orderDetail;
+  ProjectType get projectType => _projectType;
   // bool get isOrderExist => _isOrderExist;
 
   //setter
   set changeStatus(val) {
     _isOnline = val;
+    notifyListeners();
+  }
+
+  set projectType(value){
+    _projectType = value;
     notifyListeners();
   }
 

@@ -66,7 +66,7 @@ class CreateProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  largeVerticalSpacing(),
+                    // largeVerticalSpacing(),
                   // FormPersonalDetail(),
 
                   provider.currentStep == 1

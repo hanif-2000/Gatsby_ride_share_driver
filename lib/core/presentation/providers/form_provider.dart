@@ -39,6 +39,7 @@ class FormProvider with ChangeNotifier {
   bool _emailError = false;
   bool _emailConfirmError = false;
   bool _passwordError = false;
+  bool _passwordConfirmError = false;
   bool _phoneError = false;
   bool _carModelError = false;
   bool _vehicleError = false;
@@ -72,6 +73,11 @@ class FormProvider with ChangeNotifier {
 
   set setPasswordError(val) {
     _passwordError = val;
+    notifyListeners();
+  }
+
+  set setPasswordConfirmError(val) {
+    _passwordConfirmError = val;
     notifyListeners();
   }
 
@@ -146,6 +152,8 @@ class FormProvider with ChangeNotifier {
   bool get emailError => _emailError;
 
   bool get passwordError => _passwordError;
+
+  bool get passwordConfirmError => _passwordConfirmError;
 
   bool get emailConfirmError => _emailConfirmError;
 

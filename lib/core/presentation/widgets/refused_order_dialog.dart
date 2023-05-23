@@ -14,7 +14,7 @@ class RefuseOrderDialog extends StatelessWidget {
     return SafeArea(
       child: Container(
         width: double.infinity,
-        color: Color.fromRGBO(0, 0, 0, 0.4),
+        color: const Color.fromRGBO(0, 0, 0, 0.4),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -28,7 +28,7 @@ class RefuseOrderDialog extends StatelessWidget {
                   Container(
                     height: 200 * 0.7,
                     // width: 200,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(35),
@@ -41,8 +41,7 @@ class RefuseOrderDialog extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         msg,
-                        style: TextStyle(
-                            fontFamily: 'Hiragino Kaku',
+                        style: const TextStyle(
                             // fontWeight: FontWeight.bold,
                             fontSize: 22),
                         textAlign: TextAlign.center,
@@ -56,7 +55,7 @@ class RefuseOrderDialog extends StatelessWidget {
                   // ),
                   Container(
                     height: 200 * 0.3,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(35),
@@ -68,9 +67,8 @@ class RefuseOrderDialog extends StatelessWidget {
                       children: [
                         GestureDetector(
                           child: Text(appLoc.no,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: primaryColor,
-                                  fontFamily: 'Hiragino Kaku',
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15)),
                           onTap: () {
@@ -79,9 +77,8 @@ class RefuseOrderDialog extends StatelessWidget {
                         ),
                         GestureDetector(
                           child: Text(appLoc.yes,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: errorRedColor,
-                                  fontFamily: 'Hiragino Kaku',
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15)),
                           onTap: () async {

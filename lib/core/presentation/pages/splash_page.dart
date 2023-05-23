@@ -32,6 +32,9 @@ class _SplashPageState extends State<SplashPage> {
       Timer(const Duration(seconds: 2), () async {
         if (await checkPermission()) {
           await sessionClearOrder();
+          ///TODO: comment this when APIs will start working
+          // Navigator.pushNamedAndRemoveUntil(
+          //     context, HomePage.routeName, (route) => false);
           context.read<SplashProvider>().fetchCurrency().listen((state) async {
             switch (state.runtimeType) {
               case CurrencyLoaded:

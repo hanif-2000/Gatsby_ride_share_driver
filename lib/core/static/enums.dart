@@ -12,10 +12,13 @@ extension DynamicHeader on Dio {
 
 enum AddressType { origin, destination }
 
+enum ProjectType {requests, history}
+
 enum TypeField {
   email,
   phone,
   password,
+  confirmPassword,
   name,
 }
 

@@ -24,7 +24,7 @@ class CustomSimpleDialog extends StatelessWidget {
         style: const TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.normal,
-        ).useHiraginoKakuW3Font(),
+        ).usePoppinsW4Font(),
       ),
       children: [
         SimpleDialogOption(
@@ -33,7 +33,7 @@ class CustomSimpleDialog extends StatelessWidget {
             'OK',
             style: TextStyle(
                     fontSize: 16.0, fontWeight: FontWeight.bold, color: color)
-                .useHiraginoKakuW6Font(),
+                .usePoppinsW6Font(),
             textAlign: TextAlign.center,
           ),
         ),

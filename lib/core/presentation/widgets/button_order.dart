@@ -20,11 +20,12 @@ import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 
 class ButtonOrder extends StatelessWidget {
   const ButtonOrder({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, provider, _) {
       return Container(
-        color: Color.fromRGBO(0, 0, 0, 0.2),
+        color: const Color.fromRGBO(0, 0, 0, 0.2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -48,9 +49,9 @@ class ButtonOrder extends StatelessWidget {
                                     Expanded(
                                       child: AutoSizeText(
                                         appLoc.distance,
-                                        style: TextStyle(
-                                            fontFamily: 'Hiragino Maru',
-                                            fontWeight: FontWeight.normal),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                         minFontSize: 15,
                                         maxFontSize: 18,
                                         maxLines: 1,
@@ -61,8 +62,7 @@ class ButtonOrder extends StatelessWidget {
                                       child: AutoSizeText(
                                         mergeDistanceTxt(
                                             provider.orderDetail!.distance),
-                                        style: TextStyle(
-                                          fontFamily: 'Hiragino Maru',
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: primaryColor,
                                         ),
@@ -76,7 +76,7 @@ class ButtonOrder extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
                                 child: SizedBox(
                                   width: 1,
                                   child: Container(
@@ -84,7 +84,7 @@ class ButtonOrder extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 8,
                               ),
                               Expanded(
@@ -97,8 +97,7 @@ class ButtonOrder extends StatelessWidget {
                                       Expanded(
                                         child: AutoSizeText(
                                           appLoc.price,
-                                          style: TextStyle(
-                                              fontFamily: 'Hiragino Maru',
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.normal),
                                           minFontSize: 15,
                                           maxFontSize: 18,
@@ -111,8 +110,7 @@ class ButtonOrder extends StatelessWidget {
                                           mergePriceTxt(provider
                                               .orderDetail!.totalPrice
                                               .toString()),
-                                          style: TextStyle(
-                                            fontFamily: 'Hiragino Maru',
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: primaryColor,
                                           ),

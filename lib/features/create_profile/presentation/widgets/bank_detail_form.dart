@@ -74,15 +74,11 @@ class _FormBankDetailState extends State<FormBankDetail> {
               Text(
                 appLoc.bankDetail,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ).useHiraginoKakuW6Font(),
+                style: formTextFieldStyle.copyWith(fontSize: 24)
               ),
               largeVerticalSpacing(),
-              SvgPicture.asset(
-                'assets/icons/profile/ic_bank_detail.svg',
+              Image.asset(
+                'assets/icons/profile/ic_bank_detail.png',
                 height: 136,
                 width: 136,
               ),
@@ -153,7 +149,8 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 buttonHeight: 48,
                 isRounded: true,
                 bgColor: blackColor,
-              )
+              ),
+              largeVerticalSpacing(),
             ],
           ),
         ),

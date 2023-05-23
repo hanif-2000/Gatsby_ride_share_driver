@@ -120,12 +120,12 @@ class CustomerInfoWidget extends StatelessWidget {
                                           children: [
                                             Text(
                                               appLoc.origin,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                       fontSize: 13,
                                                       color: greyBlackColor,
                                                       fontWeight:
                                                           FontWeight.bold)
-                                                  .useHiraginoKakuW6Font(),
+                                                  .usePoppinsW6Font(),
                                             ),
                                             Text(
                                               provider.originAddress,
@@ -153,12 +153,12 @@ class CustomerInfoWidget extends StatelessWidget {
                                           children: [
                                             Text(
                                               appLoc.destination,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                       fontSize: 13,
                                                       color: greyBlackColor,
                                                       fontWeight:
                                                           FontWeight.bold)
-                                                  .useHiraginoKakuW6Font(),
+                                                  .usePoppinsW6Font(),
                                             ),
                                             Text(
                                               provider.destinationAddress,

@@ -72,18 +72,12 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
           child: Column(
             children: [
               largeVerticalSpacing(),
-              Text(
-                appLoc.vehicleDetail,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ).useHiraginoKakuW6Font(),
-              ),
+              Text(appLoc.vehicleDetail,
+                  textAlign: TextAlign.center,
+                  style: formTextFieldStyle.copyWith(fontSize: 24)),
               largeVerticalSpacing(),
-              SvgPicture.asset(
-                'assets/icons/profile/ic_vehicle_detail.svg',
+              Image.asset(
+                'assets/icons/profile/ic_vehicle_detail.png',
                 height: 136,
                 width: 136,
               ),
@@ -164,7 +158,8 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 buttonHeight: 48,
                 isRounded: true,
                 bgColor: blackColor,
-              )
+              ),
+              largeVerticalSpacing(),
             ],
           ),
         ),

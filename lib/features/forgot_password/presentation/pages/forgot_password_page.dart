@@ -61,7 +61,7 @@ class ForgotPasswordPage extends StatelessWidget {
                             fontSize: 24,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                          ).useHiraginoKakuW6Font(),
+                          ).usePoppinsW6Font(),
                         ),
                       ),
                       Flexible(
@@ -74,7 +74,7 @@ class ForgotPasswordPage extends StatelessWidget {
                             fontSize: 14,
                             color: grey7D7979,
                             fontWeight: FontWeight.w400,
-                          ).useHiraginoKakuW6Font(),
+                          ).usePoppinsW6Font(),
                         ),
                       ),
                     ],

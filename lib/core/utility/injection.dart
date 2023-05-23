@@ -51,6 +51,10 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/ch
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_password_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
+import 'package:appkey_taxiapp_driver/features/signup/data/datasource/signup_data_source.dart';
+import 'package:appkey_taxiapp_driver/features/signup/data/repositories/signup_repository_implementation.dart';
+import 'package:appkey_taxiapp_driver/features/signup/domain/repositories/signup_repository.dart';
+import 'package:appkey_taxiapp_driver/features/signup/domain/usecases/do_signup.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/provider/signup_provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -135,6 +139,11 @@ Future<void> init() async {
     ),
   );
 
+  locator.registerLazySingleton<SignupRepository>(
+      () => SignupRepositoryImplementation(
+            dataSource: locator<SignupDataSource>(),
+          ));
+
   locator.registerLazySingleton<AboutUsRepository>(
     () => AboutUsRepositoryImplementation(
       dataSource: locator<AboutUsDataSource>(),
@@ -181,6 +190,8 @@ Future<void> init() async {
       () => TotalPriceDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<LoginDataSource>(
       () => LoginDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<SignupDataSource>(
+      () => SignupDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<AboutUsDataSource>(
       () => AboutUsDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<ProfileDataSource>(
@@ -207,6 +218,8 @@ Future<void> init() async {
       () => GetTotalPrice(locator<TotalPriceRepository>()));
   locator.registerLazySingleton<DoLogin>(
       () => DoLogin(repository: locator<LoginRepository>()));
+  locator.registerLazySingleton<DoSignup>(
+      () => DoSignup(repository: locator<SignupRepository>()));
   locator.registerLazySingleton<GetAboutUs>(
       () => GetAboutUs(repository: locator<AboutUsRepository>()));
   locator.registerLazySingleton<GetProfile>(
@@ -264,8 +277,8 @@ Future<void> init() async {
       () => PlacePickerProvider(getGooglePlace: locator<GetGooglePlace>()));
   locator
       .registerFactory<LoginProvider>(() => LoginProvider(doLogin: locator()));
-  locator
-      .registerFactory<SignupProvider>(() => SignupProvider(/*doLogin: locator()*/));
+  locator.registerFactory<SignupProvider>(
+      () => SignupProvider(doSignup: locator()));
   locator.registerFactory<ForgotPasswordProvider>(
       () => ForgotPasswordProvider(doForgotPassword: locator()));
   locator.registerFactory<AboutUsProvider>(
@@ -280,6 +293,5 @@ Future<void> init() async {
       () => ChangeEmailProvider(updateEmail: locator()));
   locator.registerFactory<ChangePasswordProvider>(
       () => ChangePasswordProvider(updatePassword: locator()));
-  locator.registerFactory<CreateProfileProvider>(
-      () => CreateProfileProvider());
+  locator.registerFactory<CreateProfileProvider>(() => CreateProfileProvider());
 }

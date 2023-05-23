@@ -16,20 +16,20 @@ extension DynamicHeader on Dio {
 // Font Families
 
 extension CustomFontFamily on TextStyle {
-  TextStyle useHiraginoKakuW3Font() {
-    const String fontName = 'Hiragino Kaku';
-    return merge(
-        const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w300));
-  }
+  // TextStyle usePoppinsW3Font() {
+  //   const String fontName = 'Poppins';
+  //   return merge(
+  //       const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w300));
+  // }
 
-  TextStyle useHiraginoKakuW6Font() {
-    const String fontName = 'Hiragino Kaku';
+  TextStyle usePoppinsW6Font() {
+    const String fontName = 'Poppins';
     return merge(
         const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w600));
   }
 
-  TextStyle useHiraginoMaruW4Font() {
-    const String fontName = 'Hiragino Maru';
+  TextStyle usePoppinsW4Font() {
+    const String fontName = 'Poppins';
     return merge(
         const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w400));
   }

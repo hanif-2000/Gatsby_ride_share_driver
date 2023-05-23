@@ -4,10 +4,8 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 
-import '../../static/assets.dart';
 
 class BottomContainerHome extends StatelessWidget {
   const BottomContainerHome({
@@ -45,7 +43,7 @@ class BottomContainerHome extends StatelessWidget {
                         provider.isOnline
                             ? appLoc.isonlineNow
                             : appLoc.curentlyOfline,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
@@ -97,11 +95,11 @@ class BottomContainerHome extends StatelessWidget {
                     onChanged: (b) {
                       provider.updateStatus().listen((event) async {});
                       provider.changeStatus = b;
-                      return Future.delayed(Duration(seconds: 2));
+                      return Future.delayed(const Duration(seconds: 2));
                     },
-                    indicatorSize: Size.fromWidth(38),
+                    indicatorSize: const Size.fromWidth(38),
                     colorBuilder: (b) => b ? Colors.black : Colors.grey,
-                    iconBuilder: (value) => Icon(
+                    iconBuilder: (value) => const Icon(
                       Icons.local_taxi,
                       color: whiteColor,
                     ),
@@ -109,19 +107,19 @@ class BottomContainerHome extends StatelessWidget {
                         ? Center(
                             child: Text(
                             appLoc.online,
-                            style: TextStyle(
+                            style: const TextStyle(
                                     color: whiteColor,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold)
-                                .useHiraginoKakuW6Font(),
+                                .usePoppinsW6Font(),
                           ))
                         : Center(
                             child: Text(appLoc.offLine,
-                                style: TextStyle(
+                                style: const TextStyle(
                                         color: whiteColor,
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold)
-                                    .useHiraginoKakuW6Font())),
+                                    .usePoppinsW6Font())),
                   ),
                 ],
               ),

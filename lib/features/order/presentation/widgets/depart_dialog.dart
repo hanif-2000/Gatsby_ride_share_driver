@@ -23,7 +23,7 @@ class DepartDialog extends StatelessWidget {
           children: [
             Container(
               height: 350 * 0.3,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: whiteColor,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(35),
@@ -39,10 +39,8 @@ class DepartDialog extends StatelessWidget {
                   maxFontSize: 22,
                   minFontSize: 9,
                   maxLines: 1,
-                  style: TextStyle(
-                      fontFamily: 'Hiragino Kaku',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 22),
                   textAlign: TextAlign.center,
                 ),
               )),
@@ -64,11 +62,11 @@ class DepartDialog extends StatelessWidget {
                     CustomButton(
                         text: Text(
                           appLoc.yes.toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)
-                              .useHiraginoKakuW6Font(),
+                              .usePoppinsW6Font(),
                         ),
                         event: () {
                           callback!(true, false);
@@ -81,11 +79,11 @@ class DepartDialog extends StatelessWidget {
                     CustomButton(
                         text: Text(
                           appLoc.call.toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)
-                              .useHiraginoKakuW6Font(),
+                              .usePoppinsW6Font(),
                         ),
                         buttonHeight:
                             MediaQuery.of(context).size.height * 0.075,

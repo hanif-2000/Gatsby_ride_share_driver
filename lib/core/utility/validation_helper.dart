@@ -38,7 +38,24 @@ class ValidationHelper {
               isError(false);
             }
             break;
-
+          case TypeField.password:
+            RegExp passwordRegex = RegExp(
+                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+            if (!passwordRegex.hasMatch(strValue)) {
+              message = appLoc.passwordInvalid;
+              isError(true);
+            } else {
+              isError(false);
+            }
+            break;
+          case TypeField.confirmPassword:
+            if (strValue != pwd) {
+              message = appLoc.confirmPasswordInvalid;
+              isError(true);
+            } else {
+              isError(false);
+            }
+            break;
           default:
             isError(false);
         }

@@ -24,7 +24,7 @@ class CustomDeclineDialog extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
             child: Text(
               appLoc.declineOrder,
-              style: const TextStyle(fontSize: 15.0).useHiraginoKakuW3Font(),
+              style: const TextStyle(fontSize: 15.0).usePoppinsW4Font(),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

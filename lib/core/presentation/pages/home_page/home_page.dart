@@ -1,12 +1,18 @@
 import 'dart:async';
 
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/bottom_container_home.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/current_location_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_decline_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/no_projects.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
+import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
+import 'package:appkey_taxiapp_driver/core/static/enums.dart';
+import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
@@ -59,55 +65,63 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     homeProvider
         .fetchOrderDetail(_fcmProvider.incomingOrderDetail!.orderId)
-        .listen((event) {
-      if (event is OrderDetailLoaded) {
-        var _deviceSize = MediaQuery.of(context).size;
-        homeProvider
-            .fetchCustomerDetail(event.data.userId.toString())
-            .listen((event) async {
-          if (event is CustomerDetailLoaded) {
-            await showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (_) => WillPopScope(
-                      onWillPop: () async => false,
-                      child: MainDialog(
-                        customerDetailModel: homeProvider.customerDetailModel,
-                        orderDetail: homeProvider.orderDetail,
-                        deviceSize: _deviceSize,
-                        onDecline: () async {
-                          await showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (_) => WillPopScope(
-                                  onWillPop: () async => false,
-                                  child:
-                                      CustomDeclineDialog(positiveAction: () {
-                                    homeProvider.changeStatus = false;
-                                    homeProvider
-                                        .updateStatus()
-                                        .listen((event) async {
-                                      if (event is ChangeStatusLoaded) {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      }
-                                    });
-                                  })));
-                        },
-                        onAccept: () {
-                          session.setOrderId =
-                              _fcmProvider.incomingOrderDetail!.orderId;
-                          homeProvider
-                              .submitStatusOrder(Order.driverAccept)
-                              .listen((event) async {
+        .listen(
+      (event) {
+        if (event is OrderDetailLoaded) {
+          var _deviceSize = MediaQuery.of(context).size;
+          homeProvider.fetchCustomerDetail(event.data.userId.toString()).listen(
+            (event) async {
+              if (event is CustomerDetailLoaded) {
+                await showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (_) => WillPopScope(
+                    onWillPop: () async => false,
+                    child: MainDialog(
+                      customerDetailModel: homeProvider.customerDetailModel,
+                      orderDetail: homeProvider.orderDetail,
+                      deviceSize: _deviceSize,
+                      onDecline: () async {
+                        await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) => WillPopScope(
+                            onWillPop: () async => false,
+                            child: CustomDeclineDialog(
+                              positiveAction: () {
+                                homeProvider.changeStatus = false;
+                                homeProvider.updateStatus().listen(
+                                  (event) async {
+                                    if (event is ChangeStatusLoaded) {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      onAccept: () {
+                        session.setOrderId =
+                            _fcmProvider.incomingOrderDetail!.orderId;
+                        homeProvider
+                            .submitStatusOrder(Order.driverAccept)
+                            .listen(
+                          (event) async {
                             if (event is UpdateStatusOrderLoaded) {
                               if (event.data.success == 1) {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    OrderPage.routeName, (route) => false,
-                                    arguments: OrderPageArguments(
-                                        orderDetail: homeProvider.orderDetail!,
-                                        customerDetailModel:
-                                            homeProvider.customerDetailModel!));
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  OrderPage.routeName,
+                                  (route) => false,
+                                  arguments: OrderPageArguments(
+                                    orderDetail: homeProvider.orderDetail!,
+                                    customerDetailModel:
+                                        homeProvider.customerDetailModel!,
+                                  ),
+                                );
                               } else if (event.data.message == 5) {
                                 Navigator.of(context).pop();
                                 showDialog(
@@ -146,62 +160,134 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 );
                               }
                             }
-                          });
-                        },
-                      ),
-                    ));
-          }
-        });
-      }
-    });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () {
-          return Future.value(false); // if true allow back else block it
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: const CustomAppBar(
-            centerTitle: false,
-          ),
-          body: Consumer<HomeProvider>(builder: (context, map, _) {
-            return Stack(
+      onWillPop: () {
+        return Future.value(false); // if true allow back else block it
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: const CustomAppBar(
+          centerTitle: true,
+        ),
+        drawer: const HomeDrawerPage(),
+        body: Consumer<HomeProvider>(
+          builder: (context, provider, _) {
+            return Column(
               children: <Widget>[
-                GoogleMap(
-                  mapType: MapType.normal,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: map.kJapanCoordinate,
-                  onMapCreated: (GoogleMapController controller) async {
-                    map.googleMapController = controller;
-                    await map.setCurrentLocation();
-                    // }
-                  },
-                  polylines: map.polylines,
-                  markers: Set<Marker>.of(map.markers.values),
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.all(4),
+                  margin: const EdgeInsets.all(sizeMedium),
+                  decoration: BoxDecoration(
+                    color: greyF4F4F4,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: optionTile(
+                          title: 'Requests',
+                          isSelected:
+                              provider.projectType == ProjectType.requests,
+                          onChange: () {
+                            provider.projectType = ProjectType.requests;
+                          },
+                        ),
+                      ),
+                      smallHorizontalSpacing(),
+                      Expanded(
+                        child: optionTile(
+                          title: 'History',
+                          isSelected:
+                              provider.projectType == ProjectType.history,
+                          onChange: () {
+                            provider.projectType = ProjectType.history;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SafeArea(
-                    child: Stack(children: [
-                  Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
-                              CurrentLocationWidget(),
-                              BottomContainerHome()
-                            ]))
-                      ])
-                ]))
+
+                const NoProjects(),
+
+                // GoogleMap(
+                //   mapType: MapType.normal,
+                //   myLocationButtonEnabled: false,
+                //   zoomControlsEnabled: false,
+                //   initialCameraPosition: map.kJapanCoordinate,
+                //   onMapCreated: (GoogleMapController controller) async {
+                //     map.googleMapController = controller;
+                //     await map.setCurrentLocation();
+                //     // }
+                //   },
+                //   polylines: map.polylines,
+                //   markers: Set<Marker>.of(map.markers.values),
+                // ),
+                // SafeArea(
+                //   child: Stack(
+                //     children: [
+                //       Column(
+                //         mainAxisSize: MainAxisSize.max,
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: <Widget>[
+                //           Expanded(
+                //             child: Column(
+                //               crossAxisAlignment: CrossAxisAlignment.end,
+                //               mainAxisAlignment: MainAxisAlignment.end,
+                //               children: const [
+                //                 // CurrentLocationWidget(),
+                //                 // BottomContainerHome()
+                //               ],
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // )
               ],
             );
-          }),
-        ));
+          },
+        ),
+      ),
+    );
+  }
+
+  optionTile({title, onChange, isSelected}) {
+    return InkWell(
+      onTap: onChange,
+      child: Container(
+        height: 42,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected ? primaryColor : greyF4F4F4,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Text(
+          title,
+          style: versionAppTextStyle.copyWith(
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            color: isSelected ? Colors.white : greyBlackColor,
+          ),
+        ),
+      ),
+    );
   }
 }
