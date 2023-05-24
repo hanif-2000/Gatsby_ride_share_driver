@@ -18,7 +18,7 @@
     "confirmationpwdnotmatch": "confirmation password not match",
     "failedtochangeprofile": "failed to change profile",
     "emailinvalid": "Email address is invalid",
-    "phoneinvalid": "Phone number is invalid",
+    "phoneinvalid": "Mobile number is invalid",
     "emailnotmatch": "Email address is not match",
     "pwdresetfail": "password reset failed",
     "passwordInvalid": "Password should contain upper,lower,digit and Special character and minimum 8 character long!",

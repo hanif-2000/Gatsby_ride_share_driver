@@ -10,7 +10,7 @@ class SignupResponseModel extends Equatable {
       {this.data, this.success, this.token, this.message});
 
   @override
-  List<Object?> get props => [/*data,*/ success, token];
+  List<Object?> get props => [data, success, token];
 
   factory SignupResponseModel.fromJson(Map<String, dynamic> json) =>
       SignupResponseModel(
@@ -32,47 +32,53 @@ class SignupResponseModel extends Equatable {
 
 class SignupDataModel extends Equatable {
   final num driverId;
-  final String name;
-  final String email;
-  final String phoneNumber;
-  final String fcmToken;
-  final int status;
-  final String image;
-  final String categoryId;
 
-  const SignupDataModel(
-      {required this.driverId,
-      required this.name,
-      required this.email,
-      required this.phoneNumber,
-      required this.fcmToken,
-      required this.status,
-      required this.categoryId,
-      required this.image});
+  // final String name;
+  final String email;
+
+  // final String phoneNumber;
+  // final String fcmToken;
+  // final int status;
+  // final String image;
+  // final String categoryId;
+
+  const SignupDataModel({
+    required this.driverId,
+    // required this.name,
+    required this.email,
+    // required this.phoneNumber,
+    // required this.fcmToken,
+    // required this.status,
+    // required this.categoryId,
+    // required this.image,
+  });
 
   @override
-  List<Object?> get props =>
-      [driverId, name, email, phoneNumber, fcmToken, status, image, categoryId];
+  List<Object?> get props => [
+        driverId,
+        email, /*name,  phoneNumber, fcmToken, status, image, categoryId*/
+      ];
 
   factory SignupDataModel.fromJson(Map<String, dynamic> json) =>
       SignupDataModel(
-          driverId: json['id'],
-          name: json['name'],
-          email: json['email'],
-          phoneNumber: json['phone'],
-          fcmToken: json['fcm_token'] ?? '',
-          image: json['image'] ?? '',
-          categoryId: json['vehicle_category_id'] ?? '',
-          status: json['status'] ?? '');
+        driverId: json['id'],
+        email: json['email'],
+        // name: json['name'],
+        // phoneNumber: json['phone'],
+        // fcmToken: json['fcm_token'] ?? '',
+        // image: json['image'] ?? '',
+        // categoryId: json['vehicle_category_id'] ?? '',
+        // status: json['status'] ?? '',
+      );
 
   Map<String, dynamic> toJson() => {
         'id': driverId,
-        'name': name,
         'email': email,
-        'telp_driver': phoneNumber,
-        'fcm_token': fcmToken,
-        'vehicle_category_id': categoryId,
-        'image': image,
-        'status': status,
+        // 'name': name,
+        // 'telp_driver': phoneNumber,
+        // 'fcm_token': fcmToken,
+        // 'vehicle_category_id': categoryId,
+        // 'image': image,
+        // 'status': status,
       };
 }

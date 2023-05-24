@@ -109,7 +109,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-      height: 48,
+      // height: 48,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

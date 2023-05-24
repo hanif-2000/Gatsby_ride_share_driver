@@ -4,27 +4,51 @@ import '../static/strings.dart';
 
 abstract class Session {
   set setLoggedIn(bool login);
+
+  set setIsProfileCompleted(bool isCompleted);
+
   set setOrderId(String orderId);
+
   set setToken(String token);
+
   set setFcmToken(String fcmToken);
+
   set setCurrency(String currency);
+
   set setOrderStatus(int orderStatus);
+
   set setDriverId(String driverId);
+
   set setUserId(String userId);
+
   set setSessionStatusOrder(String sessionStatusOrder);
+
   set setSessionCategoryId(String sessionCategoryId);
 
   bool get isLoggedIn;
+
+  bool get isProfileCompleted;
+
   String get orderId;
+
   String get sessionToken;
+
   String get sessionFcmToken;
+
   String get currency;
+
   String get driverId;
+
   String get userId;
+
   String get sessionStatusOrder;
+
   String get sessionCategoryId;
+
   int get orderStatus;
+
   Future<void> clearSession();
+
   Future<void> clearOrderSession();
 }
 
@@ -36,6 +60,11 @@ class SessionHelper implements Session {
   @override
   set setLoggedIn(bool login) {
     pref.setBool(IS_LOGGED_IN, login);
+  }
+
+  @override
+  set setIsProfileCompleted(bool isCompleted) {
+    pref.setBool(IS_PROFILE_COMPLETED, isCompleted);
   }
 
   @override
@@ -85,6 +114,9 @@ class SessionHelper implements Session {
 
   @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
+
+  @override
+  bool get isProfileCompleted => pref.getBool(IS_PROFILE_COMPLETED) ?? false;
 
   @override
   String get sessionToken => pref.getString(SESSION_TOKEN) ?? '';

@@ -49,6 +49,7 @@ class _SignUpFormState extends State<SignUpForm> {
             dismissLoading();
             final session = locator<Session>();
             session.setLoggedIn = true;
+            session.setIsProfileCompleted = false;
             showToast(message: appLoc.success);
             Navigator.pushNamedAndRemoveUntil(
                 context, CreateProfilePage.routeName, (route) => false);
@@ -109,7 +110,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 isError: provider.passwordConfirmError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setPasswordConfirmError = value,
+                  isError: (bool value) =>
+                      provider.setPasswordConfirmError = value,
                   typeField: TypeField.confirmPassword,
                   pwd: provider.passwordController.text,
                 ).validate(),
@@ -192,21 +194,22 @@ class _SignUpFormState extends State<SignUpForm> {
                   ),
                   children: [
                     TextSpan(
-                        text: appLoc.login,
-                        style: blactStyle.copyWith(fontSize: 14),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // Navigator.pushNamed(
-                            //   context,
-                            //   SignUpPage.routeName,
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          })
+                      text: appLoc.login,
+                      style: blactStyle.copyWith(fontSize: 14),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   SignUpPage.routeName,
+                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                    )
                   ],
                 ),
               ),

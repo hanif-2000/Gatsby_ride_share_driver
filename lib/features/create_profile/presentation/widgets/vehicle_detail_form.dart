@@ -98,10 +98,10 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 title: appLoc.vehicleName,
                 controller: provider.vehicleNameController,
                 inputType: TextInputType.name,
-                isError: provider.isFirstNameError,
+                isError: provider.vehicleNameError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setFirstNameError,
+                  isError: (bool value) => provider.setVehicleNameError = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),
@@ -111,10 +111,11 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 title: appLoc.vehicleNumber,
                 controller: provider.vehicleNumberController,
                 inputType: TextInputType.number,
-                isError: provider.isFirstNameError,
+                isError: provider.vehicleNumberError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setFirstNameError,
+                  isError: (bool value) =>
+                      provider.setVehicleNumberError = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),
@@ -124,10 +125,11 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 title: appLoc.vehicleModel,
                 controller: provider.vehicleModelController,
                 inputType: TextInputType.number,
-                isError: provider.isFirstNameError,
+                isError: provider.vehicleModelError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setFirstNameError,
+                  isError: (bool value) =>
+                      provider.setVehicleModelError = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),
@@ -136,10 +138,11 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 title: appLoc.insuranceNumber,
                 controller: provider.vehicleInsuranceController,
                 inputType: TextInputType.text,
-                isError: provider.isFirstNameError,
+                isError: provider.vehicleInsuranceError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setFirstNameError,
+                  isError: (bool value) =>
+                      provider.setVehicleInsuranceError = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),

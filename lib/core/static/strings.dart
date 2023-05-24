@@ -1,5 +1,6 @@
 const String SESSION_TOKEN = 'session_token';
 const String IS_LOGGED_IN = 'is_logged_in';
+const String IS_PROFILE_COMPLETED = 'is_profile_completed';
 const String CURRENCY = 'currency';
 const String ORDER_ID = 'orderId';
 const String USER_ID = 'user_id';

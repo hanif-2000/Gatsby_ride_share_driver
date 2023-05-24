@@ -19,7 +19,7 @@ class SignupRepositoryImplementation implements SignupRepository {
       final data = await dataSource.doSignup(email, password);
       return Right(data);
     } on DioError catch (e) {
-      logMe("Failure Signup repository ${e.toString()}");
+      logMe("Failure Signup repository -- ${e.toString()}");
       return Left(ServerFailure(message: e.message));
     }
   }

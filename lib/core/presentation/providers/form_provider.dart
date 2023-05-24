@@ -45,6 +45,23 @@ class FormProvider with ChangeNotifier {
   bool _vehicleError = false;
   bool _nameError = false;
 
+  ///Personal Detail
+  bool _firstNameError = false;
+  bool _lastNameError = false;
+  bool _mobileNumberError = false;
+
+  ///Vehicle Detail
+  bool _vehicleNameError = false;
+  bool _vehicleNumberError = false;
+  bool _vehicleModelError = false;
+  bool _vehicleInsuranceError = false;
+
+  ///Bank Detail
+  bool _bankNameError = false;
+  bool _bankAccountError = false;
+  bool _bankHolderNameError = false;
+  bool _bankIFSCCodeError = false;
+
   final _imagePicker = ImagePicker();
   dynamic _imagePickerError;
   XFile? _imageFile;
@@ -98,6 +115,64 @@ class FormProvider with ChangeNotifier {
 
   set setImageError(err) {
     _imagePickerError = err;
+    notifyListeners();
+  }
+
+  ///Personal detail
+  set setFirstNameError(err) {
+    _firstNameError = err;
+    notifyListeners();
+  }
+
+  set setLastNameError(err) {
+    _lastNameError = err;
+    notifyListeners();
+  }
+
+  set setMobileNumberError(err) {
+    _mobileNumberError = err;
+    notifyListeners();
+  }
+
+  ///Vehicle Detail
+  set setVehicleNameError(bool err) {
+    _vehicleNameError = err;
+    notifyListeners();
+  }
+
+  set setVehicleNumberError(err) {
+    _vehicleNumberError = err;
+    notifyListeners();
+  }
+
+  set setVehicleModelError(err) {
+    _vehicleModelError = err;
+    notifyListeners();
+  }
+
+  set setVehicleInsuranceError(err) {
+    _vehicleInsuranceError = err;
+    notifyListeners();
+  }
+
+  ///Bank Detail
+  set setBankNameError(err) {
+    _bankNameError = err;
+    notifyListeners();
+  }
+
+  set setBankHolderNameError(err) {
+    _bankHolderNameError = err;
+    notifyListeners();
+  }
+
+  set setBankAccountError(err) {
+    _bankAccountError = err;
+    notifyListeners();
+  }
+
+  set setBankISCCodeError(err) {
+    _bankIFSCCodeError = err;
     notifyListeners();
   }
 
@@ -171,6 +246,31 @@ class FormProvider with ChangeNotifier {
 
   dynamic get imagePickerError => _imagePickerError;
 
+  ///Personal Detail
+  bool get firstNameError => _firstNameError;
+
+  bool get lastNameError => _lastNameError;
+
+  bool get mobileNumberError => _mobileNumberError;
+
+  ///Vehicle Detail
+  bool get vehicleNameError => _vehicleNameError;
+
+  bool get vehicleNumberError => _vehicleNumberError;
+
+  bool get vehicleModelError => _vehicleModelError;
+
+  bool get vehicleInsuranceError => _vehicleInsuranceError;
+
+  ///Bank Detail
+  bool get bankNameError => _bankNameError;
+
+  bool get bankAccountError => _bankAccountError;
+
+  bool get bankHolderNameError => _bankHolderNameError;
+
+  bool get bankIFSCCodeError => _bankIFSCCodeError;
+
   // method
   refresh() => notifyListeners();
 
@@ -218,20 +318,23 @@ class FormProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  showImagePicker({required BuildContext context}) {
+  Future<String> showImagePicker({required BuildContext context}) async {
     ImagePickerHelper.showPicker(
       context: context,
       imagePicker: _imagePicker,
       successCallBack: (file) {
         setImageFile = file;
         logMe('${file?.name}:${file?.path}');
+        return file!.path;
       },
       failedCallBack: (error) {
         logMe(error);
         showToast(message: error);
         setImageError = error;
         setImageFile = null;
+        return '';
       },
     );
+    return '';
   }
 }

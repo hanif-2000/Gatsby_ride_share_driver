@@ -56,6 +56,14 @@ class ValidationHelper {
               isError(false);
             }
             break;
+          case TypeField.phone:
+            if (strValue.length < 7) {
+              message = appLoc.phoneinvalid;
+              isError(true);
+            } else {
+              isError(false);
+            }
+            break;
           default:
             isError(false);
         }
