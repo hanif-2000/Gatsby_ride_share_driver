@@ -25,6 +25,9 @@ class CreateProfilePage extends StatelessWidget {
         body: SafeArea(
           child: Consumer<CreateProfileProvider>(
             builder: (context, provider, _) {
+
+
+
               return ListView(
                 children: [
                   AspectRatio(

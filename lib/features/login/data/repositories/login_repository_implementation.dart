@@ -17,7 +17,11 @@ class LoginRepositoryImplementation implements LoginRepository {
       String email, String password) async {
     try {
       final data = await dataSource.doLogin(email, password);
-      return Right(data);
+      if (data!.success == 1) {
+        return Right(data.data);
+      } else {
+        return Left(ServerFailure(message: data.message));
+      }
     } on DioError catch (e) {
       logMe("Failure login repository ${e.toString()}");
       return Left(ServerFailure(message: e.message));

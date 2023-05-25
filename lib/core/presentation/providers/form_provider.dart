@@ -271,6 +271,8 @@ class FormProvider with ChangeNotifier {
 
   bool get bankIFSCCodeError => _bankIFSCCodeError;
 
+  ImagePicker get imagePicker => _imagePicker;
+
   // method
   refresh() => notifyListeners();
 

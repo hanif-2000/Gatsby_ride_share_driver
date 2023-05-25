@@ -1,14 +1,14 @@
 import 'dart:io';
-
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/image_picker_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_provider.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/widgets/image_picker_tile.dart';
+import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -29,7 +29,15 @@ class FormPersonalDetail extends StatefulWidget {
 class _FormPersonalDetailState extends State<FormPersonalDetail> {
   void submit() {
     final provider = context.read<CreateProfileProvider>();
-    provider.doCreateProfileApi('').listen((state) async {
+    provider.doCreateProfileApi('api/webservice/driver/profile/details/add', {
+      "first_name": provider.firstNameController.text.trim(),
+      "last_name": provider.lastNameController.text.trim(),
+      "phone": provider.mobileNumberController.text.trim(),
+      "country": provider.countryName,
+      "driving_licence": provider.dlImageUploadName,
+      "profile_photo": provider.profileUploadName,
+      "id_proof": provider.idProofImageUploadName,
+    }).listen((state) async {
       switch (state.runtimeType) {
         case CreateProfileLoading:
           showLoading();
@@ -43,7 +51,6 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
           final data = (state as CreateProfileSuccess).data;
           dismissLoading();
           if (data.success == 1) {
-            showToast(message: appLoc.pwdreset);
             provider.setCurrentStep(2);
             // Navigator.pushReplacementNamed(context, ChangePasswordPage.routeName);
           } else {
@@ -80,7 +87,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 width: 136,
                 child: Stack(
                   children: [
-                    provider.imageFile == null
+                    provider.profileImage == ''
                         ? Image.asset(
                             'assets/icons/profile/ic_personal_detail.png',
                             height: 136,
@@ -94,7 +101,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                               image: DecorationImage(
                                 image: FileImage(
                                   File(
-                                    provider.imageFilePath,
+                                    provider.profileImage,
                                   ),
                                 ),
                                 fit: BoxFit.cover,
@@ -106,15 +113,41 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       child: InkWell(
                           onTap: () async {
                             ///TODO: add personal image here
-
-                            provider
-                                .showImagePicker(context: context)
-                                .then((value) {
-                              logMe('Image file -----> $value');
-                              if (value != '') {
-                                provider.profileImage = value;
-                              }
-                            });
+                            ImagePickerHelper.showPicker(
+                              context: context,
+                              imagePicker: provider.imagePicker,
+                              successCallBack: (file) {
+                                provider.setProfileImage(file!.path);
+                                provider
+                                    .doUploadProfileApi(file.path)
+                                    .listen((state) async {
+                                  switch (state.runtimeType) {
+                                    case UploadLoading:
+                                      showLoading();
+                                      break;
+                                    case UploadFailure:
+                                      final msg =
+                                          (state as UploadFailure).failure;
+                                      dismissLoading();
+                                      showToast(message: msg);
+                                      break;
+                                    case UploadSuccess:
+                                      final imageName =
+                                          (state as UploadSuccess).data;
+                                      showToast(message: appLoc.success);
+                                      provider.setProfileUploadName(imageName!);
+                                      logMe(
+                                          'Image Name ---> ${provider.profileUploadName}');
+                                      dismissLoading();
+                                      break;
+                                  }
+                                });
+                              },
+                              failedCallBack: (error) {
+                                showToast(message: error);
+                                provider.setProfileImage('');
+                              },
+                            );
                           },
                           child: SvgPicture.asset(
                             'assets/icons/profile/ic_add_image.svg',
@@ -187,10 +220,90 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
               mediumVerticalSpacing(),
               ImagePickerTile(
                 title: appLoc.uploadDL,
+                selectedImage: provider.dlImage,
+                onTap: () {
+                  ImagePickerHelper.showPicker(
+                    context: context,
+                    imagePicker: provider.imagePicker,
+                    successCallBack: (file) {
+                      provider.setDlImage(file!.path);
+                      provider
+                          .doUploadProfileApi(file.path)
+                          .listen((state) async {
+                        switch (state.runtimeType) {
+                          case UploadLoading:
+                            showLoading();
+                            break;
+                          case UploadFailure:
+                            final msg = (state as UploadFailure).failure;
+                            dismissLoading();
+                            showToast(message: msg);
+                            break;
+                          case UploadSuccess:
+                            final imageName = (state as UploadSuccess).data;
+                            showToast(message: appLoc.success);
+                            provider.setDlImageUploadName(imageName!);
+                            logMe(
+                                'Image Name ---> ${provider.profileUploadName}');
+                            dismissLoading();
+                            break;
+                        }
+                      });
+                    },
+                    failedCallBack: (error) {
+                      showToast(message: error);
+                      provider.setProfileImage('');
+                    },
+                  );
+                },
+                onDelete: () {
+                  provider.setDlImage('');
+                  provider.setDlImageUploadName('');
+                },
               ),
               mediumVerticalSpacing(),
               ImagePickerTile(
                 title: appLoc.uploadId,
+                selectedImage: provider.idProofImage,
+                onTap: () {
+                  ImagePickerHelper.showPicker(
+                    context: context,
+                    imagePicker: provider.imagePicker,
+                    successCallBack: (file) {
+                      provider.setIdProofImage(file!.path);
+                      provider
+                          .doUploadProfileApi(file.path)
+                          .listen((state) async {
+                        switch (state.runtimeType) {
+                          case UploadLoading:
+                            showLoading();
+                            break;
+                          case UploadFailure:
+                            final msg = (state as UploadFailure).failure;
+                            dismissLoading();
+                            showToast(message: msg);
+                            break;
+                          case UploadSuccess:
+                            final imageName = (state as UploadSuccess).data;
+                            showToast(message: appLoc.success);
+                            provider.setIdProofImageUploadName(imageName!);
+                            logMe(
+                                'Image Name ---> ${provider.profileUploadName}');
+                            dismissLoading();
+                            break;
+                        }
+                      });
+                    },
+                    failedCallBack: (error) {
+                      showToast(message: error);
+                      provider.setProfileImage('');
+                    },
+                  );
+                },
+                onDelete: () {
+                  provider.setIdProofImage('');
+                  provider.setIdProofImageUploadName('');
+                },
               ),
               largeVerticalSpacing(),
               CustomButton(
@@ -199,9 +312,19 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   style: txtButtonStyle,
                 ),
                 event: () {
-                  if (provider.formKey.currentState!.validate()) {
-                    // provider.setCurrentStep(2);
-                    submit();
+                  // provider.setCurrentStep(2);
+                  if (provider.profileUploadName == '') {
+                    showToast(message: 'Please select profile image!');
+                  } else if (provider.formKey.currentState!.validate()) {
+                    if (provider.countryName == null) {
+                      showToast(message: 'Please select country!');
+                    } else if (provider.dlImageUploadName == '') {
+                      showToast(message: 'Please upload Driving Licence!');
+                    } else if (provider.idProofImageUploadName == '') {
+                      showToast(message: 'Please upload ID proof!');
+                    } else {
+                      submit();
+                    }
                   }
                 },
                 buttonHeight: 48,

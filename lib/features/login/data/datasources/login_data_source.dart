@@ -6,7 +6,7 @@ import '../../../../core/utility/session_helper.dart';
 import '../models/login_response_model.dart';
 
 abstract class LoginDataSource {
-  Future<LoginDataModel?> doLogin(String email, String password);
+  Future<LoginResponseModel?> doLogin(String email, String password);
 }
 
 class LoginDataSourceImplementation implements LoginDataSource {
@@ -15,7 +15,7 @@ class LoginDataSourceImplementation implements LoginDataSource {
   LoginDataSourceImplementation({required this.dio});
 
   @override
-  Future<LoginDataModel?> doLogin(String email, String password) async {
+  Future<LoginResponseModel?> doLogin(String email, String password) async {
     String url = 'api/webservice/logindriver';
     await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
@@ -31,13 +31,13 @@ class LoginDataSourceImplementation implements LoginDataSource {
       print('Login response ---> ${response.data}');
       final model = LoginResponseModel.fromJson(response.data);
       final session = locator<Session>();
-      if (model.data != null) {
+      if (model.success == 1) {
         session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
         session.setSessionCategoryId = model.data!.categoryId.toString();
-        return model.data;
+        return model;
       } else {
-        return null;
+        return model;
       }
     } catch (e) {
       rethrow;

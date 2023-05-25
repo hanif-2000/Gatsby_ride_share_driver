@@ -4,11 +4,13 @@ class LoginResponseModel extends Equatable {
   final LoginDataModel? data;
   final num? success;
   final String? token;
+  final String? message;
 
   const LoginResponseModel({
     this.data,
     this.success,
     this.token,
+    this.message,
   });
 
   @override
@@ -20,11 +22,14 @@ class LoginResponseModel extends Equatable {
             json['user'] == null ? null : LoginDataModel.fromJson(json['user']),
         token: json['token'] ?? '',
         success: json['success'] ?? 1,
+        message: json['message'] ?? '',
       );
+
   Map<String, dynamic> toJson() => {
         'data': data == null ? '' : data!.toJson(),
         'token': token ?? '',
         'success': success ?? '',
+        'message': message ?? '',
       };
 }
 
@@ -61,6 +66,7 @@ class LoginDataModel extends Equatable {
       image: json['image'] ?? '',
       categoryId: json['vehicle_category_id'] ?? '',
       status: json['status'] ?? '');
+
   Map<String, dynamic> toJson() => {
         'id': driverId,
         'name': name,

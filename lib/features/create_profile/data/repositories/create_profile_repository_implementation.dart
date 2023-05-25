@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/datasource/create_profile_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/model/create_profile_response_model.dart';
+import 'package:appkey_taxiapp_driver/features/create_profile/data/model/vehicle_type_respose_model.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/domain/repositories/create_profile_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -23,4 +24,30 @@ class CreateProfileRepositoryImplementation implements CreateProfileRepository {
       return Left(ServerFailure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, String?>> doUploadProfile(
+      String image) async {
+    try {
+      final data = await dataSource.doUploadProfile(image);
+      return Right(data);
+    } on DioError catch (e) {
+      logMe("Failure Signup repository -- ${e.toString()}");
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<VehicleTypeDataModel>?>> getVehicleTypes() async {
+    try{
+      final data = await dataSource.getVehicleTypes();
+      return Right(data.data);
+    }on DioError catch(e){
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+
+
+
 }

@@ -1,11 +1,13 @@
+import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_provider.dart';
+import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
@@ -23,40 +25,41 @@ class FormBankDetail extends StatefulWidget {
 
 class _FormBankDetailState extends State<FormBankDetail> {
   void submit() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => const CreatePasswordPage(),
-    //   ),
-    // );
-    // final provider = context.read<ForgotPasswordProvider>();
-    // provider.doForgotPasswordApi(email: email).listen((state) async {
-    //   switch (state.runtimeType) {
-    //     case ForgotPasswordLoading:
-    //       showLoading();
-    //       break;
-    //     case ForgotPasswordFailure:
-    //       final msg = (state as ForgotPasswordFailure).failure;
-    //       dismissLoading();
-    //       showToast(message: msg);
-    //       break;
-    //     case ForgotPasswordSuccess:
-    //       final data = (state as ForgotPasswordSuccess).data;
-    //       dismissLoading();
-    //       if (data.success == 1) {
-    //         showToast(message: appLoc.pwdreset);
-    //         Navigator.pushReplacementNamed(context, ChangePasswordPage.routeName);
-    //       } else {
-    //         if (data.message == '1') {
-    //           showToast(message: appLoc.emailnotmatch);
-    //         } else {
-    //           showToast(message: appLoc.failed);
-    //         }
-    //       }
-    //
-    //       break;
-    //   }
-    // });
+    final provider = context.read<CreateProfileProvider>();
+    provider.doCreateProfileApi('api/webservice/driver/bank/details/add', {
+      "bank_name": provider.bankNameController.text.trim(),
+      "account_number": provider.bankAccountController.text.trim(),
+      "account_holder_name": provider.bankHolderNameController.text.trim(),
+      "ifsc_code": provider.bankIFSCCodeController.text.trim(),
+    }).listen((state) async {
+      switch (state.runtimeType) {
+        case CreateProfileLoading:
+          showLoading();
+          break;
+        case CreateProfileFailure:
+          final msg = (state as CreateProfileFailure).failure;
+          dismissLoading();
+          showToast(message: msg);
+          break;
+        case CreateProfileSuccess:
+          final data = (state as CreateProfileSuccess).data;
+          dismissLoading();
+          if (data.success == 1) {
+            final session = locator<Session>();
+            session.setIsProfileCompleted = true;
+            Navigator.pushNamedAndRemoveUntil(
+                context, HomePage.routeName, (route) => false);
+          } else {
+            if (data.message == '1') {
+              showToast(message: appLoc.emailnotmatch);
+            } else {
+              showToast(message: appLoc.failed);
+            }
+          }
+
+          break;
+      }
+    });
   }
 
   @override
@@ -71,11 +74,9 @@ class _FormBankDetailState extends State<FormBankDetail> {
           child: Column(
             children: [
               largeVerticalSpacing(),
-              Text(
-                appLoc.bankDetail,
-                textAlign: TextAlign.center,
-                style: formTextFieldStyle.copyWith(fontSize: 24)
-              ),
+              Text(appLoc.bankDetail,
+                  textAlign: TextAlign.center,
+                  style: formTextFieldStyle.copyWith(fontSize: 24)),
               largeVerticalSpacing(),
               Image.asset(
                 'assets/icons/profile/ic_bank_detail.png',
@@ -118,7 +119,8 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 isError: provider.bankHolderNameError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setBankHolderNameError = value,
+                  isError: (bool value) =>
+                      provider.setBankHolderNameError = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),
@@ -141,10 +143,9 @@ class _FormBankDetailState extends State<FormBankDetail> {
                   style: txtButtonStyle,
                 ),
                 event: () {
-                  // if (provider.formKey.currentState!.validate()) {
-                  provider.setCurrentStep(3);
-                  // submit();
-                  // }
+                  if (provider.formKey.currentState!.validate()) {
+                    submit();
+                  }
                 },
                 buttonHeight: 48,
                 isRounded: true,
