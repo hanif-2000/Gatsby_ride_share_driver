@@ -3,6 +3,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_pag
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/forgot_password_page.dart';
+import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/otp_page.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/pages/detail_history_page.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/pages/history_page.dart';
 import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
@@ -36,6 +37,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const CreatePasswordPage());
     case CreateProfilePage.routeName:
       return MaterialPageRoute(builder: (_) => const CreateProfilePage());
+    case OTPPage.routeName:
+      return MaterialPageRoute(builder: (_) => const OTPPage());
     case AboutUsPage.routeName:
       return MaterialPageRoute(builder: (_) => const AboutUsPage());
     case ProfilePage.routeName:

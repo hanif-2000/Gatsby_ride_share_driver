@@ -5,6 +5,7 @@ import '../../../../core/error/failure.dart';
 import '../../data/models/forgot_password_response_model.dart';
 
 abstract class ForgotPasswordRepository {
-  Future<Either<Failure, ForgotPasswordResponseModel>> doForgotPassword(
+  Future<Either<Failure, ForgotPasswordResponseModel>> doForgotPassword(String url,
       FormData formData);
+
 }

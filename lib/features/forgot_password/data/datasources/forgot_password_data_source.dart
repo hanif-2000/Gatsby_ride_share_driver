@@ -2,7 +2,8 @@ import 'package:appkey_taxiapp_driver/features/forgot_password/data/models/forgo
 import 'package:dio/dio.dart';
 
 abstract class ForgotPasswordDataSource {
-  Future<ForgotPasswordResponseModel> doForgotPassword(FormData formData);
+  Future<ForgotPasswordResponseModel> doForgotPassword(
+      String url, FormData formData);
 }
 
 class ForgotPasswordDataSourceImplementation
@@ -13,8 +14,8 @@ class ForgotPasswordDataSourceImplementation
 
   @override
   Future<ForgotPasswordResponseModel> doForgotPassword(
-      FormData formData) async {
-    String url = 'api/webservice/reset-password-user';
+      String url, FormData formData) async {
+    // String url = 'api/webservice/reset-password-user';
 
     try {
       final response = await dio.post(

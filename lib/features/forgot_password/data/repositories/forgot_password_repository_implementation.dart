@@ -14,14 +14,15 @@ class ForgotPasswordRepositoryImplementation
   ForgotPasswordRepositoryImplementation({required this.dataSource});
 
   @override
-  Future<Either<Failure, ForgotPasswordResponseModel>> doForgotPassword(
+  Future<Either<Failure, ForgotPasswordResponseModel>> doForgotPassword(String url,
       FormData formData) async {
     try {
-      final data = await dataSource.doForgotPassword(formData);
+      final data = await dataSource.doForgotPassword(url, formData);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure ForgotPassword repository ${e.toString()}");
       return Left(ServerFailure(message: e.message));
     }
   }
+
 }

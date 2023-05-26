@@ -34,6 +34,9 @@
     "emailaddress": "Email",
     "password": "Password",
     "forgotpassword": "Forgot password?",
+    "otpVerification": "OTP Verification",
+    "enterOTP": "Enter OTP Code sent to ",
+    "didntReceiveOTP": "Don’t receive OTP code ? ",
     "signup": "Sign Up",
     "createyouraccount": "Create your account by filling the following information blow",
     "dontHaveAccount": "Don't have an account?  ",
@@ -46,7 +49,12 @@
     "changepassword": "Change password",
     "send": "Send",
     "resetPassword": "Reset your Password",
-    "pleaseenteryouremailaddress": "At least 8 characters, with uppercase and lowercase letters",
+    "resendOTP": "Resend Code",
+    "verifyNow": "Verify Now",
+
+
+    "pleaseEnterYourEmailAddress": "Enter your official email to get a verification code.",
+    "atLeastEightCharacter": "At least 8 characters, with uppercase and lowercase letters",
     "name": "Name",
     "done": "Done",
     "waiting": "Waiting!",

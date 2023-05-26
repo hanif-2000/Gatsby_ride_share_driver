@@ -3,19 +3,15 @@ import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../widgets/create_password_form.dart';
+import '../widgets/forgot_password_form.dart';
 
-class CreatePasswordPage extends StatelessWidget {
-  const CreatePasswordPage({Key? key}) : super(key: key);
-  static const routeName = '/CreatePasswordPage';
+class OTPPage extends StatelessWidget {
+  const OTPPage({Key? key}) : super(key: key);
+  static const routeName = '/OTPPage';
 
   @override
   Widget build(BuildContext context) {
-    return
-        // ChangeNotifierProvider(
-        //   create: (context) => locator<ForgotPasswordProvider>(),
-        //   child:
-        Scaffold(
+    return Scaffold(
       backgroundColor: whiteColor,
       body: SafeArea(
         child: ListView(
@@ -37,12 +33,11 @@ class CreatePasswordPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  mediumVerticalSpacing(),
                   Flexible(
                     fit: FlexFit.loose,
                     flex: 1,
                     child: Text(
-                      appLoc.resetPassword,
+                      appLoc.otpVerification,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 24,
@@ -51,12 +46,11 @@ class CreatePasswordPage extends StatelessWidget {
                       ).usePoppinsW6Font(),
                     ),
                   ),
-                  smallVerticalSpacing(),
                   Flexible(
                     fit: FlexFit.loose,
                     flex: 1,
                     child: Text(
-                      appLoc.pleaseEnterYourEmailAddress,
+                      appLoc.enterOTP+'raj1@mailinator.com',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,
@@ -68,11 +62,10 @@ class CreatePasswordPage extends StatelessWidget {
                 ],
               ),
             ),
-            const FormCreatePassword(),
+            const FormForgotPassword(),
             mediumVerticalSpacing(),
           ],
         ),
-        // ),
       ),
     );
   }
