@@ -51,6 +51,8 @@
     "resetPassword": "Reset your Password",
     "resendOTP": "Resend Code",
     "verifyNow": "Verify Now",
+    "otpSent": "OTP send successfully!",
+    "otpVerifySuccess": "OTP verified successfully!",
 
 
     "pleaseEnterYourEmailAddress": "Enter your official email to get a verification code.",
@@ -171,8 +173,8 @@
     "arriveAtDestination": "Arrived at the destination",
     "yesIhave": "Yes, I have.",
     "nocontactcust": "No. Contact the customer.",
-    "profileupdated": "profile updated",
+    "profileupdated": "Profile updated",
     "orderaccepted": "Order accepted",
-    "pwdreset": "password reset successfully, check your email",
+    "pwdreset": "Password created successfully!",
     "declineOrder": "Decline the order ?"
 }

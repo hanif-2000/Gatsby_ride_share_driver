@@ -10,21 +10,17 @@ class CloseDrawerButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerRight,
-      child: CircleAvatar(
-        backgroundColor: primaryColor,
-        radius: 12,
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.close,
-            size: 18,
-          ),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: const Icon(
+          Icons.arrow_back,
+          size: 25,
         ),
+        color: Colors.black,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }

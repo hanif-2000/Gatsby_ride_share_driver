@@ -59,9 +59,9 @@ class LoginDataModel extends Equatable {
 
   factory LoginDataModel.fromJson(Map<String, dynamic> json) => LoginDataModel(
       driverId: json['id'],
-      name: json['name'],
-      email: json['email'],
-      phoneNumber: json['phone'],
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phoneNumber: json['phone'] ?? '',
       fcmToken: json['fcm_token'] ?? '',
       image: json['image'] ?? '',
       categoryId: json['vehicle_category_id'] ?? '',

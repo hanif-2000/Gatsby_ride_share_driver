@@ -46,7 +46,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: centerTitle,
         titleSpacing: 10,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            if (Scaffold.of(context).isDrawerOpen) {
+              Scaffold.of(context).closeDrawer();
+            } else {
+              Scaffold.of(context).openDrawer();
+            }
+          },
           icon: const Icon(
             Icons.menu,
             color: Colors.black,

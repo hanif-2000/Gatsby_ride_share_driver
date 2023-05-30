@@ -5,7 +5,7 @@ import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 
 abstract class SignupDataSource {
-  Future<SignupDataModel?> doSignup(String email, String password);
+  Future<SignupResponseModel?> doSignup(String email, String password);
 }
 
 class SignupDataSourceImplementation implements SignupDataSource {
@@ -14,7 +14,7 @@ class SignupDataSourceImplementation implements SignupDataSource {
   SignupDataSourceImplementation({required this.dio});
 
   @override
-  Future<SignupDataModel?> doSignup(String email, String password) async {
+  Future<SignupResponseModel?> doSignup(String email, String password) async {
     String url = 'api/webservice/driver/signup';
     await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
@@ -33,9 +33,9 @@ class SignupDataSourceImplementation implements SignupDataSource {
         // session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
         // session.setSessionCategoryId = model.data!.categoryId.toString();
-        return model.data;
+        return model;
       } else {
-        return null;
+        return model;
       }
     } catch (e) {
       rethrow;

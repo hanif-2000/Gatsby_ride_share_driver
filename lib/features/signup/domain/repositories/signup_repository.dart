@@ -4,6 +4,6 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 
 abstract class SignupRepository {
-  Future<Either<Failure, SignupDataModel?>> doSignup(
+  Future<Either<Failure, SignupResponseModel?>> doSignup(
       String email, String password);
 }

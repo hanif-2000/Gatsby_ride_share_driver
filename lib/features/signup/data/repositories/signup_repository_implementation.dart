@@ -13,7 +13,7 @@ class SignupRepositoryImplementation implements SignupRepository {
   SignupRepositoryImplementation({required this.dataSource});
 
   @override
-  Future<Either<Failure, SignupDataModel?>> doSignup(
+  Future<Either<Failure, SignupResponseModel?>> doSignup(
       String email, String password) async {
     try {
       final data = await dataSource.doSignup(email, password);

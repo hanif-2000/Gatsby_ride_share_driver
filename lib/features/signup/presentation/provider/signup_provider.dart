@@ -4,7 +4,6 @@ import 'package:appkey_taxiapp_driver/features/signup/presentation/provider/sign
 
 import '../../../../core/presentation/providers/form_provider.dart';
 
-
 class SignupProvider extends FormProvider {
   final DoSignup doSignup;
 
@@ -13,16 +12,16 @@ class SignupProvider extends FormProvider {
   Stream<SignupState> doSignupApi() async* {
     yield SignupLoading();
 
-    final signupResult =
-    await doSignup.call(emailController.text, passwordConfirmController.text);
+    final signupResult = await doSignup.call(
+        emailController.text, passwordConfirmController.text);
     yield* signupResult.fold((statusCode) async* {
       logMe('signup error $statusCode');
       yield SignupFailure(failure: statusCode.message);
     }, (result) async* {
-      if (result != null) {
+      if (result!.success == 1) {
         yield SignupSuccess(data: result);
       } else {
-        yield SignupFailure(failure: appLoc.signupFailure);
+        yield SignupFailure(failure: result.message ?? appLoc.signupFailure);
       }
     });
   }

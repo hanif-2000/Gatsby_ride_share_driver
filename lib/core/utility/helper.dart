@@ -22,7 +22,7 @@ import '../static/order_status.dart';
 import 'injection.dart';
 
 logMe(Object? obj) {
-  /* 
+  /*
     use this for print something, its run only on debug mode.
   */
   if (kDebugMode) {
@@ -32,11 +32,17 @@ logMe(Object? obj) {
 
 // spacing
 Widget smallVerticalSpacing() => const SizedBox(height: sizeSmall);
+
 Widget smallHorizontalSpacing() => const SizedBox(width: sizeSmall);
+
 Widget mediumVerticalSpacing() => const SizedBox(height: sizeMedium);
+
 Widget mediumHorizontalSpacing() => const SizedBox(width: sizeMedium);
+
 Widget largeVerticalSpacing() => const SizedBox(height: sizeLarge);
+
 Widget largeHorizontalSpacing() => const SizedBox(width: sizeLarge);
+
 Widget superLargeVerticalSpacing() => const SizedBox(height: sizeExtraLarge);
 
 //Locale Language

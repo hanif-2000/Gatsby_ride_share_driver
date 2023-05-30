@@ -78,6 +78,9 @@ class HomeProvider with ChangeNotifier {
   OrderDetail? get orderDetail => _orderDetail;
   ProjectType get projectType => _projectType;
   // bool get isOrderExist => _isOrderExist;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  GlobalKey get globalKey => _key;
 
   //setter
   set changeStatus(val) {

@@ -83,9 +83,28 @@ class _SplashPageState extends State<SplashPage> {
           height: constraints.maxHeight,
           width: constraints.maxWidth,
           color: whiteColor,
-          child: SvgPicture.asset(
-            'assets/images/splash_img.svg',
-            fit: BoxFit.fitWidth,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: SvgPicture.asset(
+                      'assets/images/splash_logo.svg',
+                      height: 110,
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                child: SvgPicture.asset(
+                  'assets/images/splash_car.svg',
+                  // height: 170,
+                  width: constraints.maxWidth,
+                ),
+              ),
+            ],
           ),
 
           // Center(

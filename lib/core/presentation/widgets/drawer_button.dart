@@ -22,7 +22,7 @@ class DrawerButtonItemWidget extends StatelessWidget {
       titlePadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
       enableDivider: false,
       padding: EdgeInsets.zero,
-      leading: Icon(icon, size: 30, color: primaryColor),
+      // leading: Icon(icon, size: 30, color: primaryColor),
       title: Text(title, style: formTextFieldStyle),
       onTap: onTap,
     );

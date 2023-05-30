@@ -43,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
           dismissLoading();
           final session = locator<Session>();
           session.setLoggedIn = true;
+          session.setIsProfileCompleted = true;
           showToast(message: appLoc.success);
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);
@@ -204,6 +205,7 @@ class _LoginFormState extends State<LoginForm> {
                 event: () async {},
                 bgColor: blue3B5998,
               ),
+              largeVerticalSpacing(),
             ],
           ),
         ),

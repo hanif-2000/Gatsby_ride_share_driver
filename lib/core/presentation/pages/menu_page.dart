@@ -1,3 +1,5 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
+import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../../../features/about_us/presentation/pages/aboutus_page.dart';
@@ -47,66 +49,74 @@ class HomeDrawerPage extends StatelessWidget {
                   flex: 2,
                   child: ListView(
                     children: [
-                      DrawerButtonItemWidget(
-                        icon: Icons.person,
-                        title: appLoc.profile,
-                        onTap: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            ProfilePage.routeName,
-                          );
-                        },
-                      ),
-                      DrawerButtonItemWidget(
-                        icon: Icons.history,
-                        title: appLoc.history,
-                        onTap: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            HistoryPage.routeName,
-                          );
-                        },
-                      ),
-                      DrawerButtonItemWidget(
-                        icon: Icons.people,
-                        title: appLoc.we,
-                        onTap: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            AboutUsPage.routeName,
-                          );
-                        },
-                      ),
-                      DrawerButtonItemWidget(
-                        icon: Icons.logout,
-                        title: appLoc.logout,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => CustomLogoutDialog(
-                              positiveAction: () async {
-                                var provider = Provider.of<HomeProvider>(
-                                    context,
-                                    listen: false);
-                                provider
-                                    .updateStatus(isFromLogout: true)
-                                    .listen((event) async {
-                                  if (event is ChangeStatusLoaded) {
-                                    await sessionLogOut().then((_) =>
-                                        Navigator.of(context)
-                                            .pushNamedAndRemoveUntil(
-                                                SplashPage.routeName,
-                                                (route) => false));
-                                  }
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                      // DrawerButtonItemWidget(
+                      //   icon: Icons.person,
+                      //   title: appLoc.profile,
+                      //   onTap: () {
+                      //     Navigator.pushReplacementNamed(
+                      //       context,
+                      //       ProfilePage.routeName,
+                      //     );
+                      //   },
+                      // ),
+                      // DrawerButtonItemWidget(
+                      //   icon: Icons.history,
+                      //   title: appLoc.history,
+                      //   onTap: () {
+                      //     Navigator.pushReplacementNamed(
+                      //       context,
+                      //       HistoryPage.routeName,
+                      //     );
+                      //   },
+                      // ),
+                      // DrawerButtonItemWidget(
+                      //   icon: Icons.people,
+                      //   title: appLoc.we,
+                      //   onTap: () {
+                      //     Navigator.pushReplacementNamed(
+                      //       context,
+                      //       AboutUsPage.routeName,
+                      //     );
+                      //   },
+                      // ),
+
                     ],
                   ),
-                )
+                ),
+
+                CustomButton(
+                  text: Text(
+                    appLoc.logout,
+                    style: txtButtonStyle.copyWith(color: greyB6B6B6),
+                  ),
+                  // buttonHeight: MediaQuery.of(context).size.height * 0.080,
+                  buttonHeight: 48,
+                  isRounded: true,
+                  event: () async {
+                    showDialog(
+                      context: context,
+                      builder: (_) => CustomLogoutDialog(
+                        positiveAction: () async {
+                          var provider = Provider.of<HomeProvider>(
+                              context,
+                              listen: false);
+                          provider
+                              .updateStatus(isFromLogout: true)
+                              .listen((event) async {
+                            if (event is ChangeStatusLoaded) {
+                              await sessionLogOut().then((_) =>
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      SplashPage.routeName,
+                                          (route) => false));
+                            }
+                          });
+                        },
+                      ),
+                    );
+                  },
+                  bgColor: Colors.white,
+                ),
               ],
             ),
           ),

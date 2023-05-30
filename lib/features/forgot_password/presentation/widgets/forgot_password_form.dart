@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/providers/forgot_password_state.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -35,7 +36,11 @@ class _FormForgotPasswordState extends State<FormForgotPassword> {
     // );
     provider
         .doForgotPasswordApi(
-            url: 'api/webservice/password/forgot', email: email)
+            url: 'api/webservice/password/forgot',
+            formData: FormData.fromMap({
+              'email': email,
+              'type': 'Driver',
+            }))
         .listen((state) async {
       switch (state.runtimeType) {
         case ForgotPasswordLoading:
@@ -50,16 +55,19 @@ class _FormForgotPasswordState extends State<FormForgotPassword> {
           final data = (state as ForgotPasswordSuccess).data;
           dismissLoading();
           if (data.success == 1) {
-            showToast(message: appLoc.pwdreset);
+            // showToast(message: appLoc.otpSent);
+            showToast(message: data.message ?? appLoc.failed);
+            provider.setSecond(30);
+            provider.otpCountDown();
             provider.setForgetScreens(ForgetScreens.otp);
             // Navigator.pushReplacementNamed(
             //     context, CreatePasswordPage.routeName);
           } else {
-            if (data.message == '1') {
-              showToast(message: appLoc.emailnotmatch);
-            } else {
-              showToast(message: appLoc.failed);
-            }
+            // if (data.message == '1') {
+            //   showToast(message: appLoc.emailnotmatch);
+            // } else {
+            showToast(message: data.message ?? appLoc.failed);
+            // }
           }
           break;
       }

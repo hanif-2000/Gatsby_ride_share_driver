@@ -12,7 +12,7 @@ class SignupInitial extends SignupState {}
 class SignupLoading extends SignupState {}
 
 class SignupSuccess extends SignupState {
-  final SignupDataModel? data;
+  final SignupResponseModel? data;
   SignupSuccess({required this.data});
 
   @override

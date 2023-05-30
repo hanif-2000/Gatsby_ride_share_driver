@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/presentation/providers/form_provider.dart';
@@ -13,10 +15,14 @@ class ForgotPasswordProvider extends FormProvider {
 
   ForgetScreens _forgetScreens = ForgetScreens.forget;
   String? _pin;
+  int _second = 30;
+  Timer? timer;
 
   ForgetScreens get forgetScreens => _forgetScreens;
 
   String? get pin => _pin;
+
+  int get second => _second;
 
   setForgetScreens(ForgetScreens screens) {
     _forgetScreens = screens;
@@ -28,12 +34,29 @@ class ForgotPasswordProvider extends FormProvider {
     notifyListeners();
   }
 
-  Stream<ForgotPasswordState> doForgotPasswordApi(
-      {required String url, required String email}) async* {
-    yield ForgotPasswordLoading();
-    final formData = FormData.fromMap({
-      'email': email,
+  setSecond(int value) {
+    _second = value;
+    notifyListeners();
+  }
+
+  otpCountDown() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_second >= 1) {
+        _second = _second - 1;
+        notifyListeners();
+      } else {
+        timer.cancel();
+      }
     });
+  }
+
+  Stream<ForgotPasswordState> doForgotPasswordApi(
+      {required String url, required FormData formData}) async* {
+    yield ForgotPasswordLoading();
+    // final formData = FormData.fromMap({
+    //   'email': email,
+    //   'type': 'Driver',
+    // });
     final result = await doForgotPassword.call(url, formData);
     yield* result.fold((statusCode) async* {
       yield ForgotPasswordFailure(failure: statusCode.message);
