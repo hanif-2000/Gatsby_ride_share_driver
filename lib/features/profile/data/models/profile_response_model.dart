@@ -64,7 +64,7 @@ class ProfileDataModel extends Equatable {
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
           driverId: json['id'],
-          name: json['name'],
+          name: json['name']??'',
           email: json['email'],
           phoneNumber: json['phone'],
           image: json['image'] ?? '',

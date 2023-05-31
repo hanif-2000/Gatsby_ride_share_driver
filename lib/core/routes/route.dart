@@ -1,6 +1,7 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/order_data_detail.dart';
+
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/forgot_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/otp_page.dart';
@@ -14,11 +15,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_p
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
-
-import '../../features/create_password/persentation/pages/change_password_page.dart';
 import '../../features/history/data/models/history_response_model.dart';
-import '../../features/order/domain/entities/order_detail.dart';
-import '../data/models/customer_detail_model.dart';
 import '../presentation/pages/splash_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -33,8 +30,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const SignUpPage());
     case ForgotPasswordPage.routeName:
       return MaterialPageRoute(builder: (_) => const ForgotPasswordPage());
-    case CreatePasswordPage.routeName:
-      return MaterialPageRoute(builder: (_) => const CreatePasswordPage());
+    case ContactUsPage.routeName:
+      return MaterialPageRoute(builder: (_) => const ContactUsPage());
     case CreateProfilePage.routeName:
       return MaterialPageRoute(builder: (_) => const CreateProfilePage());
     case OTPPage.routeName:

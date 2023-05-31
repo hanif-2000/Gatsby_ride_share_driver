@@ -222,6 +222,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 title: appLoc.uploadDL,
                 selectedImage: provider.dlImage,
                 onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   ImagePickerHelper.showPicker(
                     context: context,
                     imagePicker: provider.imagePicker,
@@ -266,6 +267,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 title: appLoc.uploadId,
                 selectedImage: provider.idProofImage,
                 onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   ImagePickerHelper.showPicker(
                     context: context,
                     imagePicker: provider.imagePicker,

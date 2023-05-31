@@ -1,12 +1,11 @@
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
+import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
 import 'package:flutter/material.dart';
-
 import '../../../features/about_us/presentation/pages/aboutus_page.dart';
 import '../../../features/history/presentation/pages/history_page.dart';
 import '../../../features/profile/presentation/pages/profile_page.dart';
 import '../../static/colors.dart';
-import '../../utility/firebase_helper.dart';
 import '../../utility/helper.dart';
 import '../providers/change_status_state.dart';
 import '../widgets/close_button.dart';
@@ -35,88 +34,96 @@ class HomeDrawerPage extends StatelessWidget {
               children: [
                 const CloseDrawerButtonWidget(),
                 const ProfileInformationDrawer(),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                const Divider(
-                  height: 2,
-                  color: secondaryColor,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
                 Expanded(
                   flex: 2,
                   child: ListView(
                     children: [
-                      // DrawerButtonItemWidget(
-                      //   icon: Icons.person,
-                      //   title: appLoc.profile,
-                      //   onTap: () {
-                      //     Navigator.pushReplacementNamed(
-                      //       context,
-                      //       ProfilePage.routeName,
-                      //     );
-                      //   },
-                      // ),
-                      // DrawerButtonItemWidget(
-                      //   icon: Icons.history,
-                      //   title: appLoc.history,
-                      //   onTap: () {
-                      //     Navigator.pushReplacementNamed(
-                      //       context,
-                      //       HistoryPage.routeName,
-                      //     );
-                      //   },
-                      // ),
-                      // DrawerButtonItemWidget(
-                      //   icon: Icons.people,
-                      //   title: appLoc.we,
-                      //   onTap: () {
-                      //     Navigator.pushReplacementNamed(
-                      //       context,
-                      //       AboutUsPage.routeName,
-                      //     );
-                      //   },
-                      // ),
-
+                      DrawerButtonItemWidget(
+                        title: appLoc.vehicleDetail,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ProfilePage.routeName,
+                          );
+                        },
+                      ),
+                      DrawerButtonItemWidget(
+                        title: appLoc.contactUs,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ContactUsPage.routeName,
+                          );
+                        },
+                      ),
+                      DrawerButtonItemWidget(
+                        title: appLoc.privacyPolicy,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AboutUsPage.routeName,
+                          );
+                        },
+                      ),
+                      DrawerButtonItemWidget(
+                        title: appLoc.termConditions,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AboutUsPage.routeName,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
-
-                CustomButton(
-                  text: Text(
-                    appLoc.logout,
-                    style: txtButtonStyle.copyWith(color: greyB6B6B6),
-                  ),
-                  // buttonHeight: MediaQuery.of(context).size.height * 0.080,
-                  buttonHeight: 48,
-                  isRounded: true,
-                  event: () async {
+                InkWell(
+                  onTap: () {
                     showDialog(
                       context: context,
                       builder: (_) => CustomLogoutDialog(
                         positiveAction: () async {
-                          var provider = Provider.of<HomeProvider>(
-                              context,
-                              listen: false);
-                          provider
-                              .updateStatus(isFromLogout: true)
-                              .listen((event) async {
-                            if (event is ChangeStatusLoaded) {
-                              await sessionLogOut().then((_) =>
-                                  Navigator.of(context)
+                          var provider =
+                              Provider.of<HomeProvider>(context, listen: false);
+                          provider.updateStatus(isFromLogout: true).listen(
+                            (event) async {
+                              if (event is ChangeStatusLoaded) {
+                                await sessionLogOut().then(
+                                  (_) => Navigator.of(context)
                                       .pushNamedAndRemoveUntil(
-                                      SplashPage.routeName,
-                                          (route) => false));
-                            }
-                          });
+                                          SplashPage.routeName,
+                                          (route) => false),
+                                );
+                              }
+                            },
+                          );
                         },
                       ),
                     );
                   },
-                  bgColor: Colors.white,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 12),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: greyEFEFF4,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      appLoc.logout,
+                      style: titleNameStyle
+                          .copyWith(color: greyB6B6B6, fontSize: 15)
+                          .usePoppinsW6Font(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
+                mediumVerticalSpacing(),
               ],
             ),
           ),

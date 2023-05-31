@@ -6,14 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinput/pinput.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
-import '../../../../core/presentation/widgets/custom_text_field.dart';
 import '../../../../core/static/dimens.dart';
-import '../../../../core/static/enums.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/utility/validation_helper.dart';
-import '../../../create_password/persentation/pages/change_password_page.dart';
 import '../providers/forgot_password_provider.dart';
 
 class FormOTP extends StatefulWidget {

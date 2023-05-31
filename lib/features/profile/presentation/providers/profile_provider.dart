@@ -30,6 +30,7 @@ class ProfileProvider extends FormProvider {
       logMe(failure);
       yield ProfileFailure(failure: failure.message);
     }, (data) async* {
+      logMe("Got fine data");
       yield ProfileLoaded(data: data);
     });
   }

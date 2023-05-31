@@ -78,6 +78,10 @@
     "accountNumber":"Account Number",
     "accountHolderName":"Account Holder Name",
     "ifscCode":"IFSC Code",
+    "contactUs":"Contact Us",
+    "privacyPolicy":"Privacy policy",
+    "termConditions":"Term and conditions",
+    "pleaseEnterYourDetail":"Please enter your detail",
 
 
     "phonenumber": "Phone number",

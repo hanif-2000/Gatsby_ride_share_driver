@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/data/models/price_category_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/domain/usecases/update_profile.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
 import 'package:dio/dio.dart';
@@ -19,14 +20,38 @@ class ProfileEditProvider extends FormProvider {
   final session = locator<Session>();
 
   String? _imageUrl;
+  String _profileImage = '';
+  String _profileUploadImage = '';
+  String _countryName = 'India';
+
   String get imageUrl => _imageUrl ?? '';
+  String get profileUploadImage => _profileUploadImage ?? '';
+  String get countryName => _countryName ?? '';
+
+  String get profileImage => _profileImage ?? '';
   static List<PriceCategory> _priceCategory = [];
   PriceCategory? _selectedCategory;
   PriceCategory? _defaultSelectedCategory;
 
   List<PriceCategory> get priceCategory => _priceCategory;
+
   PriceCategory? get selectedCategory => _selectedCategory;
+
   PriceCategory? get defaultSelectedCategory => _defaultSelectedCategory;
+
+  setProfileImage(String image) {
+    _profileImage = image;
+    notifyListeners();
+  }
+  setCountryName(String name) {
+    _countryName = name;
+    notifyListeners();
+  }
+
+  setProfileUploadImage(String image) {
+    _profileUploadImage = image;
+    notifyListeners();
+  }
 
   set setSelectedCategory(val) {
     _selectedCategory = val;
@@ -49,6 +74,7 @@ class ProfileEditProvider extends FormProvider {
     phoneController.text = profile.phoneNumber;
     carModelController.text = profile.carModel;
     vehicleController.text = profile.plateNumber;
+
     _imageUrl = profile.image;
     PriceCategoryModel setCategory;
     setCategory = PriceCategoryModel(
@@ -108,5 +134,21 @@ class ProfileEditProvider extends FormProvider {
         yield PriceCategoryLoaded(data: _priceCategory);
       },
     );
+  }
+
+  Stream<UploadState> doUploadProfileApi(String image) async* {
+    yield UploadLoading();
+
+    final signupResult = /*await doCreateProfile.upload(image)*/null;
+    yield* signupResult.fold((statusCode) async* {
+      logMe('signup error $statusCode');
+      yield UploadFailure(failure: statusCode.message);
+    }, (result) async* {
+      if (result != null) {
+        yield UploadSuccess(data: result);
+      } else {
+        yield UploadFailure(failure: appLoc.signupFailure);
+      }
+    });
   }
 }
