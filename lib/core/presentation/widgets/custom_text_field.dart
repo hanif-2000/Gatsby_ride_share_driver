@@ -133,15 +133,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 if (widget.onChanged != null) widget.onChanged!();
               },
               obscureText: _passwordVisible,
+              // obscureText: false,
               controller: widget.controller,
               keyboardType: widget.inputType,
               decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: sizeMedium),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: sizeMedium,
+                  vertical: 6,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 hintText: widget.placeholder,
+                hintStyle: titleNameStyle.copyWith(color: grey9c9c9c, fontSize: 14),
                 counterText: "",
                 prefixIcon: widget.prefixWidget == null
                     ? null

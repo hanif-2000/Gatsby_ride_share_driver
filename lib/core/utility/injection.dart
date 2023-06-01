@@ -22,6 +22,11 @@ import 'package:appkey_taxiapp_driver/features/about_us/data/datasources/aboutus
 import 'package:appkey_taxiapp_driver/features/about_us/data/repositories/aboutus_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/domain/usecases/get_aboutus.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/data/datasource/contact_us_data_source.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/data/repositories/contact_us_repository_implementation.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/domain/repositories/contact_us_repository.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/domain/usercases/do_contact_us.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/provider/contact_us_provider.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/datasource/create_profile_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/repositories/create_profile_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/domain/repositories/create_profile_repository.dart';
@@ -152,6 +157,10 @@ Future<void> init() async {
       CreateProfileRepositoryImplementation(
           dataSource: locator<CreateProfileDataSource>()));
 
+  locator.registerLazySingleton<ContactUsRepository>(() =>
+      ContactUsRepositoryImplementation(
+          dataSource: locator<ContactUsDataSource>()));
+
   locator.registerLazySingleton<AboutUsRepository>(
     () => AboutUsRepositoryImplementation(
       dataSource: locator<AboutUsDataSource>(),
@@ -202,6 +211,8 @@ Future<void> init() async {
       () => SignupDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<CreateProfileDataSource>(
       () => CreateProfileDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<ContactUsDataSource>(
+      () => ContactUsDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<AboutUsDataSource>(
       () => AboutUsDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<ProfileDataSource>(
@@ -232,6 +243,8 @@ Future<void> init() async {
       () => DoSignup(repository: locator<SignupRepository>()));
   locator.registerLazySingleton<DoCreateProfile>(
       () => DoCreateProfile(repository: locator<CreateProfileRepository>()));
+  locator.registerLazySingleton<DoContactUs>(
+      () => DoContactUs(repository: locator<ContactUsRepository>()));
   locator.registerLazySingleton<GetAboutUs>(
       () => GetAboutUs(repository: locator<AboutUsRepository>()));
   locator.registerLazySingleton<GetProfile>(
@@ -291,6 +304,8 @@ Future<void> init() async {
       .registerFactory<LoginProvider>(() => LoginProvider(doLogin: locator()));
   locator.registerFactory<SignupProvider>(
       () => SignupProvider(doSignup: locator()));
+  locator.registerFactory<ContactUsProvider>(
+      () => ContactUsProvider(doContactUs: locator()));
   locator.registerFactory<CreateProfileProvider>(
       () => CreateProfileProvider(doCreateProfile: locator()));
   locator.registerFactory<ForgotPasswordProvider>(

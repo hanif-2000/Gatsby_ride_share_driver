@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_decline_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/no_projects.dart';
@@ -190,7 +192,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         drawer: const HomeDrawerPage(),
         body: Consumer<HomeProvider>(
           builder: (context, provider, _) {
-            return Column(
+            return ListView(
               children: <Widget>[
                 Container(
                   height: 50,
@@ -226,8 +228,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
-
-                const NoProjects(),
+                provider.projectType == ProjectType.requests?
+                const RequestListWidget():
+                const HistoryListWidget(),
+                // const NoProjects(),
 
                 // GoogleMap(
                 //   mapType: MapType.normal,

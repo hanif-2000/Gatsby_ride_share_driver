@@ -41,6 +41,12 @@ extension CustomFontFamily on TextStyle {
         const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w600));
   }
 
+  TextStyle usePoppinsW5Font() {
+    const String fontName = 'Poppins';
+    return merge(
+        const TextStyle(fontFamily: fontName, fontWeight: FontWeight.w500));
+  }
+
   TextStyle usePoppinsW4Font() {
     const String fontName = 'Poppins';
     return merge(

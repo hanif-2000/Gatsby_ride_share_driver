@@ -5,8 +5,6 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provi
 import 'package:appkey_taxiapp_driver/features/profile/domain/usecases/update_profile.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '../../../../core/domain/entities/price_category.dart';
 import '../../../../core/domain/usecases/get_price_category.dart';
 import '../../../../core/presentation/providers/form_provider.dart';
@@ -25,7 +23,9 @@ class ProfileEditProvider extends FormProvider {
   String _countryName = 'India';
 
   String get imageUrl => _imageUrl ?? '';
+
   String get profileUploadImage => _profileUploadImage ?? '';
+
   String get countryName => _countryName ?? '';
 
   String get profileImage => _profileImage ?? '';
@@ -43,6 +43,7 @@ class ProfileEditProvider extends FormProvider {
     _profileImage = image;
     notifyListeners();
   }
+
   setCountryName(String name) {
     _countryName = name;
     notifyListeners();
@@ -89,30 +90,34 @@ class ProfileEditProvider extends FormProvider {
   }
 
   Stream<ProfileState> updateProfileForm(
-      {required String name,
-      required String platNumber,
-      required String carModel,
+      {required String firstName,
+      required String lastName,
       required String phone,
-      XFile? photo}) async* {
+      required String country,
+      String? image}) async* {
     yield ProfileLoading();
     final data = FormData.fromMap({
-      'api_token': session.sessionToken,
-      'name': name,
+      'first_name': firstName,
+      'last_name': lastName,
       'phone': phone,
-      'plate_number': platNumber,
-      'vehicle_category_id': _selectedCategory!.categoryId,
-      'car_model': carModel,
-      if (photo != null)
-        'image': await MultipartFile.fromFile(photo.path, filename: photo.name)
+      'country': country,
+      'image': image
+      // 'api_token': session.sessionToken,
+      // 'name': name,
+      // 'phone': phone,
+      // 'plate_number': platNumber,
+      // 'vehicle_category_id': _selectedCategory!.categoryId,
+      // 'car_model': carModel,
+      // if (image != null)
+      //   'image': await MultipartFile.fromFile(photo.path, filename: photo.name)
     });
     final result = await updateProfile.execute(data);
     yield* result.fold((failure) async* {
-      logMe("Failureeeee");
+      logMe("Failure");
       yield ProfileFailure(failure: failure.message);
     }, (data) async* {
-      logMe("loadeddd");
+      logMe("loaded");
       //checked category vehicle
-
       yield ProfileUpdateSuccess(success: data);
     });
   }
@@ -139,7 +144,7 @@ class ProfileEditProvider extends FormProvider {
   Stream<UploadState> doUploadProfileApi(String image) async* {
     yield UploadLoading();
 
-    final signupResult = /*await doCreateProfile.upload(image)*/null;
+    final signupResult = /*await doCreateProfile.upload(image)*/ null;
     yield* signupResult.fold((statusCode) async* {
       logMe('signup error $statusCode');
       yield UploadFailure(failure: statusCode.message);

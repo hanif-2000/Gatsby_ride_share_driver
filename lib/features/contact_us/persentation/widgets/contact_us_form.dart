@@ -2,6 +2,8 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/provider/contact_us_provider.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/widgets/custom_dialog_layout.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/widgets/show_custom_dialog.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/presentation/widgets/custom_text_field.dart';
@@ -66,9 +68,9 @@ class _FormContactUsState extends State<FormContactUs> {
               children: [
                 largeVerticalSpacing(),
                 CustomTextField(
-                  enabled: false,
-                  title: appLoc.emailaddress,
-                  controller: TextEditingController(),
+                  placeholder: appLoc.pleaseEnterEmail,
+                  title: appLoc.pleaseEnterEmail,
+                  controller: provider.emailController,
                   inputType: TextInputType.emailAddress,
                   isError: provider.emailError,
                   fieldValidator: ValidationHelper(
@@ -77,41 +79,74 @@ class _FormContactUsState extends State<FormContactUs> {
                     typeField: TypeField.email,
                   ).validate(),
                 ),
-                mediumVerticalSpacing(),
                 CustomTextField(
-                  prefixWidget: const Icon(Icons.lock_outline),
-                  placeholder: appLoc.confirmpassword,
-                  title: appLoc.confirmpassword,
-                  controller: TextEditingController(),
-                  inputType: TextInputType.visiblePassword,
-                  isSecure: true,
-                  fieldValidator: (value) {},
-                  // isError: provider.passwordError,
-                  // fieldValidator: ValidationHelper(
-                  //   loc: appLoc,
-                  //   isError: (bool value) => provider.setPasswordError = value,
-                  //   typeField: TypeField.password,
-                  // ).validate(),
+                  maxLine: 5,
+                  placeholder: appLoc.pleaseEnterMessage,
+                  title: appLoc.pleaseEnterMessage,
+                  controller: provider.firstNameController,
+                  inputType: TextInputType.multiline,
+                  isError: provider.firstNameError,
+                  fieldValidator: ValidationHelper(
+                    loc: appLoc,
+                    isError: (bool value) => provider.setFirstNameError = value,
+                    typeField: TypeField.name,
+                  ).validate(),
                 ),
                 largeVerticalSpacing(),
                 CustomButton(
-                    text: Text(
-                      appLoc.done,
-                      style: txtButtonStyle,
-                    ),
-                    event: () {
-                      // if (provider.formKey.currentState!.validate()) {
-                      submit(/*provider.emailController.text*/);
-                      // }
-                    },
-                    buttonHeight: 48,
-                    isRounded: true,
-                    bgColor: blackColor)
+                  text: Text(
+                    appLoc.sendMessage,
+                    style: txtButtonStyle,
+                  ),
+                  event: () {
+                    showEmailDialog();
+                    // if (provider.formKey.currentState!.validate()) {
+                    // submit(/*provider.emailController.text*/);
+                    // }
+                  },
+                  buttonHeight: 48,
+                  isRounded: true,
+                  bgColor: blackColor,
+                ),
+                mediumVerticalSpacing(),
+                CustomButton(
+                  text: Text(
+                    appLoc.cancel,
+                    style: txtButtonStyle.copyWith(color: blackColor),
+                  ),
+                  event: () {
+                    Navigator.pop(context);
+                  },
+                  buttonHeight: 48,
+                  isRounded: true,
+                  bgColor: Colors.white,
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  showEmailDialog() {
+    ShowDialog.showCustomDialog(
+      context: context,
+      child: CustomDialogLayout(
+        image: 'assets/icons/profile/ic_sent.svg',
+        title: appLoc.messageSent,
+        height: 100,
+        description: appLoc.yourMessageHasBeenSent,
+        onClose: () {
+          ///TODO: onClose here
+          Navigator.pop(context);
+        },
+        onDone: () {
+          ///TODO: onDone here
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }

@@ -1,35 +1,19 @@
 import 'dart:io';
-
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
-import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/image_picker_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_email_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/widgets/profile_image_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../../../core/domain/entities/price_category.dart';
-import '../../../../core/presentation/pages/splash_page.dart';
-import '../../../../core/presentation/providers/home_provider.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
-
-import '../../../../core/presentation/widgets/custom_dialog_logout.dart';
 import '../../../../core/presentation/widgets/custom_text_field.dart';
 import '../../../../core/static/enums.dart';
 import '../../../../core/static/styles.dart';
-import '../../../../core/utility/firebase_helper.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../core/utility/injection.dart';
-import '../../../../core/utility/session_helper.dart';
 import '../../../../core/utility/validation_helper.dart';
-import '../providers/profile_state.dart';
 
 class FormEditProfile extends StatefulWidget {
   const FormEditProfile({

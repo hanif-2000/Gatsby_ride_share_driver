@@ -1,0 +1,182 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
+import 'package:appkey_taxiapp_driver/core/static/assets.dart';
+import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/static/styles.dart';
+import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+class RequestTile extends StatelessWidget {
+  const RequestTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.2),
+              blurRadius: 4.0,
+            ),
+          ]),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 8.0,
+            ),
+            decoration: const BoxDecoration(
+              color: greyF9F9F9,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+              ),
+            ),
+            child: Row(
+              children: [
+                true
+                    ? const CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage(userAvatarImage),
+                      )
+                    : CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(mergePhotoUrl('')),
+                      ),
+                smallHorizontalSpacing(),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Johan Green',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ).usePoppinsW6Font(),
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset('assets/icons/home/ic_start.svg'),
+                          Text(
+                            '4.5',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ).usePoppinsW6Font(),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      '\$80.00',
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ).usePoppinsW6Font(),
+                    ),
+                    Text(
+                      '4.5 Km',
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: greyB6B6B6,
+                      ).usePoppinsW6Font(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset('assets/icons/home/ic_pickup.svg'),
+                    mediumHorizontalSpacing(),
+                    Expanded(
+                      child: Text(
+                        'PJCX+6R3, Sector 115, West Deophila',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ).usePoppinsW4Font(),
+                      ),
+                    ),
+                  ],
+                ),
+                mediumVerticalSpacing(),
+                Row(
+                  children: [
+                    SvgPicture.asset('assets/icons/home/ic_drop_pin.svg'),
+                    mediumHorizontalSpacing(),
+                    Expanded(
+                      child: Text(
+                        'PJCX+6R3, Sector 115, South Dothan',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ).usePoppinsW4Font(),
+                      ),
+                    ),
+                  ],
+                ),
+                mediumVerticalSpacing(),
+                const Divider(
+                  color: grey9c9c9c,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        text: Text(
+                          appLoc.reject,
+                          style: txtButtonStyle,
+                        ),
+                        event: () {},
+                        buttonHeight: 40,
+                        isRounded: true,
+                        bgColor: redD03B3B,
+                      ),
+                    ),
+                    mediumHorizontalSpacing(),
+                    Expanded(
+                      child: CustomButton(
+                        text: Text(
+                          appLoc.accept,
+                          style: txtButtonStyle,
+                        ),
+                        event: () {},
+                        buttonHeight: 40,
+                        isRounded: true,
+                        bgColor: green2DAA5F,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

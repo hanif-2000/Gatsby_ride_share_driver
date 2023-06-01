@@ -82,6 +82,16 @@
     "privacyPolicy":"Privacy policy",
     "termConditions":"Term and conditions",
     "pleaseEnterYourDetail":"Please enter your detail",
+    "pleaseEnterMessage":"Enter your message",
+    "pleaseEnterEmail":"Enter your email",
+    "sendMessage":"Send message",
+    "messageSent":"Message Sent",
+    "yourMessageHasBeenSent":"your message has been sent",
+    "inProgress":"In Progress",
+    "totalFare":"Total Fare",
+    "rideType":"Ride Type",
+    "paymentMethod":"Payment method",
+    "reject":"Reject",
 
 
     "phonenumber": "Phone number",

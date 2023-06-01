@@ -2,9 +2,6 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
 import 'package:flutter/material.dart';
-import '../../../features/about_us/presentation/pages/aboutus_page.dart';
-import '../../../features/history/presentation/pages/history_page.dart';
-import '../../../features/profile/presentation/pages/profile_page.dart';
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
 import '../providers/change_status_state.dart';
@@ -41,10 +38,10 @@ class HomeDrawerPage extends StatelessWidget {
                       DrawerButtonItemWidget(
                         title: appLoc.vehicleDetail,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            ProfilePage.routeName,
-                          );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   ProfilePage.routeName,
+                          // );
                         },
                       ),
                       DrawerButtonItemWidget(
@@ -59,19 +56,19 @@ class HomeDrawerPage extends StatelessWidget {
                       DrawerButtonItemWidget(
                         title: appLoc.privacyPolicy,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AboutUsPage.routeName,
-                          );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   AboutUsPage.routeName,
+                          // );
                         },
                       ),
                       DrawerButtonItemWidget(
                         title: appLoc.termConditions,
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AboutUsPage.routeName,
-                          );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   AboutUsPage.routeName,
+                          // );
                         },
                       ),
                     ],
