@@ -40,6 +40,7 @@ class ProfileDataSourceImplementation implements ProfileDataSource {
   @override
   Future<int> updateProfile(FormData formData) async {
     String url = 'api/webservice/driver/update-profile';
+    print('User request data ---> ${formData.fields.toString()}');
     dio.withToken();
     try {
       final response = await dio.post(url, data: formData);
