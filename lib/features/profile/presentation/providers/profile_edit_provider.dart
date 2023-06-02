@@ -17,16 +17,19 @@ class ProfileEditProvider extends FormProvider {
   final GetPriceCategory getPriceCategory;
   final session = locator<Session>();
 
-  String? _imageUrl;
+  // String? _imageUrl;
   String _profileImage = '';
   String _profileUploadImage = '';
   String _countryName = 'India';
+  bool _isVehicleEdit = false;
 
-  String get imageUrl => _imageUrl ?? '';
+  // String get imageUrl => _imageUrl ?? '';
 
   String get profileUploadImage => _profileUploadImage ?? '';
 
   String get countryName => _countryName ?? '';
+
+  bool get isVehicleEdit => _isVehicleEdit ?? false;
 
   String get profileImage => _profileImage ?? '';
   static List<PriceCategory> _priceCategory = [];
@@ -41,6 +44,11 @@ class ProfileEditProvider extends FormProvider {
 
   setProfileImage(String image) {
     _profileImage = image;
+    notifyListeners();
+  }
+
+  setIsVehicleEdit(bool image) {
+    _isVehicleEdit = image;
     notifyListeners();
   }
 
@@ -75,8 +83,17 @@ class ProfileEditProvider extends FormProvider {
     phoneController.text = profile.phoneNumber;
     carModelController.text = profile.carModel;
     vehicleController.text = profile.plateNumber;
+    if (profile.name != '') {
+      firstNameController.text = profile.name.split(' ').first;
+      lastNameController.text = profile.name.split(' ').last;
+    }
 
-    _imageUrl = profile.image;
+    vehicleInsuranceController.text = profile.insuranceNumber;
+    vehicleNameController.text = profile.vehicleName;
+    vehicleModelController.text = profile.carModel;
+    vehicleNumberController.text = profile.plateNumber;
+    // _imageUrl = profile.image;
+    _profileUploadImage = profile.image;
     PriceCategoryModel setCategory;
     setCategory = PriceCategoryModel(
         categoryId: profile.vehicleCategory.categoryId,
@@ -122,6 +139,31 @@ class ProfileEditProvider extends FormProvider {
     });
   }
 
+  Stream<ProfileState> updateVehicleDetail({
+    required String vehicleName,
+    required String vehicleNumber,
+    required String vehicleModel,
+    required String insuranceNumber,
+  }) async* {
+    yield ProfileLoading();
+    final data = FormData.fromMap({
+      'vehicle_type': _selectedCategory!.categoryId,
+      'vechile_name': vehicleName,
+      'vechile_number': vehicleNumber,
+      'vechile_model': vehicleModel,
+      'insurance_number': insuranceNumber
+    });
+    final result = await updateProfile.execute(data);
+    yield* result.fold((failure) async* {
+      logMe("Failure");
+      yield ProfileFailure(failure: failure.message);
+    }, (data) async* {
+      logMe("loaded");
+      //checked category vehicle
+      yield ProfileUpdateSuccess(success: data);
+    });
+  }
+
   Stream<PriceCategoryState> fetchPriceCategory() async* {
     yield PriceCategoryLoading();
     showLoading();
@@ -144,7 +186,7 @@ class ProfileEditProvider extends FormProvider {
   Stream<UploadState> doUploadProfileApi(String image) async* {
     yield UploadLoading();
 
-    final signupResult = /*await doCreateProfile.upload(image)*/ null;
+    final signupResult = await updateProfile.upload(image);
     yield* signupResult.fold((statusCode) async* {
       logMe('signup error $statusCode');
       yield UploadFailure(failure: statusCode.message);

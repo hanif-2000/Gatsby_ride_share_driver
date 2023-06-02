@@ -12,4 +12,5 @@ abstract class ProfileRepository {
   Future<Either<Failure, int>> updateEmail(FormData formData);
   Future<Either<Failure, EditProfileResponseModel>> updatePassword(
       FormData formData);
+  Future<Either<Failure, String?>> doUploadProfile(String image);
 }

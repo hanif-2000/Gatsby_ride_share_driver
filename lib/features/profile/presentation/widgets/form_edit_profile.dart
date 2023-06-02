@@ -1,10 +1,16 @@
 import 'dart:io';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/image_picker_helper.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -69,7 +75,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
                           width: 121,
                           child: Stack(
                             children: [
-                              provider.profileImage == ''
+                              provider.profileUploadImage == ''
                                   ? Image.asset(
                                       'assets/icons/profile/ic_personal_detail.png',
                                       height: 136,
@@ -79,13 +85,16 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                       height: 136,
                                       width: 136,
                                       decoration: BoxDecoration(
+                                        color: greyF9F9F9,
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
-                                          image: FileImage(
-                                            File(
-                                              provider.profileImage,
-                                            ),
-                                          ),
+                                          image: NetworkImage(BASE_URL +
+                                              provider.profileUploadImage),
+                                          // image: FileImage(
+                                          //   File(
+                                          //     provider.profileImage,
+                                          //   ),
+                                          // ),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -117,8 +126,8 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                             case UploadSuccess:
                                               final imageName =
                                                   (state as UploadSuccess).data;
-                                              showToast(
-                                                  message: appLoc.success);
+                                              // showToast(
+                                              //     message: appLoc.success);
                                               provider.setProfileUploadImage(
                                                   imageName!);
                                               logMe(
@@ -378,63 +387,68 @@ class _FormEditProfileState extends State<FormEditProfile> {
                         isRounded: true,
                         bgColor: blackColor,
                         event: () {
-                          // if (provider.formKey.currentState!.validate()) {
-                          //   provider
-                          //       .updateProfileForm(
-                          //           name: provider.nameController.text,
-                          //           phone: provider.phoneController.text,
-                          //           carModel:
-                          //               provider.carModelController.text,
-                          //           platNumber:
-                          //               provider.vehicleController.text,
-                          //           photo: provider.imageFile)
-                          //       .listen(
-                          //     (event) async {
-                          //       switch (event.runtimeType) {
-                          //         case ProfileLoading:
-                          //           showLoading();
-                          //           break;
-                          //         case ProfileFailure:
-                          //           final msg =
-                          //               (event as ProfileFailure).failure;
-                          //           showToast(message: msg);
-                          //           dismissLoading();
-                          //           break;
-                          //         case ProfileUpdateSuccess:
-                          //           dismissLoading();
-                          //           if (provider.selectedCategory !=
-                          //               provider.defaultSelectedCategory) {
-                          //             await FirebaseHelper.unsubTopic()
-                          //                 .then((_) {});
-                          //             final session = locator<Session>();
-                          //             var homeProvider =
-                          //                 Provider.of<HomeProvider>(context,
-                          //                     listen: false);
-                          //             session.setSessionCategoryId = provider
-                          //                 .selectedCategory!.categoryId
-                          //                 .toString();
-                          //             if (homeProvider.isOnline) {
-                          //               await FirebaseHelper.setTopicDriver(
-                          //                       '1')
-                          //                   .then((_) {});
-                          //             } else {
-                          //               await FirebaseHelper.setTopicDriver(
-                          //                       '0')
-                          //                   .then((_) {});
-                          //             }
-                          //           }
-                          //
-                          //           showToast(message: appLoc.profileupdated);
-                          //           Navigator.pop(context, true);
-                          //
-                          //           break;
-                          //         default:
-                          //           showLoading();
-                          //           break;
-                          //       }
-                          //     },
-                          //   );
-                          // }
+                          if (provider.formKey.currentState!.validate()) {
+                            provider
+                                .updateProfileForm(
+                              firstName:
+                                  provider.firstNameController.text.trim(),
+                              lastName: provider.lastNameController.text.trim(),
+                              phone: provider.phoneController.text.trim(),
+                              country: provider.countryName,
+                              image: provider.profileUploadImage,
+                              // name: provider.nameController.text,
+                              // phone: provider.phoneController.text,
+                              // carModel:
+                              //     provider.carModelController.text,
+                              // platNumber:
+                              //     provider.vehicleController.text,
+                              // photo: provider.imageFile,
+                            )
+                                .listen(
+                              (event) async {
+                                switch (event.runtimeType) {
+                                  case ProfileLoading:
+                                    showLoading();
+                                    break;
+                                  case ProfileFailure:
+                                    final msg =
+                                        (event as ProfileFailure).failure;
+                                    showToast(message: msg);
+                                    dismissLoading();
+                                    break;
+                                  case ProfileUpdateSuccess:
+                                    dismissLoading();
+                                    if (provider.selectedCategory !=
+                                        provider.defaultSelectedCategory) {
+                                      await FirebaseHelper.unsubTopic()
+                                          .then((_) {});
+                                      final session = locator<Session>();
+                                      var homeProvider =
+                                          Provider.of<HomeProvider>(context,
+                                              listen: false);
+                                      session.setSessionCategoryId = provider
+                                          .selectedCategory!.categoryId
+                                          .toString();
+                                      if (homeProvider.isOnline) {
+                                        await FirebaseHelper.setTopicDriver('1')
+                                            .then((_) {});
+                                      } else {
+                                        await FirebaseHelper.setTopicDriver('0')
+                                            .then((_) {});
+                                      }
+                                    }
+
+                                    showToast(message: appLoc.profileupdated);
+                                    Navigator.pop(context, true);
+
+                                    break;
+                                  default:
+                                    showLoading();
+                                    break;
+                                }
+                              },
+                            );
+                          }
                         },
                       ),
                       largeVerticalSpacing(),

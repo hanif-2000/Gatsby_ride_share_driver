@@ -51,6 +51,7 @@ class ProfileInformationDrawer extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     ///TODO: Edit profile here
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(

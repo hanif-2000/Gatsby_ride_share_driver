@@ -44,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
           final session = locator<Session>();
           session.setLoggedIn = true;
           session.setIsProfileCompleted = true;
-          showToast(message: appLoc.success);
+          // showToast(message: appLoc.success);
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);
           logMe("Authorization Token: ${session.sessionToken}");

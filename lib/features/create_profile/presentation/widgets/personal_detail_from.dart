@@ -134,7 +134,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                                     case UploadSuccess:
                                       final imageName =
                                           (state as UploadSuccess).data;
-                                      showToast(message: appLoc.success);
+                                      // showToast(message: appLoc.success);
                                       provider.setProfileUploadName(imageName!);
                                       logMe(
                                           'Image Name ---> ${provider.profileUploadName}');
@@ -153,7 +153,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                             'assets/icons/profile/ic_add_image.svg',
                             height: 40,
                             width: 40,
-                          )),
+                          ),),
                     ),
                   ],
                 ),
@@ -242,7 +242,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                             break;
                           case UploadSuccess:
                             final imageName = (state as UploadSuccess).data;
-                            showToast(message: appLoc.success);
+                            // showToast(message: appLoc.success);
                             provider.setDlImageUploadName(imageName!);
                             logMe(
                                 'Image Name ---> ${provider.profileUploadName}');
@@ -287,7 +287,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                             break;
                           case UploadSuccess:
                             final imageName = (state as UploadSuccess).data;
-                            showToast(message: appLoc.success);
+                            // showToast(message: appLoc.success);
                             provider.setIdProofImageUploadName(imageName!);
                             logMe(
                                 'Image Name ---> ${provider.profileUploadName}');

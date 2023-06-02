@@ -6,6 +6,7 @@ import '../repositories/profile_repository.dart';
 
 abstract class UpdateProfileUseCase<Type> {
   Future<Either<Failure, int>> execute(FormData formData);
+  Future<Either<Failure, String?>> upload(String image);
 }
 
 class UpdateProfile implements UpdateProfileUseCase<String> {
@@ -16,6 +17,14 @@ class UpdateProfile implements UpdateProfileUseCase<String> {
   @override
   Future<Either<Failure, int>> execute(FormData formData) async {
     final result = await repository.updateProfile(formData);
+    return result.fold((l) => Left(l), (r) {
+      return Right(r);
+    });
+  }
+
+  @override
+  Future<Either<Failure, String?>> upload(String image) async {
+    final result = await repository.doUploadProfile(image);
     return result.fold((l) => Left(l), (r) {
       return Right(r);
     });

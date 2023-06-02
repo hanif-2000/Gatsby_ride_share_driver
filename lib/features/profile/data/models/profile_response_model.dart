@@ -17,6 +17,7 @@ class ProfileResponseModel extends Equatable {
         data: ProfileDataModel.fromJson(json["driver"]),
         success: json['success'] ?? 1,
       );
+
   Map<String, dynamic> toJson() => {
         'driver': data.toJson(),
         'success': success ?? '',
@@ -33,12 +34,16 @@ class ProfileDataModel extends Equatable {
   final String statusOrder;
   final String plateNumber;
   final String carModel;
+  final String vehicleName;
+  final String insuranceNumber;
   final CategoryModel vehicleCategory;
 
   const ProfileDataModel(
       {required this.driverId,
       required this.name,
       required this.email,
+      required this.vehicleName,
+      required this.insuranceNumber,
       required this.phoneNumber,
       required this.status,
       required this.statusOrder,
@@ -64,15 +69,18 @@ class ProfileDataModel extends Equatable {
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
           driverId: json['id'],
-          name: json['name']??'',
-          email: json['email'],
-          phoneNumber: json['phone'],
+          name: json['name'] ?? '',
+          email: json['email'] ?? '',
+          phoneNumber: json['phone'] ?? '',
           image: json['image'] ?? '',
+          vehicleName: json['vehicle_name'] ?? '',
+          insuranceNumber: json['insurance_number'] ?? '',
           statusOrder: json['order_status'] ?? '',
           plateNumber: json['plate_number'] ?? '',
           carModel: json['car_model'] ?? '',
           vehicleCategory: CategoryModel.fromJson(json["vehicle_category"]),
           status: json['status'] ?? '');
+
   Map<String, dynamic> toJson() => {
         'id': driverId,
         'name': name,
@@ -81,6 +89,8 @@ class ProfileDataModel extends Equatable {
         'image': image,
         'order_status': statusOrder,
         'status': status,
+        'vehicle_name': vehicleName,
+        'insurance_number': insuranceNumber,
         'vehicle_category': vehicleCategory.toJson(),
         'plate_number': plateNumber,
         'car_model': carModel,
@@ -118,6 +128,7 @@ class CategoryModel extends Equatable {
         priceMin: json['min_km'],
         priceKm: json['price_km'],
       );
+
   Map<String, dynamic> toJson() => {
         'category': categoryName,
         'id': categoryId,

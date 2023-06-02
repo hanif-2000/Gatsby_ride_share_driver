@@ -1,4 +1,3 @@
-
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
@@ -12,6 +11,7 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_pa
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_email_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +40,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const AboutUsPage());
     case ProfilePage.routeName:
       return MaterialPageRoute(builder: (_) => const ProfilePage());
+    case EditVehiclePage.routeName:
+      return MaterialPageRoute(builder: (_) => const EditVehiclePage());
     case EditProfilePage.routeName:
       return MaterialPageRoute(builder: (_) => const EditProfilePage());
     case ChangeEmailPage.routeName:

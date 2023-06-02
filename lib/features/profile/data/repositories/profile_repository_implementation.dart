@@ -60,6 +60,19 @@ class ProfileRepositoryImplementation implements ProfileRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, String?>> doUploadProfile(
+      String image) async {
+    try {
+      final data = await dataSource.doUploadProfile(image);
+      return Right(data);
+    } on DioError catch (e) {
+      logMe("Failure Signup repository -- ${e.toString()}");
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+
   Failure handleErrorResponse(DioError e) {
     try {
       final errorModel =

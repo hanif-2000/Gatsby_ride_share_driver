@@ -92,6 +92,7 @@
     "rideType":"Ride Type",
     "paymentMethod":"Payment method",
     "reject":"Reject",
+    "edit":"Edit",
 
 
     "phonenumber": "Phone number",

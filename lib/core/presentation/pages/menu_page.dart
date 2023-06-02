@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:flutter/material.dart';
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
@@ -38,10 +39,10 @@ class HomeDrawerPage extends StatelessWidget {
                       DrawerButtonItemWidget(
                         title: appLoc.vehicleDetail,
                         onTap: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   ProfilePage.routeName,
-                          // );
+                          Navigator.pushNamed(
+                            context,
+                            EditVehiclePage.routeName,
+                          );
                         },
                       ),
                       DrawerButtonItemWidget(
