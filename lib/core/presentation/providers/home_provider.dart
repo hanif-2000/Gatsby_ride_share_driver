@@ -300,7 +300,7 @@ class HomeProvider with ChangeNotifier {
     final result = await getOrderDetail(orderId);
     yield* result.fold((failure) async* {
       logMe(failure);
-      logMe("ORder failure");
+      logMe("Order failure");
       yield OrderDetailFailure(failure: failure.message);
     }, (data) async* {
       _orderDetail = data;

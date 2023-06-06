@@ -2,14 +2,13 @@ import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/model/image_upload_response.dart';
 import 'package:appkey_taxiapp_driver/features/profile/data/models/edit_profile_response_model.dart';
 import 'package:dio/dio.dart';
-
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 import '../models/profile_response_model.dart';
 
 abstract class ProfileDataSource {
   Future<ProfileDataModel> getProfile();
-  Future<int> updateProfile(FormData formData);
+  Future<int> updateProfile(String url, FormData formData);
   Future<int> updateEmail(FormData formData);
   Future<String?> doUploadProfile(String image);
   Future<EditProfileResponseModel> updatePassword(FormData formData);
@@ -38,8 +37,8 @@ class ProfileDataSourceImplementation implements ProfileDataSource {
   }
 
   @override
-  Future<int> updateProfile(FormData formData) async {
-    String url = 'api/webservice/driver/update-profile';
+  Future<int> updateProfile(String url, FormData formData) async {
+    // String url = 'api/webservice/driver/update-profile';
     print('User request data ---> ${formData.fields.toString()}');
     dio.withToken();
     try {

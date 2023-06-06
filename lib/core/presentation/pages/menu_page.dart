@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
+import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:flutter/material.dart';
 import '../../static/colors.dart';
@@ -57,19 +58,19 @@ class HomeDrawerPage extends StatelessWidget {
                       DrawerButtonItemWidget(
                         title: appLoc.privacyPolicy,
                         onTap: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   AboutUsPage.routeName,
-                          // );
+                          Navigator.pushNamed(
+                            context,
+                            PrivacyPolicyPage.routeName,
+                          );
                         },
                       ),
                       DrawerButtonItemWidget(
                         title: appLoc.termConditions,
                         onTap: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   AboutUsPage.routeName,
-                          // );
+                          Navigator.pushNamed(
+                            context,
+                            PrivacyPolicyPage.routeName,
+                          );
                         },
                       ),
                     ],

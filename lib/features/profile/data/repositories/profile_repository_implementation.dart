@@ -26,9 +26,9 @@ class ProfileRepositoryImplementation implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, int>> updateProfile(FormData formData) async {
+  Future<Either<Failure, int>> updateProfile(String url, FormData formData) async {
     try {
-      final data = await dataSource.updateProfile(formData);
+      final data = await dataSource.updateProfile(url, formData);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure profile repository ${e.toString()}");

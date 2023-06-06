@@ -11,16 +11,12 @@ class ContactUsProvider extends FormProvider {
 
   ContactUsProvider({required this.doContactUs});
 
-  Stream<ContactUsState> doLoginApi() async* {
+  Stream<ContactUsState> doContactUsAPI(
+      {String? email, String? message}) async* {
     yield ContactUsLoading();
 
-    final loginResult =
-        await doContactUs.call(
-           'api/webservice/otp/verify',
-           FormData.fromMap({
-              '':''
-            })
-        );
+    final loginResult = await doContactUs.call('api/webservice/contactUs',
+        FormData.fromMap({'email': email, 'message': message}));
     yield* loginResult.fold((statusCode) async* {
       logMe(statusCode);
       yield ContactUsFailure(failure: statusCode.message);

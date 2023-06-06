@@ -11,6 +11,7 @@ import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -390,19 +391,16 @@ class _FormEditProfileState extends State<FormEditProfile> {
                           if (provider.formKey.currentState!.validate()) {
                             provider
                                 .updateProfileForm(
-                              firstName:
-                                  provider.firstNameController.text.trim(),
-                              lastName: provider.lastNameController.text.trim(),
-                              phone: provider.phoneController.text.trim(),
-                              country: provider.countryName,
-                              image: provider.profileUploadImage,
-                              // name: provider.nameController.text,
-                              // phone: provider.phoneController.text,
-                              // carModel:
-                              //     provider.carModelController.text,
-                              // platNumber:
-                              //     provider.vehicleController.text,
-                              // photo: provider.imageFile,
+                              url: 'api/webservice/driver/update-profile',
+                              data: FormData.fromMap({
+                                'first_name':
+                                    provider.firstNameController.text.trim(),
+                                'last_name':
+                                    provider.lastNameController.text.trim(),
+                                'phone': provider.phoneController.text.trim(),
+                                'country': provider.countryName,
+                                'image': provider.nameController.text,
+                              }),
                             )
                                 .listen(
                               (event) async {

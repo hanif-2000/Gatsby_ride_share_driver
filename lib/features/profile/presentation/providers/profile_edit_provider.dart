@@ -106,29 +106,32 @@ class ProfileEditProvider extends FormProvider {
     notifyListeners();
   }
 
-  Stream<ProfileState> updateProfileForm(
-      {required String firstName,
-      required String lastName,
-      required String phone,
-      required String country,
-      String? image}) async* {
+  Stream<ProfileState> updateProfileForm({
+    required String url,
+    required FormData data,
+    // required String firstName,
+    // required String lastName,
+    // required String phone,
+    // required String country,
+    // String? image,
+  }) async* {
     yield ProfileLoading();
-    final data = FormData.fromMap({
-      'first_name': firstName,
-      'last_name': lastName,
-      'phone': phone,
-      'country': country,
-      'image': image
-      // 'api_token': session.sessionToken,
-      // 'name': name,
-      // 'phone': phone,
-      // 'plate_number': platNumber,
-      // 'vehicle_category_id': _selectedCategory!.categoryId,
-      // 'car_model': carModel,
-      // if (image != null)
-      //   'image': await MultipartFile.fromFile(photo.path, filename: photo.name)
-    });
-    final result = await updateProfile.execute(data);
+    // final data = FormData.fromMap({
+    //   'first_name': firstName,
+    //   'last_name': lastName,
+    //   'phone': phone,
+    //   'country': country,
+    //   'image': image,
+    //   // 'api_token': session.sessionToken,
+    //   // 'name': name,
+    //   // 'phone': phone,
+    //   // 'plate_number': platNumber,
+    //   // 'vehicle_category_id': _selectedCategory!.categoryId,
+    //   // 'car_model': carModel,
+    //   // if (image != null)
+    //   //   'image': await MultipartFile.fromFile(photo.path, filename: photo.name)
+    // });
+    final result = await updateProfile.execute(url, data);
     yield* result.fold((failure) async* {
       logMe("Failure");
       yield ProfileFailure(failure: failure.message);
@@ -139,30 +142,30 @@ class ProfileEditProvider extends FormProvider {
     });
   }
 
-  Stream<ProfileState> updateVehicleDetail({
-    required String vehicleName,
-    required String vehicleNumber,
-    required String vehicleModel,
-    required String insuranceNumber,
-  }) async* {
-    yield ProfileLoading();
-    final data = FormData.fromMap({
-      'vehicle_type': _selectedCategory!.categoryId,
-      'vechile_name': vehicleName,
-      'vechile_number': vehicleNumber,
-      'vechile_model': vehicleModel,
-      'insurance_number': insuranceNumber
-    });
-    final result = await updateProfile.execute(data);
-    yield* result.fold((failure) async* {
-      logMe("Failure");
-      yield ProfileFailure(failure: failure.message);
-    }, (data) async* {
-      logMe("loaded");
-      //checked category vehicle
-      yield ProfileUpdateSuccess(success: data);
-    });
-  }
+  // Stream<ProfileState> updateVehicleDetail({
+  //   required String vehicleName,
+  //   required String vehicleNumber,
+  //   required String vehicleModel,
+  //   required String insuranceNumber,
+  // }) async* {
+  //   yield ProfileLoading();
+  //   final data = FormData.fromMap({
+  //     'vehicle_type': _selectedCategory!.categoryId,
+  //     'vechile_name': vehicleName,
+  //     'vechile_number': vehicleNumber,
+  //     'vechile_model': vehicleModel,
+  //     'insurance_number': insuranceNumber
+  //   });
+  //   final result = await updateProfile.execute(data);
+  //   yield* result.fold((failure) async* {
+  //     logMe("Failure");
+  //     yield ProfileFailure(failure: failure.message);
+  //   }, (data) async* {
+  //     logMe("loaded");
+  //     //checked category vehicle
+  //     yield ProfileUpdateSuccess(success: data);
+  //   });
+  // }
 
   Stream<PriceCategoryState> fetchPriceCategory() async* {
     yield PriceCategoryLoading();

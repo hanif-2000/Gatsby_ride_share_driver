@@ -8,7 +8,7 @@ import '../../data/models/profile_response_model.dart';
 
 abstract class ProfileRepository {
   Future<Either<Failure, ProfileDataModel>> getProfile();
-  Future<Either<Failure, int>> updateProfile(FormData formData);
+  Future<Either<Failure, int>> updateProfile(String url, FormData formData);
   Future<Either<Failure, int>> updateEmail(FormData formData);
   Future<Either<Failure, EditProfileResponseModel>> updatePassword(
       FormData formData);

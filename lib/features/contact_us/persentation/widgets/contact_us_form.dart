@@ -2,6 +2,7 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/provider/contact_us_provider.dart';
+import 'package:appkey_taxiapp_driver/features/contact_us/persentation/provider/contact_us_state.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/widgets/custom_dialog_layout.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/widgets/show_custom_dialog.dart';
 import 'package:flutter/material.dart';
@@ -22,36 +23,41 @@ class FormContactUs extends StatefulWidget {
 }
 
 class _FormContactUsState extends State<FormContactUs> {
-  void submit(/*String email*/) {
+  void submit() {
     // Navigator.pushReplacementNamed(context, LoginPage.routeName);
-    // final provider = context.read<ForgotPasswordProvider>();
-    // provider.doForgotPasswordApi(email: email).listen((state) async {
-    //   switch (state.runtimeType) {
-    //     case ForgotPasswordLoading:
-    //       showLoading();
-    //       break;
-    //     case ForgotPasswordFailure:
-    //       final msg = (state as ForgotPasswordFailure).failure;
-    //       dismissLoading();
-    //       showToast(message: msg);
-    //       break;
-    //     case ForgotPasswordSuccess:
-    //       final data = (state as ForgotPasswordSuccess).data;
-    //       dismissLoading();
-    //       if (data.success == 1) {
-    //         showToast(message: appLoc.pwdreset);
-    //         Navigator.pushReplacementNamed(context, LoginPage.routeName);
-    //       } else {
-    //         if (data.message == '1') {
-    //           showToast(message: appLoc.emailnotmatch);
-    //         } else {
-    //           showToast(message: appLoc.failed);
-    //         }
-    //       }
-    //
-    //       break;
-    //   }
-    // });
+    final provider = context.read<ContactUsProvider>();
+    provider
+        .doContactUsAPI(
+            email: provider.emailController.text.trim(),
+            message: provider.firstNameController.text.trim())
+        .listen((state) async {
+      switch (state.runtimeType) {
+        case ContactUsLoading:
+          showLoading();
+          break;
+        case ContactUsFailure:
+          final msg = (state as ContactUsFailure).failure;
+          dismissLoading();
+          showToast(message: msg);
+          break;
+        case ContactUsSuccess:
+          final data = (state as ContactUsSuccess).data;
+          dismissLoading();
+          if (data!.success == 1) {
+            // showToast(message: appLoc.pwdreset);
+            showToast(message: data.message!);
+            showEmailDialog();
+            // Navigator.pushReplacementNamed(context, LoginPage.routeName);
+          } else {
+            // if (data.message == '1') {
+            // showToast(message: appLoc.emailnotmatch);
+            // } else {
+            showToast(message: appLoc.failed);
+            // }
+          }
+          break;
+      }
+    });
   }
 
   @override
@@ -99,10 +105,10 @@ class _FormContactUsState extends State<FormContactUs> {
                     style: txtButtonStyle,
                   ),
                   event: () {
-                    showEmailDialog();
-                    // if (provider.formKey.currentState!.validate()) {
-                    // submit(/*provider.emailController.text*/);
-                    // }
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (provider.formKey.currentState!.validate()) {
+                      submit();
+                    }
                   },
                   buttonHeight: 48,
                   isRounded: true,
@@ -143,6 +149,9 @@ class _FormContactUsState extends State<FormContactUs> {
         },
         onDone: () {
           ///TODO: onDone here
+          // if (provider.formKey.currentState!.validate()) {
+          //   submit(/*provider.emailController.text*/);
+          // }
           Navigator.pop(context);
           Navigator.pop(context);
         },
