@@ -40,7 +40,6 @@ import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import 'change_status_state.dart';
 
-
 class HomeProvider with ChangeNotifier {
   //Constructor
   final GetProfile getProfile;
@@ -61,9 +60,11 @@ class HomeProvider with ChangeNotifier {
   OrderDetail? _orderDetail;
   late bool _isOnline = false;
   late ProjectType _projectType = ProjectType.requests;
+
   // late bool _isOrderExist = false;
 
   late GoogleMapController googleMapController;
+
   // Completer<GoogleMapController> mapController = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   late BitmapDescriptor driverMarker;
@@ -74,9 +75,13 @@ class HomeProvider with ChangeNotifier {
 
   // getter
   bool get isOnline => _isOnline;
+
   CustomerDetailModel? get customerDetailModel => _customerDetailModel;
+
   OrderDetail? get orderDetail => _orderDetail;
+
   ProjectType get projectType => _projectType;
+
   // bool get isOrderExist => _isOrderExist;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
@@ -88,7 +93,7 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  set projectType(value){
+  set projectType(value) {
     _projectType = value;
     notifyListeners();
   }
@@ -234,11 +239,14 @@ class HomeProvider with ChangeNotifier {
         onTap: () {},
       );
       if (!isListen) {
-        googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-          target: LatLng(locationData.latitude!, locationData.longitude!),
-          zoom: 18,
-        )));
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(locationData.latitude!, locationData.longitude!),
+              zoom: 18,
+            ),
+          ),
+        );
       }
 
       markers[markerId] = marker;

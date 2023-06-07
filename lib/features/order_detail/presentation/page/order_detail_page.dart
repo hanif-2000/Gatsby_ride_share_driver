@@ -1,0 +1,606 @@
+import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
+import 'package:appkey_taxiapp_driver/core/static/styles.dart';
+import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
+import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
+import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../../../core/utility/helper.dart';
+
+class OrderDetailPage extends StatelessWidget {
+  const OrderDetailPage({Key? key}) : super(key: key);
+  static const routeName = '/OrderDetailPage';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // body: ListView(
+      //   children: [
+      //     AspectRatio(
+      //       aspectRatio: 5 / 4.4,
+      //       child: Column(
+      //         children: [
+      //           // largeVerticalSpacing(),
+      //           Padding(
+      //             padding: const EdgeInsets.only(top: 20, bottom: 16),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 IconButton(
+      //                   onPressed: () {
+      //                     Navigator.pop(context);
+      //                   },
+      //                   icon: SvgPicture.asset('assets/icons/auth/ic_back.svg'),
+      //                 ),
+      //                 Text(
+      //                   appLoc.tripDetail,
+      //                   textAlign: TextAlign.center,
+      //                   style: titleStyle.copyWith(
+      //                     fontSize: fontLarge,
+      //                   ),
+      //                 ),
+      //                 const SizedBox(
+      //                   width: 30,
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //           Container(
+      //             padding: const EdgeInsets.all(20),
+      //             color: yellowF9EACC,
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 Text(
+      //                   '10 May 2023, 12:30PM',
+      //                   textAlign: TextAlign.center,
+      //                   style: titleStyle
+      //                       .copyWith(
+      //                         fontSize: 14,
+      //                       )
+      //                       .usePoppinsW5Font(),
+      //                 ),
+      //                 Row(
+      //                   children: [
+      //                     Container(
+      //                       width: 6,
+      //                       height: 6,
+      //                       decoration: const BoxDecoration(
+      //                         shape: BoxShape.circle,
+      //                         color: green2DAA5F,
+      //                       ),
+      //                     ),
+      //                     smallHorizontalSpacing(),
+      //                     Text(
+      //                       'Completed',
+      //                       textAlign: TextAlign.center,
+      //                       style: titleStyle
+      //                           .copyWith(
+      //                             fontSize: 14,
+      //                             color: green2DAA5F,
+      //                           )
+      //                           .usePoppinsW5Font(),
+      //                     ),
+      //                   ],
+      //                 )
+      //               ],
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: 216,
+      //             child: GoogleMap(
+      //               mapType: MapType.normal,
+      //               myLocationButtonEnabled: false,
+      //               zoomControlsEnabled: false,
+      //               initialCameraPosition: const CameraPosition(
+      //                 target: JAPAN_LATLNG,
+      //                 zoom: 14.4746,
+      //               ),
+      //               onMapCreated: (GoogleMapController controller) async {
+      //                 // provider.googleMapController = controller;
+      //                 // await provider.setCurrentLocation(
+      //                 //     widget.orderDetail, widget.customerDetail);
+      //               },
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //     Padding(
+      //       padding: const EdgeInsets.all(20.0),
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Row(
+      //             children: [
+      //               Container(
+      //                 height: 45,
+      //                 width: 45,
+      //                 decoration: const BoxDecoration(
+      //                   shape: BoxShape.circle,
+      //                   color: redD03B3B,
+      //                 ),
+      //               ),
+      //               mediumHorizontalSpacing(),
+      //               Column(
+      //                 children: [
+      //                   Text(
+      //                     'Johan Green',
+      //                     textAlign: TextAlign.center,
+      //                     style: titleStyle
+      //                         .copyWith(
+      //                           fontSize: 16,
+      //                         )
+      //                         .usePoppinsW5Font(),
+      //                   ),
+      //                   Row(
+      //                     children: [
+      //                       SvgPicture.asset('assets/icons/home/ic_start.svg'),
+      //                       smallHorizontalSpacing(),
+      //                       Text(
+      //                         '4.5',
+      //                         textAlign: TextAlign.center,
+      //                         style: titleStyle
+      //                             .copyWith(
+      //                               fontSize: 14,
+      //                             )
+      //                             .usePoppinsW6Font(),
+      //                       ),
+      //                       smallHorizontalSpacing(),
+      //                       Text(
+      //                         'Reviews',
+      //                         textAlign: TextAlign.center,
+      //                         style: titleStyle
+      //                             .copyWith(
+      //                               fontSize: 14,
+      //                               color: yellowE5A829,
+      //                               decoration: TextDecoration.underline,
+      //                             )
+      //                             .usePoppinsW5Font(),
+      //                       ),
+      //                     ],
+      //                   )
+      //                 ],
+      //               ),
+      //               const Spacer(),
+      //               Column(
+      //                 children: [
+      //                   Text(
+      //                     '\$80.00',
+      //                     textAlign: TextAlign.center,
+      //                     style: titleStyle
+      //                         .copyWith(
+      //                           fontSize: 16,
+      //                         )
+      //                         .usePoppinsW6Font(),
+      //                   ),
+      //                   Text(
+      //                     '4.5 Km',
+      //                     textAlign: TextAlign.center,
+      //                     style: titleStyle
+      //                         .copyWith(
+      //                           fontSize: 14,
+      //                           color: greyB6B6B6,
+      //                         )
+      //                         .usePoppinsW5Font(),
+      //                   ),
+      //                 ],
+      //               )
+      //             ],
+      //           ),
+      //           largeVerticalSpacing(),
+      //           const AddressTile(
+      //             icon: 'assets/icons/home/ic_pickup.svg',
+      //             title: 'Pickup Location',
+      //             address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+      //           ),
+      //           const Padding(
+      //             padding: EdgeInsets.symmetric(vertical: 16.0),
+      //             child: Divider(
+      //               color: grey9c9c9c,
+      //             ),
+      //           ),
+      //           const AddressTile(
+      //             icon: 'assets/icons/home/ic_drop_pin.svg',
+      //             title: 'Drop location',
+      //             address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+      //           ),
+      //           largeVerticalSpacing(),
+      //           Container(
+      //             padding: const EdgeInsets.all(20),
+      //             decoration: BoxDecoration(
+      //               color: yellowF9EACC,
+      //               borderRadius: BorderRadius.circular(8),
+      //             ),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 Text(
+      //                   '10 May 2023, 12:30PM',
+      //                   textAlign: TextAlign.center,
+      //                   style: titleStyle
+      //                       .copyWith(
+      //                         fontSize: 14,
+      //                       )
+      //                       .usePoppinsW5Font(),
+      //                 ),
+      //                 Row(
+      //                   children: [
+      //                     Container(
+      //                       width: 6,
+      //                       height: 6,
+      //                       decoration: const BoxDecoration(
+      //                         shape: BoxShape.circle,
+      //                         color: green2DAA5F,
+      //                       ),
+      //                     ),
+      //                     smallHorizontalSpacing(),
+      //                     Text(
+      //                       'Completed',
+      //                       textAlign: TextAlign.center,
+      //                       style: titleStyle
+      //                           .copyWith(
+      //                             fontSize: 14,
+      //                             color: green2DAA5F,
+      //                           )
+      //                           .usePoppinsW5Font(),
+      //                     ),
+      //                   ],
+      //                 )
+      //               ],
+      //             ),
+      //           ),
+      //           largeVerticalSpacing(),
+      //           const PriceTile(
+      //             title: 'Distance',
+      //             value: '10 KM',
+      //           ),
+      //           const PriceTile(
+      //             title: 'Cab Type',
+      //             value: 'Mini( 4 Persons)  ',
+      //           ),
+      //           const PriceTile(
+      //             title: 'Price',
+      //             value: '\$112',
+      //           ),
+      //           const Padding(
+      //             padding: EdgeInsets.only(top: 16.0),
+      //             child: Divider(
+      //               color: grey9c9c9c,
+      //             ),
+      //           ),
+      //           const PriceTile(
+      //             title: 'Total',
+      //             value: '\$112',
+      //             fontSize: 18,
+      //           ),
+      //           largeVerticalSpacing(),
+      //           Text(
+      //             'Rating Given',
+      //             textAlign: TextAlign.center,
+      //             style: titleStyle
+      //                 .copyWith(
+      //                   fontSize: 16,
+      //                   color: grey7D7979,
+      //                 )
+      //                 .usePoppinsW5Font(),
+      //           ),
+      //           mediumVerticalSpacing(),
+      //           const RatingTile(),
+      //           largeVerticalSpacing(),
+      //           Text(
+      //             'Rating Received',
+      //             textAlign: TextAlign.center,
+      //             style: titleStyle
+      //                 .copyWith(
+      //                   fontSize: 16,
+      //                   color: grey7D7979,
+      //                 )
+      //                 .usePoppinsW5Font(),
+      //           ),
+      //           mediumVerticalSpacing(),
+      //           const RatingTile(),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+
+      ///
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            largeVerticalSpacing(),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: SvgPicture.asset('assets/icons/auth/ic_back.svg'),
+                  ),
+                  Text(
+                    appLoc.tripDetail,
+                    textAlign: TextAlign.center,
+                    style: titleStyle.copyWith(
+                      fontSize: fontLarge,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              color: yellowF9EACC,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '10 May 2023, 12:30PM',
+                    textAlign: TextAlign.center,
+                    style: titleStyle
+                        .copyWith(
+                          fontSize: 14,
+                        )
+                        .usePoppinsW5Font(),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: green2DAA5F,
+                        ),
+                      ),
+                      smallHorizontalSpacing(),
+                      Text(
+                        'Completed',
+                        textAlign: TextAlign.center,
+                        style: titleStyle
+                            .copyWith(
+                              fontSize: 14,
+                              color: green2DAA5F,
+                            )
+                            .usePoppinsW5Font(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 216,
+              child: GoogleMap(
+                mapType: MapType.normal,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                initialCameraPosition: const CameraPosition(
+                  target: JAPAN_LATLNG,
+                  zoom: 14.4746,
+                ),
+                onMapCreated: (GoogleMapController controller) async {
+                  // provider.googleMapController = controller;
+                  // await provider.setCurrentLocation(
+                  //     widget.orderDetail, widget.customerDetail);
+                },
+              ),
+            ),
+
+
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        height: 45,
+                        width: 45,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: redD03B3B,
+                        ),
+                      ),
+                      mediumHorizontalSpacing(),
+                      Column(
+                        children: [
+                          Text(
+                            'Johan Green',
+                            textAlign: TextAlign.center,
+                            style: titleStyle
+                                .copyWith(
+                                  fontSize: 16,
+                                )
+                                .usePoppinsW5Font(),
+                          ),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                  'assets/icons/home/ic_start.svg'),
+                              smallHorizontalSpacing(),
+                              Text(
+                                '4.5',
+                                textAlign: TextAlign.center,
+                                style: titleStyle
+                                    .copyWith(
+                                      fontSize: 14,
+                                    )
+                                    .usePoppinsW6Font(),
+                              ),
+                              smallHorizontalSpacing(),
+                              Text(
+                                'Reviews',
+                                textAlign: TextAlign.center,
+                                style: titleStyle
+                                    .copyWith(
+                                      fontSize: 14,
+                                      color: yellowE5A829,
+                                      decoration: TextDecoration.underline,
+                                    )
+                                    .usePoppinsW5Font(),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        children: [
+                          Text(
+                            '\$80.00',
+                            textAlign: TextAlign.center,
+                            style: titleStyle
+                                .copyWith(
+                                  fontSize: 16,
+                                )
+                                .usePoppinsW6Font(),
+                          ),
+                          Text(
+                            '4.5 Km',
+                            textAlign: TextAlign.center,
+                            style: titleStyle
+                                .copyWith(
+                                  fontSize: 14,
+                                  color: greyB6B6B6,
+                                )
+                                .usePoppinsW5Font(),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  largeVerticalSpacing(),
+                  const AddressTile(
+                    icon: 'assets/icons/home/ic_pickup.svg',
+                    title: 'Pickup Location',
+                    address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: Divider(
+                      color: grey9c9c9c,
+                    ),
+                  ),
+                  const AddressTile(
+                    icon: 'assets/icons/home/ic_drop_pin.svg',
+                    title: 'Drop location',
+                    address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+                  ),
+                  largeVerticalSpacing(),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: yellowF9EACC,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '10 May 2023, 12:30PM',
+                          textAlign: TextAlign.center,
+                          style: titleStyle
+                              .copyWith(
+                                fontSize: 14,
+                              )
+                              .usePoppinsW5Font(),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: green2DAA5F,
+                              ),
+                            ),
+                            smallHorizontalSpacing(),
+                            Text(
+                              'Completed',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 14,
+                                    color: green2DAA5F,
+                                  )
+                                  .usePoppinsW5Font(),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  largeVerticalSpacing(),
+                  const PriceTile(
+                    title: 'Distance',
+                    value: '10 KM',
+                  ),
+                  const PriceTile(
+                    title: 'Cab Type',
+                    value: 'Mini( 4 Persons)  ',
+                  ),
+                  const PriceTile(
+                    title: 'Price',
+                    value: '\$112',
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Divider(
+                      color: grey9c9c9c,
+                    ),
+                  ),
+                  const PriceTile(
+                    title: 'Total',
+                    value: '\$112',
+                    fontSize: 18,
+                  ),
+                  largeVerticalSpacing(),
+                  Text(
+                    'Rating Given',
+                    textAlign: TextAlign.center,
+                    style: titleStyle
+                        .copyWith(
+                          fontSize: 16,
+                          color: grey7D7979,
+                        )
+                        .usePoppinsW5Font(),
+                  ),
+                  mediumVerticalSpacing(),
+                  const RatingTile(),
+                  largeVerticalSpacing(),
+                  Text(
+                    'Rating Received',
+                    textAlign: TextAlign.center,
+                    style: titleStyle
+                        .copyWith(
+                      fontSize: 16,
+                      color: grey7D7979,
+                    )
+                        .usePoppinsW5Font(),
+                  ),
+                  mediumVerticalSpacing(),
+                  const RatingTile(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

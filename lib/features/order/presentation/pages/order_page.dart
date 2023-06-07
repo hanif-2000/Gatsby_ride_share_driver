@@ -1,35 +1,21 @@
 import 'dart:async';
-
-import 'package:appkey_taxiapp_driver/core/domain/entities/order_data_detail.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/widgets/bottom_container_order.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/data/models/customer_detail_model.dart';
 import '../../../../core/presentation/pages/home_page/home_page.dart';
-import '../../../../core/presentation/providers/home_provider.dart';
 import '../../../../core/presentation/widgets/main_dialog.dart';
 import '../../../../core/static/order_status.dart';
-import '../../../../core/utility/injection.dart';
-import '../../../../core/utility/session_helper.dart';
 import '../../domain/entities/order_detail.dart';
-import '../providers/get_driver_detail_state.dart';
-import '../providers/update_status_order_state.dart';
 import '../widgets/current_location_order.dart';
-import '../widgets/depart_dialog.dart';
-import '../widgets/dialog_driver_detail.dart';
-import '../widgets/thank_you_dialog.dart';
-import '../widgets/waiting_driver_dialog.dart';
 
 class OrderPageArguments {
   final OrderDetail orderDetail;
@@ -75,15 +61,16 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var _deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
-        onWillPop: () {
-          return Future.value(false); // if true allow back else block it
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: const CustomAppBar(
-            centerTitle: false,
-          ),
-          body: Consumer<OrderProvider>(builder: (context, provider, _) {
+      onWillPop: () {
+        return Future.value(false); // if true allow back else block it
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: const CustomAppBar(
+          centerTitle: false,
+        ),
+        body: Consumer<OrderProvider>(
+          builder: (context, provider, _) {
             if (checkOrderStatusTimer != null) {
               checkOrderStatusTimer!.cancel();
             }
@@ -96,41 +83,46 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
               provider.trackingDriver();
             });
 
-            checkOrderStatusTimer =
-                Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
-              provider.fetchOrderStatus().listen((state) async {
-                if (state is GetStatusOrderLoaded) {
-                  if (state.data.status ==
-                      Order.customerConfirmation.toString()) {
-                    provider.changeOrderStatus =
-                        OrderStatus.customerConfirmation;
-                  }
+            checkOrderStatusTimer = Timer.periodic(
+              const Duration(seconds: 3),
+              (Timer timer) async {
+                provider.fetchOrderStatus().listen(
+                  (state) async {
+                    if (state is GetStatusOrderLoaded) {
+                      if (state.data.status ==
+                          Order.customerConfirmation.toString()) {
+                        provider.changeOrderStatus =
+                            OrderStatus.customerConfirmation;
+                      }
 
-                  if (state.data.status == Order.complete.toString()) {
-                    dismissLoading();
-                    trackingTimer!.cancel();
-                    timer.cancel();
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) => WillPopScope(
-                              onWillPop: () async => false,
-                              child: MainDialog(
-                                isOrderDialog: false,
-                                customerDetailModel: provider.customerDetail,
-                                orderDetail: provider.orderDetail,
-                                deviceSize: _deviceSize,
-                                onEnd: () async {
-                                  await provider.clearState();
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      HomePage.routeName, (route) => false);
-                                },
-                              ),
-                            ));
-                  }
-                }
-              });
-            });
+                      if (state.data.status == Order.complete.toString()) {
+                        dismissLoading();
+                        trackingTimer!.cancel();
+                        timer.cancel();
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) => WillPopScope(
+                            onWillPop: () async => false,
+                            child: MainDialog(
+                              isOrderDialog: false,
+                              customerDetailModel: provider.customerDetail,
+                              orderDetail: provider.orderDetail,
+                              deviceSize: _deviceSize,
+                              onEnd: () async {
+                                await provider.clearState();
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    HomePage.routeName, (route) => false);
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                );
+              },
+            );
             return Stack(
               children: <Widget>[
                 GoogleMap(
@@ -147,31 +139,39 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                   markers: Set<Marker>.of(provider.markers.values),
                 ),
                 SafeArea(
-                    child: Stack(children: [
-                  Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        getStatus(provider.orderStatus)
-                            ? OriginWidget(
-                                deviceWidth: _deviceSize.width,
-                              )
-                            : DestinationWidget(
-                                deviceWidth: _deviceSize.width,
-                              ),
-                        Expanded(
+                  child: Stack(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          getStatus(provider.orderStatus)
+                              ? OriginWidget(
+                                  deviceWidth: _deviceSize.width,
+                                )
+                              : DestinationWidget(
+                                  deviceWidth: _deviceSize.width,
+                                ),
+                          Expanded(
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
-                              CurrentLocationOrderWidget(),
-                              BottomContaineOrder()
-                            ]))
-                      ]),
-                ]))
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: const [
+                                CurrentLocationOrderWidget(),
+                                BottomContaineOrder()
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             );
-          }),
-        ));
+          },
+        ),
+      ),
+    );
   }
 }

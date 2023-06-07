@@ -93,7 +93,8 @@
     "paymentMethod":"Payment method",
     "reject":"Reject",
     "edit":"Edit",
-    "privacyPolicy":"Privacy Policy",
+    "privacyPolicy": "Privacy Policy",
+    "tripDetail": "Trip Detail",
 
 
     "phonenumber": "Phone number",
