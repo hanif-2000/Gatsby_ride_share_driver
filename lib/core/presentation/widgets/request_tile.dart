@@ -1,9 +1,12 @@
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -151,7 +154,12 @@ class RequestTile extends StatelessWidget {
                           appLoc.reject,
                           style: txtButtonStyle,
                         ),
-                        event: () {},
+                        event: () {
+                          CustomBottomSheet.showBottomSheet(
+                            context,
+                            const RejectReasonBottomSheet(),
+                          );
+                        },
                         buttonHeight: 40,
                         isRounded: true,
                         bgColor: redD03B3B,
@@ -164,7 +172,9 @@ class RequestTile extends StatelessWidget {
                           appLoc.accept,
                           style: txtButtonStyle,
                         ),
-                        event: () {},
+                        event: () {
+                          Navigator.pushNamed(context, ChatPage.routeName);
+                        },
                         buttonHeight: 40,
                         isRounded: true,
                         bgColor: green2DAA5F,

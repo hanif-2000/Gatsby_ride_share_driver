@@ -6,6 +6,8 @@ import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -397,9 +399,6 @@ class OrderDetailPage extends StatelessWidget {
                 },
               ),
             ),
-
-
-
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -427,33 +426,41 @@ class OrderDetailPage extends StatelessWidget {
                                 )
                                 .usePoppinsW5Font(),
                           ),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                  'assets/icons/home/ic_start.svg'),
-                              smallHorizontalSpacing(),
-                              Text(
-                                '4.5',
-                                textAlign: TextAlign.center,
-                                style: titleStyle
-                                    .copyWith(
-                                      fontSize: 14,
-                                    )
-                                    .usePoppinsW6Font(),
-                              ),
-                              smallHorizontalSpacing(),
-                              Text(
-                                'Reviews',
-                                textAlign: TextAlign.center,
-                                style: titleStyle
-                                    .copyWith(
-                                      fontSize: 14,
-                                      color: yellowE5A829,
-                                      decoration: TextDecoration.underline,
-                                    )
-                                    .usePoppinsW5Font(),
-                              ),
-                            ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  // context, RatingListPage.routeName);
+                                  context,
+                                  GiveRatingScreen.routeName);
+                            },
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                    'assets/icons/home/ic_start.svg'),
+                                smallHorizontalSpacing(),
+                                Text(
+                                  '4.5',
+                                  textAlign: TextAlign.center,
+                                  style: titleStyle
+                                      .copyWith(
+                                        fontSize: 14,
+                                      )
+                                      .usePoppinsW6Font(),
+                                ),
+                                smallHorizontalSpacing(),
+                                Text(
+                                  'Reviews',
+                                  textAlign: TextAlign.center,
+                                  style: titleStyle
+                                      .copyWith(
+                                        fontSize: 14,
+                                        color: yellowE5A829,
+                                        decoration: TextDecoration.underline,
+                                      )
+                                      .usePoppinsW5Font(),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -588,9 +595,9 @@ class OrderDetailPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
-                      fontSize: 16,
-                      color: grey7D7979,
-                    )
+                          fontSize: 16,
+                          color: grey7D7979,
+                        )
                         .usePoppinsW5Font(),
                   ),
                   mediumVerticalSpacing(),
