@@ -39,6 +39,7 @@ Widget mediumVerticalSpacing() => const SizedBox(height: sizeMedium);
 
 Widget mediumHorizontalSpacing() => const SizedBox(width: sizeMedium);
 
+///# Size 32.0
 Widget largeVerticalSpacing() => const SizedBox(height: sizeLarge);
 
 Widget largeHorizontalSpacing() => const SizedBox(width: sizeLarge);
@@ -218,7 +219,7 @@ String getHistoryStatus(String statusHistory) {
     case Order.driverAccept:
       strStatus = appLoc.gotadriver;
       break;
-    case Order.departureToCustomerplace:
+    case Order.departureToCustomerPlace:
       strStatus = appLoc.departToCustomerPlace;
       break;
     case Order.arriveAtCustomerPlace:

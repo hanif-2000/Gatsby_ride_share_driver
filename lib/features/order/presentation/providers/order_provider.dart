@@ -427,7 +427,7 @@ class OrderProvider with ChangeNotifier {
       yield UpdateStatusOrderLoading();
       String orderStatusBody = "";
       if (_orderStatus == OrderStatus.driverAccept) {
-        orderStatusBody = Order.departureToCustomerplace.toString();
+        orderStatusBody = Order.departureToCustomerPlace.toString();
       } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
         orderStatusBody = Order.arriveAtCustomerPlace.toString();
       } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {

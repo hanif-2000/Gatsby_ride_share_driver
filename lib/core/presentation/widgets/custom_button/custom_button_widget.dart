@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
       required this.event,
       required this.bgColor,
       this.shape,
+      this.showBorder = false,
       this.isRounded = false,
       this.buttonHeight})
       : super(key: key);
@@ -15,6 +16,7 @@ class CustomButton extends StatelessWidget {
   final Function() event;
   final Color bgColor;
   final bool isRounded;
+  final bool showBorder;
   final OutlinedBorder? shape;
   final double? buttonHeight;
 
@@ -24,6 +26,7 @@ class CustomButton extends StatelessWidget {
       style: isRounded
           ? ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
+                side: BorderSide(color: showBorder ? Colors.black : bgColor),
                 borderRadius: BorderRadius.circular(10), // <-- Radius
               ),
               minimumSize: Size.fromHeight(buttonHeight ?? 58.0),

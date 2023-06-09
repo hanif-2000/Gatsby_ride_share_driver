@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -6,8 +7,7 @@ import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -406,12 +406,18 @@ class OrderDetailPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        height: 45,
-                        width: 45,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: redD03B3B,
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, OtherUserProfile.routeName);
+                        },
+                        child: Container(
+                          height: 45,
+                          width: 45,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: redD03B3B,
+                          ),
                         ),
                       ),
                       mediumHorizontalSpacing(),

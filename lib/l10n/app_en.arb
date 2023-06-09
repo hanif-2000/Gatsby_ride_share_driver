@@ -96,6 +96,13 @@
     "privacyPolicy": "Privacy Policy",
     "tripDetail": "Trip Detail",
     "ratings": "Ratings",
+    "rateYourPassenger": "Rate your passenger ?",
+    "yourFeedbackWillHelp": "Your feedback will help",
+    "submit": "Submit",
+    "skip": "Skip",
+    "findNextRide": "Find Next Ride",
+    "getReceipt": "Get Receipt",
+    "continuee": "Continue",
 
 
     "phonenumber": "Phone number",

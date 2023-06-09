@@ -16,6 +16,7 @@ class PaymentTile extends StatelessWidget {
       required this.selected,
       required this.onTap})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // return Consumer<HomeProvider>(builder: (context, provider, _) {
@@ -26,7 +27,11 @@ class PaymentTile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-                top: 8.0, bottom: 8.0, left: 10.0, right: 20.0),
+              top: 8.0,
+              bottom: 8.0,
+              left: 10.0,
+              right: 20.0,
+            ),
             child: Image.asset(
               assets,
               width: 35,
@@ -43,19 +48,20 @@ class PaymentTile extends StatelessWidget {
             ),
           ),
           Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              selected
-                  ? Icon(
-                      Icons.check,
-                      color: primaryColor,
-                      size: 35,
-                    )
-                  : Text("")
-            ],
-          ))
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                selected
+                    ? const Icon(
+                        Icons.check,
+                        color: primaryColor,
+                        size: 35,
+                      )
+                    : const Text("")
+              ],
+            ),
+          )
         ],
       ),
       onTap: () => onTap(),

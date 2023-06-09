@@ -1,4 +1,7 @@
+import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
@@ -16,7 +19,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -59,10 +62,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const OrderDetailPage());
     case RatingListPage.routeName:
       return MaterialPageRoute(builder: (_) => const RatingListPage());
+    case JobCompletedPage.routeName:
+      return MaterialPageRoute(builder: (_) => const JobCompletedPage());
     case ChatPage.routeName:
       return MaterialPageRoute(builder: (_) => const ChatPage());
     case GiveRatingScreen.routeName:
       return MaterialPageRoute(builder: (_) => const GiveRatingScreen());
+    case ReceiptPage.routeName:
+      return MaterialPageRoute(builder: (_) => const ReceiptPage());
+    case OtherUserProfile.routeName:
+      return MaterialPageRoute(builder: (_) => const OtherUserProfile());
     case HistoryPage.routeName:
       return MaterialPageRoute(builder: (_) => const HistoryPage());
     case DetailHistoryPage.routeName:
