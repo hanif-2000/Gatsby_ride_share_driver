@@ -22,6 +22,7 @@ class ProfileEditProvider extends FormProvider {
   String _profileUploadImage = '';
   String _countryName = 'India';
   bool _isVehicleEdit = false;
+  bool _isBankEdit = false;
 
   // String get imageUrl => _imageUrl ?? '';
 
@@ -30,6 +31,8 @@ class ProfileEditProvider extends FormProvider {
   String get countryName => _countryName ?? '';
 
   bool get isVehicleEdit => _isVehicleEdit ?? false;
+
+  bool get isBankEdit => _isBankEdit ?? false;
 
   String get profileImage => _profileImage ?? '';
   static List<PriceCategory> _priceCategory = [];
@@ -47,8 +50,13 @@ class ProfileEditProvider extends FormProvider {
     notifyListeners();
   }
 
-  setIsVehicleEdit(bool image) {
-    _isVehicleEdit = image;
+  setIsVehicleEdit(bool value) {
+    _isVehicleEdit = value;
+    notifyListeners();
+  }
+
+  setIsBankEdit(bool value) {
+    _isBankEdit = value;
     notifyListeners();
   }
 

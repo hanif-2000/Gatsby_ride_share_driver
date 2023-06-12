@@ -60,7 +60,11 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                           alignment: Alignment.centerLeft,
                           child: IconButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              if (provider.isVehicleEdit) {
+                                provider.setIsVehicleEdit(false);
+                              } else {
+                                Navigator.pop(context);
+                              }
                             },
                             icon: SvgPicture.asset(
                               'assets/icons/auth/ic_back.svg',
@@ -183,7 +187,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                             ),
                           ],
                         ),
-                        mediumVerticalSpacing(),
+                        largeVerticalSpacing(),
                         Text(
                           appLoc.vehicleName,
                           style: titleNameStyle
@@ -206,7 +210,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                             typeField: TypeField.name,
                           ).validate(),
                         ),
-                        mediumVerticalSpacing(),
+                        largeVerticalSpacing(),
                         Text(
                           appLoc.vehicleNumber,
                           style: titleNameStyle
@@ -229,7 +233,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                             typeField: TypeField.name,
                           ).validate(),
                         ),
-                        mediumVerticalSpacing(),
+                        largeVerticalSpacing(),
                         Text(
                           appLoc.vehicleModel,
                           style: titleNameStyle
@@ -253,7 +257,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                             typeField: TypeField.name,
                           ).validate(),
                         ),
-                        mediumVerticalSpacing(),
+                        largeVerticalSpacing(),
                         Text(
                           appLoc.insuranceNumber,
                           style: titleNameStyle
@@ -292,7 +296,8 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                               if (provider.formKey.currentState!.validate()) {
                                 provider
                                     .updateProfileForm(
-                                  url: 'api/webservice/driver/vehicle/details/add',
+                                  url:
+                                      'api/webservice/driver/vehicle/details/add',
                                   data: FormData.fromMap({
                                     'vehicle_type':
                                         provider.selectedCategory!.categoryId,

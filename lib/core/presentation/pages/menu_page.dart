@@ -2,6 +2,7 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
 import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_bank_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:flutter/material.dart';
 import '../../static/colors.dart';
@@ -43,6 +44,15 @@ class HomeDrawerPage extends StatelessWidget {
                           Navigator.pushNamed(
                             context,
                             EditVehiclePage.routeName,
+                          );
+                        },
+                      ),
+                      DrawerButtonItemWidget(
+                        title: appLoc.bankDetail,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            EditBankPage.routeName,
                           );
                         },
                       ),

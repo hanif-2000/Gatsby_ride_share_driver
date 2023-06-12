@@ -1,21 +1,21 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/widgets/form_edit_vehicle.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/widgets/form_edit_bank.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_edit_provider.dart';
 import '../providers/profile_provider.dart';
 import '../../../../core/utility/injection.dart';
 
-class EditVehiclePage extends StatefulWidget {
-  static const String routeName = "EditVehiclePage";
+class EditBankPage extends StatefulWidget {
+  static const String routeName = "EditBankPage";
 
-  const EditVehiclePage({Key? key}) : super(key: key);
+  const EditBankPage({Key? key}) : super(key: key);
 
   @override
-  State<EditVehiclePage> createState() => _EditVehiclePageState();
+  State<EditBankPage> createState() => _EditBankPageState();
 }
 
-class _EditVehiclePageState extends State<EditVehiclePage> {
+class _EditBankPageState extends State<EditBankPage> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +30,7 @@ class _EditVehiclePageState extends State<EditVehiclePage> {
         ChangeNotifierProxyProvider<ProfileProvider, ProfileEditProvider>(
           create: (_) => locator<ProfileEditProvider>(),
           update: (context, profile, edit) =>
-              edit!..setupTextControllerValues(profile.profile!),
+          edit!..setupTextControllerValues(profile.profile!),
         )
       ],
       builder: (context, child) => Scaffold(
@@ -50,7 +50,7 @@ class _EditVehiclePageState extends State<EditVehiclePage> {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   return ListView(
-                    children: const [FormEditVehicle()],
+                    children: const [FormEditBank()],
                   );
                 }
               });

@@ -16,6 +16,7 @@ import 'package:appkey_taxiapp_driver/features/order_detail/presentation/page/or
 import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_email_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_password_page.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_bank_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
@@ -60,6 +61,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
     case OrderDetailPage.routeName:
       return MaterialPageRoute(builder: (_) => const OrderDetailPage());
+    case EditBankPage.routeName:
+      return MaterialPageRoute(builder: (_) => const EditBankPage());
     case RatingListPage.routeName:
       return MaterialPageRoute(builder: (_) => const RatingListPage());
     case JobCompletedPage.routeName:
