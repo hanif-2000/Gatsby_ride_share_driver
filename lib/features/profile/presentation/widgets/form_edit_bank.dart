@@ -1,6 +1,12 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -208,73 +214,71 @@ class _FormEditBankState extends State<FormEditBank> {
                             bgColor: blackColor,
                             event: () {
                               if (provider.formKey.currentState!.validate()) {
-                                // provider
-                                //     .updateProfileForm(
-                                //   url: 'api/webservice/driver/vehicle/details/add',
-                                //   data: FormData.fromMap({
-                                //     'vehicle_type':
-                                //     provider.selectedCategory!.categoryId,
-                                //     'vehicle_name': provider
-                                //         .vehicleNameController.text
-                                //         .trim(),
-                                //     'vehicle_number': provider
-                                //         .vehicleNumberController.text
-                                //         .trim(),
-                                //     'vehicle_model': provider
-                                //         .vehicleModelController.text
-                                //         .trim(),
-                                //     'insurance_number': provider
-                                //         .vehicleInsuranceController.text,
-                                //   }),
-                                // )
-                                //     .listen(
-                                //       (event) async {
-                                //     switch (event.runtimeType) {
-                                //       case ProfileLoading:
-                                //         showLoading();
-                                //         break;
-                                //       case ProfileFailure:
-                                //         final msg =
-                                //             (event as ProfileFailure).failure;
-                                //         showToast(message: msg);
-                                //         dismissLoading();
-                                //         break;
-                                //       case ProfileUpdateSuccess:
-                                //         dismissLoading();
-                                //         if (provider.selectedCategory !=
-                                //             provider.defaultSelectedCategory) {
-                                //           await FirebaseHelper.unsubTopic()
-                                //               .then((_) {});
-                                //           final session = locator<Session>();
-                                //           var homeProvider =
-                                //           Provider.of<HomeProvider>(context,
-                                //               listen: false);
-                                //           session.setSessionCategoryId =
-                                //               provider
-                                //                   .selectedCategory!.categoryId
-                                //                   .toString();
-                                //           if (homeProvider.isOnline) {
-                                //             await FirebaseHelper.setTopicDriver(
-                                //                 '1')
-                                //                 .then((_) {});
-                                //           } else {
-                                //             await FirebaseHelper.setTopicDriver(
-                                //                 '0')
-                                //                 .then((_) {});
-                                //           }
-                                //         }
-                                //
-                                //         showToast(
-                                //             message: appLoc.profileupdated);
-                                //         Navigator.pop(context, true);
-                                //
-                                //         break;
-                                //       default:
-                                //         showLoading();
-                                //         break;
-                                //     }
-                                //   },
-                                // );
+                                provider
+                                    .updateProfileForm(
+                                  url: 'api/webservice/driver/bank/details/add',
+                                  data: FormData.fromMap({
+                                    "bank_name":
+                                        provider.bankNameController.text.trim(),
+                                    "account_number": provider
+                                        .bankAccountController.text
+                                        .trim(),
+                                    "account_holder_name": provider
+                                        .bankHolderNameController.text
+                                        .trim(),
+                                    "ifsc_code": provider
+                                        .bankIFSCCodeController.text
+                                        .trim(),
+                                  }),
+                                )
+                                    .listen(
+                                  (event) async {
+                                    switch (event.runtimeType) {
+                                      case ProfileLoading:
+                                        showLoading();
+                                        break;
+                                      case ProfileFailure:
+                                        final msg =
+                                            (event as ProfileFailure).failure;
+                                        showToast(message: msg);
+                                        dismissLoading();
+                                        break;
+                                      case ProfileUpdateSuccess:
+                                        dismissLoading();
+                                        if (provider.selectedCategory !=
+                                            provider.defaultSelectedCategory) {
+                                          await FirebaseHelper.unsubTopic()
+                                              .then((_) {});
+                                          final session = locator<Session>();
+                                          var homeProvider =
+                                              Provider.of<HomeProvider>(context,
+                                                  listen: false);
+                                          session.setSessionCategoryId =
+                                              provider
+                                                  .selectedCategory!.categoryId
+                                                  .toString();
+                                          if (homeProvider.isOnline) {
+                                            await FirebaseHelper.setTopicDriver(
+                                                    '1')
+                                                .then((_) {});
+                                          } else {
+                                            await FirebaseHelper.setTopicDriver(
+                                                    '0')
+                                                .then((_) {});
+                                          }
+                                        }
+
+                                        showToast(
+                                            message: appLoc.profileupdated);
+                                        Navigator.pop(context, true);
+
+                                        break;
+                                      default:
+                                        showLoading();
+                                        break;
+                                    }
+                                  },
+                                );
                               }
                             },
                           ),

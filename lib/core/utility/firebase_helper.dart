@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:appkey_taxiapp_driver/core/domain/entities/incoming_order.dart';
 import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import '../../firebase_options.dart';
-import 'global_function.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
@@ -15,7 +12,7 @@ import 'notification_handler.dart';
 class FirebaseHelper {
   static late FirebaseMessaging messaging;
   static Future<void> init() async {
-    logMe("Firebasee helperrrr");
+    logMe("Firebase helper");
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;

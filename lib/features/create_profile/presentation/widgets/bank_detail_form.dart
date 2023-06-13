@@ -74,9 +74,11 @@ class _FormBankDetailState extends State<FormBankDetail> {
           child: Column(
             children: [
               largeVerticalSpacing(),
-              Text(appLoc.bankDetail,
-                  textAlign: TextAlign.center,
-                  style: formTextFieldStyle.copyWith(fontSize: 24)),
+              Text(
+                appLoc.bankDetail,
+                textAlign: TextAlign.center,
+                style: formTextFieldStyle.copyWith(fontSize: 24),
+              ),
               largeVerticalSpacing(),
               Image.asset(
                 'assets/icons/profile/ic_bank_detail.png',

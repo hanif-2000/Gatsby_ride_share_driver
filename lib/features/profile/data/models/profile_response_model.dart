@@ -37,6 +37,7 @@ class ProfileDataModel extends Equatable {
   final String vehicleName;
   final String insuranceNumber;
   final CategoryModel vehicleCategory;
+  final BankDetails bankDetails;
 
   const ProfileDataModel(
       {required this.driverId,
@@ -50,6 +51,7 @@ class ProfileDataModel extends Equatable {
       required this.plateNumber,
       required this.vehicleCategory,
       required this.carModel,
+      required this.bankDetails,
       required this.image});
 
   @override
@@ -63,7 +65,8 @@ class ProfileDataModel extends Equatable {
         statusOrder,
         carModel,
         vehicleCategory,
-        vehicleCategory
+        vehicleCategory,
+        bankDetails,
       ];
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
@@ -78,6 +81,7 @@ class ProfileDataModel extends Equatable {
           statusOrder: json['order_status'] ?? '',
           plateNumber: json['plate_number'] ?? '',
           carModel: json['car_model'] ?? '',
+          bankDetails: BankDetails.fromMap(json["bank_details"]),
           vehicleCategory: CategoryModel.fromJson(json["vehicle_category"]),
           status: json['status'] ?? '');
 
@@ -94,6 +98,7 @@ class ProfileDataModel extends Equatable {
         'vehicle_category': vehicleCategory.toJson(),
         'plate_number': plateNumber,
         'car_model': carModel,
+        "bank_details": bankDetails.toMap(),
       };
 }
 
@@ -135,5 +140,53 @@ class CategoryModel extends Equatable {
         'min_km': priceMin,
         'price_km': priceKm,
         'seat': seat,
+      };
+}
+
+class BankDetails {
+  int id;
+  int driverId;
+  String accountHolderName;
+  String bankName;
+  String accountNumber;
+  String ifscCode;
+  int status;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  BankDetails({
+    required this.id,
+    required this.driverId,
+    required this.accountHolderName,
+    required this.bankName,
+    required this.accountNumber,
+    required this.ifscCode,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory BankDetails.fromMap(Map<String, dynamic> json) => BankDetails(
+        id: json["id"],
+        driverId: json["driver_id"],
+        accountHolderName: json["account_holder_name"],
+        bankName: json["bank_name"],
+        accountNumber: json["account_number"],
+        ifscCode: json["ifsc_code"],
+        status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "driver_id": driverId,
+        "account_holder_name": accountHolderName,
+        "bank_name": bankName,
+        "account_number": accountNumber,
+        "ifsc_code": ifscCode,
+        "status": status,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
       };
 }
