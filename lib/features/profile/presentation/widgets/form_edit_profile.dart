@@ -399,7 +399,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                     provider.lastNameController.text.trim(),
                                 'phone': provider.phoneController.text.trim(),
                                 'country': provider.countryName,
-                                'image': provider.nameController.text,
+                                'image': provider.profileUploadImage,
                               }),
                             )
                                 .listen(
