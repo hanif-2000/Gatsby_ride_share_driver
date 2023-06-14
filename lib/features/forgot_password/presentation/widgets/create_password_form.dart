@@ -139,6 +139,9 @@ class _FormCreatePasswordState extends State<FormCreatePassword> {
                       inputType: TextInputType.visiblePassword,
                       isSecure: true,
                       isError: provider.passwordError,
+                      onChanged: (value){
+                        provider.setPassword(value);
+                      },
                       fieldValidator: ValidationHelper(
                         loc: appLoc,
                         isError: (bool value) =>
@@ -160,7 +163,8 @@ class _FormCreatePasswordState extends State<FormCreatePassword> {
                               isError: (bool value) =>
                                   provider.setPasswordConfirmError = value,
                               typeField: TypeField.confirmPassword,
-                              pwd: provider.passwordController.text.trim())
+                              // pwd: provider.passwordController.text.trim())
+                              pwd: provider.password)
                           .validate(),
                     ),
                     largeVerticalSpacing(),

@@ -44,6 +44,7 @@ class ProfileInformationDrawer extends StatelessWidget {
                         backgroundImage:
                             NetworkImage(mergePhotoUrl(data.image)),
                       ),
+                smallVerticalSpacing(),
                 Text(
                   data.name,
                   style: formTextFieldStyle,

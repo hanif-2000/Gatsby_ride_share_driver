@@ -19,7 +19,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffixWidget;
   final Widget? prefixWidget;
   final bool border;
-  final Function? onChanged;
+  final Function(String)? onChanged;
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final bool enablePadding;
@@ -130,7 +130,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 }
               },
               onChanged: (str) {
-                if (widget.onChanged != null) widget.onChanged!();
+                if (widget.onChanged != null) widget.onChanged!(str);
               },
               obscureText: _passwordVisible,
               // obscureText: false,

@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
@@ -11,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RequestTile extends StatelessWidget {
-  const RequestTile({Key? key}) : super(key: key);
+  const RequestTile({Key? key, this.request}) : super(key: key);
+  final RequestListModel? request;
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +83,10 @@ class RequestTile extends StatelessWidget {
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '\$80.00',
+                      '\$${request!.total}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16,
@@ -91,7 +94,7 @@ class RequestTile extends StatelessWidget {
                       ).usePoppinsW6Font(),
                     ),
                     Text(
-                      '4.5 Km',
+                      '${request!.distance} Km',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,
@@ -113,7 +116,7 @@ class RequestTile extends StatelessWidget {
                     mediumHorizontalSpacing(),
                     Expanded(
                       child: Text(
-                        'PJCX+6R3, Sector 115, West Deophila',
+                        request!.startAddress ?? '',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -131,7 +134,7 @@ class RequestTile extends StatelessWidget {
                     mediumHorizontalSpacing(),
                     Expanded(
                       child: Text(
-                        'PJCX+6R3, Sector 115, South Dothan',
+                        request!.endAddress ?? '',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,

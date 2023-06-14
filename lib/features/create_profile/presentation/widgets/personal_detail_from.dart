@@ -35,7 +35,8 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "phone": provider.mobileNumberController.text.trim(),
       "country": provider.countryName,
       "driving_licence": provider.dlImageUploadName,
-      "profile_photo": provider.profileUploadName,
+      // "profile_photo": provider.profileUploadName,
+      "image": provider.profileUploadName,
       "id_proof": provider.idProofImageUploadName,
     }).listen((state) async {
       switch (state.runtimeType) {
@@ -54,11 +55,11 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
             provider.setCurrentStep(2);
             // Navigator.pushReplacementNamed(context, ChangePasswordPage.routeName);
           } else {
-            if (data.message == '1') {
-              showToast(message: appLoc.emailnotmatch);
-            } else {
-              showToast(message: appLoc.failed);
-            }
+            // if (data.message == '1') {
+            //   showToast(message: appLoc.emailnotmatch);
+            // } else {
+            showToast(message: data.message ?? appLoc.failed);
+            // }
           }
 
           break;
@@ -111,49 +112,50 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: InkWell(
-                          onTap: () async {
-                            ///TODO: add personal image here
-                            ImagePickerHelper.showPicker(
-                              context: context,
-                              imagePicker: provider.imagePicker,
-                              successCallBack: (file) {
-                                provider.setProfileImage(file!.path);
-                                provider
-                                    .doUploadProfileApi(file.path)
-                                    .listen((state) async {
-                                  switch (state.runtimeType) {
-                                    case UploadLoading:
-                                      showLoading();
-                                      break;
-                                    case UploadFailure:
-                                      final msg =
-                                          (state as UploadFailure).failure;
-                                      dismissLoading();
-                                      showToast(message: msg);
-                                      break;
-                                    case UploadSuccess:
-                                      final imageName =
-                                          (state as UploadSuccess).data;
-                                      // showToast(message: appLoc.success);
-                                      provider.setProfileUploadName(imageName!);
-                                      logMe(
-                                          'Image Name ---> ${provider.profileUploadName}');
-                                      dismissLoading();
-                                      break;
-                                  }
-                                });
-                              },
-                              failedCallBack: (error) {
-                                showToast(message: error);
-                                provider.setProfileImage('');
-                              },
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            'assets/icons/profile/ic_add_image.svg',
-                            height: 40,
-                            width: 40,
-                          ),),
+                        onTap: () async {
+                          ///TODO: add personal image here
+                          ImagePickerHelper.showPicker(
+                            context: context,
+                            imagePicker: provider.imagePicker,
+                            successCallBack: (file) {
+                              provider.setProfileImage(file!.path);
+                              provider
+                                  .doUploadProfileApi(file.path)
+                                  .listen((state) async {
+                                switch (state.runtimeType) {
+                                  case UploadLoading:
+                                    showLoading();
+                                    break;
+                                  case UploadFailure:
+                                    final msg =
+                                        (state as UploadFailure).failure;
+                                    dismissLoading();
+                                    showToast(message: msg);
+                                    break;
+                                  case UploadSuccess:
+                                    final imageName =
+                                        (state as UploadSuccess).data;
+                                    // showToast(message: appLoc.success);
+                                    provider.setProfileUploadName(imageName!);
+                                    logMe(
+                                        'Image Name ---> ${provider.profileUploadName}');
+                                    dismissLoading();
+                                    break;
+                                }
+                              });
+                            },
+                            failedCallBack: (error) {
+                              showToast(message: error);
+                              provider.setProfileImage('');
+                            },
+                          );
+                        },
+                        child: SvgPicture.asset(
+                          'assets/icons/profile/ic_add_image.svg',
+                          height: 40,
+                          width: 40,
+                        ),
+                      ),
                     ),
                   ],
                 ),

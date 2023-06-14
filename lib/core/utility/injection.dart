@@ -47,6 +47,7 @@ import 'package:appkey_taxiapp_driver/features/order/data/repositories/order_rep
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_driver_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_driver_location.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_order_detail.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_request_list.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_status_order.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/update_status_order.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
@@ -267,6 +268,8 @@ Future<void> init() async {
       () => GetStatusOrder(repository: locator<OrderRepository>()));
   locator.registerLazySingleton<GetOrderDetail>(
       () => GetOrderDetail(repository: locator<OrderRepository>()));
+  locator.registerLazySingleton<GetRequestList>(
+      () => GetRequestList(repository: locator<OrderRepository>()));
   locator.registerLazySingleton<GetDriverDetail>(
       () => GetDriverDetail(repository: locator<OrderRepository>()));
   locator.registerLazySingleton<GetDriverLocation>(
@@ -284,6 +287,7 @@ Future<void> init() async {
       updateStatusOrder: locator<UpdateStatusOrder>(),
       doUpdateLocation: locator<DoUpdateLocation>(),
       getCustomerDetail: locator<GetCustomerDetail>(),
+      getRequestList: locator<GetRequestList>(),
       getOrderDetail: locator<GetOrderDetail>(),
       changeStatus: locator<ChangeStatus>(),
       getProfile: locator<GetProfile>(),

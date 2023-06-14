@@ -1,11 +1,10 @@
+import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/detail_driver_response.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/detail_order_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
-import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail_response.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:dio/dio.dart';
-
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 import '../models/create_order_response_model.dart';
@@ -20,6 +19,7 @@ abstract class OrderDataSource {
   Future<OrderDetail> getDetailOrder(String orderId);
   Future<DriverDetail> getDriverDetail();
   Future<DriverLocationResponseModel> getDriverLocation();
+  Future<RequestListDataModel> getRequestListData(FormData formData);
 }
 
 class OrderDataSourceImplementation implements OrderDataSource {
@@ -37,6 +37,22 @@ class OrderDataSourceImplementation implements OrderDataSource {
         data: formData,
       );
       final model = ChangeStatusesponseModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<RequestListDataModel> getRequestListData(FormData formData) async {
+    String url = 'api/webservice/driver/requests/new';
+    dio.withToken();
+    try {
+      final response = await dio.post(
+        url,
+        // data: formData,
+      );
+      final model = RequestListDataModel.fromMap(response.data);
       return model;
     } catch (e) {
       rethrow;

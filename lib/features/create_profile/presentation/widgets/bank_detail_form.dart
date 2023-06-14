@@ -50,11 +50,11 @@ class _FormBankDetailState extends State<FormBankDetail> {
             Navigator.pushNamedAndRemoveUntil(
                 context, HomePage.routeName, (route) => false);
           } else {
-            if (data.message == '1') {
-              showToast(message: appLoc.emailnotmatch);
-            } else {
-              showToast(message: appLoc.failed);
-            }
+            // if (data.message == '1') {
+            //   showToast(message: appLoc.emailnotmatch);
+            // } else {
+            showToast(message: data.message??appLoc.failed);
+            // }
           }
 
           break;

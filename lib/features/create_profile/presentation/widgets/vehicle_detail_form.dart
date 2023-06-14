@@ -8,6 +8,7 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provi
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/get_vehicle_type_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/dimens.dart';
@@ -29,9 +30,9 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
     final provider = context.read<CreateProfileProvider>();
     provider.doCreateProfileApi('api/webservice/driver/vehicle/details/add', {
       "vehicle_type": provider.selectedVehicleType!.id,
-      "vechile_name": provider.vehicleNameController.text.trim(),
-      "vechile_number": provider.vehicleNumberController.text.trim(),
-      "vechile_model": provider.vehicleModelController.text.trim(),
+      "vehicle_name": provider.vehicleNameController.text.trim(),
+      "vehicle_number": provider.vehicleNumberController.text.trim(),
+      "vehicle_model": provider.vehicleModelController.text.trim(),
       "insurance_number": provider.vehicleInsuranceController.text.trim(),
     }).listen((state) async {
       switch (state.runtimeType) {
@@ -145,6 +146,9 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 controller: provider.vehicleNumberController,
                 inputType: TextInputType.text,
                 isError: provider.vehicleNumberError,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
                   isError: (bool value) =>
@@ -157,7 +161,7 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 placeholder: appLoc.vehicleModel,
                 title: appLoc.vehicleModel,
                 controller: provider.vehicleModelController,
-                inputType: TextInputType.number,
+                inputType: TextInputType.text,
                 isError: provider.vehicleModelError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,

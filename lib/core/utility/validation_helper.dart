@@ -22,6 +22,10 @@ class ValidationHelper {
     String? message;
     return (value) {
       final strValue = value as String;
+      print('===================================================================');
+      print('Validation value ===> $typeField');
+      print('Validation value ===> $strValue');
+      print('Validation Password ===> $pwd');
       if (strValue.isEmpty) {
         message = appLoc.mustnotempty;
         isError(true);

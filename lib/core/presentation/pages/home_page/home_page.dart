@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_decline_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -44,6 +45,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     _fcmProvider.addListener(() async => await fcmListener());
     WidgetsBinding.instance!.addObserver(this);
+    homeProvider.getRequestListData().listen((event) {
+      if (event is RequestListLoaded) {
+        logMe(
+            'Request list data loaded success----------> ${event.data.length}');
+      }
+    });
   }
 
   @override
@@ -59,113 +66,105 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     homeProvider
         .fetchOrderDetail(_fcmProvider.incomingOrderDetail!.orderId)
         .listen(
-          (event) {
+      (event) {
         if (event is OrderDetailLoaded) {
-          var _deviceSize = MediaQuery
-              .of(context)
-              .size;
+          var _deviceSize = MediaQuery.of(context).size;
           homeProvider.fetchCustomerDetail(event.data.userId.toString()).listen(
-                (event) async {
+            (event) async {
               if (event is CustomerDetailLoaded) {
                 await showDialog(
                   barrierDismissible: false,
                   context: context,
-                  builder: (_) =>
-                      WillPopScope(
-                        onWillPop: () async => false,
-                        child: MainDialog(
-                          customerDetailModel: homeProvider.customerDetailModel,
-                          orderDetail: homeProvider.orderDetail,
-                          deviceSize: _deviceSize,
-                          onDecline: () async {
-                            await showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (_) =>
-                                  WillPopScope(
-                                    onWillPop: () async => false,
-                                    child: CustomDeclineDialog(
-                                      positiveAction: () {
-                                        homeProvider.changeStatus = false;
-                                        homeProvider.updateStatus().listen(
-                                              (event) async {
-                                            if (event is ChangeStatusLoaded) {
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                            }
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                            );
-                          },
-                          onAccept: () {
-                            session.setOrderId =
-                                _fcmProvider.incomingOrderDetail!.orderId;
-                            homeProvider
-                                .submitStatusOrder(Order.driverAccept)
-                                .listen(
+                  builder: (_) => WillPopScope(
+                    onWillPop: () async => false,
+                    child: MainDialog(
+                      customerDetailModel: homeProvider.customerDetailModel,
+                      orderDetail: homeProvider.orderDetail,
+                      deviceSize: _deviceSize,
+                      onDecline: () async {
+                        await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) => WillPopScope(
+                            onWillPop: () async => false,
+                            child: CustomDeclineDialog(
+                              positiveAction: () {
+                                homeProvider.changeStatus = false;
+                                homeProvider.updateStatus().listen(
                                   (event) async {
-                                if (event is UpdateStatusOrderLoaded) {
-                                  if (event.data.success == 1) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      OrderPage.routeName,
-                                          (route) => false,
-                                      arguments: OrderPageArguments(
-                                        orderDetail: homeProvider.orderDetail!,
-                                        customerDetailModel:
-                                        homeProvider.customerDetailModel!,
-                                      ),
-                                    );
-                                  } else if (event.data.message == 5) {
-                                    Navigator.of(context).pop();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CommonDialog(
-                                            title: appLoc.sorry,
-                                            msg: appLoc
-                                                .orderacceptedotherdriver,
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                    );
-                                  } else if (event.data.message == 6) {
-                                    Navigator.of(context).pop();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CommonDialog(
-                                            title: appLoc.sorry,
-                                            msg: appLoc.ordernotfound,
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                    );
-                                  } else if (event.data.message == 7) {
-                                    Navigator.of(context).pop();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CommonDialog(
-                                            title: appLoc.sorry,
-                                            msg: appLoc.orderhascancelled,
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                    );
-                                  }
-                                }
+                                    if (event is ChangeStatusLoaded) {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                );
                               },
-                            );
+                            ),
+                          ),
+                        );
+                      },
+                      onAccept: () {
+                        session.setOrderId =
+                            _fcmProvider.incomingOrderDetail!.orderId;
+                        homeProvider
+                            .submitStatusOrder(Order.driverAccept)
+                            .listen(
+                          (event) async {
+                            if (event is UpdateStatusOrderLoaded) {
+                              if (event.data.success == 1) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  OrderPage.routeName,
+                                  (route) => false,
+                                  arguments: OrderPageArguments(
+                                    orderDetail: homeProvider.orderDetail!,
+                                    customerDetailModel:
+                                        homeProvider.customerDetailModel!,
+                                  ),
+                                );
+                              } else if (event.data.message == 5) {
+                                Navigator.of(context).pop();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CommonDialog(
+                                    title: appLoc.sorry,
+                                    msg: appLoc.orderacceptedotherdriver,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                );
+                              } else if (event.data.message == 6) {
+                                Navigator.of(context).pop();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CommonDialog(
+                                    title: appLoc.sorry,
+                                    msg: appLoc.ordernotfound,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                );
+                              } else if (event.data.message == 7) {
+                                Navigator.of(context).pop();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CommonDialog(
+                                    title: appLoc.sorry,
+                                    msg: appLoc.orderhascancelled,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                );
+                              }
+                            }
                           },
-                        ),
-                      ),
+                        );
+                      },
+                    ),
+                  ),
                 );
               }
             },
@@ -206,7 +205,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         child: optionTile(
                           title: 'Requests',
                           isSelected:
-                          provider.projectType == ProjectType.requests,
+                              provider.projectType == ProjectType.requests,
                           onChange: () {
                             provider.projectType = ProjectType.requests;
                           },
@@ -217,7 +216,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         child: optionTile(
                           title: 'History',
                           isSelected:
-                          provider.projectType == ProjectType.history,
+                              provider.projectType == ProjectType.history,
                           onChange: () {
                             provider.projectType = ProjectType.history;
                           },
@@ -226,9 +225,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
-                provider.projectType == ProjectType.requests?
-                const RequestListWidget():
-                const HistoryListWidget(),
+                provider.projectType == ProjectType.requests
+                    ? const RequestListWidget()
+                    : const HistoryListWidget(),
                 // const NoProjects(),
 
                 // GoogleMap(

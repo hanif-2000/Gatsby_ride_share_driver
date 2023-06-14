@@ -1,39 +1,29 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'dart:math';
-
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.dart';
-import 'package:appkey_taxiapp_driver/core/domain/usecases/get_total_price.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/price_category_state.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/total_price_state.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/update_location_state.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/payment_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/change_status.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_order_detail.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_request_list.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
-
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
 import '../../../features/profile/domain/usecases/get_profile.dart';
 import '../../../features/profile/presentation/providers/profile_state.dart';
 import '../../data/models/customer_detail_model.dart';
-import '../../domain/entities/price_category.dart';
-import '../../domain/usecases/get_price_category.dart';
 import '../../utility/direction_helper.dart';
 import '../../utility/firebase_helper.dart';
 import '../../utility/injection.dart';
@@ -44,6 +34,7 @@ class HomeProvider with ChangeNotifier {
   //Constructor
   final GetProfile getProfile;
   final GetOrderDetail getOrderDetail;
+  final GetRequestList getRequestList;
   final GetCustomerDetail getCustomerDetail;
   final ChangeStatus changeStatus;
   final UpdateStatusOrder updateStatusOrder;
@@ -115,6 +106,7 @@ class HomeProvider with ChangeNotifier {
   HomeProvider(
       {required this.getProfile,
       required this.getCustomerDetail,
+      required this.getRequestList,
       required this.updateStatusOrder,
       required this.getOrderDetail,
       required this.doUpdateLocation,
@@ -189,6 +181,25 @@ class HomeProvider with ChangeNotifier {
     }, (data) async* {
       dismissLoading();
       yield UpdateStatusOrderLoaded(data: data);
+    });
+  }
+
+  Stream<RequestListState> getRequestListData() async* {
+    // showLoading();
+    yield RequestListLoading();
+    final formData = FormData.fromMap({
+      // 'id': session.orderId,
+      // 'status': orderStatus,
+    });
+    final result = await getRequestList.call(formData);
+    yield* result.fold((failure) async* {
+      logMe("failure");
+      logMe(failure);
+      // dismissLoading();
+      yield RequestListFailure(failure: failure);
+    }, (data) async* {
+      dismissLoading();
+      yield RequestListLoaded(data: data.data);
     });
   }
 

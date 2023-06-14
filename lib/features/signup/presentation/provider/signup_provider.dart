@@ -7,7 +7,9 @@ import '../../../../core/presentation/providers/form_provider.dart';
 class SignupProvider extends FormProvider {
   final DoSignup doSignup;
 
+
   SignupProvider({required this.doSignup});
+
 
   Stream<SignupState> doSignupApi() async* {
     yield SignupLoading();

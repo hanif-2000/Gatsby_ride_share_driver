@@ -176,6 +176,16 @@ class FormProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  ///Confirm password
+  String? _password;
+
+  setPassword(String value) {
+    _password = value;
+    notifyListeners();
+  }
+
+  String? get password => _password;
+
   // getter
 
   TextEditingController get phoneController => _phoneController;

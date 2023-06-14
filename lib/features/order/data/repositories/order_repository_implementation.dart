@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/create_order_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/get_status_response.dart';
@@ -22,6 +23,18 @@ class OrderRepositoryImplementation implements OrderRepository {
       FormData formData) async {
     try {
       final data = await dataSource.changeStatus(formData);
+      return Right(data);
+    } on DioError catch (e) {
+      logMe("Failure Order repository ${e.toString()}");
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RequestListDataModel>> getRequestListData(
+      FormData formData) async {
+    try {
+      final data = await dataSource.getRequestListData(formData);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure Order repository ${e.toString()}");
