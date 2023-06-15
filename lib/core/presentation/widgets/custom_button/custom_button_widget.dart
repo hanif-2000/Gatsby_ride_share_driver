@@ -1,5 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
@@ -8,6 +9,7 @@ class CustomButton extends StatelessWidget {
       required this.event,
       required this.bgColor,
       this.shape,
+      this.image = '',
       this.showBorder = false,
       this.isRounded = false,
       this.buttonHeight})
@@ -19,6 +21,7 @@ class CustomButton extends StatelessWidget {
   final bool showBorder;
   final OutlinedBorder? shape;
   final double? buttonHeight;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,18 @@ class CustomButton extends StatelessWidget {
               primary: bgColor,
               shape: shape),
       onPressed: () => event(),
-      child: text is String ? Text(text, style: txtButtonStyle) : text,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          image != ''
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: SvgPicture.asset(image!),
+                )
+              : const SizedBox.shrink(),
+          text is String ? Text(text, style: txtButtonStyle) : text,
+        ],
+      ),
     );
   }
 }

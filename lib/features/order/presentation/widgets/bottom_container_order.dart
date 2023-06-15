@@ -11,17 +11,23 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/static/enums.dart';
 
-class BottomContaineOrder extends StatelessWidget {
-  const BottomContaineOrder({
+class BottomContainerOrder extends StatelessWidget {
+  const BottomContainerOrder({
     Key? key,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(builder: (context, provider, _) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: const [CustomerInfoWidget(), ButtonOrder()],
-      );
-    });
+    return Consumer<OrderProvider>(
+      builder: (context, provider, _) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            // CustomerInfoWidget(),
+            ButtonOrder(),
+          ],
+        );
+      },
+    );
   }
 }

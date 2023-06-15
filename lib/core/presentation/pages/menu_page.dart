@@ -112,7 +112,9 @@ class HomeDrawerPage extends StatelessWidget {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 12),
+                      horizontal: 15,
+                      vertical: 12,
+                    ),
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
                       border: Border(

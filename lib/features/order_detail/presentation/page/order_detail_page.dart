@@ -8,6 +8,7 @@ import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
+import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -404,98 +405,7 @@ class OrderDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, OtherUserProfile.routeName);
-                        },
-                        child: Container(
-                          height: 45,
-                          width: 45,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: redD03B3B,
-                          ),
-                        ),
-                      ),
-                      mediumHorizontalSpacing(),
-                      Column(
-                        children: [
-                          Text(
-                            'Johan Green',
-                            textAlign: TextAlign.center,
-                            style: titleStyle
-                                .copyWith(
-                                  fontSize: 16,
-                                )
-                                .usePoppinsW5Font(),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  // context, RatingListPage.routeName);
-                                  context,
-                                  GiveRatingScreen.routeName);
-                            },
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                    'assets/icons/home/ic_start.svg'),
-                                smallHorizontalSpacing(),
-                                Text(
-                                  '4.5',
-                                  textAlign: TextAlign.center,
-                                  style: titleStyle
-                                      .copyWith(
-                                        fontSize: 14,
-                                      )
-                                      .usePoppinsW6Font(),
-                                ),
-                                smallHorizontalSpacing(),
-                                Text(
-                                  'Reviews',
-                                  textAlign: TextAlign.center,
-                                  style: titleStyle
-                                      .copyWith(
-                                        fontSize: 14,
-                                        color: yellowE5A829,
-                                        decoration: TextDecoration.underline,
-                                      )
-                                      .usePoppinsW5Font(),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      const Spacer(),
-                      Column(
-                        children: [
-                          Text(
-                            '\$80.00',
-                            textAlign: TextAlign.center,
-                            style: titleStyle
-                                .copyWith(
-                                  fontSize: 16,
-                                )
-                                .usePoppinsW6Font(),
-                          ),
-                          Text(
-                            '4.5 Km',
-                            textAlign: TextAlign.center,
-                            style: titleStyle
-                                .copyWith(
-                                  fontSize: 14,
-                                  color: greyB6B6B6,
-                                )
-                                .usePoppinsW5Font(),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                  const UserProfileTile(),
                   largeVerticalSpacing(),
                   const AddressTile(
                     icon: 'assets/icons/home/ic_pickup.svg',

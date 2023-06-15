@@ -7,13 +7,16 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RequestTile extends StatelessWidget {
-  const RequestTile({Key? key, this.request}) : super(key: key);
+  const RequestTile(
+      {Key? key, this.request, required this.onAccept, required this.onReject})
+      : super(key: key);
   final RequestListModel? request;
+  final Function() onAccept;
+  final Function() onReject;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +179,8 @@ class RequestTile extends StatelessWidget {
                           style: txtButtonStyle,
                         ),
                         event: () {
-                          Navigator.pushNamed(context, ChatPage.routeName);
+                          onAccept();
+                          // Navigator.pushNamed(context, ChatPage.routeName);
                         },
                         buttonHeight: 40,
                         isRounded: true,

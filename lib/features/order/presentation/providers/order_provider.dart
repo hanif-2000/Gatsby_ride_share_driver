@@ -75,24 +75,30 @@ class OrderProvider with ChangeNotifier {
 
   //get
   OrderStatus get orderStatus => _orderStatus;
+
   DriverLocationResponseModel? get driverLocation => _driverLocation;
+
   CustomerDetailModel? get customerDetail => _customerDetail;
+
   OrderDetail? get orderDetail => _orderDetail;
+
   double get driverLat => _driverLat;
+
   double? get driverLng => _driverLng;
 
   //setter
   set changeOrderStatus(val) {
     if (val == OrderStatus.driverAccept) {
       _orderStatus = OrderStatus.departureToCustomerplace;
-      setPolylinesDirection(true);
+      setPolylineDirection(true);
     } else if (val == OrderStatus.departureToCustomerplace) {
       _orderStatus = OrderStatus.arriveAtCustomerPlace;
     } else if (val == OrderStatus.arriveAtCustomerPlace) {
+      _orderStatus = OrderStatus.customerConfirmation;
     } else if (val == OrderStatus.customerConfirmation) {
       _orderStatus = OrderStatus.customerConfirmation;
     } else if (val == OrderStatus.departureToDestination) {
-      setPolylinesDirection(false);
+      setPolylineDirection(false);
       _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.arriveAtDestination) {
       showLoading();
@@ -263,7 +269,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  setPolylinesDirection(bool isFromOrigin) async {
+  setPolylineDirection(bool isFromOrigin) async {
     showLoading();
     var latLongOrigin = _orderDetail!.startCoordinate;
     var latLongDestination = _orderDetail!.endCoordinate;
@@ -289,7 +295,7 @@ class OrderProvider with ChangeNotifier {
 
           Polyline polyline = Polyline(
               polylineId: const PolylineId("jalur"),
-              color: Colors.lightBlue,
+              color: Colors.black,
               points: polylineCoordinates,
               width: 6,
               startCap: Cap.roundCap,
@@ -421,51 +427,53 @@ class OrderProvider with ChangeNotifier {
 
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
     if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
-      showToast(message: appLoc.waitcustconfirmation);
-    } else {
-      showLoading();
-      yield UpdateStatusOrderLoading();
-      String orderStatusBody = "";
-      if (_orderStatus == OrderStatus.driverAccept) {
-        orderStatusBody = Order.departureToCustomerPlace.toString();
-      } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
-        orderStatusBody = Order.arriveAtCustomerPlace.toString();
-      } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
-      } else if (_orderStatus == OrderStatus.customerConfirmation) {
-        orderStatusBody = Order.departureToDestination.toString();
-      } else if (_orderStatus == OrderStatus.departureToDestination) {
-        orderStatusBody = Order.arriveAtDestination.toString();
-      } else if (_orderStatus == OrderStatus.arriveAtDestination) {}
-      logMe("orderStatusBody");
-      logMe(orderStatusBody);
-      final formData = FormData.fromMap({
-        'id': session.orderId,
-        'status': int.parse(orderStatusBody),
-      });
-      logMe("Update Status Body :");
-      logMe(session.orderId);
-      logMe(int.parse(orderStatusBody));
-      final result = await updateStatusOrder.execute(formData);
-      yield* result.fold((failure) async* {
-        logMe("failure");
-        logMe(failure);
-        dismissLoading();
-        yield UpdateStatusOrderFailure(failure: failure);
-      }, (data) async* {
-        if (_orderStatus == OrderStatus.customerConfirmation) {
-          dismissLoading();
-
-          changeOrderStatus = OrderStatus.departureToDestination;
-        } else if (_orderStatus == OrderStatus.departureToDestination) {
-          changeOrderStatus = OrderStatus.arriveAtDestination;
-        } else {
-          dismissLoading();
-          changeOrderStatus = _orderStatus;
-        }
-
-        yield UpdateStatusOrderLoaded(data: data);
-      });
+      _orderStatus = OrderStatus.customerConfirmation;
+      // showToast(message: appLoc.waitcustconfirmation);
     }
+    // else {
+    showLoading();
+    yield UpdateStatusOrderLoading();
+    String orderStatusBody = "";
+    if (_orderStatus == OrderStatus.driverAccept) {
+      orderStatusBody = Order.departureToCustomerPlace.toString();
+    } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
+      orderStatusBody = Order.arriveAtCustomerPlace.toString();
+    } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
+    } else if (_orderStatus == OrderStatus.customerConfirmation) {
+      orderStatusBody = Order.departureToDestination.toString();
+    } else if (_orderStatus == OrderStatus.departureToDestination) {
+      orderStatusBody = Order.arriveAtDestination.toString();
+    } else if (_orderStatus == OrderStatus.arriveAtDestination) {}
+    logMe("orderStatusBody");
+    logMe(orderStatusBody);
+    final formData = FormData.fromMap({
+      'id': session.orderId,
+      'status': int.parse(orderStatusBody),
+    });
+    logMe("Update Status Body :");
+    logMe(session.orderId);
+    logMe(int.parse(orderStatusBody));
+    final result = await updateStatusOrder.execute(formData);
+    yield* result.fold((failure) async* {
+      logMe("failure");
+      logMe(failure);
+      dismissLoading();
+      yield UpdateStatusOrderFailure(failure: failure);
+    }, (data) async* {
+      if (_orderStatus == OrderStatus.customerConfirmation) {
+        dismissLoading();
+
+        changeOrderStatus = OrderStatus.departureToDestination;
+      } else if (_orderStatus == OrderStatus.departureToDestination) {
+        changeOrderStatus = OrderStatus.arriveAtDestination;
+      } else {
+        dismissLoading();
+        changeOrderStatus = _orderStatus;
+      }
+
+      yield UpdateStatusOrderLoaded(data: data);
+    });
+    // }
   }
 
   Stream<GetStatusOrderState> fetchOrderStatus() async* {
@@ -477,7 +485,7 @@ class OrderProvider with ChangeNotifier {
       logMe(failure);
       yield GetStatusOrderFailure(failure: failure);
     }, (data) async* {
-      logMe("Order Statussss : ");
+      logMe("Order Statussss : $data");
       logMe(orderStatus);
       yield GetStatusOrderLoaded(data: data);
     });

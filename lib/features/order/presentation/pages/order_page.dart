@@ -66,9 +66,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: const CustomAppBar(
-          centerTitle: false,
-        ),
+        // appBar: const CustomAppBar(
+        //   centerTitle: false,
+        // ),
         body: Consumer<OrderProvider>(
           builder: (context, provider, _) {
             if (checkOrderStatusTimer != null) {
@@ -157,8 +157,8 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: const [
-                                CurrentLocationOrderWidget(),
-                                BottomContaineOrder()
+                                // CurrentLocationOrderWidget(),
+                                BottomContainerOrder()
                               ],
                             ),
                           ),

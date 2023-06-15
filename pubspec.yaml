@@ -81,6 +81,7 @@ flutter:
     - assets/icons/auth/
     - assets/icons/profile/
     - assets/icons/home/
+    - assets/icons/order/
 
   fonts:
     - family: Poppins
