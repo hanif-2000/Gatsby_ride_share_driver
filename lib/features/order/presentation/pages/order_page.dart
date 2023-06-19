@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
@@ -46,7 +47,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -54,7 +55,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     super.dispose();
     checkOrderStatusTimer?.cancel();
     trackingTimer?.cancel();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -94,29 +95,37 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         provider.changeOrderStatus =
                             OrderStatus.customerConfirmation;
                       }
+                      if (state.data.status ==
+                          Order.arriveAtDestination.toString()) {
+                        dismissLoading();
+                      }
 
                       if (state.data.status == Order.complete.toString()) {
                         dismissLoading();
                         trackingTimer!.cancel();
                         timer.cancel();
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) => WillPopScope(
-                            onWillPop: () async => false,
-                            child: MainDialog(
-                              isOrderDialog: false,
-                              customerDetailModel: provider.customerDetail,
-                              orderDetail: provider.orderDetail,
-                              deviceSize: _deviceSize,
-                              onEnd: () async {
-                                await provider.clearState();
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    HomePage.routeName, (route) => false);
-                              },
-                            ),
-                          ),
-                        );
+                        ///Clear the state and navigate driver to the rating screen
+                        await provider.clearState();
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            GiveRatingScreen.routeName, (route) => false);
+                        // showDialog(
+                        //   barrierDismissible: false,
+                        //   context: context,
+                        //   builder: (_) => WillPopScope(
+                        //     onWillPop: () async => false,
+                        //     child: MainDialog(
+                        //       isOrderDialog: false,
+                        //       customerDetailModel: provider.customerDetail,
+                        //       orderDetail: provider.orderDetail,
+                        //       deviceSize: _deviceSize,
+                        //       onEnd: () async {
+                        //         await provider.clearState();
+                        //         Navigator.pushNamedAndRemoveUntil(context,
+                        //             HomePage.routeName, (route) => false);
+                        //       },
+                        //     ),
+                        //   ),
+                        // );
                       }
                     }
                   },

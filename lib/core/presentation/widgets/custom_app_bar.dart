@@ -3,6 +3,8 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.
 import 'package:appkey_taxiapp_driver/core/static/app_config.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:flutter/material.dart';
 import '../../static/colors.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +41,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(builder: (context, provider, _) {
+      var session = locator<Session>();
+      provider.changeStatus = session.isOnline;
       return AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: backgroundColor,
@@ -81,8 +85,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
                 innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
                 onChanged: (b) {
-                  provider.updateStatus().listen((event) async {});
                   provider.changeStatus = b;
+                  provider.updateStatus().listen((event) async {
+                    session.setIsOnline(b);
+
+                  });
                   return Future.delayed(const Duration(seconds: 2));
                 },
                 indicatorSize: const Size.fromWidth(38),

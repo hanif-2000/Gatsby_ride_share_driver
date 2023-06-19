@@ -15,7 +15,6 @@ import 'package:appkey_taxiapp_driver/core/domain/usecases/get_currency.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_total_price.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/place_picker_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/data/datasources/aboutus_data_source.dart';

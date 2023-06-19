@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 class RequestListDataModel extends Equatable {
@@ -19,8 +18,10 @@ class RequestListDataModel extends Equatable {
       RequestListDataModel(
         success: json["success"],
         message: json["message"],
-        data: List<RequestListModel>.from(
-            json["data"].map((x) => RequestListModel.fromMap(x))),
+        data: json["data"] == null
+            ? []
+            : List<RequestListModel>.from(
+                json["data"].map((x) => RequestListModel.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {

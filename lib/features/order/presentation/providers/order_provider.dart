@@ -89,6 +89,7 @@ class OrderProvider with ChangeNotifier {
   //setter
   set changeOrderStatus(val) {
     if (val == OrderStatus.driverAccept) {
+      showLoading();
       _orderStatus = OrderStatus.departureToCustomerplace;
       setPolylineDirection(true);
     } else if (val == OrderStatus.departureToCustomerplace) {
@@ -208,11 +209,14 @@ class OrderProvider with ChangeNotifier {
         markers[markerIdOrigin] = markerOrigin;
         markers[markerIdDestination] = markerDestination;
         markers[markerIdDriver] = markerDriver;
-        googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-          target: coordinate,
-          zoom: 17,
-        )));
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: coordinate,
+              zoom: 17,
+            ),
+          ),
+        );
 
         notifyListeners();
         dismissLoading();
@@ -305,6 +309,7 @@ class OrderProvider with ChangeNotifier {
           dismissLoading();
         }
       });
+      dismissLoading();
     } else {
       logMe("Polylinessss destinationnnn created");
       await DirectionHelper()
@@ -329,6 +334,7 @@ class OrderProvider with ChangeNotifier {
           dismissLoading();
         }
       });
+      dismissLoading();
     }
   }
 
@@ -351,77 +357,88 @@ class OrderProvider with ChangeNotifier {
       await DirectionHelper()
           .getRouteBetweenCoordinates(
               coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
-          .then((result) {
-        if (result.isNotEmpty) {
-          polylineCoordinates = [];
-          for (var point in result) {
-            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          .then(
+        (result) {
+          if (result.isNotEmpty) {
+            polylineCoordinates = [];
+            for (var point in result) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            }
+            MarkerId markerIdDriver = const MarkerId("driver");
+
+            final Marker markerDriver = Marker(
+              markerId: markerIdDriver,
+              position: coordinate,
+              icon: driverMarker,
+              rotation: locationData.heading!,
+            );
+
+            markers[markerIdDriver] = markerDriver;
+
+            Polyline polyline = Polyline(
+                polylineId: const PolylineId("jalur"),
+                color: Colors.lightBlue,
+                points: polylineCoordinates,
+                width: 6,
+                startCap: Cap.roundCap,
+                endCap: Cap.roundCap);
+            polylines.add(polyline);
+            googleMapController.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: coordinate,
+                  zoom: 18,
+                ),
+              ),
+            );
+            notifyListeners();
           }
-          MarkerId markerIdDriver = const MarkerId("driver");
-
-          final Marker markerDriver = Marker(
-            markerId: markerIdDriver,
-            position: coordinate,
-            icon: driverMarker,
-            rotation: locationData.heading!,
-          );
-
-          markers[markerIdDriver] = markerDriver;
-
-          Polyline polyline = Polyline(
-              polylineId: const PolylineId("jalur"),
-              color: Colors.lightBlue,
-              points: polylineCoordinates,
-              width: 6,
-              startCap: Cap.roundCap,
-              endCap: Cap.roundCap);
-          polylines.add(polyline);
-          googleMapController
-              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: coordinate,
-            zoom: 18,
-          )));
-          notifyListeners();
-        }
-      });
+        },
+      );
     } else {
       logMe("Polylinessss destinationnnn");
       await DirectionHelper()
           .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
               latDestination, lngDestination)
-          .then((result) {
-        if (result.isNotEmpty) {
-          polylineCoordinates = [];
-          for (var point in result) {
-            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-          }
-          MarkerId markerIdDriver = const MarkerId("driver");
+          .then(
+        (result) {
+          if (result.isNotEmpty) {
+            polylineCoordinates = [];
+            for (var point in result) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            }
+            MarkerId markerIdDriver = const MarkerId("driver");
 
-          final Marker markerDriver = Marker(
-            markerId: markerIdDriver,
-            position: coordinate,
-            icon: driverMarker,
-            rotation: locationData.heading!,
-          );
+            final Marker markerDriver = Marker(
+              markerId: markerIdDriver,
+              position: coordinate,
+              icon: driverMarker,
+              rotation: locationData.heading!,
+            );
 
-          markers[markerIdDriver] = markerDriver;
+            markers[markerIdDriver] = markerDriver;
 
-          Polyline polyline = Polyline(
+            Polyline polyline = Polyline(
               polylineId: const PolylineId("jalur"),
               color: Colors.lightBlue,
               points: polylineCoordinates,
               width: 6,
               startCap: Cap.roundCap,
-              endCap: Cap.roundCap);
-          polylines.add(polyline);
-          googleMapController
-              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: coordinate,
-            zoom: 18,
-          )));
-          notifyListeners();
-        }
-      });
+              endCap: Cap.roundCap,
+            );
+            polylines.add(polyline);
+            googleMapController.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: coordinate,
+                  zoom: 18,
+                ),
+              ),
+            );
+            notifyListeners();
+          }
+        },
+      );
     }
   }
 
@@ -443,7 +460,10 @@ class OrderProvider with ChangeNotifier {
       orderStatusBody = Order.departureToDestination.toString();
     } else if (_orderStatus == OrderStatus.departureToDestination) {
       orderStatusBody = Order.arriveAtDestination.toString();
-    } else if (_orderStatus == OrderStatus.arriveAtDestination) {}
+    } else if (_orderStatus == OrderStatus.arriveAtDestination) {
+      orderStatusBody = Order.complete.toString();
+      dismissLoading();
+    }
     logMe("orderStatusBody");
     logMe(orderStatusBody);
     final formData = FormData.fromMap({

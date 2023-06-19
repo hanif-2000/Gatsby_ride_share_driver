@@ -62,7 +62,7 @@ class RequestTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Johan Green',
+                        '${request!.firstName} ${request!.lastName}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,
@@ -72,8 +72,11 @@ class RequestTile extends StatelessWidget {
                       Row(
                         children: [
                           SvgPicture.asset('assets/icons/home/ic_start.svg'),
+                          const SizedBox(
+                            width: 3,
+                          ),
                           Text(
-                            '4.5',
+                            '1.0',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 16,

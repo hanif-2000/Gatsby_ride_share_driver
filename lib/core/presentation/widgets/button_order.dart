@@ -221,53 +221,8 @@ class ButtonOrder extends StatelessWidget {
                   },
                   buttonHeight: 48,
                   isRounded: true,
-                  bgColor:
-                      // provider.orderStatus == OrderStatus.driverAccept
-                      //     ?
-                      Colors.black
-                  // : provider.orderStatus == OrderStatus.customerConfirmation
-                  //     ? Colors.black
-                  //     : primaryColor,
+                  bgColor: Colors.black
                   ),
-              // CustomButton(
-              //   buttonHeight: 48,
-              //   text: Text(
-              //     provider.orderStatus.getString(),
-              //     style: txtButtonStyle,
-              //   ),
-              //   event: () {
-              //     provider.submitStatusOrder().listen(
-              //       (event) async {
-              //         if (event is UpdateStatusOrderLoaded) {
-              //           if (provider.orderStatus ==
-              //               OrderStatus.arriveAtCustomerPlace) {
-              //             showDialog(
-              //               barrierDismissible: false,
-              //               context: context,
-              //               builder: (context) {
-              //                 return WillPopScope(
-              //                   onWillPop: () async => false,
-              //                   child: DepartDialog(
-              //                     callback: (b, call) {
-              //                       if (call) {
-              //                         provider.callCustomer();
-              //                       }
-              //                     },
-              //                   ),
-              //                 );
-              //               },
-              //             );
-              //           }
-              //         }
-              //       },
-              //     );
-              //   },
-              //   bgColor: provider.orderStatus == OrderStatus.driverAccept
-              //       ? Colors.black
-              //       : provider.orderStatus == OrderStatus.customerConfirmation
-              //           ? Colors.black
-              //           : primaryColor,
-              // ),
             ],
           ),
         );

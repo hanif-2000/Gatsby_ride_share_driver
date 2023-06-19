@@ -25,7 +25,10 @@ class OriginWidget extends StatelessWidget {
       builder: (context, map, _) {
         if (map.originAddress == '') {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+            padding: const EdgeInsets.symmetric(
+              vertical: 3,
+              horizontal: 8,
+            ),
             child: SizedBox(
               width: deviceWidth,
               height: 60,
@@ -36,7 +39,10 @@ class OriginWidget extends StatelessWidget {
           );
         } else {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+            padding: const EdgeInsets.symmetric(
+              vertical: 3,
+              horizontal: 8,
+            ),
             child: GestureDetector(
               onTap: () {},
               child: SizedBox(
@@ -44,7 +50,10 @@ class OriginWidget extends StatelessWidget {
                 // height: 60,
                 child: Container(
                   margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 13),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 13,
+                    vertical: 13,
+                  ),
                   decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(12),
@@ -56,8 +65,11 @@ class OriginWidget extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        const Icon(Icons.my_location,
-                            color: Colors.black, size: 30),
+                        const Icon(
+                          Icons.my_location,
+                          color: Colors.black,
+                          size: 30,
+                        ),
                         const SizedBox(
                           width: 10,
                         ),

@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
@@ -29,7 +30,8 @@ class GiveRatingScreen extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, HomePage.routeName, (value) => true);
                 },
                 icon: SvgPicture.asset('assets/icons/auth/ic_back.svg'),
               ),
@@ -126,7 +128,9 @@ class GiveRatingScreen extends StatelessWidget {
                       style: txtButtonStyle.copyWith(color: blackColor),
                     ),
                     event: () {
-                      Navigator.pop(context);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, HomePage.routeName, (value) => true);
+                      // Navigator.pop(context);
                     },
                     showBorder: true,
                     buttonHeight: 48,

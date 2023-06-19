@@ -5,6 +5,8 @@ import '../static/strings.dart';
 abstract class Session {
   set setLoggedIn(bool login);
 
+  set setIsOnline(bool isOnline);
+
   set setIsProfileCompleted(bool isCompleted);
 
   set setOrderId(String orderId);
@@ -26,6 +28,8 @@ abstract class Session {
   set setSessionCategoryId(String sessionCategoryId);
 
   bool get isLoggedIn;
+
+  bool get isOnline;
 
   bool get isProfileCompleted;
 
@@ -60,6 +64,11 @@ class SessionHelper implements Session {
   @override
   set setLoggedIn(bool login) {
     pref.setBool(IS_LOGGED_IN, login);
+  }
+
+  @override
+  set setIsOnline(bool online) {
+    pref.setBool(IS_ONLINE, online);
   }
 
   @override
@@ -114,6 +123,9 @@ class SessionHelper implements Session {
 
   @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
+
+  @override
+  bool get isOnline => pref.getBool(IS_ONLINE) ?? false;
 
   @override
   bool get isProfileCompleted => pref.getBool(IS_PROFILE_COMPLETED) ?? false;

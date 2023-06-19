@@ -53,8 +53,6 @@
     "verifyNow": "Verify Now",
     "otpSent": "OTP send successfully!",
     "otpVerifySuccess": "OTP verified successfully!",
-
-
     "pleaseEnterYourEmailAddress": "Enter your official email to get a verification code.",
     "atLeastEightCharacter": "At least 8 characters, with uppercase and lowercase letters",
     "name": "Name",
@@ -103,8 +101,6 @@
     "findNextRide": "Find Next Ride",
     "getReceipt": "Get Receipt",
     "continuee": "Continue",
-
-
     "phonenumber": "Phone number",
     "appname": "taxi app",
     "profile": "Information",
@@ -192,10 +188,11 @@
     "carModel": "Car Model",
     "people": "Person",
     "pending": "Pending",
-    "departToCustomerPlace": "Reached Pickup Location",
-    "arriveAtCustomerPlace": "Arrival",
-    "departToDestination": "Take to the destination",
-    "arriveAtDestination": "Arrived at the destination",
+    "departToCustomerPlace": "Start Ride to Pickup Location",
+    "arriveAtCustomerPlace": "Reached Pickup Location",
+    "departToDestination": "Start Trip",
+    "arriveAtDestination": "Start Trip",
+    "endTrip": "End Trip",
     "yesIhave": "Yes, I have.",
     "nocontactcust": "No. Contact the customer.",
     "profileupdated": "Profile updated",
