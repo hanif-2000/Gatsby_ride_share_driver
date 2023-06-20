@@ -27,9 +27,25 @@ abstract class Session {
 
   set setSessionCategoryId(String sessionCategoryId);
 
+  set setIsOrderRunning(bool isOrderRunning);
+
+  set setRunningOrderId(int orderId);
+
+  set setRunningOrderStatus(int orderStatus);
+
+  set setOrderUserId(int userId);
+
   bool get isLoggedIn;
 
   bool get isOnline;
+
+  bool get isOrderRunning;
+
+  int get runningOrderId;
+
+  int get runningOrderStatus;
+
+  int get orderUserId;
 
   bool get isProfileCompleted;
 
@@ -122,10 +138,42 @@ class SessionHelper implements Session {
   }
 
   @override
+  set setRunningOrderId(int orderId) {
+    pref.setInt(RUNNING_ORDER_ID, orderId);
+  }
+
+  @override
+  set setRunningOrderStatus(int orderStatus) {
+    pref.setInt(RUNNING_ORDER_STATUS, orderStatus);
+  }
+
+  @override
+  set setIsOrderRunning(bool value) {
+    pref.setBool(IS_ORDER_RUNNING, value);
+  }
+
+  @override
+  set setOrderUserId(int value) {
+    pref.setInt(ORDER_USER_ID, value);
+  }
+
+  @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
 
   @override
   bool get isOnline => pref.getBool(IS_ONLINE) ?? false;
+
+  @override
+  bool get isOrderRunning => pref.getBool(IS_ORDER_RUNNING) ?? false;
+
+  @override
+  int get runningOrderId => pref.getInt(RUNNING_ORDER_ID) ?? 0;
+
+  @override
+  int get runningOrderStatus => pref.getInt(RUNNING_ORDER_STATUS) ?? 0;
+
+  @override
+  int get orderUserId => pref.getInt(ORDER_USER_ID) ?? 0;
 
   @override
   bool get isProfileCompleted => pref.getBool(IS_PROFILE_COMPLETED) ?? false;

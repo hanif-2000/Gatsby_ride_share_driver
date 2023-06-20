@@ -1,5 +1,6 @@
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class CurrentLocationOrderWidget extends StatelessWidget {
@@ -16,15 +17,23 @@ class CurrentLocationOrderWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+
               child: FloatingActionButton(
-                child: const Icon(
-                  Icons.my_location_rounded,
-                  color: Colors.grey,
-                  size: 35,
+                // child: const Icon(
+                //   Icons.my_location_rounded,
+                //   color: Colors.grey,
+                //   size: 35,
+                // ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/icons/home/ic_navigation.png',
+                  ),
                 ),
                 backgroundColor: Colors.white,
                 onPressed: () async {
-                  await provider.moveCameraToDriver();
+                  // await provider.moveCameraToDriver();
+                  await provider.startNavigationInMap();
                 },
               ),
             ),

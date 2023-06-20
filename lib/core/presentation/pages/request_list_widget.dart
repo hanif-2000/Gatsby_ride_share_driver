@@ -45,17 +45,22 @@ class RequestListWidget extends StatelessWidget {
                               homeProvider
                                   .fetchOrderDetail(_data[index].id.toString())
                                   .listen(
-                                (event) {
-                                  if (event is OrderDetailLoaded) {
+                                (event1) {
+                                  if (event1 is OrderDetailLoaded) {
                                     // var _deviceSize = MediaQuery.of(context).size;
+                                    session.setRunningOrderId = _data[index].id;
+                                    session.setOrderId =
+                                        _data[index].id.toString();
                                     homeProvider
                                         .fetchCustomerDetail(
-                                            event.data.userId.toString())
+                                            event1.data.userId.toString())
                                         .listen(
                                       (event) async {
                                         if (event is CustomerDetailLoaded) {
-                                          session.setOrderId =
-                                              _data[index].id.toString();
+                                          session.setOrderUserId =
+                                              event1.data.userId;
+                                          print(
+                                              'RUNNING order id --> ${_data[index].id}');
                                           homeProvider
                                               .submitStatusOrder(
                                                   Order.driverAccept)
@@ -64,6 +69,10 @@ class RequestListWidget extends StatelessWidget {
                                               if (event
                                                   is UpdateStatusOrderLoaded) {
                                                 if (event.data.success == 1) {
+                                                  // var session =
+                                                  //     locator<Session>();
+                                                  session.setIsOrderRunning =
+                                                      true;
                                                   Navigator
                                                       .pushNamedAndRemoveUntil(
                                                     context,

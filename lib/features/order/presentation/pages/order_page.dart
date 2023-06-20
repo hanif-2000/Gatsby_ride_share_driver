@@ -5,6 +5,8 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widg
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/widgets/bottom_container_order.dart';
@@ -85,7 +87,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 3),
+              const Duration(seconds: 2),
               (Timer timer) async {
                 provider.fetchOrderStatus().listen(
                   (state) async {
@@ -96,6 +98,11 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                             OrderStatus.customerConfirmation;
                       }
                       if (state.data.status ==
+                          Order.arriveAtCustomerPlace.toString()) {
+                        provider.changeOrderStatus =
+                            OrderStatus.departureToDestination;
+                      }
+                      if (state.data.status ==
                           Order.arriveAtDestination.toString()) {
                         dismissLoading();
                       }
@@ -104,8 +111,14 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         dismissLoading();
                         trackingTimer!.cancel();
                         timer.cancel();
+
                         ///Clear the state and navigate driver to the rating screen
                         await provider.clearState();
+                        var session = locator<Session>();
+                        session.setIsOrderRunning = false;
+                        session.setOrderUserId = 0;
+                        session.setRunningOrderId = 0;
+
                         Navigator.pushNamedAndRemoveUntil(context,
                             GiveRatingScreen.routeName, (route) => false);
                         // showDialog(
@@ -166,7 +179,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: const [
-                                // CurrentLocationOrderWidget(),
+                                CurrentLocationOrderWidget(),
                                 BottomContainerOrder()
                               ],
                             ),

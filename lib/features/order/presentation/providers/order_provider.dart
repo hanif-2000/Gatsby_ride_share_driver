@@ -97,7 +97,9 @@ class OrderProvider with ChangeNotifier {
     } else if (val == OrderStatus.arriveAtCustomerPlace) {
       _orderStatus = OrderStatus.customerConfirmation;
     } else if (val == OrderStatus.customerConfirmation) {
-      _orderStatus = OrderStatus.customerConfirmation;
+      // _orderStatus = OrderStatus.customerConfirmation;
+      setPolylineDirection(false);
+      _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.departureToDestination) {
       setPolylineDirection(false);
       _orderStatus = OrderStatus.departureToDestination;
@@ -180,7 +182,7 @@ class OrderProvider with ChangeNotifier {
           markerId: markerIdOrigin,
           position: originLatLng,
           infoWindow: InfoWindow(title: appLoc.customerplace),
-          icon: await getBytesFromAsset(pickupIcon, 100).then((value) {
+          icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
             return pickUpMarker = BitmapDescriptor.fromBytes(value);
           }),
           onTap: () {},
@@ -268,13 +270,11 @@ class OrderProvider with ChangeNotifier {
       logMe("Listen Tracking");
       await createMarker();
       await updateLocation();
-
       notifyListeners();
     }
   }
 
   setPolylineDirection(bool isFromOrigin) async {
-    showLoading();
     var latLongOrigin = _orderDetail!.startCoordinate;
     var latLongDestination = _orderDetail!.endCoordinate;
     var splitOrigin = latLongOrigin.split(",");
@@ -324,7 +324,7 @@ class OrderProvider with ChangeNotifier {
 
           Polyline polyline = Polyline(
               polylineId: const PolylineId("jalur"),
-              color: Colors.lightBlue,
+              color: Colors.black,
               points: polylineCoordinates,
               width: 6,
               startCap: Cap.roundCap,
@@ -377,7 +377,7 @@ class OrderProvider with ChangeNotifier {
 
             Polyline polyline = Polyline(
                 polylineId: const PolylineId("jalur"),
-                color: Colors.lightBlue,
+                color: Colors.black,
                 points: polylineCoordinates,
                 width: 6,
                 startCap: Cap.roundCap,
@@ -444,7 +444,7 @@ class OrderProvider with ChangeNotifier {
 
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
     if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
-      _orderStatus = OrderStatus.customerConfirmation;
+      _orderStatus = OrderStatus.departureToDestination;
       // showToast(message: appLoc.waitcustconfirmation);
     }
     // else {
@@ -456,6 +456,7 @@ class OrderProvider with ChangeNotifier {
     } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
       orderStatusBody = Order.arriveAtCustomerPlace.toString();
     } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
+      orderStatusBody = Order.departureToDestination.toString();
     } else if (_orderStatus == OrderStatus.customerConfirmation) {
       orderStatusBody = Order.departureToDestination.toString();
     } else if (_orderStatus == OrderStatus.departureToDestination) {
@@ -531,12 +532,39 @@ class OrderProvider with ChangeNotifier {
     lctn.LocationData locationData = await location.getLocation();
     var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
     dismissLoading();
-    googleMapController
-        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: coordinate,
-      zoom: 18,
-    )));
+    googleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: coordinate,
+          zoom: 18,
+        ),
+      ),
+    );
+    notifyListeners();
+  }
 
+  startNavigationInMap() async {
+    var latLongOrigin = _orderDetail!.startCoordinate;
+    var latLongDestination = _orderDetail!.endCoordinate;
+    var splitOrigin = latLongOrigin.split(",");
+    var splitDestination = latLongDestination.split(",");
+    var latOrigin = double.parse(splitOrigin[0]);
+    var lngOrigin = double.parse(splitOrigin[1]);
+    var latDestination = double.parse(splitDestination[0]);
+    var lngDestination = double.parse(splitDestination[1]);
+    String url;
+    if (_orderStatus == OrderStatus.driverAccept ||
+        _orderStatus == OrderStatus.departureToCustomerplace) {
+      url = 'google.navigation:q=$latOrigin,$lngOrigin&mode=d';
+    } else {
+      url = 'google.navigation:q=$latDestination,$lngDestination&mode=d';
+    }
+
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
     notifyListeners();
   }
 
