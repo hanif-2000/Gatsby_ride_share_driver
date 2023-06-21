@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/history_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/detail_driver_response.dart';
@@ -14,12 +15,20 @@ import '../models/status_oder_response_model.dart';
 
 abstract class OrderDataSource {
   Future<ChangeStatusesponseModel> changeStatus(FormData formData);
+
   Future<UpdateStatusOrderResponseModel> updateStatusOrder(FormData formData);
+
   Future<GetStatusResponseModel> getStatusOrder();
+
   Future<OrderDetail> getDetailOrder(String orderId);
+
   Future<DriverDetail> getDriverDetail();
+
   Future<DriverLocationResponseModel> getDriverLocation();
+
   Future<RequestListDataModel> getRequestListData(FormData formData);
+
+  Future<HistoryDataModel> getHistoryListData();
 }
 
 class OrderDataSourceImplementation implements OrderDataSource {
@@ -60,6 +69,21 @@ class OrderDataSourceImplementation implements OrderDataSource {
   }
 
   @override
+  Future<HistoryDataModel> getHistoryListData() async {
+    String url = 'api/webservice/driver/order';
+    dio.withToken();
+    try {
+      final response = await dio.get(
+        url,
+      );
+      final model = HistoryDataModel.fromJson(response.data);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<UpdateStatusOrderResponseModel> updateStatusOrder(
       FormData formData) async {
     String url = 'api/webservice/driver/update-status';
@@ -79,7 +103,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
   @override
   Future<GetStatusResponseModel> getStatusOrder() async {
     final session = locator<Session>();
-    String orderId = session.orderId;
+    String orderId = session.runningOrderId.toString();
     String url = 'api/webservice/driver/order-status?id=$orderId';
     dio.withToken();
     try {

@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
@@ -20,7 +21,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_b
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChatPage.routeName:
       return MaterialPageRoute(builder: (_) => const ChatPage());
     case GiveRatingScreen.routeName:
-      return MaterialPageRoute(builder: (_) => const GiveRatingScreen());
+      final args = settings.arguments as RatingPageArguments;
+      return MaterialPageRoute(
+        builder: (_) => GiveRatingScreen(
+          customerDataModel: args.customerDataModel,
+          customerId: args.customerId!,
+        ),
+      );
     case ReceiptPage.routeName:
       return MaterialPageRoute(builder: (_) => const ReceiptPage());
     case OtherUserProfile.routeName:

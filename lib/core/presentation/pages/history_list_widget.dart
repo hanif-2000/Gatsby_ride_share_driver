@@ -1,4 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/history_tile.dart';
+import 'package:appkey_taxiapp_driver/features/history/presentation/pages/history_page.dart';
 import 'package:flutter/material.dart';
 
 class HistoryListWidget extends StatelessWidget {
@@ -6,13 +7,14 @@ class HistoryListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        HistoryTile(),
-        HistoryTile(),
-        HistoryTile(),
-        HistoryTile(),
-      ],
-    );
+    // return Column(
+    //   children: const [
+    //     HistoryTile(),
+    //     HistoryTile(),
+    //     HistoryTile(),
+    //     HistoryTile(),
+    //   ],
+    // );
+    return const HistoryPage();
   }
 }

@@ -443,10 +443,11 @@ class OrderProvider with ChangeNotifier {
   }
 
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
-    if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
-      _orderStatus = OrderStatus.departureToDestination;
-      // showToast(message: appLoc.waitcustconfirmation);
-    }
+    print('Current order status -----> $_orderStatus');
+    // if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
+    //   _orderStatus = OrderStatus.departureToDestination;
+    //   // showToast(message: appLoc.waitcustconfirmation);
+    // }
     // else {
     showLoading();
     yield UpdateStatusOrderLoading();
@@ -468,7 +469,7 @@ class OrderProvider with ChangeNotifier {
     logMe("orderStatusBody");
     logMe(orderStatusBody);
     final formData = FormData.fromMap({
-      'id': session.orderId,
+      'id': session.runningOrderId,
       'status': int.parse(orderStatusBody),
     });
     logMe("Update Status Body :");
@@ -508,6 +509,7 @@ class OrderProvider with ChangeNotifier {
     }, (data) async* {
       logMe("Order Statussss : $data");
       logMe(orderStatus);
+      // _orderStatus = data.status;
       yield GetStatusOrderLoaded(data: data);
     });
   }

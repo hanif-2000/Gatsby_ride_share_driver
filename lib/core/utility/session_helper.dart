@@ -35,6 +35,8 @@ abstract class Session {
 
   set setOrderUserId(int userId);
 
+  set setCurrentOrderState(int state);
+
   bool get isLoggedIn;
 
   bool get isOnline;
@@ -42,6 +44,8 @@ abstract class Session {
   bool get isOrderRunning;
 
   int get runningOrderId;
+
+  int get currentOrderState;
 
   int get runningOrderStatus;
 
@@ -158,6 +162,11 @@ class SessionHelper implements Session {
   }
 
   @override
+  set setCurrentOrderState(int value) {
+    pref.setInt(CURRENT_ORDER_STATE, value);
+  }
+
+  @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
 
   @override
@@ -168,6 +177,9 @@ class SessionHelper implements Session {
 
   @override
   int get runningOrderId => pref.getInt(RUNNING_ORDER_ID) ?? 0;
+
+  @override
+  int get currentOrderState => pref.getInt(CURRENT_ORDER_STATE) ?? 0;
 
   @override
   int get runningOrderStatus => pref.getInt(RUNNING_ORDER_STATUS) ?? 0;

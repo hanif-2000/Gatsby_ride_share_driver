@@ -34,6 +34,7 @@ class CustomRatingBar extends StatelessWidget {
       ),
       onRatingUpdate: (rating) {
         ///Update rating
+        print('Rating Rating ----> ${rating}');
         if (onUpdate != null) {
           onUpdate!(rating);
         }

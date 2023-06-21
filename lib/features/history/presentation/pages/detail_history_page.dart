@@ -1,16 +1,11 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/history/presentation/widgets/history_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../core/presentation/widgets/custom_app_title_bar.dart';
 import '../../data/models/history_response_model.dart';
-import '../providers/history_state.dart';
-import '../providers/history_provider.dart';
-
 class DetailHistoryPage extends StatefulWidget {
   final HistoryOrder item;
   static const String routeName = "DetailHistoryPage";

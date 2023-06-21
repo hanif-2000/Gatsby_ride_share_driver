@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/give_rating_screen.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
@@ -27,6 +27,16 @@ class OrderPageArguments {
   OrderPageArguments({
     required this.orderDetail,
     required this.customerDetailModel,
+  });
+}
+
+class RatingPageArguments {
+  final CustomerDataModel customerDataModel;
+  final int? customerId;
+
+  RatingPageArguments({
+    required this.customerDataModel,
+    required this.customerId,
   });
 }
 
@@ -92,6 +102,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
+                      var session = locator<Session>();
+                      session.setCurrentOrderState =
+                          int.parse(state.data.status);
                       if (state.data.status ==
                           Order.customerConfirmation.toString()) {
                         provider.changeOrderStatus =
@@ -117,10 +130,16 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         var session = locator<Session>();
                         session.setIsOrderRunning = false;
                         session.setOrderUserId = 0;
-                        session.setRunningOrderId = 0;
 
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            GiveRatingScreen.routeName, (route) => false);
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          GiveRatingScreen.routeName,
+                          (route) => false,
+                          arguments: RatingPageArguments(
+                            customerDataModel: provider.customerDetail!.data,
+                            customerId: provider.orderDetail!.userId,
+                          ),
+                        );
                         // showDialog(
                         //   barrierDismissible: false,
                         //   context: context,
@@ -155,7 +174,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                   onMapCreated: (GoogleMapController controller) async {
                     provider.googleMapController = controller;
                     await provider.setCurrentLocation(
-                        widget.orderDetail, widget.customerDetail);
+                      widget.orderDetail,
+                      widget.customerDetail,
+                    );
                   },
                   polylines: provider.polylines,
                   markers: Set<Marker>.of(provider.markers.values),

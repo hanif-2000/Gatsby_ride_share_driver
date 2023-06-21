@@ -1,5 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class UserProfileTile extends StatelessWidget {
                       color: redD03B3B,
                       image: DecorationImage(
                         image: NetworkImage(
-                          provider.customerDetail!.data.photo,
+                          '$BASE_URL${provider.customerDetail!.data.photo}',
                         ),
                       ),
                     ),
@@ -41,6 +42,7 @@ class UserProfileTile extends StatelessWidget {
                 ),
                 mediumHorizontalSpacing(),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${provider.customerDetail!.data.name}',
@@ -91,7 +93,7 @@ class UserProfileTile extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '\$80.00',
+                      '\$${provider.orderDetail!.totalPrice.toStringAsFixed(0)}',
                       textAlign: TextAlign.center,
                       style: titleStyle
                           .copyWith(
@@ -100,7 +102,7 @@ class UserProfileTile extends StatelessWidget {
                           .usePoppinsW6Font(),
                     ),
                     Text(
-                      '4.5 Km',
+                      '${provider.orderDetail!.distance} Km',
                       textAlign: TextAlign.center,
                       style: titleStyle
                           .copyWith(

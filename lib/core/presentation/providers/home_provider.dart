@@ -81,7 +81,7 @@ class HomeProvider with ChangeNotifier {
   //setter
   set changeStatus(val) {
     _isOnline = val;
-    notifyListeners();
+    // notifyListeners();
   }
 
   set projectType(value) {

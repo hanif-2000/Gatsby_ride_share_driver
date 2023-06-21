@@ -60,6 +60,11 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/ch
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_password_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
+import 'package:appkey_taxiapp_driver/features/rating/data/datasource/rating_data_source.dart';
+import 'package:appkey_taxiapp_driver/features/rating/data/repositories/rating_repository_implementation.dart';
+import 'package:appkey_taxiapp_driver/features/rating/domain/repositories/rating_repository.dart';
+import 'package:appkey_taxiapp_driver/features/rating/domain/usercases/do_rating.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/datasource/signup_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/repositories/signup_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/signup/domain/repositories/signup_repository.dart';
@@ -171,6 +176,11 @@ Future<void> init() async {
       dataSource: locator<ProfileDataSource>(),
     ),
   );
+  locator.registerLazySingleton<RatingRepository>(
+    () => RatingRepositoryImplementation(
+      dataSource: locator<RatingDataSource>(),
+    ),
+  );
   locator.registerLazySingleton<HistoryRepository>(
     () => HistoryRepositoryImplementation(
       dataSource: locator<HistoryDataSource>(),
@@ -225,6 +235,8 @@ Future<void> init() async {
       () => OrderDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<UpdateLocationDataSource>(
       () => UpdateLocationDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<RatingDataSource>(
+      () => RatingDataSourceImplementation(dio: locator<Dio>()));
 
   //usecase
   locator.registerLazySingleton<GetCustomerDetail>(
@@ -275,6 +287,8 @@ Future<void> init() async {
       () => GetDriverLocation(repository: locator<OrderRepository>()));
   locator.registerLazySingleton<DoUpdateLocation>(
       () => DoUpdateLocation(repository: locator<UpdateLocationRepository>()));
+  locator.registerLazySingleton<DoRating>(
+      () => DoRating(repository: locator<RatingRepository>()));
 
   //providers
   locator.registerLazySingleton<FcmProvider>(() => FcmProvider());
@@ -325,4 +339,6 @@ Future<void> init() async {
       () => ChangeEmailProvider(updateEmail: locator()));
   locator.registerFactory<ChangePasswordProvider>(
       () => ChangePasswordProvider(updatePassword: locator()));
+  locator.registerFactory<RatingProvider>(
+      () => RatingProvider(doRating: locator()));
 }
