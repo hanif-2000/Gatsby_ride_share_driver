@@ -13,6 +13,7 @@ import 'menu_button.dart';
 class AppBarLoggedIn extends StatelessWidget {
   final BoxConstraints boxConstraints;
   final double appbarHeight;
+
   const AppBarLoggedIn(
       {Key? key, required this.boxConstraints, required this.appbarHeight})
       : super(key: key);
@@ -20,78 +21,80 @@ class AppBarLoggedIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: boxConstraints.maxWidth * 0.6,
-        height: appbarHeight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: MenuButton(
-                title: appLoc.profile,
-                imageAsset: userIcon,
-                tap: () {
-                  Navigator.pushNamed(
-                    context,
-                    ProfilePage.routeName,
-                  );
-                },
-                height: appbarHeight,
-              ),
+      width: boxConstraints.maxWidth * 0.6,
+      height: appbarHeight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: MenuButton(
+              title: appLoc.profile,
+              imageAsset: userIcon,
+              tap: () {
+                Navigator.pushNamed(
+                  context,
+                  ProfilePage.routeName,
+                );
+              },
+              height: appbarHeight,
             ),
-            Expanded(
-              child: MenuButton(
-                title: appLoc.history,
-                imageAsset: historyIcon,
-                tap: () {
-                  Navigator.pushNamed(
-                    context,
-                    HistoryPage.routeName,
-                  );
-                },
-                height: appbarHeight,
-              ),
+          ),
+          Expanded(
+            child: MenuButton(
+              title: appLoc.history,
+              imageAsset: historyIcon,
+              tap: () {
+                Navigator.pushNamed(
+                  context,
+                  HistoryPage.routeName,
+                );
+              },
+              height: appbarHeight,
             ),
-            Expanded(
-              child: MenuButton(
-                title: appLoc.we,
-                imageAsset: introductionIcon,
-                tap: () {
-                  Navigator.pushNamed(
-                    context,
-                    AboutUsPage.routeName,
-                  );
-                },
-                height: appbarHeight,
-              ),
+          ),
+          Expanded(
+            child: MenuButton(
+              title: appLoc.we,
+              imageAsset: introductionIcon,
+              tap: () {
+                Navigator.pushNamed(
+                  context,
+                  AboutUsPage.routeName,
+                );
+              },
+              height: appbarHeight,
             ),
-            Expanded(
-              child: MenuButton(
-                title: appLoc.logout,
-                imageAsset: logoutIcon,
-                tap: () async {
-                  showDialog(
-                    context: context,
-                    builder: (_) => CustomLogoutDialog(
-                      positiveAction: () async {
-                        await sessionLogOut().then((_) => Navigator.of(context)
-                            .pushNamedAndRemoveUntil(
-                                SplashPage.routeName, (route) => false));
-                      },
-                    ),
-                  );
-                },
-                height: appbarHeight,
-              ),
+          ),
+          Expanded(
+            child: MenuButton(
+              title: appLoc.logout,
+              imageAsset: logoutIcon,
+              tap: () async {
+                showDialog(
+                  context: context,
+                  builder: (_) => CustomLogoutDialog(
+                    positiveAction: () async {
+                      await sessionLogOut().then((_) => Navigator.of(context)
+                          .pushNamedAndRemoveUntil(
+                              SplashPage.routeName, (route) => false));
+                    },
+                  ),
+                );
+              },
+              height: appbarHeight,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class AppBarNotLoggedIn extends StatelessWidget {
   final BoxConstraints boxConstraints;
   final double appbarHeight;
+
   const AppBarNotLoggedIn(
       {Key? key, required this.boxConstraints, required this.appbarHeight})
       : super(key: key);

@@ -15,6 +15,7 @@ class HistoryProvider extends FormProvider {
   HistoryProvider({required this.getHistory});
 
   Stream<HistoryState> fetchHistory() async* {
+    logMe('Fetching History data  ---> ');
     yield HistoryLoading();
     final result = await getHistory();
     yield* result.fold((failure) async* {

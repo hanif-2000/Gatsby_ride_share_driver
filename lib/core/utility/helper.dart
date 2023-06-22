@@ -243,3 +243,54 @@ String getHistoryStatus(String statusHistory) {
   }
   return strStatus;
 }
+
+getPaymentType(int type) {
+  if (type == 1) {
+    return 'Online';
+  } else {
+    return 'Cash';
+  }
+}
+
+getStatusColor(String status) {
+  return status == '8'
+      ? Colors.redAccent
+      : status == '7'
+          ? Colors.green
+          : yellowE5A829;
+}
+
+String getOrderStatus(String statusHistory) {
+  var status = int.parse(statusHistory);
+  String strStatus = "";
+  switch (status) {
+    case Order.lookingDriver:
+      strStatus = appLoc.pending;
+      break;
+    case Order.driverAccept:
+      strStatus = appLoc.pending;
+      break;
+    case Order.departureToCustomerPlace:
+      strStatus = appLoc.pending;
+      break;
+    case Order.arriveAtCustomerPlace:
+      strStatus = appLoc.pending;
+      break;
+    case Order.customerConfirmation:
+      strStatus = appLoc.pending;
+      break;
+    case Order.departureToDestination:
+      strStatus = appLoc.pending;
+      break;
+    case Order.arriveAtDestination:
+      strStatus = appLoc.pending;
+      break;
+    case Order.complete:
+      strStatus = appLoc.complete;
+      break;
+    case Order.cancel:
+      strStatus = appLoc.cancel;
+      break;
+  }
+  return strStatus;
+}

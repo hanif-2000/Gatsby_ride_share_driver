@@ -178,10 +178,8 @@ class GiveRatingScreen extends StatelessWidget {
                             style: txtButtonStyle.copyWith(color: blackColor),
                           ),
                           event: () {
-                            provider.addRating();
-
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, HomePage.routeName, (value) => true);
+                            Navigator.pushNamed(
+                                context, JobCompletedPage.routeName);
                             // Navigator.pop(context);
                           },
                           showBorder: true,

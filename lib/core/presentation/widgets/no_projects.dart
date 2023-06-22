@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NoProjects extends StatelessWidget {
-  const NoProjects({Key? key}) : super(key: key);
+  const NoProjects({
+    Key? key,
+    this.isOffline = false,
+  }) : super(key: key);
+  final bool isOffline;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class NoProjects extends StatelessWidget {
         SvgPicture.asset('assets/icons/home/car_img.svg'),
         largeVerticalSpacing(),
         Text(
-          appLoc.waiting,
+          isOffline ? 'Go Online!' : appLoc.waiting,
           textAlign: TextAlign.center,
           style: formTextFieldStyle.copyWith(
             fontSize: 24,
@@ -27,7 +31,9 @@ class NoProjects extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28.0),
           child: Text(
-            appLoc.waitForTheReside,
+            isOffline
+                ? 'You are currently offline go online to get rides.'
+                : appLoc.waitForTheReside,
             textAlign: TextAlign.center,
             style: formTextFieldStyle.copyWith(
               fontSize: 17,

@@ -23,13 +23,19 @@ class HistoryResponseModel {
       HistoryResponseModel(
         success: json["success"],
         historyOrder: List<HistoryOrder>.from(
-            json["history_order"].map((x) => HistoryOrder.fromJson(x))),
+          json["history_order"].map(
+            (x) => HistoryOrder.fromJson(x),
+          ),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
-        "history_order":
-            List<dynamic>.from(historyOrder.map((x) => x.toJson())),
+        "history_order": List<dynamic>.from(
+          historyOrder.map(
+            (x) => x.toJson(),
+          ),
+        ),
       };
 }
 
@@ -73,19 +79,19 @@ class HistoryOrder {
   VehicleCategory vehicleCategory;
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
-        id: json["id"],
-        driverId: json["driver_id"],
-        startCoordinate: json["start_coordinate"],
-        endCoordinate: json["end_coordinate"],
-        startAddress: json["start_address"],
-        endAddress: json["end_address"],
-        distance: json["distance"],
-        total: json["total"],
+        id: json["id"] ?? '',
+        driverId: json["driver_id"] ?? '',
+        startCoordinate: json["start_coordinate"] ?? '',
+        endCoordinate: json["end_coordinate"] ?? '',
+        startAddress: json["start_address"] ?? '',
+        endAddress: json["end_address"] ?? '',
+        distance: json["distance"] ?? '',
+        total: json["total"] ?? 0,
         orderTime: DateTime.parse(json["order_time"]),
-        status: json["status"],
-        name: json["name"],
-        phone: json["phone"],
-        email: json["email"],
+        status: json["status"] ?? '',
+        name: json["name"] ?? '',
+        phone: json["phone"] ?? '',
+        email: json["email"] ?? '',
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],

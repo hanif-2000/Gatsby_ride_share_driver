@@ -65,6 +65,11 @@ import 'package:appkey_taxiapp_driver/features/rating/data/repositories/rating_r
 import 'package:appkey_taxiapp_driver/features/rating/domain/repositories/rating_repository.dart';
 import 'package:appkey_taxiapp_driver/features/rating/domain/usercases/do_rating.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/data/datasource/receipt_data_source.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/data/repositories/receipt_repository_implementation.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/domain/repositories/receipt_repository.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/domain/usercases/do_contact_us.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_provider.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/datasource/signup_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/repositories/signup_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/signup/domain/repositories/signup_repository.dart';
@@ -152,6 +157,11 @@ Future<void> init() async {
       dataSource: locator<LoginDataSource>(),
     ),
   );
+  locator.registerLazySingleton<ReceiptRepository>(
+    () => ReceiptRepositoryImplementation(
+      dataSource: locator<ReceiptDataSource>(),
+    ),
+  );
 
   locator.registerLazySingleton<SignupRepository>(
       () => SignupRepositoryImplementation(
@@ -237,6 +247,8 @@ Future<void> init() async {
       () => UpdateLocationDataSourceImplementation(dio: locator<Dio>()));
   locator.registerLazySingleton<RatingDataSource>(
       () => RatingDataSourceImplementation(dio: locator<Dio>()));
+  locator.registerLazySingleton<ReceiptDataSource>(
+      () => ReceiptDataSourceImplementation(dio: locator<Dio>()));
 
   //usecase
   locator.registerLazySingleton<GetCustomerDetail>(
@@ -289,6 +301,8 @@ Future<void> init() async {
       () => DoUpdateLocation(repository: locator<UpdateLocationRepository>()));
   locator.registerLazySingleton<DoRating>(
       () => DoRating(repository: locator<RatingRepository>()));
+  locator.registerLazySingleton<DoReceipt>(
+      () => DoReceipt(repository: locator<ReceiptRepository>()));
 
   //providers
   locator.registerLazySingleton<FcmProvider>(() => FcmProvider());
@@ -341,4 +355,6 @@ Future<void> init() async {
       () => ChangePasswordProvider(updatePassword: locator()));
   locator.registerFactory<RatingProvider>(
       () => RatingProvider(doRating: locator()));
+  locator.registerFactory<ReceiptProvider>(
+      () => ReceiptProvider(doReceipt: locator()));
 }

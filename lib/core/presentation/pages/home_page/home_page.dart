@@ -199,7 +199,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         .listen(
                       (event) async {
                         if (event is CustomerDetailLoaded) {
-
                           Navigator.pushNamed(
                             context,
                             OrderPage.routeName,
@@ -207,7 +206,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             arguments: OrderPageArguments(
                               orderDetail: homeProvider.orderDetail!,
                               customerDetailModel:
-                              homeProvider.customerDetailModel!,
+                                  homeProvider.customerDetailModel!,
                             ),
                           );
                           // homeProvider
@@ -266,7 +265,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           //     }
                           //   },
                           // );
-
                         }
                       },
                     );

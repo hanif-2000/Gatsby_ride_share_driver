@@ -1,5 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/receipt_page.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';

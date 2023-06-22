@@ -1,12 +1,15 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/page/order_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class HistoryTile extends StatelessWidget {
-  const HistoryTile({Key? key}) : super(key: key);
+  const HistoryTile({Key? key, this.order}) : super(key: key);
+  final HistoryOrder? order;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,8 @@ class HistoryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '12 May 2023, 12:30PM',
+                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    // '${order!.orderTime.toIso8601String()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 14,
@@ -55,18 +59,23 @@ class HistoryTile extends StatelessWidget {
                       Container(
                         height: 6,
                         width: 6,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: yellowE5A829,
+                          color: getStatusColor(
+                            order!.status,
+                          ),
                         ),
                       ),
                       smallHorizontalSpacing(),
                       Text(
-                        appLoc.inProgress,
+                        getOrderStatus(order!.status),
+                        // appLoc.inProgress,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: greyB6B6B6,
+                          color: getStatusColor(
+                            order!.status,
+                          ),
                         ).usePoppinsW6Font(),
                       ),
                     ],
@@ -95,7 +104,8 @@ class HistoryTile extends StatelessWidget {
                             mediumHorizontalSpacing(),
                             Expanded(
                               child: Text(
-                                'PJCX+6R3, Sector 115',
+                                // 'PJCX+6R3, Sector 115',
+                                order!.startAddress,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
@@ -116,7 +126,8 @@ class HistoryTile extends StatelessWidget {
                             mediumHorizontalSpacing(),
                             Expanded(
                               child: Text(
-                                'PJCX+6R3, Sector 115',
+                                order!.endAddress,
+                                // 'PJCX+6R3, Sector 115',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
@@ -130,6 +141,7 @@ class HistoryTile extends StatelessWidget {
                       ],
                     ),
                   ),
+                  smallHorizontalSpacing(),
                   Column(
                     children: [
                       Text(
@@ -141,7 +153,7 @@ class HistoryTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '\$112',
+                        '\$${order!.total}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 24,
@@ -173,7 +185,7 @@ class HistoryTile extends StatelessWidget {
                         ).usePoppinsW5Font(),
                       ),
                       Text(
-                        'Mini (4 Person)',
+                        '${order!.vehicleCategory.category} (${order!.vehicleCategory.seat} Person)',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,

@@ -79,9 +79,13 @@ class HomeProvider with ChangeNotifier {
   GlobalKey get globalKey => _key;
 
   //setter
-  set changeStatus(val) {
+  set changeStatusOld(val) {
     _isOnline = val;
     // notifyListeners();
+  }
+  set changeStatus(val) {
+    _isOnline = val;
+    notifyListeners();
   }
 
   set projectType(value) {
