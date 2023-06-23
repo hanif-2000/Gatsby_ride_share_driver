@@ -5,5 +5,5 @@ import '../../data/models/login_response_model.dart';
 
 abstract class LoginRepository {
   Future<Either<Failure, LoginDataModel?>> doLogin(
-      String email, String password);
+      String email, String password, String position);
 }

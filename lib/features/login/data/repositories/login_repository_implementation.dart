@@ -14,9 +14,9 @@ class LoginRepositoryImplementation implements LoginRepository {
 
   @override
   Future<Either<Failure, LoginDataModel?>> doLogin(
-      String email, String password) async {
+      String email, String password, String position) async {
     try {
-      final data = await dataSource.doLogin(email, password);
+      final data = await dataSource.doLogin(email, password, position);
       if (data!.success == 1) {
         return Right(data.data);
       } else {

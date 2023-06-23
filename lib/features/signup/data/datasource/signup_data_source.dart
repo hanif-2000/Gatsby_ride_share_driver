@@ -5,7 +5,8 @@ import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 
 abstract class SignupDataSource {
-  Future<SignupResponseModel?> doSignup(String email, String password);
+  Future<SignupResponseModel?> doSignup(
+      String email, String password, String position);
 }
 
 class SignupDataSourceImplementation implements SignupDataSource {
@@ -14,13 +15,19 @@ class SignupDataSourceImplementation implements SignupDataSource {
   SignupDataSourceImplementation({required this.dio});
 
   @override
-  Future<SignupResponseModel?> doSignup(String email, String password) async {
+  Future<SignupResponseModel?> doSignup(
+      String email, String password, String position) async {
     String url = 'api/webservice/driver/signup';
     await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
     String fcmToken = session.sessionFcmToken;
-    FormData data = FormData.fromMap(
-        {'email': email, 'password': password, 'fcm_token': fcmToken});
+    FormData data = FormData.fromMap({
+      'email': email,
+      'password': password,
+      'fcm_token': fcmToken,
+      'position': position
+    });
+    print('Signup data -----> ${data.fields.toString()}');
     try {
       final response = await dio.post(
         url,

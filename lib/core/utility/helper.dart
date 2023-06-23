@@ -72,7 +72,6 @@ Future<bool> checkPermission() async {
   if (permission == LocationPermission.deniedForever) {
     return false;
   }
-
   return true;
 }
 
@@ -245,7 +244,7 @@ String getHistoryStatus(String statusHistory) {
 }
 
 getPaymentType(int type) {
-  if (type == 1) {
+  if (type == 2) {
     return 'Online';
   } else {
     return 'Cash';
@@ -289,8 +288,19 @@ String getOrderStatus(String statusHistory) {
       strStatus = appLoc.complete;
       break;
     case Order.cancel:
-      strStatus = appLoc.cancel;
+      strStatus = appLoc.cancelled;
       break;
   }
   return strStatus;
+}
+
+String getTimeTaken(int minutes) {
+  if (minutes < 60) {
+    return '$minutes min';
+  } else {
+    double hours = minutes / 60;
+    return '$hours hours';
+  }
+
+  return '';
 }

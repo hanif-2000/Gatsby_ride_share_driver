@@ -18,7 +18,7 @@ class PriceCategoryDataSourceImplementation implements PriceCategoryDataSource {
     String path = 'api/webservice/priceCategory';
 
     try {
-      final response = await dio.get(path);
+      final response = await dio.post(path);
       return PriceCategoryListModel.fromJson(response.data);
     } catch (e) {
       log("PriceCategoryListModel detail Error PriceCategoryDataSourceImplementation : ",

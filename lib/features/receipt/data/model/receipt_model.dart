@@ -27,8 +27,8 @@ class OrderReceipt {
   String distance;
   int total;
   DateTime orderTime;
-  dynamic startTime;
-  DateTime endTime;
+  DateTime? startTime;
+  DateTime? endTime;
   String status;
   String image;
   String userName;
@@ -44,7 +44,7 @@ class OrderReceipt {
     required this.total,
     required this.orderTime,
     this.startTime,
-    required this.endTime,
+    this.endTime,
     required this.status,
     required this.image,
     required this.userName,
@@ -60,8 +60,11 @@ class OrderReceipt {
         distance: json["distance"],
         total: json["total"],
         orderTime: DateTime.parse(json["order_time"]),
-        startTime: json["start_time"],
-        endTime: DateTime.parse(json["end_time"]),
+        startTime: json["start_time"] != null
+            ? DateTime.parse(json["start_time"])
+            : null,
+        endTime:
+            json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
         status: json["status"],
         image: json["image"],
         userName: json["user_name"],
@@ -79,8 +82,8 @@ class OrderReceipt {
         "distance": distance,
         "total": total,
         "order_time": orderTime.toIso8601String(),
-        "start_time": startTime,
-        "end_time": endTime.toIso8601String(),
+        "end_time": endTime!.toIso8601String(),
+        "start_time": endTime!.toIso8601String(),
         "status": status,
         "image": image,
         "user_name": userName,

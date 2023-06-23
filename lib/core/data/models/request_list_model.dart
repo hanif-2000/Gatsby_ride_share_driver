@@ -117,7 +117,7 @@ class RequestListModel extends Equatable {
         updatedAt: DateTime.parse(json["updated_at"]),
         firstName: json["first_name"],
         lastName: json["last_name"],
-        image: json["image"],
+        image: json["image"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {

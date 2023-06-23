@@ -32,7 +32,8 @@ class RequestListWidget extends StatelessWidget {
                 showToast(message: failure.message);
                 return const SizedBox.shrink();
               case RequestListLoaded:
-                final _data = (state.data as RequestListLoaded).data;
+                final data = (state.data as RequestListLoaded).data;
+                final _data = data.isEmpty ? [] : data.reversed.toList();
                 var session = locator<Session>();
                 return !session.isOnline
                     ? Center(child: NoProjects(isOffline: !session.isOnline))

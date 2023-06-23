@@ -6,7 +6,8 @@ import '../../../../core/utility/session_helper.dart';
 import '../models/login_response_model.dart';
 
 abstract class LoginDataSource {
-  Future<LoginResponseModel?> doLogin(String email, String password);
+  Future<LoginResponseModel?> doLogin(
+      String email, String password, String position);
 }
 
 class LoginDataSourceImplementation implements LoginDataSource {
@@ -15,14 +16,19 @@ class LoginDataSourceImplementation implements LoginDataSource {
   LoginDataSourceImplementation({required this.dio});
 
   @override
-  Future<LoginResponseModel?> doLogin(String email, String password) async {
+  Future<LoginResponseModel?> doLogin(
+      String email, String password, String position) async {
     String url = 'api/webservice/logindriver';
     await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
     String fcmToken = session.sessionFcmToken;
-    FormData data = FormData.fromMap(
-        {'email': email, 'password': password, 'fcm_token': fcmToken});
-
+    FormData data = FormData.fromMap({
+      'email': email,
+      'password': password,
+      'fcm_token': fcmToken,
+      'position': position
+    });
+    print('Sign in data ----> ${data.fields.toString()}');
     try {
       final response = await dio.post(
         url,

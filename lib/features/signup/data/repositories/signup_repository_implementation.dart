@@ -14,9 +14,9 @@ class SignupRepositoryImplementation implements SignupRepository {
 
   @override
   Future<Either<Failure, SignupResponseModel?>> doSignup(
-      String email, String password) async {
+      String email, String password, String position) async {
     try {
-      final data = await dataSource.doSignup(email, password);
+      final data = await dataSource.doSignup(email, password, position);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure Signup repository -- ${e.toString()}");

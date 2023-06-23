@@ -139,6 +139,7 @@
     "yes": "Yes",
     "wouldyouliketologout": "Would you like to log out?",
     "cancel": "Cancel",
+    "cancelled": "Cancelled",
     "registersuccessfully": "register successfully",
     "successfullyregistered": "正常に登録されました",
     "ok": "Ok",

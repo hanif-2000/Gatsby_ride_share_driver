@@ -6,7 +6,7 @@ import '../../../../core/error/failure.dart';
 abstract class SignupUseCase<Type> {
   // return statusCode when fails
   // return token when succeed
-  Future<Either<Failure, SignupResponseModel?>> call(String email, String password);
+  Future<Either<Failure, SignupResponseModel?>> call(String email, String password, String position);
 }
 
 class DoSignup implements SignupUseCase<String> {
@@ -16,8 +16,8 @@ class DoSignup implements SignupUseCase<String> {
 
   @override
   Future<Either<Failure, SignupResponseModel?>> call(
-      String email, String password) async {
-    final result = await repository.doSignup(email, password);
+      String email, String password, String position) async {
+    final result = await repository.doSignup(email, password, position);
     return result.fold((l) => Left(l), (r) {
       return Right(r);
     });

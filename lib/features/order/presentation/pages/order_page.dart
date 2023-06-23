@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -14,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
-import '../../../../core/presentation/pages/home_page/home_page.dart';
-import '../../../../core/presentation/widgets/main_dialog.dart';
 import '../../../../core/static/order_status.dart';
 import '../../domain/entities/order_detail.dart';
 import '../widgets/current_location_order.dart';
@@ -118,6 +116,18 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       if (state.data.status ==
                           Order.arriveAtDestination.toString()) {
                         dismissLoading();
+                      }
+                      if (state.data.status == Order.cancel.toString()) {
+                        showToast(message: "Order cancelled by the user");
+                        await provider.clearState();
+                        var session = locator<Session>();
+                        session.setIsOrderRunning = false;
+                        session.setOrderUserId = 0;
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          HomePage.routeName,
+                          (route) => false,
+                        );
                       }
 
                       if (state.data.status == Order.complete.toString()) {

@@ -5,5 +5,5 @@ import '../../../../core/error/failure.dart';
 
 abstract class SignupRepository {
   Future<Either<Failure, SignupResponseModel?>> doSignup(
-      String email, String password);
+      String email, String password, String position);
 }

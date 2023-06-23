@@ -49,6 +49,10 @@ class ReceiptPage extends StatelessWidget {
                       );
                     }
                     OrderReceipt order = _data.orderReceipt.first;
+
+                    int time =
+                        (order.endTime!.difference(order.startTime!).inMinutes);
+
                     return Column(
                       children: [
                         Container(
@@ -243,7 +247,7 @@ class ReceiptPage extends StatelessWidget {
                                           .usePoppinsW6Font(),
                                     ),
                                     Text(
-                                      '30 min',
+                                      '${time ?? 0} min',
                                       textAlign: TextAlign.center,
                                       style: titleStyle
                                           .copyWith(
@@ -345,7 +349,7 @@ class ReceiptPage extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Service Price',
+                                          'Service Price (5%)',
                                           textAlign: TextAlign.center,
                                           style: titleStyle
                                               .copyWith(
@@ -355,7 +359,7 @@ class ReceiptPage extends StatelessWidget {
                                               .usePoppinsW6Font(),
                                         ),
                                         Text(
-                                          '\$4.00',
+                                          '\$${(order.total * 5) / 100}',
                                           textAlign: TextAlign.center,
                                           style: titleStyle
                                               .copyWith(
@@ -385,7 +389,7 @@ class ReceiptPage extends StatelessWidget {
                                               .usePoppinsW6Font(),
                                         ),
                                         Text(
-                                          '\$${order.total - 4}',
+                                          '\$${order.total - ((order.total * 5) / 100)}',
                                           textAlign: TextAlign.center,
                                           style: titleStyle
                                               .copyWith(

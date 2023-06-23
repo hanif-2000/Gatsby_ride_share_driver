@@ -7,6 +7,7 @@ import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_provider.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
+import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/dimens.dart';
@@ -47,8 +48,9 @@ class _FormBankDetailState extends State<FormBankDetail> {
           if (data.success == 1) {
             final session = locator<Session>();
             session.setIsProfileCompleted = true;
+            showToast(message: 'Please wait Admin will verify your account!');
             Navigator.pushNamedAndRemoveUntil(
-                context, HomePage.routeName, (route) => false);
+                context, LoginPage.routeName, (route) => false);
           } else {
             // if (data.message == '1') {
             //   showToast(message: appLoc.emailnotmatch);
