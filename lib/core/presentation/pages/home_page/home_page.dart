@@ -41,12 +41,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     // _fcmProvider.addListener(() async => await fcmListener());
     WidgetsBinding.instance.addObserver(this);
+    connectToSocket();
     homeProvider.getRequestListData().listen((event) {
       if (event is RequestListLoaded) {
         logMe(
             'Request list data loaded success----------> ${event.data.length}');
       }
     });
+  }
+
+  connectToSocket() {
+    homeProvider.connectToSocket();
   }
 
   @override

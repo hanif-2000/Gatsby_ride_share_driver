@@ -4,19 +4,23 @@ import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/utility/helper.dart';
 
 class OrderDetailPage extends StatelessWidget {
-  const OrderDetailPage({Key? key}) : super(key: key);
+  const OrderDetailPage({Key? key, this.order}) : super(key: key);
   static const routeName = '/OrderDetailPage';
+  final HistoryOrder? order;
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +353,7 @@ class OrderDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '10 May 2023, 12:30PM',
+                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -362,19 +366,23 @@ class OrderDetailPage extends StatelessWidget {
                       Container(
                         width: 6,
                         height: 6,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: green2DAA5F,
+                          color: getStatusColor(
+                            order!.status,
+                          ),
                         ),
                       ),
                       smallHorizontalSpacing(),
                       Text(
-                        'Completed',
+                        getOrderStatus(order!.status),
                         textAlign: TextAlign.center,
                         style: titleStyle
                             .copyWith(
                               fontSize: 14,
-                              color: green2DAA5F,
+                              color: getStatusColor(
+                                order!.status,
+                              ),
                             )
                             .usePoppinsW5Font(),
                       ),
@@ -405,12 +413,112 @@ class OrderDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const UserProfileTile(),
+                  // const UserProfileTile(),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, OtherUserProfile.routeName);
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: redD03B3B,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  '$BASE_URL${order!.image}',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        mediumHorizontalSpacing(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${order!.userName}',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 16,
+                                  )
+                                  .usePoppinsW5Font(),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, RatingListPage.routeName);
+                                // context,
+                                // GiveRatingScreen.routeName);
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/icons/home/ic_start.svg'),
+                                  smallHorizontalSpacing(),
+                                  Text(
+                                    '${order!.rating}',
+                                    textAlign: TextAlign.center,
+                                    style: titleStyle
+                                        .copyWith(
+                                          fontSize: 14,
+                                        )
+                                        .usePoppinsW6Font(),
+                                  ),
+                                  smallHorizontalSpacing(),
+                                  Text(
+                                    'Reviews',
+                                    textAlign: TextAlign.center,
+                                    style: titleStyle
+                                        .copyWith(
+                                          fontSize: 14,
+                                          color: yellowE5A829,
+                                          decoration: TextDecoration.underline,
+                                        )
+                                        .usePoppinsW5Font(),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                        Column(
+                          children: [
+                            Text(
+                              '\$${order!.total.toStringAsFixed(0)}',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 16,
+                                  )
+                                  .usePoppinsW6Font(),
+                            ),
+                            Text(
+                              '${order!.distance} Km',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 14,
+                                    color: greyB6B6B6,
+                                  )
+                                  .usePoppinsW5Font(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   largeVerticalSpacing(),
-                  const AddressTile(
+                  AddressTile(
                     icon: 'assets/icons/home/ic_pickup.svg',
                     title: 'Pickup Location',
-                    address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+                    address: order!.startAddress,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -418,10 +526,10 @@ class OrderDetailPage extends StatelessWidget {
                       color: grey9c9c9c,
                     ),
                   ),
-                  const AddressTile(
+                  AddressTile(
                     icon: 'assets/icons/home/ic_drop_pin.svg',
                     title: 'Drop location',
-                    address: 'PJCX+6R3, Sector 115, Lorem ipsum dolor sit amet',
+                    address: order!.endAddress,
                   ),
                   largeVerticalSpacing(),
                   Container(
@@ -434,7 +542,7 @@ class OrderDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '10 May 2023, 12:30PM',
+                          '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
                           textAlign: TextAlign.center,
                           style: titleStyle
                               .copyWith(
@@ -447,19 +555,23 @@ class OrderDetailPage extends StatelessWidget {
                             Container(
                               width: 6,
                               height: 6,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: green2DAA5F,
+                                color: getStatusColor(
+                                  order!.status,
+                                ),
                               ),
                             ),
                             smallHorizontalSpacing(),
                             Text(
-                              'Completed',
+                              getOrderStatus(order!.status),
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
                                     fontSize: 14,
-                                    color: green2DAA5F,
+                                    color: getStatusColor(
+                                      order!.status,
+                                    ),
                                   )
                                   .usePoppinsW5Font(),
                             ),
@@ -469,17 +581,18 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                   ),
                   largeVerticalSpacing(),
-                  const PriceTile(
+                  PriceTile(
                     title: 'Distance',
-                    value: '10 KM',
+                    value: '${order!.distance} KM',
                   ),
-                  const PriceTile(
+                  PriceTile(
                     title: 'Cab Type',
-                    value: 'Mini( 4 Persons)  ',
+                    value:
+                        '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
                   ),
-                  const PriceTile(
+                  PriceTile(
                     title: 'Price',
-                    value: '\$112',
+                    value: '\$${order!.total}',
                   ),
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
@@ -487,37 +600,86 @@ class OrderDetailPage extends StatelessWidget {
                       color: grey9c9c9c,
                     ),
                   ),
-                  const PriceTile(
+                  PriceTile(
                     title: 'Total',
-                    value: '\$112',
+                    value: '\$${order!.total}',
                     fontSize: 18,
                   ),
                   largeVerticalSpacing(),
-                  Text(
-                    'Rating Given',
-                    textAlign: TextAlign.center,
-                    style: titleStyle
-                        .copyWith(
-                          fontSize: 16,
-                          color: grey7D7979,
-                        )
-                        .usePoppinsW5Font(),
+
+                  ...List.generate(
+                    order!.ratingList.length,
+                    (index) {
+                      if (order!.ratingList[index].type == 2) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Rating Given',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 16,
+                                    color: grey7D7979,
+                                  )
+                                  .usePoppinsW5Font(),
+                            ),
+                            mediumVerticalSpacing(),
+                            RatingTile(
+                              rating: order!.ratingList[index],
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            largeVerticalSpacing(),
+                            Text(
+                              'Rating Received',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(
+                                    fontSize: 16,
+                                    color: grey7D7979,
+                                  )
+                                  .usePoppinsW5Font(),
+                            ),
+                            mediumVerticalSpacing(),
+                            RatingTile(
+                              rating: order!.ratingList[index],
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
-                  mediumVerticalSpacing(),
-                  const RatingTile(),
-                  largeVerticalSpacing(),
-                  Text(
-                    'Rating Received',
-                    textAlign: TextAlign.center,
-                    style: titleStyle
-                        .copyWith(
-                          fontSize: 16,
-                          color: grey7D7979,
-                        )
-                        .usePoppinsW5Font(),
-                  ),
-                  mediumVerticalSpacing(),
-                  const RatingTile(),
+
+                  // Text(
+                  //   'Rating Given',
+                  //   textAlign: TextAlign.center,
+                  //   style: titleStyle
+                  //       .copyWith(
+                  //         fontSize: 16,
+                  //         color: grey7D7979,
+                  //       )
+                  //       .usePoppinsW5Font(),
+                  // ),
+                  // mediumVerticalSpacing(),
+                  // const RatingTile(),
+                  // largeVerticalSpacing(),
+                  // Text(
+                  //   'Rating Received',
+                  //   textAlign: TextAlign.center,
+                  //   style: titleStyle
+                  //       .copyWith(
+                  //         fontSize: 16,
+                  //         color: grey7D7979,
+                  //       )
+                  //       .usePoppinsW5Font(),
+                  // ),
+                  // mediumVerticalSpacing(),
+                  // const RatingTile(),
                 ],
               ),
             ),

@@ -2,11 +2,14 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class RatingTile extends StatelessWidget {
-  const RatingTile({Key? key}) : super(key: key);
+  const RatingTile({Key? key, this.rating}) : super(key: key);
+  final RatingList? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class RatingTile extends StatelessWidget {
                 itemSize: 18,
               ),
               Text(
-                '(4.6)',
+                '(${rating!.rating})',
                 style: titleStyle
                     .copyWith(
                       fontSize: 14,
@@ -36,7 +39,7 @@ class RatingTile extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '2 min ago',
+                '${timeago.format(rating!.createdAt)}',
                 style: titleStyle
                     .copyWith(
                       fontSize: 12,
@@ -48,7 +51,7 @@ class RatingTile extends StatelessWidget {
           ),
           mediumVerticalSpacing(),
           Text(
-            'Very Continent ride and really nice driver behaviour. Quick service really enjoyed the ride.',
+            rating!.review,
             style: titleStyle
                 .copyWith(
                   fontSize: 14,

@@ -42,6 +42,7 @@ class LoginDataModel extends Equatable {
   final int status;
   final String image;
   final String categoryId;
+  final String chatToken;
 
   const LoginDataModel(
       {required this.driverId,
@@ -51,6 +52,7 @@ class LoginDataModel extends Equatable {
       required this.fcmToken,
       required this.status,
       required this.categoryId,
+      required this.chatToken,
       required this.image});
 
   @override
@@ -64,6 +66,7 @@ class LoginDataModel extends Equatable {
       phoneNumber: json['phone'] ?? '',
       fcmToken: json['fcm_token'] ?? '',
       image: json['image'] ?? '',
+      chatToken: json['chat_token'] ?? '',
       categoryId: json['vehicle_category_id'] ?? '',
       status: json['status'] ?? '');
 
@@ -75,6 +78,7 @@ class LoginDataModel extends Equatable {
         'fcm_token': fcmToken,
         'vehicle_category_id': categoryId,
         'image': image,
+        'chat_token': chatToken,
         'status': status,
       };
 }

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
+import 'package:web_socket_client/web_socket_client.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
@@ -83,6 +84,7 @@ class HomeProvider with ChangeNotifier {
     _isOnline = val;
     // notifyListeners();
   }
+
   set changeStatus(val) {
     _isOnline = val;
     notifyListeners();
@@ -401,6 +403,7 @@ class HomeProvider with ChangeNotifier {
       'coordinate': latLng,
       'bearing': bearing,
     });
+
     final result = await doUpdateLocation.execute(formData);
     yield* result.fold((failure) async* {
       logMe(failure);
@@ -408,6 +411,29 @@ class HomeProvider with ChangeNotifier {
       yield UpdateLocationFailure(failure: failure);
     }, (data) async* {
       yield UpdateLocationLoaded(data: data);
+    });
+  }
+
+  WebSocket? _socket;
+
+  connectToSocket() {
+    logMe('============= Chat Token ${session.chatToken} ================');
+    _socket = WebSocket(Uri.parse(
+        'ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.driverId}'));
+
+    logMe('============= Connecting to Socket ================');
+    _socket!.connection.listen((event) {
+      logMe('Socket on Listen ---> ${event.toString()}');
+      if (event is Connected) {
+        listenRequests();
+      }
+    });
+  }
+
+  listenRequests() {
+    logMe('============= Listening to requests ================');
+    _socket!.messages.listen((event) {
+      logMe('Request list data -----> ${event.toString()}');
     });
   }
 }

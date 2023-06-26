@@ -15,7 +15,7 @@ class HistoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, OrderDetailPage.routeName);
+        Navigator.pushNamed(context, OrderDetailPage.routeName, arguments: order);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

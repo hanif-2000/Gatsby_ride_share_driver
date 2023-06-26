@@ -41,6 +41,7 @@ class LoginDataSourceImplementation implements LoginDataSource {
         session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
         session.setSessionCategoryId = model.data!.categoryId.toString();
+        session.setChatToken = model.data!.chatToken;
         return model;
       } else {
         return model;

@@ -44,6 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       builder: (context, provider, _) {
         var session = locator<Session>();
         provider.changeStatus = session.isOnline;
+
         return AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: backgroundColor,

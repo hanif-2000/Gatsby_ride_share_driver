@@ -4,6 +4,7 @@ const String IS_ONLINE = 'is_online';
 const String IS_ORDER_RUNNING = 'is_order_running';
 const String RUNNING_ORDER_ID = 'running_order_id';
 const String CURRENT_ORDER_STATE = 'current_order_state';
+const String CHAT_TOKEN = 'chat_token';
 const String RUNNING_ORDER_STATUS = 'running_order_status';
 const String ORDER_USER_ID = 'order_user_id';
 const String IS_PROFILE_COMPLETED = 'is_profile_completed';

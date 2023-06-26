@@ -61,7 +61,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PrivacyPolicyPage.routeName:
       return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
     case OrderDetailPage.routeName:
-      return MaterialPageRoute(builder: (_) => const OrderDetailPage());
+      final args = settings.arguments as HistoryOrder;
+      return MaterialPageRoute(
+        builder: (_) => OrderDetailPage(
+          order: args,
+        ),
+      );
     case EditBankPage.routeName:
       return MaterialPageRoute(builder: (_) => const EditBankPage());
     case RatingListPage.routeName:
@@ -87,16 +92,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case DetailHistoryPage.routeName:
       final args = settings.arguments as HistoryOrder;
       return MaterialPageRoute(
-          builder: (_) => DetailHistoryPage(
-                item: args,
-              ));
+        builder: (_) => DetailHistoryPage(
+          item: args,
+        ),
+      );
     case OrderPage.routeName:
       final args = settings.arguments as OrderPageArguments;
       return MaterialPageRoute(
-          builder: (_) => OrderPage(
-                orderDetail: args.orderDetail,
-                customerDetail: args.customerDetailModel,
-              ));
+        builder: (_) => OrderPage(
+          orderDetail: args.orderDetail,
+          customerDetail: args.customerDetailModel,
+        ),
+      );
 
     default:
       return MaterialPageRoute(

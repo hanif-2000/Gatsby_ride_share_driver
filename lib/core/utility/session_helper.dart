@@ -37,6 +37,10 @@ abstract class Session {
 
   set setCurrentOrderState(int state);
 
+  set setChatToken(String chatToken);
+
+  String get chatToken;
+
   bool get isLoggedIn;
 
   bool get isOnline;
@@ -165,6 +169,14 @@ class SessionHelper implements Session {
   set setCurrentOrderState(int value) {
     pref.setInt(CURRENT_ORDER_STATE, value);
   }
+
+  @override
+  set setChatToken(String chatToken) {
+    pref.setString(CHAT_TOKEN, chatToken);
+  }
+
+  @override
+  String get chatToken => pref.getString(CHAT_TOKEN) ?? '';
 
   @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
