@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/get_status_response.dart';
 import 'package:dartz/dartz.dart';
@@ -26,5 +27,7 @@ abstract class OrderRepository {
   Future<Either<Failure, DriverLocationResponseModel>> getDriverLocation();
 
   Future<Either<Failure, RequestListDataModel>> getRequestListData(
+      FormData formData);
+  Future<Either<Failure, RejectDataModel>> rejectRequest(
       FormData formData);
 }

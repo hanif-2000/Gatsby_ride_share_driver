@@ -102,6 +102,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (_) => OrderPage(
           orderDetail: args.orderDetail,
           customerDetail: args.customerDetailModel,
+          orderStatus: args.orderStatus,
         ),
       );
 

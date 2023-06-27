@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/repositories/order_repository.dart';
 import 'package:dartz/dartz.dart';
@@ -7,6 +8,7 @@ import '../../../../core/error/failure.dart';
 
 abstract class GetRequestListUseCase<Type> {
   Future<Either<Failure, RequestListDataModel>> call(FormData data);
+  Future<Either<Failure, RejectDataModel>> reject(FormData data);
 }
 
 class GetRequestList implements GetRequestListUseCase {
@@ -17,5 +19,9 @@ class GetRequestList implements GetRequestListUseCase {
   @override
   Future<Either<Failure, RequestListDataModel>> call(FormData data) async {
     return await repository.getRequestListData(data);
+  }
+  @override
+  Future<Either<Failure, RejectDataModel>> reject(FormData data) async {
+    return await repository.rejectRequest(data);
   }
 }

@@ -3,16 +3,13 @@ import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widge
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/common_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +209,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               orderDetail: homeProvider.orderDetail!,
                               customerDetailModel:
                                   homeProvider.customerDetailModel!,
+                              orderStatus: event1.data.orderStatus,
                             ),
                           );
                           // homeProvider

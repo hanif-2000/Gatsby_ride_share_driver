@@ -4,7 +4,8 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 
 class RejectReasonBottomSheet extends StatelessWidget {
-  const RejectReasonBottomSheet({Key? key}) : super(key: key);
+  const RejectReasonBottomSheet({Key? key, this.reject}) : super(key: key);
+  final Function(String)? reject;
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +40,21 @@ class RejectReasonBottomSheet extends StatelessWidget {
             title: 'Wrong address shown',
             onTap: () {
               ///TOdo: Update rejection on the server
+              reject!('Wrong address shown');
             },
           ),
           RejectTile(
             title: 'Any Legal instructions violation',
             onTap: () {
               ///TOdo: Update rejection on the server
+              reject!('Any Legal instructions violation');
             },
           ),
           RejectTile(
             title: 'Other',
             onTap: () {
               ///TOdo: Update rejection on the server
+              reject!('Other');
             },
           ),
         ],

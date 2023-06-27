@@ -1,8 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_detail_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -23,13 +21,13 @@ class RequestTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => RequestDetailPage(
-        //       requestListModel: request,
-        //     ),
-        //   ),
-        // );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => RequestDetailPage(
+              requestListModel: request,
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -176,10 +174,7 @@ class RequestTile extends StatelessWidget {
                             style: txtButtonStyle,
                           ),
                           event: () {
-                            CustomBottomSheet.showBottomSheet(
-                              context,
-                              const RejectReasonBottomSheet(),
-                            );
+                            onReject();
                           },
                           buttonHeight: 40,
                           isRounded: true,

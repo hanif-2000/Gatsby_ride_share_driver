@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/model/signup_response_model.dart';
 import 'package:dio/dio.dart';
@@ -25,7 +27,8 @@ class SignupDataSourceImplementation implements SignupDataSource {
       'email': email,
       'password': password,
       'fcm_token': fcmToken,
-      'position': position
+      'position': position,
+      'device_type': Platform.isIOS ? 'ios' : 'android',
     });
     print('Signup data -----> ${data.fields.toString()}');
     try {

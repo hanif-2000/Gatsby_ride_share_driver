@@ -66,7 +66,8 @@ class LoginDataModel extends Equatable {
       phoneNumber: json['phone'] ?? '',
       fcmToken: json['fcm_token'] ?? '',
       image: json['image'] ?? '',
-      chatToken: json['chat_token'] ?? '',
+      chatToken:
+          json['chat_token'] != null ? json['chat_token'].toString() : '',
       categoryId: json['vehicle_category_id'] ?? '',
       status: json['status'] ?? '');
 

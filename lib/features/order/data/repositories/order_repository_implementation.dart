@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/data/models/create_order_response_model.dart';
@@ -92,6 +93,18 @@ class OrderRepositoryImplementation implements OrderRepository {
       getDriverLocation() async {
     try {
       final data = await dataSource.getDriverLocation();
+      return Right(data);
+    } on DioError catch (e) {
+      logMe("Failure getDriverLocation repository ${e.toString()}");
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RejectDataModel>> rejectRequest(
+      FormData formData) async {
+    try {
+      final data = await dataSource.rejectRequest(formData);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure getDriverLocation repository ${e.toString()}");

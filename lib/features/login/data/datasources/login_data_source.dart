@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:dio/dio.dart';
 
@@ -26,7 +28,8 @@ class LoginDataSourceImplementation implements LoginDataSource {
       'email': email,
       'password': password,
       'fcm_token': fcmToken,
-      'position': position
+      'position': position,
+      'device_type': Platform.isIOS ? 'ios' : 'android',
     });
     print('Sign in data ----> ${data.fields.toString()}');
     try {

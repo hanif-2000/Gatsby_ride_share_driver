@@ -21,10 +21,12 @@ import '../widgets/current_location_order.dart';
 class OrderPageArguments {
   final OrderDetail orderDetail;
   final CustomerDetailModel customerDetailModel;
+  final int orderStatus;
 
   OrderPageArguments({
     required this.orderDetail,
     required this.customerDetailModel,
+    required this.orderStatus,
   });
 }
 
@@ -41,9 +43,10 @@ class RatingPageArguments {
 class OrderPage extends StatefulWidget {
   final OrderDetail orderDetail;
   final CustomerDetailModel customerDetail;
+  final int orderStatus;
 
   const OrderPage(
-      {Key? key, required this.orderDetail, required this.customerDetail})
+      {Key? key, required this.orderDetail, required this.customerDetail, required this.orderStatus})
       : super(key: key);
   static const routeName = '/OrderPage';
 
@@ -53,11 +56,34 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
-
+  var orderPProvider = locator<OrderProvider>();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+  }
+
+  setDefaultStatus(){
+    switch(widget.orderStatus){
+      case Order.driverAccept:
+        orderPProvider.changeOrderStatus =
+            OrderStatus.driverAccept;
+        return;
+      case Order.departureToCustomerPlace:
+        orderPProvider.changeOrderStatus =
+            OrderStatus.driverAccept;
+        return;
+
+    }
+
+    if (widget.orderStatus ==
+        Order.driverAccept) {
+      orderPProvider.changeOrderStatus =
+          OrderStatus.driverAccept;
+    }else if(){
+
+    }
   }
 
   @override

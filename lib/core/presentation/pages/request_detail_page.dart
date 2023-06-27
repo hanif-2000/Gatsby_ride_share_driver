@@ -1,10 +1,13 @@
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/common_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
+import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -13,7 +16,9 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/providers/upda
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
+import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +30,17 @@ class RequestDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, _) {
+        homeProvider.setPolylineDirection(
+            LatLng(
+                double.tryParse(
+                    requestListModel!.startCoordinate.split(',').first)!,
+                double.tryParse(
+                    requestListModel!.startCoordinate.split(',').last)!),
+            LatLng(
+                double.tryParse(
+                    requestListModel!.endCoordinate.split(',').first)!,
+                double.tryParse(
+                    requestListModel!.endCoordinate.split(',').last)!));
         return Scaffold(
           resizeToAvoidBottomInset: false,
           // appBar: const CustomAppBar(
@@ -52,8 +68,8 @@ class RequestDetailPage extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                            vertical: 3,
-                            horizontal: 8,
+                            vertical: 0,
+                            horizontal: 0,
                           ),
                           child: GestureDetector(
                             onTap: () {},
@@ -61,14 +77,14 @@ class RequestDetailPage extends StatelessWidget {
                               width: MediaQuery.of(context).size.width,
                               // height: 60,
                               child: Container(
-                                margin: const EdgeInsets.all(20),
+                                margin: const EdgeInsets.all(0),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 13,
                                   vertical: 13,
                                 ),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: whiteColor,
-                                  borderRadius: BorderRadius.circular(12),
+                                  // borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -76,41 +92,130 @@ class RequestDetailPage extends StatelessWidget {
                                   ),
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.my_location,
-                                        color: Colors.black,
-                                        size: 30,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              'PICK UP',
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color: greyC8C7CC,
-                                              ),
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(Icons.arrow_back),
+                                          )),
+                                      mediumHorizontalSpacing(),
+                                      Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.my_location,
+                                            color: Colors.black,
+                                            size: 30,
+                                          ),
+                                          Image.asset(
+                                            'assets/icons/home/ic_line.png',
+                                            height: 60,
+                                          ),
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  offset: Offset(0, 5),
+                                                  blurRadius: 12,
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.16),
+                                                )
+                                              ],
                                             ),
-                                            Text(
-                                              requestListModel!.startAddress,
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                              ),
+                                            child: SvgPicture.asset(
+                                              'assets/icons/order/ic_location.svg',
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        'PICK UP',
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          color: greyC8C7CC,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        requestListModel!
+                                                            .startAddress,
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            largeVerticalSpacing(),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        'DROP-OFF',
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          color: greyC8C7CC,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        requestListModel!
+                                                            .endAddress,
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -136,117 +241,108 @@ class RequestDetailPage extends StatelessWidget {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    // provider.orderDetail != null
-                                    //     ? Padding(
-                                    //         padding: const EdgeInsets.symmetric(
-                                    //           vertical: 8.0,
-                                    //           horizontal: 8.0,
-                                    //         ),
-                                    //         child: Card(
-                                    //           child: Padding(
-                                    //             padding: const EdgeInsets.symmetric(
-                                    //               vertical: 8.0,
-                                    //               horizontal: 20.0,
-                                    //             ),
-                                    //             child: SizedBox(
-                                    //               height: 50,
-                                    //               child: Row(
-                                    //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    //                 children: <Widget>[
-                                    //                   Expanded(
-                                    //                     flex: 5,
-                                    //                     child: Row(
-                                    //                       children: [
-                                    //                         Expanded(
-                                    //                           child: AutoSizeText(
-                                    //                             appLoc.distance,
-                                    //                             style: const TextStyle(
-                                    //                               fontWeight: FontWeight.normal,
-                                    //                             ),
-                                    //                             minFontSize: 15,
-                                    //                             maxFontSize: 18,
-                                    //                             maxLines: 1,
-                                    //                             overflow: TextOverflow.ellipsis,
-                                    //                           ),
-                                    //                         ),
-                                    //                         Expanded(
-                                    //                           child: AutoSizeText(
-                                    //                             mergeDistanceTxt(
-                                    //                                 provider.orderDetail!.distance),
-                                    //                             style: const TextStyle(
-                                    //                               fontWeight: FontWeight.bold,
-                                    //                               color: primaryColor,
-                                    //                             ),
-                                    //                             minFontSize: 16,
-                                    //                             maxFontSize: 20,
-                                    //                             maxLines: 1,
-                                    //                             overflow: TextOverflow.ellipsis,
-                                    //                           ),
-                                    //                         )
-                                    //                       ],
-                                    //                     ),
-                                    //                   ),
-                                    //                   Padding(
-                                    //                     padding:
-                                    //                         const EdgeInsets.symmetric(horizontal: 5),
-                                    //                     child: SizedBox(
-                                    //                       width: 1,
-                                    //                       child: Container(
-                                    //                         color: Colors.grey[350],
-                                    //                       ),
-                                    //                     ),
-                                    //                   ),
-                                    //                   const SizedBox(
-                                    //                     width: 8,
-                                    //                   ),
-                                    //                   Expanded(
-                                    //                     flex: 5,
-                                    //                     child: Container(
-                                    //                       child: Align(
-                                    //                         alignment: Alignment.centerLeft,
-                                    //                         child: Row(
-                                    //                           children: [
-                                    //                             Expanded(
-                                    //                               child: AutoSizeText(
-                                    //                                 appLoc.price,
-                                    //                                 style: const TextStyle(
-                                    //                                   fontWeight: FontWeight.normal,
-                                    //                                 ),
-                                    //                                 minFontSize: 15,
-                                    //                                 maxFontSize: 18,
-                                    //                                 maxLines: 1,
-                                    //                                 overflow: TextOverflow.ellipsis,
-                                    //                               ),
-                                    //                             ),
-                                    //                             Expanded(
-                                    //                               child: AutoSizeText(
-                                    //                                 mergePriceTxt(provider
-                                    //                                     .orderDetail!.totalPrice
-                                    //                                     .toString()),
-                                    //                                 style: const TextStyle(
-                                    //                                   fontWeight: FontWeight.bold,
-                                    //                                   color: primaryColor,
-                                    //                                 ),
-                                    //                                 minFontSize: 16,
-                                    //                                 maxFontSize: 20,
-                                    //                                 maxLines: 1,
-                                    //                                 overflow: TextOverflow.ellipsis,
-                                    //                               ),
-                                    //                             )
-                                    //                           ],
-                                    //                         ),
-                                    //                       ),
-                                    //                     ),
-                                    //                   )
-                                    //                 ],
-                                    //               ),
-                                    //             ),
-                                    //           ),
-                                    //         ),
-                                    //       )
-                                    //     : const SizedBox(),
-                                    const UserProfileTile(),
-                                    mediumVerticalSpacing(),
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.pushNamed(context,
+                                                OtherUserProfile.routeName);
+                                          },
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: redD03B3B,
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  '$BASE_URL${requestListModel!.image}',
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        mediumHorizontalSpacing(),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${requestListModel!.firstName} ${requestListModel!.lastName}',
+                                              textAlign: TextAlign.center,
+                                              style: titleStyle
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                  )
+                                                  .usePoppinsW5Font(),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    RatingListPage.routeName);
+                                                // context,
+                                                // GiveRatingScreen.routeName);
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/icons/home/ic_start.svg'),
+                                                  smallHorizontalSpacing(),
+                                                  Text(
+                                                    '4.5',
+                                                    textAlign: TextAlign.center,
+                                                    style: titleStyle
+                                                        .copyWith(
+                                                          fontSize: 14,
+                                                        )
+                                                        .usePoppinsW6Font(),
+                                                  ),
+                                                  smallHorizontalSpacing(),
+                                                  Text(
+                                                    'Reviews',
+                                                    textAlign: TextAlign.center,
+                                                    style: titleStyle
+                                                        .copyWith(
+                                                          fontSize: 14,
+                                                          color: yellowE5A829,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                        )
+                                                        .usePoppinsW5Font(),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              '\$${requestListModel!.total.toStringAsFixed(0)}',
+                                              textAlign: TextAlign.center,
+                                              style: titleStyle
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                  )
+                                                  .usePoppinsW6Font(),
+                                            ),
+                                            Text(
+                                              '${requestListModel!.distance} Km',
+                                              textAlign: TextAlign.center,
+                                              style: titleStyle
+                                                  .copyWith(
+                                                    fontSize: 14,
+                                                    color: greyB6B6B6,
+                                                  )
+                                                  .usePoppinsW5Font(),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    largeVerticalSpacing(),
                                     Row(
                                       children: [
                                         Expanded(
@@ -518,7 +614,7 @@ class RequestDetailPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    mediumVerticalSpacing(),
+                                    smallVerticalSpacing(),
                                   ],
                                 ),
                               ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/update_location_state.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
@@ -209,6 +210,26 @@ class HomeProvider with ChangeNotifier {
     });
   }
 
+  Stream<RejectRequestState> rejectRequest(
+      String orderId, String reason) async* {
+    showLoading();
+    yield RejectRequestLoading();
+    final formData = FormData.fromMap({
+      'order_id': orderId,
+      'reason': reason,
+    });
+    final result = await getRequestList.reject(formData);
+    yield* result.fold((failure) async* {
+      logMe("failure");
+      logMe(failure);
+      dismissLoading();
+      yield RejectRequestFailure(failure: failure);
+    }, (data) async* {
+      dismissLoading();
+      yield RejectRequestLoaded(data: data);
+    });
+  }
+
   getCurrentLocation() async {
     try {
       showLoading();
@@ -273,7 +294,7 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  setPolylinesDirection(LatLng origin, LatLng destination) async {
+  setPolylineDirection(LatLng origin, LatLng destination) async {
     polylines.clear();
     await DirectionHelper()
         .getRouteBetweenCoordinates(origin.latitude, origin.longitude,
@@ -418,8 +439,10 @@ class HomeProvider with ChangeNotifier {
 
   connectToSocket() {
     logMe('============= Chat Token ${session.chatToken} ================');
+    logMe(
+        'URL --> ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     _socket = WebSocket(Uri.parse(
-        'ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.driverId}'));
+        'ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}'));
 
     logMe('============= Connecting to Socket ================');
     _socket!.connection.listen((event) {
@@ -433,7 +456,12 @@ class HomeProvider with ChangeNotifier {
   listenRequests() {
     logMe('============= Listening to requests ================');
     _socket!.messages.listen((event) {
+      logMe('Data in socket');
       logMe('Request list data -----> ${event.toString()}');
     });
+  }
+
+  rejectRequestSocket() {
+    _socket!.send("");
   }
 }

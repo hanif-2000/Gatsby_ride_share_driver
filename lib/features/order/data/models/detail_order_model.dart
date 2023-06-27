@@ -1,18 +1,20 @@
 import 'package:appkey_taxiapp_driver/core/domain/entities/price_category.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
+import 'package:dartz/dartz.dart';
 
 class DetailOrderModel extends OrderDetail {
-  const DetailOrderModel({
-    required int orderId,
-    required int driverId,
-    required int userId,
-    required int totalPrice,
-    required String startCoordinate,
-    required String endCoordinate,
-    required String startAddress,
-    required String endAddress,
-    required String distance,
-  }) : super(
+  const DetailOrderModel(
+      {required int orderId,
+      required int driverId,
+      required int userId,
+      required int totalPrice,
+      required String startCoordinate,
+      required String endCoordinate,
+      required String startAddress,
+      required String endAddress,
+      required String distance,
+      required int orderStatus})
+      : super(
           orderId: orderId,
           driverId: driverId,
           userId: userId,
@@ -21,6 +23,7 @@ class DetailOrderModel extends OrderDetail {
           startCoordinate: startCoordinate,
           startAddress: startAddress,
           endAddress: endAddress,
+          orderStatus: orderStatus,
           endCoordinate: endCoordinate,
         );
 
@@ -31,6 +34,7 @@ class DetailOrderModel extends OrderDetail {
         userId: json['customer_id'],
         distance: json['distance'],
         totalPrice: json['total'],
+        orderStatus: json['order_status'],
         startCoordinate: json['start_coordinate'],
         endAddress: json['end_address'],
         startAddress: json['start_address'],
@@ -46,6 +50,7 @@ class DetailOrderModel extends OrderDetail {
         "total": totalPrice,
         "start_coordinate": startCoordinate,
         "end_coordinate": endCoordinate,
+        'order_status': orderStatus,
         "start_address": startAddress,
         "end_address": endAddress,
       };
