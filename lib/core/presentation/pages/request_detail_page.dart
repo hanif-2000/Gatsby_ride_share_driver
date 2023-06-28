@@ -1,8 +1,12 @@
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/common_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -22,45 +26,83 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class RequestDetailPage extends StatelessWidget {
+class RequestDetailPage extends StatefulWidget {
   const RequestDetailPage({Key? key, this.requestListModel}) : super(key: key);
   final RequestListModel? requestListModel;
+
+  @override
+  State<RequestDetailPage> createState() => _RequestDetailPageState();
+}
+
+class _RequestDetailPageState extends State<RequestDetailPage> {
+  // final provider = locator<HomeProvider>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  loadPolyline() async {
+    logMe('Start ---> ${widget.requestListModel!.startCoordinate}');
+    logMe('end ---> ${widget.requestListModel!.endCoordinate}');
+
+    // final pickup = LatLng(
+    //     double.tryParse(
+    //         widget.requestListModel!.startCoordinate.split(',').first)!,
+    //     double.tryParse(
+    //         widget.requestListModel!.startCoordinate.split(',').last)!);
+    // final drop = LatLng(
+    //     double.tryParse(
+    //         widget.requestListModel!.endCoordinate.split(',').first)!,
+    //     double.tryParse(
+    //         widget.requestListModel!.endCoordinate.split(',').last)!);
+    //
+    // await provider.createPickupAndDropMarker(pickup, drop);
+    // await provider.setPolylineDirection(pickup, drop);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, _) {
-        homeProvider.setPolylineDirection(
-            LatLng(
-                double.tryParse(
-                    requestListModel!.startCoordinate.split(',').first)!,
-                double.tryParse(
-                    requestListModel!.startCoordinate.split(',').last)!),
-            LatLng(
-                double.tryParse(
-                    requestListModel!.endCoordinate.split(',').first)!,
-                double.tryParse(
-                    requestListModel!.endCoordinate.split(',').last)!));
         return Scaffold(
           resizeToAvoidBottomInset: false,
           // appBar: const CustomAppBar(
           //   centerTitle: false,
           // ),
-          body: Stack(
-            children: <Widget>[
-              GoogleMap(
-                mapType: MapType.normal,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                initialCameraPosition: homeProvider.kJapanCoordinate,
-                onMapCreated: (GoogleMapController controller) async {
-                  homeProvider.googleMapController = controller;
-                },
-                polylines: homeProvider.polylines,
-                markers: Set<Marker>.of(homeProvider.markers.values),
-              ),
-              SafeArea(
-                child: Stack(
+          body: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                GoogleMap(
+                  // myLocationEnabled: true,
+                  mapType: MapType.normal,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: homeProvider.kJapanCoordinate,
+                  onMapCreated: (GoogleMapController controller) async {
+                    homeProvider.googleMapController = controller;
+                    final pickup = LatLng(
+                        double.tryParse(widget.requestListModel!.startCoordinate
+                            .split(',')
+                            .first)!,
+                        double.tryParse(widget.requestListModel!.startCoordinate
+                            .split(',')
+                            .last)!);
+                    final drop = LatLng(
+                        double.tryParse(widget.requestListModel!.endCoordinate
+                            .split(',')
+                            .first)!,
+                        double.tryParse(widget.requestListModel!.endCoordinate
+                            .split(',')
+                            .last)!);
+
+                    await homeProvider.createPickupAndDropMarker(pickup, drop);
+                    await homeProvider.setPolylineDirection(pickup, drop);
+                  },
+                  polylines: homeProvider.polylines,
+                  markers: Set<Marker>.of(homeProvider.markers.values),
+                ),
+                Stack(
                   children: [
                     Column(
                       mainAxisSize: MainAxisSize.max,
@@ -159,7 +201,7 @@ class RequestDetailPage extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Text(
-                                                        requestListModel!
+                                                        widget.requestListModel!
                                                             .startAddress,
                                                         softWrap: false,
                                                         overflow: TextOverflow
@@ -198,7 +240,7 @@ class RequestDetailPage extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Text(
-                                                        requestListModel!
+                                                        widget.requestListModel!
                                                             .endAddress,
                                                         softWrap: false,
                                                         overflow: TextOverflow
@@ -256,7 +298,7 @@ class RequestDetailPage extends StatelessWidget {
                                               color: redD03B3B,
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  '$BASE_URL${requestListModel!.image}',
+                                                  '$BASE_URL${widget.requestListModel!.image}',
                                                 ),
                                               ),
                                             ),
@@ -268,7 +310,7 @@ class RequestDetailPage extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${requestListModel!.firstName} ${requestListModel!.lastName}',
+                                              '${widget.requestListModel!.firstName} ${widget.requestListModel!.lastName}',
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -320,7 +362,7 @@ class RequestDetailPage extends StatelessWidget {
                                         Column(
                                           children: [
                                             Text(
-                                              '\$${requestListModel!.total.toStringAsFixed(0)}',
+                                              '\$${widget.requestListModel!.total.toStringAsFixed(0)}',
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -329,7 +371,7 @@ class RequestDetailPage extends StatelessWidget {
                                                   .usePoppinsW6Font(),
                                             ),
                                             Text(
-                                              '${requestListModel!.distance} Km',
+                                              '${widget.requestListModel!.distance} Km',
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -347,14 +389,51 @@ class RequestDetailPage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: CustomButton(
-                                            image:
-                                                'assets/icons/order/ic_call.svg',
                                             text: Text(
                                               'Reject',
                                               style: txtButtonStyle,
                                             ),
                                             event: () {
                                               ///Reject the request
+                                              CustomBottomSheet.showBottomSheet(
+                                                context,
+                                                RejectReasonBottomSheet(
+                                                  reject: (reason) {
+                                                    ///send reason to the server
+                                                    homeProvider
+                                                        .rejectRequest(
+                                                            widget
+                                                                .requestListModel!
+                                                                .id
+                                                                .toString(),
+                                                            reason)
+                                                        .listen(
+                                                      (event) {
+                                                        if (event
+                                                            is RejectRequestLoaded) {
+                                                          final data =
+                                                              event.data;
+                                                          var socketProvider =
+                                                              locator<
+                                                                  SocketProvider>();
+                                                          socketProvider
+                                                              .rejectRequestSocket();
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
+                                                          showToast(
+                                                            message:
+                                                                data.message,
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+
+                                                    ///
+                                                  },
+                                                ),
+                                              );
                                             },
                                             buttonHeight: 48,
                                             isRounded: true,
@@ -372,19 +451,20 @@ class RequestDetailPage extends StatelessWidget {
                                               final session =
                                                   locator<Session>();
                                               homeProvider
-                                                  .fetchOrderDetail(
-                                                      requestListModel!.id
-                                                          .toString())
+                                                  .fetchOrderDetail(widget
+                                                      .requestListModel!.id
+                                                      .toString())
                                                   .listen(
                                                 (event1) {
                                                   if (event1
                                                       is OrderDetailLoaded) {
                                                     // var _deviceSize = MediaQuery.of(context).size;
                                                     session.setRunningOrderId =
-                                                        requestListModel!.id;
-                                                    session.setOrderId =
-                                                        requestListModel!.id
-                                                            .toString();
+                                                        widget.requestListModel!
+                                                            .id;
+                                                    session.setOrderId = widget
+                                                        .requestListModel!.id
+                                                        .toString();
                                                     homeProvider
                                                         .fetchCustomerDetail(
                                                             event1.data.userId
@@ -397,7 +477,7 @@ class RequestDetailPage extends StatelessWidget {
                                                               event1
                                                                   .data.userId;
                                                           print(
-                                                              'RUNNING order id --> ${requestListModel!.id}');
+                                                              'RUNNING order id --> ${widget.requestListModel!.id}');
                                                           homeProvider
                                                               .submitStatusOrder(
                                                                   Order
@@ -413,6 +493,11 @@ class RequestDetailPage extends StatelessWidget {
                                                                   //     locator<Session>();
                                                                   session.setIsOrderRunning =
                                                                       true;
+                                                                  var socketProvider =
+                                                                      locator<
+                                                                          SocketProvider>();
+                                                                  socketProvider
+                                                                      .acceptRequestSocket();
                                                                   Navigator
                                                                       .pushNamedAndRemoveUntil(
                                                                     context,
@@ -420,15 +505,16 @@ class RequestDetailPage extends StatelessWidget {
                                                                         .routeName,
                                                                     (route) =>
                                                                         false,
-                                                                    arguments:
-                                                                        OrderPageArguments(
-                                                                      orderDetail:
-                                                                          homeProvider
-                                                                              .orderDetail!,
-                                                                      customerDetailModel:
-                                                                          homeProvider
-                                                                              .customerDetailModel!,
-                                                                    ),
+                                                                    arguments: OrderPageArguments(
+                                                                        orderDetail:
+                                                                            homeProvider
+                                                                                .orderDetail!,
+                                                                        customerDetailModel:
+                                                                            homeProvider
+                                                                                .customerDetailModel!,
+                                                                        orderStatus: event1
+                                                                            .data
+                                                                            .orderStatus),
                                                                   );
                                                                 } else if (event
                                                                         .data
@@ -506,100 +592,6 @@ class RequestDetailPage extends StatelessWidget {
                                                               }
                                                             },
                                                           );
-
-                                                          // await showDialog(
-                                                          //   barrierDismissible: false,
-                                                          //   context: context,
-                                                          //   builder: (_) => WillPopScope(
-                                                          //     onWillPop: () async => false,
-                                                          //     child: MainDialog(
-                                                          //       customerDetailModel: homeProvider.customerDetailModel,
-                                                          //       orderDetail: homeProvider.orderDetail,
-                                                          //       deviceSize: _deviceSize,
-                                                          //       onDecline: () async {
-                                                          //         await showDialog(
-                                                          //           barrierDismissible: false,
-                                                          //           context: context,
-                                                          //           builder: (_) => WillPopScope(
-                                                          //             onWillPop: () async => false,
-                                                          //             child: CustomDeclineDialog(
-                                                          //               positiveAction: () {
-                                                          //                 homeProvider.changeStatus = false;
-                                                          //                 homeProvider.updateStatus().listen(
-                                                          //                       (event) async {
-                                                          //                     if (event is ChangeStatusLoaded) {
-                                                          //                       Navigator.pop(context);
-                                                          //                       Navigator.pop(context);
-                                                          //                     }
-                                                          //                   },
-                                                          //                 );
-                                                          //               },
-                                                          //             ),
-                                                          //           ),
-                                                          //         );
-                                                          //       },
-                                                          //       onAccept: () {
-                                                          //         session.setOrderId = _data[index].id.toString();
-                                                          //         homeProvider
-                                                          //             .submitStatusOrder(Order.driverAccept)
-                                                          //             .listen(
-                                                          //               (event) async {
-                                                          //             if (event is UpdateStatusOrderLoaded) {
-                                                          //               if (event.data.success == 1) {
-                                                          //                 Navigator.pushNamedAndRemoveUntil(
-                                                          //                   context,
-                                                          //                   OrderPage.routeName,
-                                                          //                       (route) => false,
-                                                          //                   arguments: OrderPageArguments(
-                                                          //                     orderDetail: homeProvider.orderDetail!,
-                                                          //                     customerDetailModel:
-                                                          //                     homeProvider.customerDetailModel!,
-                                                          //                   ),
-                                                          //                 );
-                                                          //               } else if (event.data.message == 5) {
-                                                          //                 Navigator.of(context).pop();
-                                                          //                 showDialog(
-                                                          //                   context: context,
-                                                          //                   builder: (context) => CommonDialog(
-                                                          //                     title: appLoc.sorry,
-                                                          //                     msg: appLoc.orderacceptedotherdriver,
-                                                          //                     onTap: () {
-                                                          //                       Navigator.of(context).pop();
-                                                          //                     },
-                                                          //                   ),
-                                                          //                 );
-                                                          //               } else if (event.data.message == 6) {
-                                                          //                 Navigator.of(context).pop();
-                                                          //                 showDialog(
-                                                          //                   context: context,
-                                                          //                   builder: (context) => CommonDialog(
-                                                          //                     title: appLoc.sorry,
-                                                          //                     msg: appLoc.ordernotfound,
-                                                          //                     onTap: () {
-                                                          //                       Navigator.of(context).pop();
-                                                          //                     },
-                                                          //                   ),
-                                                          //                 );
-                                                          //               } else if (event.data.message == 7) {
-                                                          //                 Navigator.of(context).pop();
-                                                          //                 showDialog(
-                                                          //                   context: context,
-                                                          //                   builder: (context) => CommonDialog(
-                                                          //                     title: appLoc.sorry,
-                                                          //                     msg: appLoc.orderhascancelled,
-                                                          //                     onTap: () {
-                                                          //                       Navigator.of(context).pop();
-                                                          //                     },
-                                                          //                   ),
-                                                          //                 );
-                                                          //               }
-                                                          //             }
-                                                          //           },
-                                                          //         );
-                                                          //       },
-                                                          //     ),
-                                                          //   ),
-                                                          // );
                                                         }
                                                       },
                                                     );
@@ -625,8 +617,8 @@ class RequestDetailPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

@@ -48,7 +48,7 @@ class OrderProvider with ChangeNotifier {
   //Initial
   final lctn.Location locationService = lctn.Location();
   CameraPosition kJapanCoordinate = const CameraPosition(
-    target: JAPAN_LATLNG,
+    target: DEFAULT_LATLNG,
     zoom: 14.4746,
   );
   DriverLocationResponseModel? _driverLocation;

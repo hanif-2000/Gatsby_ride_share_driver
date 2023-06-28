@@ -49,6 +49,11 @@ class ProfileInformationDrawer extends StatelessWidget {
                   data.name,
                   style: formTextFieldStyle,
                 ),
+                smallVerticalSpacing(),
+                Text(
+                  data.email,
+                  style: formTextFieldStyle,
+                ),
                 InkWell(
                   onTap: () {
                     ///TODO: Edit profile here

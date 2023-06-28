@@ -46,7 +46,10 @@ class OrderPage extends StatefulWidget {
   final int orderStatus;
 
   const OrderPage(
-      {Key? key, required this.orderDetail, required this.customerDetail, required this.orderStatus})
+      {Key? key,
+      required this.orderDetail,
+      required this.customerDetail,
+      required this.orderStatus})
       : super(key: key);
   static const routeName = '/OrderPage';
 
@@ -57,32 +60,41 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
+    // setDefaultStatus(widget.orderStatus);
   }
 
-  setDefaultStatus(){
-    switch(widget.orderStatus){
+  setDefaultStatus(int orderStatus) {
+    logMe('Order already running -----> ${widget.orderStatus}');
+    switch (orderStatus) {
       case Order.driverAccept:
-        orderPProvider.changeOrderStatus =
-            OrderStatus.driverAccept;
+        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
         return;
       case Order.departureToCustomerPlace:
-        orderPProvider.changeOrderStatus =
-            OrderStatus.driverAccept;
+        orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
         return;
-
-    }
-
-    if (widget.orderStatus ==
-        Order.driverAccept) {
-      orderPProvider.changeOrderStatus =
-          OrderStatus.driverAccept;
-    }else if(){
-
+      case Order.arriveAtCustomerPlace:
+        orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+        return;
+      case Order.customerConfirmation:
+        orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
+        return;
+      case Order.departureToDestination:
+        orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+        return;
+      case Order.arriveAtDestination:
+        orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
+        return;
+      case Order.complete:
+        orderPProvider.changeOrderStatus = OrderStatus.complete;
+        return;
+      default:
+        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+        return;
     }
   }
 
@@ -129,6 +141,11 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       var session = locator<Session>();
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
+
+                      // if (true) {
+                      //   setDefaultStatus(int.parse(state.data.status));
+                      // }
+
                       if (state.data.status ==
                           Order.customerConfirmation.toString()) {
                         provider.changeOrderStatus =

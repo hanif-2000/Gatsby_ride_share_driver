@@ -3,6 +3,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widge
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // var homeProvider = Provider.of<HomeProvider>(context, listen: false);
   var homeProvider = locator<HomeProvider>();
+  var socketProvider = locator<SocketProvider>();
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   connectToSocket() {
-    homeProvider.connectToSocket();
+    socketProvider.connectToSocket();
   }
 
   @override
@@ -189,92 +191,92 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           builder: (context, provider, _) {
             var session = locator<Session>();
             print('RUNNING order id --> ${session.runningOrderId}');
-            if (session.isOrderRunning) {
-              homeProvider
-                  .fetchOrderDetail(session.runningOrderId.toString())
-                  .listen(
-                (event1) {
-                  if (event1 is OrderDetailLoaded) {
-                    // var _deviceSize = MediaQuery.of(context).size;
-                    homeProvider
-                        .fetchCustomerDetail(event1.data.userId.toString())
-                        .listen(
-                      (event) async {
-                        if (event is CustomerDetailLoaded) {
-                          Navigator.pushNamed(
-                            context,
-                            OrderPage.routeName,
-                            // (route) => false,
-                            arguments: OrderPageArguments(
-                              orderDetail: homeProvider.orderDetail!,
-                              customerDetailModel:
-                                  homeProvider.customerDetailModel!,
-                              orderStatus: event1.data.orderStatus,
-                            ),
-                          );
-                          // homeProvider
-                          //     .submitStatusOrder(Order.driverAccept)
-                          //     .listen(
-                          //   (event) async {
-                          //     if (event is UpdateStatusOrderLoaded) {
-                          //       if (event.data.success == 1) {
-                          //         Navigator.pushNamed(
-                          //           context,
-                          //           OrderPage.routeName,
-                          //           // (route) => false,
-                          //           arguments: OrderPageArguments(
-                          //             orderDetail: homeProvider.orderDetail!,
-                          //             customerDetailModel:
-                          //                 homeProvider.customerDetailModel!,
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 5) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.orderacceptedotherdriver,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 6) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.ordernotfound,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 7) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.orderhascancelled,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       }
-                          //     }
-                          //   },
-                          // );
-                        }
-                      },
-                    );
-                  }
-                },
-              );
-            }
+            // if (session.isOrderRunning) {
+            //   homeProvider
+            //       .fetchOrderDetail(session.runningOrderId.toString())
+            //       .listen(
+            //     (event1) {
+            //       if (event1 is OrderDetailLoaded) {
+            //         // var _deviceSize = MediaQuery.of(context).size;
+            //         homeProvider
+            //             .fetchCustomerDetail(event1.data.userId.toString())
+            //             .listen(
+            //           (event) async {
+            //             if (event is CustomerDetailLoaded) {
+            //               Navigator.pushNamed(
+            //                 context,
+            //                 OrderPage.routeName,
+            //                 // (route) => false,
+            //                 arguments: OrderPageArguments(
+            //                   orderDetail: homeProvider.orderDetail!,
+            //                   customerDetailModel:
+            //                       homeProvider.customerDetailModel!,
+            //                   orderStatus: event1.data.orderStatus,
+            //                 ),
+            //               );
+            //               // homeProvider
+            //               //     .submitStatusOrder(Order.driverAccept)
+            //               //     .listen(
+            //               //   (event) async {
+            //               //     if (event is UpdateStatusOrderLoaded) {
+            //               //       if (event.data.success == 1) {
+            //               //         Navigator.pushNamed(
+            //               //           context,
+            //               //           OrderPage.routeName,
+            //               //           // (route) => false,
+            //               //           arguments: OrderPageArguments(
+            //               //             orderDetail: homeProvider.orderDetail!,
+            //               //             customerDetailModel:
+            //               //                 homeProvider.customerDetailModel!,
+            //               //           ),
+            //               //         );
+            //               //       } else if (event.data.message == 5) {
+            //               //         // Navigator.of(context).pop();
+            //               //         showDialog(
+            //               //           context: context,
+            //               //           builder: (context) => CommonDialog(
+            //               //             title: appLoc.sorry,
+            //               //             msg: appLoc.orderacceptedotherdriver,
+            //               //             onTap: () {
+            //               //               Navigator.of(context).pop();
+            //               //             },
+            //               //           ),
+            //               //         );
+            //               //       } else if (event.data.message == 6) {
+            //               //         // Navigator.of(context).pop();
+            //               //         showDialog(
+            //               //           context: context,
+            //               //           builder: (context) => CommonDialog(
+            //               //             title: appLoc.sorry,
+            //               //             msg: appLoc.ordernotfound,
+            //               //             onTap: () {
+            //               //               Navigator.of(context).pop();
+            //               //             },
+            //               //           ),
+            //               //         );
+            //               //       } else if (event.data.message == 7) {
+            //               //         // Navigator.of(context).pop();
+            //               //         showDialog(
+            //               //           context: context,
+            //               //           builder: (context) => CommonDialog(
+            //               //             title: appLoc.sorry,
+            //               //             msg: appLoc.orderhascancelled,
+            //               //             onTap: () {
+            //               //               Navigator.of(context).pop();
+            //               //             },
+            //               //           ),
+            //               //         );
+            //               //       }
+            //               //     }
+            //               //   },
+            //               // );
+            //             }
+            //           },
+            //         );
+            //       }
+            //     },
+            //   );
+            // }
             return ListView(
               children: <Widget>[
                 Container(

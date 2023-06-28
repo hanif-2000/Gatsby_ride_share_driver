@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.dart';
@@ -19,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
-import 'package:web_socket_client/web_socket_client.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
@@ -42,11 +42,12 @@ class HomeProvider with ChangeNotifier {
   final UpdateStatusOrder updateStatusOrder;
   final DoUpdateLocation doUpdateLocation;
   final session = locator<Session>();
+  late BitmapDescriptor pickUpMarker, destinationMarker;
 
   //Initial
   final lctn.Location locationService = lctn.Location();
   CameraPosition kJapanCoordinate = const CameraPosition(
-    target: JAPAN_LATLNG,
+    target: DEFAULT_LATLNG,
     zoom: 14.4746,
   );
   CustomerDetailModel? _customerDetailModel;
@@ -124,6 +125,12 @@ class HomeProvider with ChangeNotifier {
     getBytesFromAsset(redMarkerIcon, 48).then((value) async {
       redMarker = BitmapDescriptor.fromBytes(value);
     });
+    getBytesFromAsset(pickupIcon, 100).then((value) async {
+      pickUpMarker = BitmapDescriptor.fromBytes(value);
+    });
+    getBytesFromAsset(destinationIcon, 100).then((value) async {
+      destinationMarker = BitmapDescriptor.fromBytes(value);
+    });
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -145,13 +152,13 @@ class HomeProvider with ChangeNotifier {
         logMe("locationData");
         logMe(locationData);
 
-        createDriverMarker(locationData, false);
-        fetchProfile().listen((event) {});
+        // createDriverMarker(locationData, false);
+        // fetchProfile().listen((event) {});
 
         //onlocation change
-        locationService.onLocationChanged.listen((event) {
-          createDriverMarker(event, true);
-        });
+        // locationService.onLocationChanged.listen((event) {
+        //   createDriverMarker(event, true);
+        // });
       } else {
         try {
           bool serviceStatusResult = await locationService.requestService();
@@ -226,6 +233,7 @@ class HomeProvider with ChangeNotifier {
       yield RejectRequestFailure(failure: failure);
     }, (data) async* {
       dismissLoading();
+      // rejectRequestSocket();
       yield RejectRequestLoaded(data: data);
     });
   }
@@ -268,14 +276,16 @@ class HomeProvider with ChangeNotifier {
 
   createDriverMarker(lctn.LocationData locationData, bool isListen) async {
     try {
+      logMe('Create in creating marker --> ');
       MarkerId markerId = const MarkerId("origin");
       final Marker marker = Marker(
         markerId: markerId,
         position: LatLng(locationData.latitude!, locationData.longitude!),
-        icon: driverMarker,
+        // icon: driverMarker,
         rotation: locationData.heading!,
         onTap: () {},
       );
+
       if (!isListen) {
         googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(
@@ -290,8 +300,94 @@ class HomeProvider with ChangeNotifier {
       markers[markerId] = marker;
       notifyListeners();
     } catch (e) {
-      logMe(e);
+      logMe('Error in creating marker --> $e');
     }
+  }
+
+  createPickupAndDropMarker(LatLng pickup, LatLng drop, ) async {
+    try {
+      logMe('Create in creating marker --> ');
+      MarkerId pickupMarkerId = const MarkerId("pickup");
+      MarkerId dropMarkerId = const MarkerId("drop");
+      final Marker marker = Marker(
+        markerId: pickupMarkerId,
+        position: LatLng(pickup.latitude, pickup.longitude),
+        icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
+          return pickUpMarker = BitmapDescriptor.fromBytes(value);
+        }),
+        // rotation: locationData.heading!,
+        onTap: () {},
+      );
+      final Marker dropMarker = Marker(
+        markerId: dropMarkerId,
+        position: LatLng(drop.latitude, drop.longitude),
+        icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
+          return destinationMarker = BitmapDescriptor.fromBytes(value);
+        }),
+        // rotation: locationData.heading!,
+        onTap: () {},
+      );
+
+      markers[pickupMarkerId] = marker;
+      markers[dropMarkerId] = dropMarker;
+      notifyListeners();
+      // googleMapController.animateCamera(
+      //   CameraUpdate.newCameraPosition(
+      //     CameraPosition(
+      //       target: pickup,
+      //       zoom: 17,
+      //     ),
+      //   ),
+      // );
+
+      List<Marker> listMarker = [];
+      markers.forEach((k, v) => listMarker.add(v));
+      CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(getBounds(listMarker), 75);
+      googleMapController.animateCamera(cameraUpdate);
+
+      // googleMapController.animateCamera(CameraUpdate.newLatLngBounds(
+      //   getBounds(markers), 75)
+      //     LatLngBounds(
+      //       southwest: LatLng(
+      //           pickup.latitude <= drop.latitude
+      //               ? pickup.latitude
+      //               : drop.latitude,
+      //           pickup.longitude <= drop.longitude
+      //               ? pickup.longitude
+      //               : drop.longitude),
+      //       northeast: LatLng(
+      //         pickup.latitude <= drop.latitude
+      //             ? drop.latitude
+      //             : pickup.latitude,
+      //         pickup.longitude <= drop.longitude
+      //             ? drop.longitude
+      //             : pickup.longitude,
+      //       ),
+      //     )
+      // )
+      // );
+
+      logMe('Marker created -- --> ${markers.length}');
+    } catch (e) {
+      logMe('Error in creating marker --> $e');
+    }
+  }
+
+  LatLngBounds getBounds(List<Marker> markers) {
+    var lngs = markers.map<double>((m) => m.position.longitude).toList();
+    var lats = markers.map<double>((m) => m.position.latitude).toList();
+
+    double topMost = lngs.reduce(max);
+    double leftMost = lats.reduce(min);
+    double rightMost = lats.reduce(max);
+    double bottomMost = lngs.reduce(min);
+
+    LatLngBounds bounds = LatLngBounds(
+      northeast: LatLng(rightMost, topMost),
+      southwest: LatLng(leftMost, bottomMost),
+    );
+
+    return bounds;
   }
 
   setPolylineDirection(LatLng origin, LatLng destination) async {
@@ -300,6 +396,7 @@ class HomeProvider with ChangeNotifier {
         .getRouteBetweenCoordinates(origin.latitude, origin.longitude,
             destination.latitude, destination.longitude)
         .then((result) {
+      logMe('Polyline ---> ${result.toString()}');
       if (result.isNotEmpty) {
         polylineCoordinates = [];
         for (var point in result) {
@@ -308,12 +405,13 @@ class HomeProvider with ChangeNotifier {
 
         Polyline polyline = Polyline(
             polylineId: const PolylineId("jalur"),
-            color: Colors.lightBlue,
+            color: Colors.black,
             points: polylineCoordinates,
             width: 6,
             startCap: Cap.roundCap,
             endCap: Cap.roundCap);
         polylines.add(polyline);
+        logMe('Polyline in the list - ${polylines.toString()}');
         notifyListeners();
       }
     });
@@ -433,35 +531,5 @@ class HomeProvider with ChangeNotifier {
     }, (data) async* {
       yield UpdateLocationLoaded(data: data);
     });
-  }
-
-  WebSocket? _socket;
-
-  connectToSocket() {
-    logMe('============= Chat Token ${session.chatToken} ================');
-    logMe(
-        'URL --> ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-    _socket = WebSocket(Uri.parse(
-        'ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}'));
-
-    logMe('============= Connecting to Socket ================');
-    _socket!.connection.listen((event) {
-      logMe('Socket on Listen ---> ${event.toString()}');
-      if (event is Connected) {
-        listenRequests();
-      }
-    });
-  }
-
-  listenRequests() {
-    logMe('============= Listening to requests ================');
-    _socket!.messages.listen((event) {
-      logMe('Data in socket');
-      logMe('Request list data -----> ${event.toString()}');
-    });
-  }
-
-  rejectRequestSocket() {
-    _socket!.send("");
   }
 }

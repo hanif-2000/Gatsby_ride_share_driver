@@ -9,5 +9,5 @@ const String BASE_URL_PHOTO = 'https://[your_domain]/public';
 
 // const String GOOGLEMAPKEY = "AIzaSyBLVQD5gh9CP8C4_yrzuhvn06ZfhfFUODE";
 const String GOOGLEMAPKEY = "AIzaSyAh44zG-nwjUK3-C0IR8lLpw2uBZfVukVY";
-const LatLng JAPAN_LATLNG = LatLng(30.7046, 76.7179);
+const LatLng DEFAULT_LATLNG = LatLng(30.7046, 76.7179);
 

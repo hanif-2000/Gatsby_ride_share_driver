@@ -2,6 +2,7 @@ import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/no_projects.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/request_tile.dart';
@@ -84,20 +85,25 @@ class RequestListWidget extends StatelessWidget {
                                                       //     locator<Session>();
                                                       session.setIsOrderRunning =
                                                           true;
+                                                      var socketProvider =
+                                                      locator<SocketProvider>();
+                                                      socketProvider
+                                                          .acceptRequestSocket();
                                                       Navigator
                                                           .pushNamedAndRemoveUntil(
                                                         context,
                                                         OrderPage.routeName,
                                                         (route) => false,
-                                                        arguments:
-                                                            OrderPageArguments(
-                                                          orderDetail:
-                                                              homeProvider
-                                                                  .orderDetail!,
-                                                          customerDetailModel:
-                                                              homeProvider
-                                                                  .customerDetailModel!,
-                                                        ),
+                                                        arguments: OrderPageArguments(
+                                                            orderDetail:
+                                                                homeProvider
+                                                                    .orderDetail!,
+                                                            customerDetailModel:
+                                                                homeProvider
+                                                                    .customerDetailModel!,
+                                                            orderStatus: event1
+                                                                .data
+                                                                .orderStatus),
                                                       );
                                                     } else if (event
                                                             .data.message ==
@@ -180,7 +186,11 @@ class RequestListWidget extends StatelessWidget {
                                             .listen((event) {
                                           if (event is RejectRequestLoaded) {
                                             final data = event.data;
+                                            var socketProvider =
+                                                locator<SocketProvider>();
                                             Navigator.pop(context);
+                                            socketProvider
+                                                .rejectRequestSocket();
                                             showToast(message: data.message);
                                           }
                                         });

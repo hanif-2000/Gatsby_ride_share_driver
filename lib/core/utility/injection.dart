@@ -16,6 +16,7 @@ import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.d
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_total_price.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/place_picker_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/data/datasources/aboutus_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/data/repositories/aboutus_repository_implementation.dart';
@@ -357,4 +358,5 @@ Future<void> init() async {
       () => RatingProvider(doRating: locator()));
   locator.registerFactory<ReceiptProvider>(
       () => ReceiptProvider(doReceipt: locator()));
+  locator.registerFactory<SocketProvider>(() => SocketProvider());
 }

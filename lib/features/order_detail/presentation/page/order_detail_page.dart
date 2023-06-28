@@ -1,4 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -8,9 +9,10 @@ import 'package:appkey_taxiapp_driver/features/history/data/models/history_respo
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
-import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
+import 'package:provider/provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -391,23 +393,45 @@ class OrderDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: 216,
-              child: GoogleMap(
-                mapType: MapType.normal,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                initialCameraPosition: const CameraPosition(
-                  target: JAPAN_LATLNG,
-                  zoom: 14.4746,
+            Consumer<HomeProvider>(builder: (context, provider, _) {
+              return SizedBox(
+                height: 216,
+                child: GoogleMap(
+                  mapType: MapType.normal,
+                  gestureRecognizers: Set()
+                    ..add(
+                      Factory<PanGestureRecognizer>(
+                        () => PanGestureRecognizer(),
+                      ),
+                    ),
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: const CameraPosition(
+                    target: DEFAULT_LATLNG,
+                    zoom: 14.4746,
+                  ),
+                  polylines: provider.polylines,
+                  markers: Set<Marker>.of(provider.markers.values),
+                  onMapCreated: (GoogleMapController controller) async {
+                    provider.googleMapController = controller;
+                    // await provider.setCurrentLocation(
+                    //     widget.orderDetail, widget.customerDetail);
+                    final pickup = LatLng(
+                        double.tryParse(
+                            order!.startCoordinate.split(',').first)!,
+                        double.tryParse(
+                            order!.startCoordinate.split(',').last)!);
+                    final drop = LatLng(
+                        double.tryParse(order!.endCoordinate.split(',').first)!,
+                        double.tryParse(order!.endCoordinate.split(',').last)!);
+
+                    await provider.createPickupAndDropMarker(
+                        pickup, drop);
+                    await provider.setPolylineDirection(pickup, drop);
+                  },
                 ),
-                onMapCreated: (GoogleMapController controller) async {
-                  // provider.googleMapController = controller;
-                  // await provider.setCurrentLocation(
-                  //     widget.orderDetail, widget.customerDetail);
-                },
-              ),
-            ),
+              );
+            }),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
