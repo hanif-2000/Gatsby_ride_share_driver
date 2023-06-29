@@ -1,4 +1,4 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/price_category.dart';
+
 import 'package:equatable/equatable.dart';
 
 import 'order_detail.dart';

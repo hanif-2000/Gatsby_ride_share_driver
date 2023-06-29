@@ -37,6 +37,7 @@ class UserProfileTile extends StatelessWidget {
                           image: NetworkImage(
                             '$BASE_URL${provider.customerDetail!.data.photo}',
                           ),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -56,17 +57,15 @@ class UserProfileTile extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, RatingListPage.routeName);
-                          // context,
-                          // GiveRatingScreen.routeName);
+                          Navigator.pushNamed(context, RatingListPage.routeName,
+                              arguments: provider.customerDetail!.data.id);
                         },
                         child: Row(
                           children: [
                             SvgPicture.asset('assets/icons/home/ic_start.svg'),
                             smallHorizontalSpacing(),
                             Text(
-                              '4.5',
+                              '${provider.customerDetail!.data.rating}',
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(

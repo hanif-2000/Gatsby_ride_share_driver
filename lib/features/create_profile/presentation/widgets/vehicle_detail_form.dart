@@ -2,7 +2,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/validation_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_provider.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
@@ -78,7 +77,7 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
           showToast(message: msg);
           break;
         case GetVehicleTypeSuccess:
-          final data = (state as GetVehicleTypeSuccess).data;
+          // final data = (state as GetVehicleTypeSuccess).data;
           dismissLoading();
           // if (data.success == 1) {
           //   provider.setCurrentStep(3);

@@ -17,7 +17,6 @@ import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
-import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
@@ -297,10 +296,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                               shape: BoxShape.circle,
                                               color: redD03B3B,
                                               image: DecorationImage(
-                                                image: NetworkImage(
-                                                  '$BASE_URL${widget.requestListModel!.image}',
-                                                ),
-                                              ),
+                                                  image: NetworkImage(
+                                                    '$BASE_URL${widget.requestListModel!.image}',
+                                                  ),
+                                                  fit: BoxFit.cover),
                                             ),
                                           ),
                                         ),
@@ -321,7 +320,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                             InkWell(
                                               onTap: () {
                                                 Navigator.pushNamed(context,
-                                                    RatingListPage.routeName);
+                                                    RatingListPage.routeName,
+                                                    arguments: widget
+                                                        .requestListModel!
+                                                        .customerId);
                                                 // context,
                                                 // GiveRatingScreen.routeName);
                                               },
@@ -331,7 +333,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                       'assets/icons/home/ic_start.svg'),
                                                   smallHorizontalSpacing(),
                                                   Text(
-                                                    '4.5',
+                                                    '${widget.requestListModel!.rating}',
                                                     textAlign: TextAlign.center,
                                                     style: titleStyle
                                                         .copyWith(

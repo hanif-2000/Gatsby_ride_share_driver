@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_google_place.dart';
-import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
-
 import 'place_auto_complete_state.dart';
 
 class PlacePickerProvider with ChangeNotifier {

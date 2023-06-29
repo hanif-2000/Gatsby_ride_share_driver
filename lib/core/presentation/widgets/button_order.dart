@@ -1,23 +1,14 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/order_data_detail.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../features/login/presentation/pages/login_page.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
-import '../../../features/order/presentation/widgets/depart_dialog.dart';
 import '../../static/styles.dart';
-import '../../utility/global_function.dart';
-import '../providers/home_provider.dart';
-import 'custom_simple_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 
 class ButtonOrder extends StatelessWidget {
@@ -221,8 +212,7 @@ class ButtonOrder extends StatelessWidget {
                   },
                   buttonHeight: 48,
                   isRounded: true,
-                  bgColor: Colors.black
-                  ),
+                  bgColor: Colors.black),
             ],
           ),
         );

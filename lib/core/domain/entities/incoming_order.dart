@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class IncomingOrderDetail extends Equatable {
   final String title, body, orderId, clickAction;

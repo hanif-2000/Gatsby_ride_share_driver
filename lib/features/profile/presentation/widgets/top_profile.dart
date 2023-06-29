@@ -1,9 +1,6 @@
-import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../core/presentation/widgets/dynamic_network_image.dart';
-import '../../../../core/static/assets.dart';
 import '../../data/models/profile_response_model.dart';
 
 class TopProfile extends StatefulWidget {
@@ -77,7 +74,7 @@ class _TopProfileState extends State<TopProfile> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(mergeTypeTaxiProfile(widget.data.vehicleCategory),
-                style: TextStyle(
+                style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.normal,
                     color: Colors.black,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../static/colors.dart';
 import '../../static/styles.dart';
-import 'custom_list_tile.dart';
 
 class DrawerButtonItemWidget extends StatelessWidget {
   const DrawerButtonItemWidget({

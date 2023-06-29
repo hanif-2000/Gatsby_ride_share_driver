@@ -1,7 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_title_bar.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/history/presentation/widgets/history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/static/styles.dart';

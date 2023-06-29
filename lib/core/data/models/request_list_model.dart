@@ -51,6 +51,7 @@ class RequestListModel extends Equatable {
   final String? firstName;
   final String? lastName;
   final String? image;
+  final double? rating;
 
   const RequestListModel({
     required this.id,
@@ -72,6 +73,7 @@ class RequestListModel extends Equatable {
     this.firstName,
     this.lastName,
     this.image,
+    this.rating,
   });
 
   @override
@@ -95,6 +97,7 @@ class RequestListModel extends Equatable {
         firstName,
         lastName,
         image,
+        rating,
       ];
 
   factory RequestListModel.fromMap(Map<String, dynamic> json) =>
@@ -113,6 +116,9 @@ class RequestListModel extends Equatable {
         paymentMethod: json["payment_method"],
         status: json["status"],
         total: json["total"],
+        rating: json["rating"] != null
+            ? double.tryParse(json['rating'].toString())
+            : 0,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         firstName: json["first_name"],
@@ -140,5 +146,6 @@ class RequestListModel extends Equatable {
         "first_name": firstName,
         "last_name": lastName,
         "image": image,
+        "rating": rating,
       };
 }

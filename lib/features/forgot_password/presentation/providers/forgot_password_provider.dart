@@ -40,7 +40,7 @@ class ForgotPasswordProvider extends FormProvider {
   }
 
   otpCountDown() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_second >= 1) {
         _second = _second - 1;
         notifyListeners();

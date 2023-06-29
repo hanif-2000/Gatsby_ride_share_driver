@@ -65,6 +65,7 @@ class HistoryOrder {
     required this.timestamp,
     required this.vehicleCategory,
     required this.ratingList,
+    required this.customerId,
   });
 
   String id;
@@ -91,6 +92,7 @@ class HistoryOrder {
   String timestamp;
   VehicleCategory vehicleCategory;
   List<RatingList> ratingList;
+  int customerId;
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
         id: json["id"],
@@ -118,6 +120,7 @@ class HistoryOrder {
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],
+        customerId: json["customer_id"] ?? 0,
         vehicleCategory: VehicleCategory.fromMap(json["vehicle_category"]),
         ratingList: List<RatingList>.from(
             json["rating_list"].map((x) => RatingList.fromMap(x))),
@@ -146,6 +149,7 @@ class HistoryOrder {
         "payment_method": paymentMethod,
         "taxi_type": taxiType,
         "timestamp": timestamp,
+        "customer_id": customerId,
         "vehicle_category": vehicleCategory.toMap(),
         "rating_list": List<dynamic>.from(ratingList.map((x) => x.toMap())),
       };

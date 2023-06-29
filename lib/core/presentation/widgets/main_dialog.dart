@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/round_button.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
@@ -98,7 +97,7 @@ class MainDialog extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 appLoc.customerCurrentLocation,
-                                style: TextStyle(
+                                style: const TextStyle(
                                         fontSize: 13,
                                         color: greyBlackColor,
                                         fontWeight: FontWeight.bold)
@@ -130,7 +129,7 @@ class MainDialog extends StatelessWidget {
                               const SizedBox(height: 10),
                               Text(
                                 appLoc.customerDestination,
-                                style: TextStyle(
+                                style: const TextStyle(
                                         fontSize: 13,
                                         color: greyBlackColor,
                                         fontWeight: FontWeight.bold)

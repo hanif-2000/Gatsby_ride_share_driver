@@ -1,15 +1,7 @@
-import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/place_picker_page/place_picker_page.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../../features/login/presentation/pages/login_page.dart';
-import '../../static/enums.dart';
-import '../../utility/global_function.dart';
-import '../providers/home_provider.dart';
 
 class OriginWidget extends StatelessWidget {
   final double deviceWidth;

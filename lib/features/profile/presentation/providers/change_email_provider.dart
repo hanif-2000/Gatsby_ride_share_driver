@@ -2,8 +2,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/profile/domain/usecases/update_email.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '../../../../core/presentation/providers/form_provider.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';

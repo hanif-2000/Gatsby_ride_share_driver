@@ -14,6 +14,7 @@ class RoundAlertButton extends StatelessWidget {
       required this.label,
       required this.bgColor,
       this.txtColor});
+
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
@@ -34,7 +35,7 @@ class RoundAlertButton extends StatelessWidget {
         },
         child: AutoSizeText(
           label,
-          style: TextStyle(color: txtColor == null ? Colors.white : txtColor),
+          style: TextStyle(color: txtColor ?? Colors.white),
           minFontSize: 5,
           maxLines: 1,
         ),

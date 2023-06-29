@@ -1,24 +1,17 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
-import 'package:appkey_taxiapp_driver/core/domain/entities/order_data_detail.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
-import 'package:appkey_taxiapp_driver/features/order/domain/usecases/change_status.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_driver_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_driver_location.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_order_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_status_order.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/update_status_order.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_driver_detail_state.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_driver_location_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
@@ -28,7 +21,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../core/domain/usecases/do_update_location.dart';
 import '../../../../core/presentation/providers/update_location_state.dart';
 import '../../../../core/utility/direction_helper.dart';

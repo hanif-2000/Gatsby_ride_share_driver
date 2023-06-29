@@ -1,10 +1,10 @@
-import 'package:appkey_taxiapp_driver/features/order/data/models/create_order_response_model.dart';
+
 import 'package:appkey_taxiapp_driver/features/order/data/models/driver_location_response_model.dart';
-import 'package:appkey_taxiapp_driver/features/order/data/models/get_status_response.dart';
+
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/error/failure.dart';
-import '../../data/models/status_oder_response_model.dart';
+
 
 abstract class GetDriverLocationState extends Equatable {
   @override

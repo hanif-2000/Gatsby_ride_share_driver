@@ -1,6 +1,5 @@
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class CurrentLocationOrderWidget extends StatelessWidget {

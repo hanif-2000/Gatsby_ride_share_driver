@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/currency.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../data/models/customer_detail_model.dart';

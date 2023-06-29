@@ -425,8 +425,7 @@ class OrderDetailPage extends StatelessWidget {
                         double.tryParse(order!.endCoordinate.split(',').first)!,
                         double.tryParse(order!.endCoordinate.split(',').last)!);
 
-                    await provider.createPickupAndDropMarker(
-                        pickup, drop);
+                    await provider.createPickupAndDropMarker(pickup, drop);
                     await provider.setPolylineDirection(pickup, drop);
                   },
                 ),
@@ -476,7 +475,8 @@ class OrderDetailPage extends StatelessWidget {
                             InkWell(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, RatingListPage.routeName);
+                                    context, RatingListPage.routeName,
+                                    arguments: order!.customerId);
                                 // context,
                                 // GiveRatingScreen.routeName);
                               },

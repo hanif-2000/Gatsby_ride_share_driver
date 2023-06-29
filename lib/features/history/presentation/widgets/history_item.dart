@@ -35,7 +35,7 @@ class _HistoryItemState extends State<HistoryItem> {
               color: Colors.grey.withOpacity(0.3),
               spreadRadius: 4,
               blurRadius: 10,
-              offset: Offset(0, 7), // changes position of shadow
+              offset: const Offset(0, 7), // changes position of shadow
             ),
           ]),
           child: LayoutBuilder(builder: (context, constraint) {
@@ -65,7 +65,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                 child: AutoSizeText(
                                   orderDate,
                                   maxLines: 1,
-                                  style: TextStyle(color: whiteColor),
+                                  style: const TextStyle(color: whiteColor),
                                 ),
                               ),
                               Flexible(
@@ -76,7 +76,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: TextStyle(color: whiteColor),
+                                  style: const TextStyle(color: whiteColor),
                                 ),
                               )
                             ],
@@ -86,7 +86,7 @@ class _HistoryItemState extends State<HistoryItem> {
                     )),
                 Container(
                     height: constraint.maxHeight * 0.4,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: whiteColor,
                       border: Border(
                           bottom:
@@ -106,8 +106,8 @@ class _HistoryItemState extends State<HistoryItem> {
                                 children: [
                                   Row(
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             horizontal: 10.0),
                                         child: Icon(
                                           Icons.my_location,
@@ -124,8 +124,8 @@ class _HistoryItemState extends State<HistoryItem> {
                                   ),
                                   Row(
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             horizontal: 10.0),
                                         child: Icon(
                                           Icons.location_on,
@@ -141,7 +141,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               height: constraint.maxHeight,
                               width: constraint.maxWidth * 0.3,
                               child: Column(
@@ -153,7 +153,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                       mergePriceTxt(
                                           widget.data.total.toString()),
                                       maxLines: 1,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
@@ -168,7 +168,7 @@ class _HistoryItemState extends State<HistoryItem> {
                     )),
                 Container(
                     height: constraint.maxHeight * 0.35,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(15),
@@ -178,7 +178,7 @@ class _HistoryItemState extends State<HistoryItem> {
                       builder: (context, constraints) {
                         return Row(
                           children: [
-                            Container(
+                            SizedBox(
                               height: constraint.maxHeight,
                               width: constraint.maxWidth * 0.5,
                               child: Padding(
@@ -205,7 +205,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               height: constraint.maxHeight,
                               width: constraint.maxWidth * 0.5,
                               child: Padding(

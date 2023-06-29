@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
@@ -86,7 +85,8 @@ class RequestListWidget extends StatelessWidget {
                                                       session.setIsOrderRunning =
                                                           true;
                                                       var socketProvider =
-                                                      locator<SocketProvider>();
+                                                          locator<
+                                                              SocketProvider>();
                                                       socketProvider
                                                           .acceptRequestSocket();
                                                       Navigator

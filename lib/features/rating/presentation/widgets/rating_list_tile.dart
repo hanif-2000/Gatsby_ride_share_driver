@@ -1,12 +1,16 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/features/rating/data/model/rating_list_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/utility/helper.dart';
 
 class RatingListTile extends StatelessWidget {
-  const RatingListTile({Key? key}) : super(key: key);
+  const RatingListTile({Key? key, this.ratingItem}) : super(key: key);
+  final RatingItem? ratingItem;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +24,12 @@ class RatingListTile extends StatelessWidget {
         horizontal: 16,
       ),
       decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: greyEFEFF4,
-            ),
+        border: Border(
+          bottom: BorderSide(
+            color: greyEFEFF4,
           ),
-          ),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,9 +38,14 @@ class RatingListTile extends StatelessWidget {
               Container(
                 height: 45,
                 width: 45,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: redD03B3B,
+                  image: DecorationImage(
+                      image: NetworkImage(
+                        '$BASE_URL${ratingItem!.image}',
+                      ),
+                      fit: BoxFit.cover),
                 ),
               ),
               mediumHorizontalSpacing(),
@@ -44,7 +53,7 @@ class RatingListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Alex Robin',
+                    '${ratingItem!.name}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -53,7 +62,7 @@ class RatingListTile extends StatelessWidget {
                         .usePoppinsW5Font(),
                   ),
                   Text(
-                    '12 May 2023',
+                    '${DateFormat.yMMMd().format(ratingItem!.createdAt)}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -69,7 +78,7 @@ class RatingListTile extends StatelessWidget {
                   SvgPicture.asset('assets/icons/home/ic_start.svg'),
                   smallHorizontalSpacing(),
                   Text(
-                    '4.5',
+                    '${ratingItem!.rating}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -84,7 +93,7 @@ class RatingListTile extends StatelessWidget {
           ),
           mediumVerticalSpacing(),
           Text(
-            'Lorem ipsum dolor sit amet consectetur. Scelerisque ornare nunc adipiscing ipsum id turpis quis. Viverra amet arcu eget quisque cras risus lacus tristique morbi. Nisl magnis aliquam tortor dui adipiscing .',
+            '${ratingItem!.review ?? ''}',
             style: titleStyle
                 .copyWith(
                   fontSize: 14,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../static/colors.dart';
 
 class CloseDrawerButtonWidget extends StatelessWidget {
   const CloseDrawerButtonWidget({

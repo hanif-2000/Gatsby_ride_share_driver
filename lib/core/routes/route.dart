@@ -1,4 +1,4 @@
-import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
@@ -70,7 +70,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case EditBankPage.routeName:
       return MaterialPageRoute(builder: (_) => const EditBankPage());
     case RatingListPage.routeName:
-      return MaterialPageRoute(builder: (_) => const RatingListPage());
+      final args = settings.arguments as int;
+      return MaterialPageRoute(
+        builder: (_) => RatingListPage(
+          userId: args.toString(),
+        ),
+      );
     case JobCompletedPage.routeName:
       return MaterialPageRoute(builder: (_) => const JobCompletedPage());
     case ChatPage.routeName:

@@ -1,6 +1,6 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/price_category.dart';
+
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
-import 'package:dartz/dartz.dart';
+
 
 class DetailOrderModel extends OrderDetail {
   const DetailOrderModel(

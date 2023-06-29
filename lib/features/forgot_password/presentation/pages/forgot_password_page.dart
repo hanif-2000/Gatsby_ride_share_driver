@@ -23,8 +23,8 @@ class ForgotPasswordPage extends StatelessWidget {
             return provider.forgetScreens == ForgetScreens.forget
                 ? const FormForgotPassword()
                 : provider.forgetScreens == ForgetScreens.otp
-                    ? FormOTP()
-                    : FormCreatePassword();
+                    ? const FormOTP()
+                    : const FormCreatePassword();
           }),
         ),
       ),

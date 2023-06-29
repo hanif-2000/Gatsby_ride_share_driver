@@ -1,8 +1,8 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/price_category.dart';
+
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
 import 'package:equatable/equatable.dart';
 
-import 'order_detail.dart';
+
 
 class DriverDetailResponse extends Equatable {
   final int success;

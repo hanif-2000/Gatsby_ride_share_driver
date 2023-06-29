@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../features/login/presentation/pages/login_page.dart';
-import '../../static/assets.dart';
 import '../../utility/global_function.dart';
 import '../../utility/helper.dart';
 import '../../utility/injection.dart';
