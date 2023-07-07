@@ -37,7 +37,7 @@ class HistoryListWidget extends StatelessWidget {
                 return Column(
                   children: List.generate(
                     _data.length,
-                    (index) => HistoryTile(
+                        (index) => HistoryTile(
                       order: _data[index],
                     ),
                   ),

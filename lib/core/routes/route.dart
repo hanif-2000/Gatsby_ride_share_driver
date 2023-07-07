@@ -1,7 +1,7 @@
-
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
@@ -79,7 +79,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case JobCompletedPage.routeName:
       return MaterialPageRoute(builder: (_) => const JobCompletedPage());
     case ChatPage.routeName:
-      return MaterialPageRoute(builder: (_) => const ChatPage());
+      final args = settings.arguments as ChatDetail;
+      return MaterialPageRoute(
+        builder: (_) => ChatPage(
+          chatDetail: args,
+        ),
+      );
     case GiveRatingScreen.routeName:
       final args = settings.arguments as RatingPageArguments;
       return MaterialPageRoute(

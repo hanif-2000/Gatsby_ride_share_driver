@@ -109,6 +109,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     }
                     return ListView.builder(
                       itemCount: _data.length,
+                      shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(10.0),

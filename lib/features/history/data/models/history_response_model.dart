@@ -120,10 +120,13 @@ class HistoryOrder {
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],
-        customerId: json["customer_id"] ?? 0,
+        customerId: int.parse(json["customer_id"].toString()) ?? 0,
         vehicleCategory: VehicleCategory.fromMap(json["vehicle_category"]),
         ratingList: List<RatingList>.from(
-            json["rating_list"].map((x) => RatingList.fromMap(x))),
+          json["rating_list"].map(
+            (x) => RatingList.fromMap(x),
+          ),
+        ),
       );
 
   Map<String, dynamic> toJson() => {

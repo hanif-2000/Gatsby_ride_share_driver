@@ -28,8 +28,8 @@ class _FormContactUsState extends State<FormContactUs> {
     final provider = context.read<ContactUsProvider>();
     provider
         .doContactUsAPI(
-            email: provider.emailController.text.trim(),
-            message: provider.firstNameController.text.trim())
+        email: provider.emailController.text.trim(),
+        message: provider.firstNameController.text.trim())
         .listen((state) async {
       switch (state.runtimeType) {
         case ContactUsLoading:

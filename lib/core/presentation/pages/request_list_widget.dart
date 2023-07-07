@@ -42,167 +42,167 @@ class RequestListWidget extends StatelessWidget {
                 return !session.isOnline
                     ? Center(child: NoProjects(isOffline: !session.isOnline))
                     : _data.isEmpty
-                        ? const Center(child: NoProjects())
-                        : Column(
-                            children: List.generate(
-                              _data.length,
-                              (index) => RequestTile(
-                                request: _data[index],
-                                onAccept: () {
-                                  final session = locator<Session>();
-                                  homeProvider
-                                      .fetchOrderDetail(
-                                          _data[index].id.toString())
-                                      .listen(
-                                    (event1) {
-                                      if (event1 is OrderDetailLoaded) {
-                                        // var _deviceSize = MediaQuery.of(context).size;
-                                        session.setRunningOrderId =
-                                            _data[index].id;
-                                        session.setOrderId =
-                                            _data[index].id.toString();
-                                        homeProvider
-                                            .fetchCustomerDetail(
-                                                event1.data.userId.toString())
-                                            .listen(
+                    ? const Center(child: NoProjects())
+                    : Column(
+                  children: List.generate(
+                    _data.length,
+                        (index) => RequestTile(
+                      request: _data[index],
+                      onAccept: () {
+                        final session = locator<Session>();
+                        homeProvider
+                            .fetchOrderDetail(
+                            _data[index].id.toString())
+                            .listen(
+                              (event1) {
+                            if (event1 is OrderDetailLoaded) {
+                              // var _deviceSize = MediaQuery.of(context).size;
+                              session.setRunningOrderId =
+                                  _data[index].id;
+                              session.setOrderId =
+                                  _data[index].id.toString();
+                              homeProvider
+                                  .fetchCustomerDetail(
+                                  event1.data.userId.toString())
+                                  .listen(
+                                    (event) async {
+                                  if (event is CustomerDetailLoaded) {
+                                    session.setOrderUserId =
+                                        event1.data.userId;
+                                    print(
+                                        'RUNNING order id --> ${_data[index].id}');
+                                    homeProvider
+                                        .submitStatusOrder(
+                                        Order.driverAccept)
+                                        .listen(
                                           (event) async {
-                                            if (event is CustomerDetailLoaded) {
-                                              session.setOrderUserId =
-                                                  event1.data.userId;
-                                              print(
-                                                  'RUNNING order id --> ${_data[index].id}');
-                                              homeProvider
-                                                  .submitStatusOrder(
-                                                      Order.driverAccept)
-                                                  .listen(
-                                                (event) async {
-                                                  if (event
-                                                      is UpdateStatusOrderLoaded) {
-                                                    if (event.data.success ==
-                                                        1) {
-                                                      // var session =
-                                                      //     locator<Session>();
-                                                      session.setIsOrderRunning =
-                                                          true;
-                                                      var socketProvider =
-                                                          locator<
-                                                              SocketProvider>();
-                                                      socketProvider
-                                                          .acceptRequestSocket();
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        OrderPage.routeName,
-                                                        (route) => false,
-                                                        arguments: OrderPageArguments(
-                                                            orderDetail:
-                                                                homeProvider
-                                                                    .orderDetail!,
-                                                            customerDetailModel:
-                                                                homeProvider
-                                                                    .customerDetailModel!,
-                                                            orderStatus: event1
-                                                                .data
-                                                                .orderStatus),
-                                                      );
-                                                    } else if (event
-                                                            .data.message ==
-                                                        5) {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            CommonDialog(
-                                                          title: appLoc.sorry,
-                                                          msg: appLoc
-                                                              .orderacceptedotherdriver,
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      );
-                                                    } else if (event
-                                                            .data.message ==
-                                                        6) {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            CommonDialog(
-                                                          title: appLoc.sorry,
-                                                          msg: appLoc
-                                                              .ordernotfound,
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      );
-                                                    } else if (event
-                                                            .data.message ==
-                                                        7) {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            CommonDialog(
-                                                          title: appLoc.sorry,
-                                                          msg: appLoc
-                                                              .orderhascancelled,
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                },
-                                              );
-                                            }
-                                          },
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                                onReject: () {
-                                  CustomBottomSheet.showBottomSheet(
-                                    context,
-                                    RejectReasonBottomSheet(
-                                      reject: (reason) {
-                                        ///send reason to the server
-                                        homeProvider
-                                            .rejectRequest(
-                                                _data[index].id.toString(),
-                                                reason)
-                                            .listen((event) {
-                                          if (event is RejectRequestLoaded) {
-                                            final data = event.data;
+                                        if (event
+                                        is UpdateStatusOrderLoaded) {
+                                          if (event.data.success ==
+                                              1) {
+                                            // var session =
+                                            //     locator<Session>();
+                                            session.setIsOrderRunning =
+                                            true;
                                             var socketProvider =
-                                                locator<SocketProvider>();
-                                            Navigator.pop(context);
+                                            locator<
+                                                SocketProvider>();
                                             socketProvider
-                                                .rejectRequestSocket();
-                                            showToast(message: data.message);
+                                                .acceptRequestSocket();
+                                            Navigator
+                                                .pushNamedAndRemoveUntil(
+                                              context,
+                                              OrderPage.routeName,
+                                                  (route) => false,
+                                              arguments: OrderPageArguments(
+                                                  orderDetail:
+                                                  homeProvider
+                                                      .orderDetail!,
+                                                  customerDetailModel:
+                                                  homeProvider
+                                                      .customerDetailModel!,
+                                                  orderStatus: event1
+                                                      .data
+                                                      .orderStatus),
+                                            );
+                                          } else if (event
+                                              .data.message ==
+                                              5) {
+                                            Navigator.of(context)
+                                                .pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CommonDialog(
+                                                    title: appLoc.sorry,
+                                                    msg: appLoc
+                                                        .orderacceptedotherdriver,
+                                                    onTap: () {
+                                                      Navigator.of(
+                                                          context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                            );
+                                          } else if (event
+                                              .data.message ==
+                                              6) {
+                                            Navigator.of(context)
+                                                .pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CommonDialog(
+                                                    title: appLoc.sorry,
+                                                    msg: appLoc
+                                                        .ordernotfound,
+                                                    onTap: () {
+                                                      Navigator.of(
+                                                          context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                            );
+                                          } else if (event
+                                              .data.message ==
+                                              7) {
+                                            Navigator.of(context)
+                                                .pop();
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CommonDialog(
+                                                    title: appLoc.sorry,
+                                                    msg: appLoc
+                                                        .orderhascancelled,
+                                                    onTap: () {
+                                                      Navigator.of(
+                                                          context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                            );
                                           }
-                                        });
-
-                                        ///
+                                        }
                                       },
-                                    ),
-                                  );
+                                    );
+                                  }
                                 },
-                              ),
-                            ),
-                          );
+                              );
+                            }
+                          },
+                        );
+                      },
+                      onReject: () {
+                        CustomBottomSheet.showBottomSheet(
+                          context,
+                          RejectReasonBottomSheet(
+                            reject: (reason) {
+                              ///send reason to the server
+                              homeProvider
+                                  .rejectRequest(
+                                  _data[index].id.toString(),
+                                  reason)
+                                  .listen((event) {
+                                if (event is RejectRequestLoaded) {
+                                  final data = event.data;
+                                  var socketProvider =
+                                  locator<SocketProvider>();
+                                  Navigator.pop(context);
+                                  socketProvider
+                                      .rejectRequestSocket();
+                                  showToast(message: data.message);
+                                }
+                              });
+
+                              ///
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
 
               default:
                 return const NoProjects();

@@ -11,6 +11,14 @@ import '../../../features/order/presentation/providers/update_status_order_state
 import '../../static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 
+class ChatDetail {
+  String? userName;
+  String? userPhoto;
+  int? userId;
+
+  ChatDetail(this.userName, this.userPhoto, this.userId);
+}
+
 class ButtonOrder extends StatelessWidget {
   const ButtonOrder({Key? key}) : super(key: key);
 
@@ -168,7 +176,12 @@ class ButtonOrder extends StatelessWidget {
                         style: txtButtonStyle,
                       ),
                       event: () {
-                        Navigator.pushNamed(context, ChatPage.routeName);
+                        Navigator.pushNamed(context, ChatPage.routeName,
+                            arguments: ChatDetail(
+                              provider.customerDetail!.data.name,
+                              provider.customerDetail!.data.photo,
+                              provider.customerDetail!.data.id,
+                            ));
                       },
                       buttonHeight: 48,
                       isRounded: true,

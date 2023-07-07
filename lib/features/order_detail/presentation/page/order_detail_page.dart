@@ -319,7 +319,6 @@ class OrderDetailPage extends StatelessWidget {
       //   ],
       // ),
 
-      ///
       body: SingleChildScrollView(
         child: Column(
           children: [

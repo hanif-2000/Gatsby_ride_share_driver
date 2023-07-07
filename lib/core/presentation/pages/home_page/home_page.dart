@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         child: optionTile(
                           title: 'Requests',
                           isSelected:
-                              provider.projectType == ProjectType.requests,
+                          provider.projectType == ProjectType.requests,
                           onChange: () {
                             provider.projectType = ProjectType.requests;
                           },
@@ -301,7 +301,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         child: optionTile(
                           title: 'History',
                           isSelected:
-                              provider.projectType == ProjectType.history,
+                          provider.projectType == ProjectType.history,
                           onChange: () {
                             provider.projectType = ProjectType.history;
                           },

@@ -200,6 +200,7 @@ class HomeProvider with ChangeNotifier {
 
   Stream<RequestListState> getRequestListData() async* {
     // showLoading();
+    print('========== Refresh List =============');
     yield RequestListLoading();
     final formData = FormData.fromMap({
       // 'id': session.orderId,
@@ -304,7 +305,10 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  createPickupAndDropMarker(LatLng pickup, LatLng drop, ) async {
+  createPickupAndDropMarker(
+    LatLng pickup,
+    LatLng drop,
+  ) async {
     try {
       logMe('Create in creating marker --> ');
       MarkerId pickupMarkerId = const MarkerId("pickup");
@@ -342,7 +346,8 @@ class HomeProvider with ChangeNotifier {
 
       List<Marker> listMarker = [];
       markers.forEach((k, v) => listMarker.add(v));
-      CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(getBounds(listMarker), 75);
+      CameraUpdate cameraUpdate =
+          CameraUpdate.newLatLngBounds(getBounds(listMarker), 75);
       googleMapController.animateCamera(cameraUpdate);
 
       // googleMapController.animateCamera(CameraUpdate.newLatLngBounds(
@@ -395,26 +400,28 @@ class HomeProvider with ChangeNotifier {
     await DirectionHelper()
         .getRouteBetweenCoordinates(origin.latitude, origin.longitude,
             destination.latitude, destination.longitude)
-        .then((result) {
-      logMe('Polyline ---> ${result.toString()}');
-      if (result.isNotEmpty) {
-        polylineCoordinates = [];
-        for (var point in result) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        }
+        .then(
+      (result) {
+        logMe('Polyline ---> ${result.toString()}');
+        if (result.isNotEmpty) {
+          polylineCoordinates = [];
+          for (var point in result) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          }
 
-        Polyline polyline = Polyline(
-            polylineId: const PolylineId("jalur"),
-            color: Colors.black,
-            points: polylineCoordinates,
-            width: 6,
-            startCap: Cap.roundCap,
-            endCap: Cap.roundCap);
-        polylines.add(polyline);
-        logMe('Polyline in the list - ${polylines.toString()}');
-        notifyListeners();
-      }
-    });
+          Polyline polyline = Polyline(
+              polylineId: const PolylineId("jalur"),
+              color: Colors.black,
+              points: polylineCoordinates,
+              width: 5,
+              startCap: Cap.roundCap,
+              endCap: Cap.roundCap);
+          polylines.add(polyline);
+          logMe('Polyline in the list - ${polylines.toString()}');
+          notifyListeners();
+        }
+      },
+    );
   }
 
   Stream<ProfileState> fetchProfile() async* {

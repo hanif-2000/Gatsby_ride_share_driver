@@ -293,7 +293,7 @@ class OrderProvider with ChangeNotifier {
               polylineId: const PolylineId("jalur"),
               color: Colors.black,
               points: polylineCoordinates,
-              width: 6,
+              width: 5,
               startCap: Cap.roundCap,
               endCap: Cap.roundCap);
           polylines.add(polyline);
@@ -318,7 +318,7 @@ class OrderProvider with ChangeNotifier {
               polylineId: const PolylineId("jalur"),
               color: Colors.black,
               points: polylineCoordinates,
-              width: 6,
+              width: 5,
               startCap: Cap.roundCap,
               endCap: Cap.roundCap);
           polylines.add(polyline);
@@ -371,7 +371,7 @@ class OrderProvider with ChangeNotifier {
                 polylineId: const PolylineId("jalur"),
                 color: Colors.black,
                 points: polylineCoordinates,
-                width: 6,
+                width: 5,
                 startCap: Cap.roundCap,
                 endCap: Cap.roundCap);
             polylines.add(polyline);
@@ -414,7 +414,7 @@ class OrderProvider with ChangeNotifier {
               polylineId: const PolylineId("jalur"),
               color: Colors.lightBlue,
               points: polylineCoordinates,
-              width: 6,
+              width: 5,
               startCap: Cap.roundCap,
               endCap: Cap.roundCap,
             );

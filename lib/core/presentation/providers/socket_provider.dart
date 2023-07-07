@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:appkey_taxiapp_driver/features/chat/data/model/chat_model.dart';
+import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -17,6 +19,7 @@ class SocketProvider with ChangeNotifier {
 
   WebSocket? _socket;
   final session = locator<Session>();
+  final chatProvider = locator<ChatProvider>();
 
   connectToSocket() {
     logMe('============= Chat Token ${session.chatToken} ================');
@@ -39,6 +42,11 @@ class SocketProvider with ChangeNotifier {
     _socket!.messages.listen((event) {
       logMe('Data in socket');
       logMe('Request list data socket-----> ${event.toString()}');
+      final response = jsonDecode(event);
+      if (response['type'] == 'MessageList') {
+        chatProvider.addSingleChat(ChatModel.fromMap(response['data']));
+      }
+      if (response['type'] == 'chat') {}
     });
   }
 
@@ -57,6 +65,74 @@ class SocketProvider with ChangeNotifier {
       'driverID': session.userId,
     };
     logMe('reject request socket -- > ${map.toString()}');
+    _socket!.send(jsonEncode(map));
+  }
+
+  joinExitRoom({int? receiverId, String type = 'Join'}) {
+    final map = {
+      'serviceType': type,
+      'UserID': session.userId,
+      'roomID': (int.parse(session.userId) > receiverId!)
+          ? '$receiverId-${session.userId}'
+          : '${session.userId}-$receiverId',
+    };
+    logMe('Join Exit room socket -- > ${map.toString()}');
+    _socket!.send(jsonEncode(map));
+  }
+
+  sendChatMessage({
+    String? message,
+    int? receiverId,
+    String? messageType = 'Text',
+  }) {
+    final chatProvider = locator<ChatProvider>();
+    final map = {
+      "userID": session.userId,
+      "serviceType": "Chat",
+      "recieverID": receiverId,
+      "msg": message,
+      "room": (int.parse(session.userId) > receiverId!)
+          ? '$receiverId-${session.userId}'
+          : '${session.userId}-$receiverId',
+      "MessageType": "Text",
+      "SenderType": "Driver",
+      "RecieverType": "Customer",
+      "type": "Chat"
+    };
+    print('Message send ---> ${map.toString()}');
+    _socket!.send(jsonEncode(map));
+    chatProvider.addSingleChat(
+      ChatModel(
+        id: '1',
+        messageType: 'Text',
+        roomId: (int.parse(session.userId) > receiverId)
+            ? '$receiverId-${session.userId}'
+            : '${session.userId}-$receiverId',
+        message: message,
+        senderType: 'Driver',
+        recieverType: 'Customer',
+        sourceUserId: session.userId,
+        targetUserId: receiverId.toString(),
+        createdOn: DateTime.now(),
+        modifiedOn: DateTime.now(),
+      ),
+    );
+  }
+
+  markMessageAsRead({
+    int? receiverId,
+  }) {
+    final map = {
+      "userID": session.userId,
+      "serviceType": "Chat",
+      "recieverID": receiverId,
+      "room": (int.parse(session.userId) > receiverId!)
+          ? '$receiverId-${session.userId}'
+          : '${session.userId}-$receiverId',
+      "SenderType": "Driver",
+      "RecieverType": "Customer",
+      "type": "read"
+    };
     _socket!.send(jsonEncode(map));
   }
 }
