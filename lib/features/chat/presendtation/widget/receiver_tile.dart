@@ -27,6 +27,7 @@ class ReceiverTile extends StatelessWidget {
         ),
         child: Text(
           title!,
+          textAlign: TextAlign.left,
           style: titleStyle
               .copyWith(
                 fontSize: 16,

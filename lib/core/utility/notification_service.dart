@@ -34,8 +34,8 @@ class NotificationHelper {
 
   final AndroidNotificationDetails _androidNotificationDetails =
       const AndroidNotificationDetails(
-    'channel ID',
-    'channel name',
+    'GatesByDriver',
+    'GatesBy Driver',
     playSound: true,
     priority: Priority.high,
     importance: Importance.high,

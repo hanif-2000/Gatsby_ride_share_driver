@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -39,15 +38,29 @@ class SocketProvider with ChangeNotifier {
 
   listenRequests() {
     logMe('============= Listening to requests ================');
-    _socket!.messages.listen((event) {
-      logMe('Data in socket');
-      logMe('Request list data socket-----> ${event.toString()}');
-      final response = jsonDecode(event);
-      if (response['type'] == 'MessageList') {
-        chatProvider.addSingleChat(ChatModel.fromMap(response['data']));
-      }
-      if (response['type'] == 'chat') {}
-    });
+    _socket!.messages.listen(
+      (event) {
+        final response = jsonDecode(event);
+        logMe('Message list data-----> ${response.toString()}');
+        if (response['type'] == 'MessageList') {
+          logMe('Message list data-----> ${response['data']}');
+          chatProvider.addChatAll(
+            List<ChatModel>.from(
+              response["data"].map(
+                (x) => ChatModel.fromMap(x),
+              ),
+            ),
+          );
+        }
+        if (response['type'] == 'Chat') {
+          chatProvider.addSingleChat(
+            ChatModel.fromMap(
+              response['data'],
+            ),
+          );
+        }
+      },
+    );
   }
 
   rejectRequestSocket() {
@@ -56,7 +69,9 @@ class SocketProvider with ChangeNotifier {
       'driverID': session.userId,
     };
     logMe('reject request socket -- > ${map.toString()}');
-    _socket!.send(jsonEncode(map));
+    _socket!.send(
+      jsonEncode(map),
+    );
   }
 
   acceptRequestSocket() {
@@ -70,6 +85,7 @@ class SocketProvider with ChangeNotifier {
 
   joinExitRoom({int? receiverId, String type = 'Join'}) {
     final map = {
+      'type': 'Driver',
       'serviceType': type,
       'UserID': session.userId,
       'roomID': (int.parse(session.userId) > receiverId!)
@@ -77,7 +93,9 @@ class SocketProvider with ChangeNotifier {
           : '${session.userId}-$receiverId',
     };
     logMe('Join Exit room socket -- > ${map.toString()}');
-    _socket!.send(jsonEncode(map));
+    _socket!.send(
+      jsonEncode(map),
+    );
   }
 
   sendChatMessage({

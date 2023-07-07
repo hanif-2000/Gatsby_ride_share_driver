@@ -6,7 +6,9 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
+import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/receiver_tile.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/sender_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,6 +26,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   var socketProvider = locator<SocketProvider>();
   var chatProvider = locator<ChatProvider>();
+  var sessionProvider = locator<Session>();
 
   @override
   void initState() {
@@ -120,9 +123,16 @@ class _ChatPageState extends State<ChatPage> {
                           reverse: true,
                           itemCount: provider.chatMessageList.length,
                           itemBuilder: (context, index) {
-                            return SenderTile(
-                              title: provider.chatMessageList[index].message,
-                            );
+                            return provider.chatMessageList[index].senderType ==
+                                    'Customer'
+                                ? ReceiverTile(
+                                    title:
+                                        provider.chatMessageList[index].message,
+                                  )
+                                : SenderTile(
+                                    title:
+                                        provider.chatMessageList[index].message,
+                                  );
                           },
                         ),
                   // child: Column(

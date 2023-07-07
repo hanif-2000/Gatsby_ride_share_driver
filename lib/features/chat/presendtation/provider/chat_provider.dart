@@ -14,7 +14,7 @@ class ChatProvider extends ChangeNotifier {
 
   List<ChatModel> _chatMessagesList = [];
 
-  List<ChatModel> get chatMessageList => _chatMessagesList.reversed.toList();
+  List<ChatModel> get chatMessageList => _chatMessagesList;
 
   clearChatList() {
     _chatMessagesList.clear();
@@ -28,7 +28,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   addSingleChat(ChatModel chat) {
-    _chatMessagesList.add(chat);
+    _chatMessagesList.insert(0,chat);
     notifyListeners();
   }
 }

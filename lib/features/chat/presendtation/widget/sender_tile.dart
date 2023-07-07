@@ -27,7 +27,7 @@ class SenderTile extends StatelessWidget {
         ),
         child: Text(
           title!,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
           style: titleStyle
               .copyWith(
                 fontSize: 16,
