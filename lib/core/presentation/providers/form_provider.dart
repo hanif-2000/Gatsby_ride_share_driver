@@ -6,6 +6,15 @@ import '../../utility/image_picker_helper.dart';
 
 class FormProvider with ChangeNotifier {
   // initial
+
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _idNumberController = TextEditingController();
+  // final TextEditingController _cityController=TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _vehicleController = TextEditingController();
   final TextEditingController _carModelController = TextEditingController();
@@ -36,6 +45,14 @@ class FormProvider with ChangeNotifier {
   final _bankIFSCCodeController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool _cityError = false;
+  bool _stateError = false;
+  bool _addressError = false;
+  bool _postalCodeError = false;
+  bool _dobError = false;
+  bool _idNumberError = false;
+
   bool _emailError = false;
   bool _emailConfirmError = false;
   bool _passwordError = false;
@@ -70,6 +87,43 @@ class FormProvider with ChangeNotifier {
 
   set setEmailError(val) {
     _emailError = val;
+    notifyListeners();
+  }
+
+  //City
+
+  set setCityError(val) {
+    _cityError = val;
+    notifyListeners();
+  }
+
+//state
+  set setStateError(val) {
+    _stateError = val;
+    notifyListeners();
+  }
+
+  //address
+  set setAddressError(val) {
+    _addressError = val;
+    notifyListeners();
+  }
+
+  //Date of Birth
+  set setDobError(val) {
+    _dobError = val;
+    notifyListeners();
+  }
+
+  //Postal Code
+  set setPostalCodeError(val) {
+    _postalCodeError = val;
+    notifyListeners();
+  }
+  //Id Number
+
+  set setIdNumberError(val) {
+    _idNumberError = val;
     notifyListeners();
   }
 
@@ -187,6 +241,13 @@ class FormProvider with ChangeNotifier {
   String? get password => _password;
 
   // getter
+  TextEditingController get addressController => _addressController;
+  TextEditingController get cityController => _cityController;
+  TextEditingController get stateController => _stateController;
+  TextEditingController get postalCodeController => _postalCodeController;
+  TextEditingController get dobController => _dobController;
+  TextEditingController get idNumberController => _idNumberController;
+// TextEditingController get addressController=>_addressController;
 
   TextEditingController get phoneController => _phoneController;
 
@@ -233,6 +294,13 @@ class FormProvider with ChangeNotifier {
   TextEditingController get bankIFSCCodeController => _bankIFSCCodeController;
 
   GlobalKey<FormState> get formKey => _formKey;
+
+  bool get cityError => _cityError;
+  bool get stateError => _stateError;
+  bool get addressError => _addressError;
+  bool get postalCodeError => _postalCodeError;
+  bool get dobError => _dobError;
+  bool get idNumberError => _idNumberError;
 
   bool get emailError => _emailError;
 
@@ -303,6 +371,12 @@ class FormProvider with ChangeNotifier {
     _firstNameController.clear();
     _lastNameController.clear();
     _mobileNumberController.clear();
+    _cityController.clear();
+    _stateController.clear();
+    _addressController.clear();
+    _postalCodeController.clear();
+    _dobController.clear();
+    _idNumberController.clear();
     notifyListeners();
   }
 
