@@ -42,7 +42,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "dob": provider.dobController.text.trim(),
       "id_number": provider.idNumberController.text.trim(),
       "driving_licence": provider.dlImageUploadNameFront,
-      "driving_license_back": provider.dlImageUploadNameBack,
+      "driving_licence_back": provider.dlImageUploadNameBack,
       // "profile_photo": provider.profileUploadName,
       "image": provider.profileUploadName,
       "id_proof": provider.idProofImageUploadName,
@@ -279,6 +279,8 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                               pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                           String formattedDate =
                               DateFormat('yyyy-MM-dd').format(pickedDate);
+
+                          provider.setdobController = formattedDate;
 
                           print(
                               formattedDate); //formatted date output using intl package =>  2021-03-16

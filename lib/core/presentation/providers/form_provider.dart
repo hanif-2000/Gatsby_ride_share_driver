@@ -230,6 +230,11 @@ class FormProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  set setdobController(val) {
+    _dobController.text = val;
+    notifyListeners();
+  }
+
   ///Confirm password
   String? _password;
 
