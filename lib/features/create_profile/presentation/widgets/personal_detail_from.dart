@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -34,7 +36,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "first_name": provider.firstNameController.text.trim(),
       "last_name": provider.lastNameController.text.trim(),
       "phone": provider.mobileNumberController.text.trim(),
-      "country": provider.countryName,
+      "country": provider.shortCountryName,
       "city": provider.cityController.text.trim(),
       "state": provider.stateController.text.trim(),
       "address": provider.addressController.text.trim(),
@@ -250,7 +252,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       placeholder: "Postal Code",
                       title: "Postal Code",
                       controller: provider.postalCodeController,
-                      inputType: TextInputType.phone,
+                      inputType: TextInputType.text,
                       isError: provider.postalCodeError,
                       fieldValidator: ValidationHelper(
                         loc: appLoc,
@@ -271,8 +273,8 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                             context: context, //context of current state
                             initialDate: DateTime.now(),
                             firstDate: DateTime(
-                                2000), //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2101));
+                                1950), //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime.now());
 
                         if (pickedDate != null) {
                           print(
@@ -354,6 +356,16 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 selectedValue: provider.countryName,
                 hint: appLoc.country,
                 onChange: (value) {
+                  if (value == "India") {
+                    provider.setShortCountryName('IN');
+                  } else if (value == "United State") {
+                    provider.setShortCountryName('US');
+                  } else if (value == "England") {
+                    provider.setShortCountryName('EN');
+                  } else if (value == "Canada") {
+                    provider.setShortCountryName('CA');
+                  }
+                  log("value is:-->>$value");
                   provider.setCountryName(value);
                 },
               ),
@@ -523,7 +535,9 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   style: txtButtonStyle,
                 ),
                 event: () {
+                  log(provider.countryName.toString());
                   // provider.setCurrentStep(2);
+
                   if (provider.profileUploadName == '') {
                     showToast(message: 'Please select profile image!');
                   } else if (provider.formKey.currentState!.validate()) {
@@ -537,6 +551,8 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     } else if (provider.idProofImageUploadName == '') {
                       showToast(message: 'Please upload ID proof!');
                     } else {
+                      log("short country code is:==>>" +
+                          provider.shortCountryName.toString());
                       submit();
                     }
                   }

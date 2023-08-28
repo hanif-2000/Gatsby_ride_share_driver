@@ -18,6 +18,8 @@ class CreateProfileProvider extends FormProvider {
 
   String _idProofImage = '';
   String? _countryName;
+  String _shortCountryName = '';
+
   String _profileUploadName = '';
   String _dlImageUploadNameFront = '';
   String _dlImageUploadNameBack = '';
@@ -33,6 +35,11 @@ class CreateProfileProvider extends FormProvider {
 
   setCountryName(String name) {
     _countryName = name;
+    notifyListeners();
+  }
+
+  setShortCountryName(String name) {
+    _shortCountryName = name;
     notifyListeners();
   }
 
@@ -91,6 +98,7 @@ class CreateProfileProvider extends FormProvider {
   String get profileImage => _profileImage;
 
   String? get countryName => _countryName;
+  String get shortCountryName => _shortCountryName;
 
   String get profileUploadName => _profileUploadName;
 

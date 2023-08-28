@@ -42,7 +42,8 @@ class FormProvider with ChangeNotifier {
   final _bankNameController = TextEditingController();
   final _bankAccountController = TextEditingController();
   final _bankHolderNameController = TextEditingController();
-  final _bankIFSCCodeController = TextEditingController();
+  final _bankTransitCodeController = TextEditingController();
+  final _bankInstitutionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -78,6 +79,8 @@ class FormProvider with ChangeNotifier {
   bool _bankAccountError = false;
   bool _bankHolderNameError = false;
   bool _bankIFSCCodeError = false;
+  bool _bankTransitCodeError = false;
+  bool _bankInstitutionCodeError = false;
 
   final _imagePicker = ImagePicker();
   dynamic _imagePickerError;
@@ -235,6 +238,16 @@ class FormProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  set setBankTransitErr(val) {
+    _bankTransitCodeError = val;
+    notifyListeners();
+  }
+
+  set setBankInstitutionErr(val) {
+    _bankInstitutionCodeError = val;
+    notifyListeners();
+  }
+
   ///Confirm password
   String? _password;
 
@@ -296,7 +309,9 @@ class FormProvider with ChangeNotifier {
   TextEditingController get bankHolderNameController =>
       _bankHolderNameController;
 
-  TextEditingController get bankIFSCCodeController => _bankIFSCCodeController;
+  TextEditingController get bankTransitController => _bankTransitCodeController;
+  TextEditingController get bankInstitutionController =>
+      _bankInstitutionController;
 
   GlobalKey<FormState> get formKey => _formKey;
 
@@ -353,6 +368,8 @@ class FormProvider with ChangeNotifier {
   bool get bankHolderNameError => _bankHolderNameError;
 
   bool get bankIFSCCodeError => _bankIFSCCodeError;
+  bool get bankTransitError => _bankTransitCodeError;
+  bool get bankInstitutionCodeError => _bankInstitutionCodeError;
 
   ImagePicker get imagePicker => _imagePicker;
 
@@ -394,7 +411,8 @@ class FormProvider with ChangeNotifier {
   }
 
   refreshBankDetail() {
-    _bankIFSCCodeController.clear();
+    _bankTransitCodeController.clear();
+    _bankInstitutionController.clear();
     _bankHolderNameController.clear();
     _bankAccountController.clear();
     _bankNameController.clear();

@@ -101,12 +101,10 @@ class ProfileEditProvider extends FormProvider {
     vehicleModelController.text = profile.carModel;
     vehicleNumberController.text = profile.plateNumber;
 
-    if (profile.bankDetails != null) {
-      bankIFSCCodeController.text = profile.bankDetails.ifscCode;
-      bankHolderNameController.text = profile.bankDetails.accountHolderName;
-      bankAccountController.text = profile.bankDetails.accountNumber;
-      bankNameController.text = profile.bankDetails.bankName;
-    }
+    bankTransitController.text = profile.bankDetails.ifscCode;
+    bankHolderNameController.text = profile.bankDetails.accountHolderName;
+    bankAccountController.text = profile.bankDetails.accountNumber;
+    bankNameController.text = profile.bankDetails.bankName;
     // _imageUrl = profile.image;
     _profileUploadImage = profile.image;
     PriceCategoryModel setCategory;

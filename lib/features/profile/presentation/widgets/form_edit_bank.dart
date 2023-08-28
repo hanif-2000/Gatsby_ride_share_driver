@@ -186,18 +186,20 @@ class _FormEditBankState extends State<FormEditBank> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+
+                        //Transit number
                         CustomTextField(
                           enabled: provider.isBankEdit,
-                          placeholder: appLoc.ifscCode,
+                          placeholder: "Transit Number",
                           title: appLoc.ifscCode,
-                          controller: provider.bankIFSCCodeController,
+                          controller: provider.bankTransitController,
                           inputType: TextInputType.name,
                           maxLength: 20,
-                          isError: provider.bankIFSCCodeError,
+                          isError: provider.bankTransitError,
                           fieldValidator: ValidationHelper(
                             loc: appLoc,
                             isError: (bool value) =>
-                                provider.setBankISCCodeError = value,
+                                provider.setBankAccountError = value,
                             typeField: TypeField.name,
                           ).validate(),
                         ),
@@ -227,7 +229,7 @@ class _FormEditBankState extends State<FormEditBank> {
                                         .bankHolderNameController.text
                                         .trim(),
                                     "ifsc_code": provider
-                                        .bankIFSCCodeController.text
+                                        .bankTransitController.text
                                         .trim(),
                                   }),
                                 )

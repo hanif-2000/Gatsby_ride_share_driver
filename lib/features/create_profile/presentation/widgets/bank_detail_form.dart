@@ -1,4 +1,3 @@
-
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -31,7 +30,8 @@ class _FormBankDetailState extends State<FormBankDetail> {
       "bank_name": provider.bankNameController.text.trim(),
       "account_number": provider.bankAccountController.text.trim(),
       "account_holder_name": provider.bankHolderNameController.text.trim(),
-      "ifsc_code": provider.bankIFSCCodeController.text.trim(),
+      "transit_number": provider.bankTransitController.text.trim(),
+      "institution_number": provider.bankInstitutionController.text.trim(),
     }).listen((state) async {
       switch (state.runtimeType) {
         case CreateProfileLoading:
@@ -55,7 +55,7 @@ class _FormBankDetailState extends State<FormBankDetail> {
             // if (data.message == '1') {
             //   showToast(message: appLoc.emailnotmatch);
             // } else {
-            showToast(message: data.message??appLoc.failed);
+            showToast(message: data.message ?? appLoc.failed);
             // }
           }
 
@@ -128,18 +128,36 @@ class _FormBankDetailState extends State<FormBankDetail> {
                   typeField: TypeField.name,
                 ).validate(),
               ),
+
+              //Transit number
               CustomTextField(
-                placeholder: appLoc.ifscCode,
-                title: appLoc.ifscCode,
-                controller: provider.bankIFSCCodeController,
+                placeholder: "Transit Number",
+                title: "Transit Number",
+                controller: provider.bankTransitController,
                 inputType: TextInputType.text,
-                isError: provider.bankIFSCCodeError,
+                isError: provider.bankTransitError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
-                  isError: (bool value) => provider.setBankISCCodeError = value,
+                  isError: (bool value) => provider.setBankTransitErr = value,
                   typeField: TypeField.name,
                 ).validate(),
               ),
+
+              //Transit number
+              CustomTextField(
+                placeholder: "Institution Number",
+                title: "Institution Number",
+                controller: provider.bankInstitutionController,
+                inputType: TextInputType.text,
+                isError: provider.bankInstitutionCodeError,
+                fieldValidator: ValidationHelper(
+                  loc: appLoc,
+                  isError: (bool value) =>
+                      provider.setBankInstitutionErr = value,
+                  typeField: TypeField.name,
+                ).validate(),
+              ),
+
               largeVerticalSpacing(),
               CustomButton(
                 text: Text(
