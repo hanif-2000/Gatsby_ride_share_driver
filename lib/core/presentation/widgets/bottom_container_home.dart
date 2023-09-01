@@ -6,7 +6,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class BottomContainerHome extends StatelessWidget {
   const BottomContainerHome({
     Key? key,

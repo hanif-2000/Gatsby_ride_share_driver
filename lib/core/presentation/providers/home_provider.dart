@@ -52,7 +52,7 @@ class HomeProvider with ChangeNotifier {
   );
   CustomerDetailModel? _customerDetailModel;
   OrderDetail? _orderDetail;
-  late bool _isOnline = false;
+  bool _isOnline = false;
   late ProjectType _projectType = ProjectType.requests;
 
   // late bool _isOrderExist = false;

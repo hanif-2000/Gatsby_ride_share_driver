@@ -169,11 +169,11 @@ class BankDetails {
   factory BankDetails.fromMap(Map<String, dynamic> json) => BankDetails(
         id: json["id"],
         driverId: json["driver_id"],
-        accountHolderName: json["account_holder_name"],
-        bankName: json["bank_name"],
-        accountNumber: json["account_number"],
-        ifscCode: json["ifsc_code"],
-        status: json["status"],
+        accountHolderName: json["account_holder_name"] ?? '',
+        bankName: json["bank_name"] ?? '',
+        accountNumber: json["account_number"] ?? "",
+        ifscCode: json["ifsc_code"] ?? "",
+        status: json["status"] ?? "",
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
