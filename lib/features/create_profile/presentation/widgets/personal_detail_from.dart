@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -36,7 +35,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "first_name": provider.firstNameController.text.trim(),
       "last_name": provider.lastNameController.text.trim(),
       "phone": provider.mobileNumberController.text.trim(),
-      "country": provider.shortCountryName,
+      "country": 'CA',
       "city": provider.cityController.text.trim(),
       "state": provider.stateController.text.trim(),
       "address": provider.addressController.text.trim(),
@@ -350,31 +349,48 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 ],
               ),
               mediumVerticalSpacing(),
+
               //Country Selection
-              CustomDropDown(
-                values: const ['India', 'United State', 'England', 'Canada'],
-                selectedValue: provider.countryName,
-                hint: appLoc.country,
-                onChange: (value) {
-                  if (value == "India") {
-                    provider.setShortCountryName('IN');
-                  } else if (value == "United State") {
-                    provider.setShortCountryName('US');
-                  } else if (value == "England") {
-                    provider.setShortCountryName('EN');
-                  } else if (value == "Canada") {
-                    provider.setShortCountryName('CA');
-                  }
-                  log("value is:-->>$value");
-                  provider.setCountryName(value);
-                },
+              CustomTextField(
+                placeholder: "Canada",
+                title: "Canada",
+                isReadOnly: true,
+                controller: TextEditingController(text: "Canada"),
+                // controller: provider.countr,
+                inputType: TextInputType.number,
+                isError: provider.idNumberError,
+                fieldValidator: ValidationHelper(
+                  loc: appLoc,
+                  isError: (bool value) => provider.setIdNumberError = value,
+                  typeField: TypeField.idNumber,
+                ).validate(),
               ),
+
+              //Country Selection
+              // CustomDropDown(
+              //   values: const ['India', 'United State', 'England', 'Canada'],
+              //   selectedValue: provider.countryName,
+              //   hint: appLoc.country,
+              //   onChange: (value) {
+              //     if (value == "India") {
+              //       provider.setShortCountryName('IN');
+              //     } else if (value == "United State") {
+              //       provider.setShortCountryName('US');
+              //     } else if (value == "England") {
+              //       provider.setShortCountryName('EN');
+              //     } else if (value == "Canada") {
+              //       provider.setShortCountryName('CA');
+              //     }
+              //     log("value is:-->>$value");
+              //     provider.setCountryName(value);
+              //   },
+              // ),
               mediumVerticalSpacing(),
 
               //ID Number
               CustomTextField(
-                placeholder: "Enter ID Number",
-                title: "Enter ID Number",
+                placeholder: "Enter Driving License Number",
+                title: "Enter Driving License Number",
                 controller: provider.idNumberController,
                 inputType: TextInputType.number,
                 isError: provider.idNumberError,
@@ -482,51 +498,51 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
               mediumVerticalSpacing(),
 
               //Upload Id Proof
-              ImagePickerTile(
-                title: appLoc.uploadId,
-                selectedImage: provider.idProofImage,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  ImagePickerHelper.showPicker(
-                    context: context,
-                    imagePicker: provider.imagePicker,
-                    successCallBack: (file) {
-                      provider.setIdProofImage(file!.path);
-                      provider
-                          .doUploadProfileApi(file.path)
-                          .listen((state) async {
-                        switch (state.runtimeType) {
-                          case UploadLoading:
-                            showLoading();
-                            break;
-                          case UploadFailure:
-                            final msg = (state as UploadFailure).failure;
-                            dismissLoading();
-                            showToast(message: msg);
-                            break;
-                          case UploadSuccess:
-                            final imageName = (state as UploadSuccess).data;
-                            // showToast(message: appLoc.success);
-                            provider.setIdProofImageUploadName(imageName!);
-                            logMe(
-                                'Image Name ---> ${provider.profileUploadName}');
-                            dismissLoading();
-                            break;
-                        }
-                      });
-                    },
-                    failedCallBack: (error) {
-                      showToast(message: error);
-                      provider.setProfileImage('');
-                    },
-                  );
-                },
-                onDelete: () {
-                  provider.setIdProofImage('');
-                  provider.setIdProofImageUploadName('');
-                },
-              ),
-              largeVerticalSpacing(),
+              // ImagePickerTile(
+              //   title: appLoc.uploadId,
+              //   selectedImage: provider.idProofImage,
+              //   onTap: () {
+              //     FocusScope.of(context).requestFocus(FocusNode());
+              //     ImagePickerHelper.showPicker(
+              //       context: context,
+              //       imagePicker: provider.imagePicker,
+              //       successCallBack: (file) {
+              //         provider.setIdProofImage(file!.path);
+              //         provider
+              //             .doUploadProfileApi(file.path)
+              //             .listen((state) async {
+              //           switch (state.runtimeType) {
+              //             case UploadLoading:
+              //               showLoading();
+              //               break;
+              //             case UploadFailure:
+              //               final msg = (state as UploadFailure).failure;
+              //               dismissLoading();
+              //               showToast(message: msg);
+              //               break;
+              //             case UploadSuccess:
+              //               final imageName = (state as UploadSuccess).data;
+              //               // showToast(message: appLoc.success);
+              //               provider.setIdProofImageUploadName(imageName!);
+              //               logMe(
+              //                   'Image Name ---> ${provider.profileUploadName}');
+              //               dismissLoading();
+              //               break;
+              //           }
+              //         });
+              //       },
+              //       failedCallBack: (error) {
+              //         showToast(message: error);
+              //         provider.setProfileImage('');
+              //       },
+              //     );
+              //   },
+              //   onDelete: () {
+              //     provider.setIdProofImage('');
+              //     provider.setIdProofImageUploadName('');
+              //   },
+              // ),
+              // largeVerticalSpacing(),
 
               //Next Button
               CustomButton(
@@ -541,16 +557,21 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   if (provider.profileUploadName == '') {
                     showToast(message: 'Please select profile image!');
                   } else if (provider.formKey.currentState!.validate()) {
-                    if (provider.countryName == null) {
-                      showToast(message: 'Please select country!');
-                    } else if (provider.dlImageUploadNameFront == '') {
+                    // if (provider.countryName == null) {
+                    //   showToast(message: 'Please select country!');
+                    // } else
+
+                    if (provider.dlImageUploadNameFront == '') {
                       showToast(
                           message: 'Please upload Front Driving Licence!');
                     } else if (provider.dlImageUploadNameBack == '') {
                       showToast(message: 'Please upload Back Driving Licence!');
-                    } else if (provider.idProofImageUploadName == '') {
-                      showToast(message: 'Please upload ID proof!');
-                    } else {
+                    }
+                    // else if (provider.idProofImageUploadName == '') {
+                    //   showToast(message: 'Please upload ID proof!');
+                    // }
+
+                    else {
                       log("short country code is:==>>" +
                           provider.shortCountryName.toString());
                       submit();
