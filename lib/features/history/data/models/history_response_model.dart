@@ -75,7 +75,7 @@ class HistoryOrder {
   String startAddress;
   String endAddress;
   String distance;
-  int total;
+  double total;
   DateTime orderTime;
   DateTime? startTime;
   DateTime? endTime;
@@ -92,17 +92,17 @@ class HistoryOrder {
   String timestamp;
   VehicleCategory vehicleCategory;
   List<RatingList> ratingList;
-  int customerId;
+  String customerId;
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
-        id: json["id"],
-        driverId: json["driver_id"],
-        startCoordinate: json["start_coordinate"],
-        endCoordinate: json["end_coordinate"],
-        startAddress: json["start_address"],
-        endAddress: json["end_address"],
-        distance: json["distance"],
-        total: json["total"],
+        id: json["id"]??0,
+        driverId: json["driver_id"]??0,
+        startCoordinate: json["start_coordinate"]??'',
+        endCoordinate: json["end_coordinate"]??'',
+        startAddress: json["start_address"]??"",
+        endAddress: json["end_address"]??"",
+        distance: json["distance"]??'',
+        total: json["total"]??0.0,
         orderTime: DateTime.parse(json["order_time"]),
         startTime: json["start_time"] == null
             ? null
@@ -120,7 +120,7 @@ class HistoryOrder {
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],
-        customerId: int.parse(json["customer_id"].toString()) ?? 0,
+        customerId: json["customer_id"] ?? '',
         vehicleCategory: VehicleCategory.fromMap(json["vehicle_category"]),
         ratingList: List<RatingList>.from(
           json["rating_list"].map(

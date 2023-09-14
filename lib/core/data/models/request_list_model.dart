@@ -45,13 +45,13 @@ class RequestListModel extends Equatable {
   final DateTime orderTime;
   final int paymentMethod;
   final int status;
-  final int total;
+  final dynamic total;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? firstName;
   final String? lastName;
   final String? image;
-  final double? rating;
+  final dynamic rating;
 
   const RequestListModel({
     required this.id,
@@ -117,7 +117,7 @@ class RequestListModel extends Equatable {
         status: json["status"],
         total: json["total"],
         rating: json["rating"] != null
-            ? double.tryParse(json['rating'].toString())
+            ? int.tryParse(json['rating'].toString())
             : 0,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),

@@ -53,57 +53,115 @@ class ReceiptPage extends StatelessWidget {
                     int time =
                         (order.endTime!.difference(order.startTime!).inMinutes);
 
-                    return Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 60, bottom: 16),
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(0, 1),
-                                  blurRadius: 2,
-                                  color: Color.fromRGBO(0, 0, 0, 0.16),
-                                )
-                              ]),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                appLoc.tripDetail,
-                                textAlign: TextAlign.center,
-                                style: titleStyle.copyWith(
-                                  fontSize: fontLarge,
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(top: 60, bottom: 16),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(0, 1),
+                                    blurRadius: 2,
+                                    color: Color.fromRGBO(0, 0, 0, 0.16),
+                                  )
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  appLoc.tripDetail,
+                                  textAlign: TextAlign.center,
+                                  style: titleStyle.copyWith(
+                                    fontSize: fontLarge,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: redD03B3B,
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          '$BASE_URL${order.image}',
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: redD03B3B,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            '$BASE_URL${order.image}',
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  mediumHorizontalSpacing(),
-                                  Column(
+                                    mediumHorizontalSpacing(),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          '${order.userName}',
+                                          textAlign: TextAlign.center,
+                                          style: titleStyle
+                                              .copyWith(
+                                                fontSize: 16,
+                                              )
+                                              .usePoppinsW5Font(),
+                                        ),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/icons/home/ic_start.svg'),
+                                        smallHorizontalSpacing(),
+                                        Text(
+                                          '${order.rating!.toStringAsFixed(1)}',
+                                          textAlign: TextAlign.center,
+                                          style: titleStyle
+                                              .copyWith(
+                                                fontSize: 14,
+                                              )
+                                              .usePoppinsW6Font(),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                largeVerticalSpacing(),
+                                Text(
+                                  'Fare Breakdown ',
+                                  textAlign: TextAlign.start,
+                                  style: titleStyle
+                                      .copyWith(
+                                        fontSize: 16,
+                                      )
+                                      .usePoppinsW6Font(),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${order.userName}',
+                                        'Date',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                              color: grey7c7c7c,
+                                            )
+                                            .usePoppinsW6Font(),
+                                      ),
+                                      Text(
+                                        '${DateFormat.yMMMd().format(order.orderTime)}',
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -113,314 +171,258 @@ class ReceiptPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  const Spacer(),
-                                  Row(
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SvgPicture.asset(
-                                          'assets/icons/home/ic_start.svg'),
-                                      smallHorizontalSpacing(),
                                       Text(
-                                        '${order.rating!.toStringAsFixed(1)}',
+                                        'Time',
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
-                                              fontSize: 14,
+                                              fontSize: 16,
+                                              color: grey7c7c7c,
                                             )
                                             .usePoppinsW6Font(),
                                       ),
+                                      Text(
+                                        '${DateFormat.jm().format(order.orderTime)}',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                            )
+                                            .usePoppinsW5Font(),
+                                      ),
                                     ],
-                                  )
-                                ],
-                              ),
-                              largeVerticalSpacing(),
-                              Text(
-                                'Fare Breakdown ',
-                                textAlign: TextAlign.start,
-                                style: titleStyle
-                                    .copyWith(
-                                      fontSize: 16,
-                                    )
-                                    .usePoppinsW6Font(),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Date',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                            color: grey7c7c7c,
-                                          )
-                                          .usePoppinsW6Font(),
-                                    ),
-                                    Text(
-                                      '${DateFormat.yMMMd().format(order.orderTime)}',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                          )
-                                          .usePoppinsW5Font(),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Time',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                            color: grey7c7c7c,
-                                          )
-                                          .usePoppinsW6Font(),
-                                    ),
-                                    Text(
-                                      '${DateFormat.jm().format(order.orderTime)}',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                          )
-                                          .usePoppinsW5Font(),
-                                    ),
-                                  ],
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Total Distance',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                              color: grey7c7c7c,
+                                            )
+                                            .usePoppinsW6Font(),
+                                      ),
+                                      Text(
+                                        '${order.distance}',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                            )
+                                            .usePoppinsW5Font(),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Total Distance',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                            color: grey7c7c7c,
-                                          )
-                                          .usePoppinsW6Font(),
-                                    ),
-                                    Text(
-                                      '${order.distance}',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                          )
-                                          .usePoppinsW5Font(),
-                                    ),
-                                  ],
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Time taken',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                              color: grey7c7c7c,
+                                            )
+                                            .usePoppinsW6Font(),
+                                      ),
+                                      Text(
+                                        '${time ?? 0} min',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                            )
+                                            .usePoppinsW5Font(),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Time taken',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                            color: grey7c7c7c,
-                                          )
-                                          .usePoppinsW6Font(),
-                                    ),
-                                    Text(
-                                      '${time ?? 0} min',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                          )
-                                          .usePoppinsW5Font(),
-                                    ),
-                                  ],
+                                largeVerticalSpacing(),
+                                Text(
+                                  'Payment Information',
+                                  textAlign: TextAlign.start,
+                                  style: titleStyle
+                                      .copyWith(
+                                        fontSize: 16,
+                                      )
+                                      .usePoppinsW6Font(),
                                 ),
-                              ),
-                              largeVerticalSpacing(),
-                              Text(
-                                'Payment Information',
-                                textAlign: TextAlign.start,
-                                style: titleStyle
-                                    .copyWith(
-                                      fontSize: 16,
-                                    )
-                                    .usePoppinsW6Font(),
-                              ),
-                              smallVerticalSpacing(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Payment Through',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 13,
-                                            color: grey7D7979,
-                                          )
-                                          .usePoppinsW6Font(),
-                                    ),
-                                    Row(
-                                      children: [
-                                        // SvgPicture.asset(
-                                        //     'assets/icons/home/ic_card_master.svg'),
-                                        smallHorizontalSpacing(),
-                                        Text(
-                                          getPaymentType(order.paymentMethod),
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
+                                smallVerticalSpacing(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Payment Through',
+                                        textAlign: TextAlign.center,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 13,
+                                              color: grey7D7979,
+                                            )
+                                            .usePoppinsW6Font(),
+                                      ),
+                                      Row(
+                                        children: [
+                                          // SvgPicture.asset(
+                                          //     'assets/icons/home/ic_card_master.svg'),
+                                          smallHorizontalSpacing(),
+                                          Text(
+                                            getPaymentType(order.paymentMethod),
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                    fontSize: 16,
+                                                    color: grey7D7979)
+                                                .usePoppinsW5Font(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                mediumVerticalSpacing(),
+                                Container(
+                                  padding: const EdgeInsets.all(14),
+                                  decoration: BoxDecoration(
+                                    color: greyB6B6B6.withOpacity(.3),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Price',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
                                                   fontSize: 16,
-                                                  color: grey7D7979)
-                                              .usePoppinsW5Font(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                                  color: grey7c7c7c,
+                                                )
+                                                .usePoppinsW6Font(),
+                                          ),
+                                          Text(
+                                            '\$${order.total}',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                  fontSize: 16,
+                                                )
+                                                .usePoppinsW5Font(),
+                                          ),
+                                        ],
+                                      ),
+                                      smallVerticalSpacing(),
+                                      const Divider(
+                                        color: grey7D7979,
+                                      ),
+                                      smallVerticalSpacing(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Service Price (5%)',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                  fontSize: 16,
+                                                  color: grey7c7c7c,
+                                                )
+                                                .usePoppinsW6Font(),
+                                          ),
+                                          Text(
+                                            '\$${(order.total * 5) / 100}',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                  fontSize: 16,
+                                                )
+                                                .usePoppinsW5Font(),
+                                          ),
+                                        ],
+                                      ),
+                                      smallVerticalSpacing(),
+                                      const Divider(
+                                        color: grey7D7979,
+                                      ),
+                                      smallVerticalSpacing(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Total Price',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                  fontSize: 16,
+                                                  color: grey7c7c7c,
+                                                )
+                                                .usePoppinsW6Font(),
+                                          ),
+                                          Text(
+                                            '\$${order.total - ((order.total * 5) / 100)}',
+                                            textAlign: TextAlign.center,
+                                            style: titleStyle
+                                                .copyWith(
+                                                  fontSize: 16,
+                                                )
+                                                .usePoppinsW5Font(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              mediumVerticalSpacing(),
-                              Container(
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: greyB6B6B6.withOpacity(.3),
-                                  borderRadius: BorderRadius.circular(10),
+                                largeVerticalSpacing(),
+                                largeVerticalSpacing(),
+                                CustomButton(
+                                  text: Text(
+                                    '${appLoc.continuee}',
+                                    style: txtButtonStyle,
+                                  ),
+                                  event: () {
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        HomePage.routeName, (route) => false);
+                                  },
+                                  buttonHeight: 48,
+                                  isRounded: true,
+                                  bgColor: blackColor,
                                 ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Price',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                                color: grey7c7c7c,
-                                              )
-                                              .usePoppinsW6Font(),
-                                        ),
-                                        Text(
-                                          '\$${order.total}',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                              )
-                                              .usePoppinsW5Font(),
-                                        ),
-                                      ],
-                                    ),
-                                    smallVerticalSpacing(),
-                                    const Divider(
-                                      color: grey7D7979,
-                                    ),
-                                    smallVerticalSpacing(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Service Price (5%)',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                                color: grey7c7c7c,
-                                              )
-                                              .usePoppinsW6Font(),
-                                        ),
-                                        Text(
-                                          '\$${(order.total * 5) / 100}',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                              )
-                                              .usePoppinsW5Font(),
-                                        ),
-                                      ],
-                                    ),
-                                    smallVerticalSpacing(),
-                                    const Divider(
-                                      color: grey7D7979,
-                                    ),
-                                    smallVerticalSpacing(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Total Price',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                                color: grey7c7c7c,
-                                              )
-                                              .usePoppinsW6Font(),
-                                        ),
-                                        Text(
-                                          '\$${order.total - ((order.total * 5) / 100)}',
-                                          textAlign: TextAlign.center,
-                                          style: titleStyle
-                                              .copyWith(
-                                                fontSize: 16,
-                                              )
-                                              .usePoppinsW5Font(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              largeVerticalSpacing(),
-                              largeVerticalSpacing(),
-                              CustomButton(
-                                text: Text(
-                                  '${appLoc.continuee}',
-                                  style: txtButtonStyle,
-                                ),
-                                event: () {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      HomePage.routeName, (route) => false);
-                                },
-                                buttonHeight: 48,
-                                isRounded: true,
-                                bgColor: blackColor,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                 }
                 return const SizedBox.shrink();

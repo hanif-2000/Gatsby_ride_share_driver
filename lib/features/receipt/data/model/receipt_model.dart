@@ -25,7 +25,7 @@ class OrderReceipt {
   String id;
   String driverId;
   String distance;
-  int total;
+  dynamic total;
   DateTime orderTime;
   DateTime? startTime;
   DateTime? endTime;
