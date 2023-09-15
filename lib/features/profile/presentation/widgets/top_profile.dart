@@ -30,13 +30,13 @@ class _TopProfileState extends State<TopProfile> {
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(80),
                   child: DynamicCachedNetworkImage(
-                      imageUrl: mergePhotoUrl(widget.data.image))),
+                      imageUrl: mergePhotoUrl(widget.data.image!))),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(
-              widget.data.name,
+              widget.data.name!,
               style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class _TopProfileState extends State<TopProfile> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Text(widget.data.email,
+            child: Text(widget.data.email!,
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.normal,
@@ -55,7 +55,7 @@ class _TopProfileState extends State<TopProfile> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Text(widget.data.phoneNumber,
+            child: Text(widget.data.phoneNumber!,
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.normal,
@@ -64,7 +64,7 @@ class _TopProfileState extends State<TopProfile> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Text(widget.data.plateNumber,
+            child: Text(widget.data.plateNumber!,
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.normal,
@@ -82,7 +82,7 @@ class _TopProfileState extends State<TopProfile> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Text(widget.data.carModel,
+            child: Text(widget.data.carModel!,
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.normal,

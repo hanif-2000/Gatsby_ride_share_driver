@@ -25,19 +25,20 @@ class ProfileResponseModel extends Equatable {
 }
 
 class ProfileDataModel extends Equatable {
-  final String driverId;
-  final String name;
-  final String email;
-  final String phoneNumber;
-  final int status;
-  final String image;
-  final String statusOrder;
-  final String plateNumber;
-  final String carModel;
-  final String vehicleName;
-  final String insuranceNumber;
+  final String? driverId;
+  final String? name;
+  final String? email;
+  final String? phoneNumber;
+  final int? status;
+  final String? image;
+  final String? statusOrder;
+  final String? plateNumber;
+  final String? carModel;
+  final String? vehicleName;
+  final String? insuranceNumber;
   final CategoryModel vehicleCategory;
-  final BankDetails bankDetails;
+  // final BankDetails bankDetails;
+  final List<dynamic> bankDetails;
 
   const ProfileDataModel(
       {required this.driverId,
@@ -71,7 +72,7 @@ class ProfileDataModel extends Equatable {
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
-          driverId: json['id'],
+          driverId: json['id'] ?? '',
           name: json['name'] ?? '',
           email: json['email'] ?? '',
           phoneNumber: json['phone'] ?? '',
@@ -81,7 +82,8 @@ class ProfileDataModel extends Equatable {
           statusOrder: json['order_status'] ?? '',
           plateNumber: json['plate_number'] ?? '',
           carModel: json['car_model'] ?? '',
-          bankDetails: BankDetails.fromMap(json["bank_details"]),
+          // bankDetails: BankDetails.fromMap(json["bank_details"]),
+          bankDetails: List<dynamic>.from(json["bank_details"].map((x) => x)),
           vehicleCategory: CategoryModel.fromJson(json["vehicle_category"]),
           status: json['status'] ?? '');
 
@@ -98,7 +100,8 @@ class ProfileDataModel extends Equatable {
         'vehicle_category': vehicleCategory.toJson(),
         'plate_number': plateNumber,
         'car_model': carModel,
-        "bank_details": bankDetails.toMap(),
+        // "bank_details": bankDetails.toMap(),
+        "bank_details": List<dynamic>.from(bankDetails.map((x) => x)),
       };
 }
 
@@ -107,7 +110,7 @@ class CategoryModel extends Equatable {
   final num priceKm;
   final num priceMin;
   final String categoryName;
-  final int seat;
+  final dynamic seat;
 
   const CategoryModel({
     required this.categoryName,
@@ -128,7 +131,7 @@ class CategoryModel extends Equatable {
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
         categoryName: json['category'],
-        seat: json['seat'],
+        seat: json['seat'] ?? '',
         categoryId: json['id'],
         priceMin: json['min_km'],
         priceKm: json['price_km'],

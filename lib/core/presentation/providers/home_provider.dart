@@ -82,14 +82,17 @@ class HomeProvider with ChangeNotifier {
   GlobalKey get globalKey => _key;
 
   //setter
-  set changeStatusOld(val) {
-    _isOnline = val;
-    // notifyListeners();
-  }
+  // set changeStatusOld(val) {
+  //   _isOnline = val;
+  //   // notifyListeners();
+  // }
 
   set changeStatus(val) {
     _isOnline = val;
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
+    // });
   }
 
   set projectType(value) {
@@ -439,7 +442,7 @@ class HomeProvider with ChangeNotifier {
       } else {
         changeStatus = false;
       }
-      await FirebaseHelper.setTopicDriver(data.statusOrder).then((_) {});
+      await FirebaseHelper.setTopicDriver(data.statusOrder!).then((_) {});
       dismissLoading();
 
       yield ProfileLoaded(data: data);

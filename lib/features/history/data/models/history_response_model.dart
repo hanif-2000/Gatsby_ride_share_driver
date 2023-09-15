@@ -11,65 +11,34 @@ String historyResponseModelToJson(HistoryResponseModel data) =>
     json.encode(data.toJson());
 
 class HistoryResponseModel {
+  int success;
+  List<HistoryOrder>? historyOrder;
+
   HistoryResponseModel({
     required this.success,
     required this.historyOrder,
   });
 
-  int success;
-  List<HistoryOrder> historyOrder;
-
   factory HistoryResponseModel.fromJson(Map<String, dynamic> json) =>
       HistoryResponseModel(
         success: json["success"],
-        historyOrder: List<HistoryOrder>.from(
-          json["history_order"].map(
-            (x) => HistoryOrder.fromJson(x),
-          ),
-        ),
+        historyOrder: json["history_order"] != null
+            ? List<HistoryOrder>.from(
+                json["history_order"].map((x) => HistoryOrder.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
-        "history_order": List<dynamic>.from(
-          historyOrder.map(
-            (x) => x.toJson(),
-          ),
-        ),
+        "history_order":
+            List<dynamic>.from(historyOrder!.map((x) => x.toJson())),
       };
 }
 
 class HistoryOrder {
-  HistoryOrder({
-    required this.id,
-    required this.driverId,
-    required this.startCoordinate,
-    required this.endCoordinate,
-    required this.startAddress,
-    required this.endAddress,
-    required this.distance,
-    required this.total,
-    required this.orderTime,
-    this.startTime,
-    this.endTime,
-    required this.status,
-    required this.image,
-    required this.userName,
-    required this.userPhone,
-    required this.rating,
-    required this.driverName,
-    required this.driverPhone,
-    required this.email,
-    required this.paymentMethod,
-    required this.taxiType,
-    required this.timestamp,
-    required this.vehicleCategory,
-    required this.ratingList,
-    required this.customerId,
-  });
-
   String id;
   String driverId;
+  String customerId;
   String startCoordinate;
   String endCoordinate;
   String startAddress;
@@ -77,8 +46,8 @@ class HistoryOrder {
   String distance;
   double total;
   DateTime orderTime;
-  DateTime? startTime;
-  DateTime? endTime;
+  DateTime startTime;
+  DateTime endTime;
   String status;
   String image;
   String userName;
@@ -92,23 +61,48 @@ class HistoryOrder {
   String timestamp;
   VehicleCategory vehicleCategory;
   List<RatingList> ratingList;
-  String customerId;
+
+  HistoryOrder({
+    required this.id,
+    required this.driverId,
+    required this.customerId,
+    required this.startCoordinate,
+    required this.endCoordinate,
+    required this.startAddress,
+    required this.endAddress,
+    required this.distance,
+    required this.total,
+    required this.orderTime,
+    required this.startTime,
+    required this.endTime,
+    required this.status,
+    required this.image,
+    required this.userName,
+    required this.userPhone,
+    required this.rating,
+    required this.driverName,
+    required this.driverPhone,
+    required this.email,
+    required this.paymentMethod,
+    required this.taxiType,
+    required this.timestamp,
+    required this.vehicleCategory,
+    required this.ratingList,
+  });
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
-        id: json["id"]??0,
-        driverId: json["driver_id"]??0,
-        startCoordinate: json["start_coordinate"]??'',
-        endCoordinate: json["end_coordinate"]??'',
-        startAddress: json["start_address"]??"",
-        endAddress: json["end_address"]??"",
-        distance: json["distance"]??'',
-        total: json["total"]??0.0,
+        id: json["id"],
+        driverId: json["driver_id"],
+        customerId: json["customer_id"],
+        startCoordinate: json["start_coordinate"],
+        endCoordinate: json["end_coordinate"],
+        startAddress: json["start_address"],
+        endAddress: json["end_address"],
+        distance: json["distance"],
+        total: json["total"]?.toDouble(),
         orderTime: DateTime.parse(json["order_time"]),
-        startTime: json["start_time"] == null
-            ? null
-            : DateTime.parse(json["start_time"]),
-        endTime:
-            json["end_time"] == null ? null : DateTime.parse(json["end_time"]),
+        startTime: DateTime.parse(json["start_time"]),
+        endTime: DateTime.parse(json["end_time"]),
         status: json["status"],
         image: json["image"],
         userName: json["user_name"],
@@ -120,18 +114,15 @@ class HistoryOrder {
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],
-        customerId: json["customer_id"] ?? '',
-        vehicleCategory: VehicleCategory.fromMap(json["vehicle_category"]),
+        vehicleCategory: VehicleCategory.fromJson(json["vehicle_category"]),
         ratingList: List<RatingList>.from(
-          json["rating_list"].map(
-            (x) => RatingList.fromMap(x),
-          ),
-        ),
+            json["rating_list"].map((x) => RatingList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "driver_id": driverId,
+        "customer_id": customerId,
         "start_coordinate": startCoordinate,
         "end_coordinate": endCoordinate,
         "start_address": startAddress,
@@ -139,8 +130,8 @@ class HistoryOrder {
         "distance": distance,
         "total": total,
         "order_time": orderTime.toIso8601String(),
-        "start_time": startTime?.toIso8601String(),
-        "end_time": endTime?.toIso8601String(),
+        "start_time": startTime.toIso8601String(),
+        "end_time": endTime.toIso8601String(),
         "status": status,
         "image": image,
         "user_name": userName,
@@ -152,9 +143,8 @@ class HistoryOrder {
         "payment_method": paymentMethod,
         "taxi_type": taxiType,
         "timestamp": timestamp,
-        "customer_id": customerId,
-        "vehicle_category": vehicleCategory.toMap(),
-        "rating_list": List<dynamic>.from(ratingList.map((x) => x.toMap())),
+        "vehicle_category": vehicleCategory.toJson(),
+        "rating_list": List<dynamic>.from(ratingList.map((x) => x.toJson())),
       };
 }
 
@@ -183,7 +173,7 @@ class RatingList {
     required this.updatedAt,
   });
 
-  factory RatingList.fromMap(Map<String, dynamic> json) => RatingList(
+  factory RatingList.fromJson(Map<String, dynamic> json) => RatingList(
         id: json["id"],
         senderId: json["sender_id"],
         receiverId: json["receiver_id"],
@@ -196,7 +186,7 @@ class RatingList {
         updatedAt: DateTime.parse(json["updated_at"]),
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "sender_id": senderId,
         "receiver_id": receiverId,
@@ -213,12 +203,14 @@ class RatingList {
 class VehicleCategory {
   int id;
   String category;
-  int priceKm;
+  double priceKm;
+  int techFee;
+  double baseFare;
   int distance;
-  int minKm;
+  double minKm;
   int minPrice;
   int extraKm;
-  int seat;
+  String seat;
   DateTime createdAt;
   DateTime updatedAt;
   dynamic deletedAt;
@@ -227,6 +219,8 @@ class VehicleCategory {
     required this.id,
     required this.category,
     required this.priceKm,
+    required this.techFee,
+    required this.baseFare,
     required this.distance,
     required this.minKm,
     required this.minPrice,
@@ -234,15 +228,18 @@ class VehicleCategory {
     required this.seat,
     required this.createdAt,
     required this.updatedAt,
-    this.deletedAt,
+    required this.deletedAt,
   });
 
-  factory VehicleCategory.fromMap(Map<String, dynamic> json) => VehicleCategory(
+  factory VehicleCategory.fromJson(Map<String, dynamic> json) =>
+      VehicleCategory(
         id: json["id"],
         category: json["category"],
-        priceKm: json["price_km"],
+        priceKm: json["price_km"]?.toDouble(),
+        techFee: json["tech_fee"],
+        baseFare: json["base_fare"]?.toDouble(),
         distance: json["distance"],
-        minKm: json["min_km"],
+        minKm: json["min_km"]?.toDouble(),
         minPrice: json["min_price"],
         extraKm: json["extra_km"],
         seat: json["seat"],
@@ -251,10 +248,12 @@ class VehicleCategory {
         deletedAt: json["deleted_at"],
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "category": category,
         "price_km": priceKm,
+        "tech_fee": techFee,
+        "base_fare": baseFare,
         "distance": distance,
         "min_km": minKm,
         "min_price": minPrice,

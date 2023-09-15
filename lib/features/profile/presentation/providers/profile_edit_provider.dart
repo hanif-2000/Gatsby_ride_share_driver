@@ -86,27 +86,32 @@ class ProfileEditProvider extends FormProvider {
   setupTextControllerValues(ProfileDataModel profile) {
     fetchPriceCategory().listen((event) {});
 
-    nameController.text = profile.name;
-    emailController.text = profile.email;
-    phoneController.text = profile.phoneNumber;
-    carModelController.text = profile.carModel;
-    vehicleController.text = profile.plateNumber;
+    nameController.text = profile.name!;
+    emailController.text = profile.email!;
+    phoneController.text = profile.phoneNumber!;
+    carModelController.text = profile.carModel!;
+    vehicleController.text = profile.plateNumber!;
     if (profile.name != '') {
-      firstNameController.text = profile.name.split(' ').first;
-      lastNameController.text = profile.name.split(' ').last;
+      firstNameController.text = profile.name!.split(' ').first;
+      lastNameController.text = profile.name!.split(' ').last;
     }
 
-    vehicleInsuranceController.text = profile.insuranceNumber;
-    vehicleNameController.text = profile.vehicleName;
-    vehicleModelController.text = profile.carModel;
-    vehicleNumberController.text = profile.plateNumber;
+    vehicleInsuranceController.text = profile.insuranceNumber!;
+    vehicleNameController.text = profile.vehicleName!;
+    vehicleModelController.text = profile.carModel!;
+    vehicleNumberController.text = profile.plateNumber!;
 
-    bankTransitController.text = profile.bankDetails.ifscCode;
-    bankHolderNameController.text = profile.bankDetails.accountHolderName;
-    bankAccountController.text = profile.bankDetails.accountNumber;
-    bankNameController.text = profile.bankDetails.bankName;
+    // bankTransitController.text = profile.bankDetails.ifscCode;
+    // bankHolderNameController.text = profile.bankDetails.accountHolderName;
+    // bankAccountController.text = profile.bankDetails.accountNumber;
+    // bankNameController.text = profile.bankDetails.bankName;
     // _imageUrl = profile.image;
-    _profileUploadImage = profile.image;
+
+    bankTransitController.text = "bankDetails";
+    bankHolderNameController.text = "bankDetails";
+    bankAccountController.text = "bankDetails";
+    bankNameController.text = "bankDetails";
+    _profileUploadImage = profile.image!;
     PriceCategoryModel setCategory;
     setCategory = PriceCategoryModel(
         categoryId: profile.vehicleCategory.categoryId,

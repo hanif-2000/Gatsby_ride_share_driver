@@ -92,7 +92,7 @@ class BottomContainerHome extends StatelessWidget {
                     ],
                     innerColor: provider.isOnline ? primaryColor : Colors.black,
                     onChanged: (b) {
-                      provider.updateStatus().listen((event) async {});
+                      // provider.updateStatus().listen((event) async {});
                       provider.changeStatus = b;
                       return Future.delayed(const Duration(seconds: 2));
                     },

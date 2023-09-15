@@ -59,6 +59,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   // fcmListener() async {
   //   final session = locator<Session>();
   //   logMe("incoming action: ${_fcmProvider.incomingOrderDetail}");

@@ -34,7 +34,7 @@ class ProfileInformationDrawer extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                data.image.isEmpty
+                data.image!.isEmpty
                     ? const CircleAvatar(
                         radius: 50,
                         backgroundImage: AssetImage(userAvatarImage),
@@ -42,16 +42,16 @@ class ProfileInformationDrawer extends StatelessWidget {
                     : CircleAvatar(
                         radius: 50,
                         backgroundImage:
-                            NetworkImage(mergePhotoUrl(data.image)),
+                            NetworkImage(mergePhotoUrl(data.image!)),
                       ),
                 smallVerticalSpacing(),
                 Text(
-                  data.name,
+                  data.name!,
                   style: formTextFieldStyle,
                 ),
                 smallVerticalSpacing(),
                 Text(
-                  data.email,
+                  data.email!,
                   style: formTextFieldStyle,
                 ),
                 InkWell(
