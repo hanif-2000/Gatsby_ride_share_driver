@@ -15,6 +15,8 @@ import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
 
+import 'detailed_payment_screen.dart';
+
 class ReceiptPage extends StatelessWidget {
   const ReceiptPage({Key? key, this.id}) : super(key: key);
   static const routeName = '/ReceiptPage';
@@ -104,7 +106,7 @@ class ReceiptPage extends StatelessWidget {
                                     Column(
                                       children: [
                                         Text(
-                                          '${order.userName}',
+                                          order.userName,
                                           textAlign: TextAlign.center,
                                           style: titleStyle
                                               .copyWith(
@@ -121,7 +123,7 @@ class ReceiptPage extends StatelessWidget {
                                             'assets/icons/home/ic_start.svg'),
                                         smallHorizontalSpacing(),
                                         Text(
-                                          '${order.rating!.toStringAsFixed(1)}',
+                                          order.rating!.toStringAsFixed(1),
                                           textAlign: TextAlign.center,
                                           style: titleStyle
                                               .copyWith(
@@ -161,7 +163,8 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        '${DateFormat.yMMMd().format(order.orderTime)}',
+                                        DateFormat.yMMMd()
+                                            .format(order.orderTime),
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -190,7 +193,7 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        '${DateFormat.jm().format(order.orderTime)}',
+                                        DateFormat.jm().format(order.orderTime),
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -219,7 +222,7 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        '${order.distance}',
+                                        order.distance + ' Km',
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -260,14 +263,100 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                 ),
                                 largeVerticalSpacing(),
-                                Text(
-                                  'Payment Information',
-                                  textAlign: TextAlign.start,
-                                  style: titleStyle
-                                      .copyWith(
-                                        fontSize: 16,
-                                      )
-                                      .usePoppinsW6Font(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 300,
+                                    height: 50,
+                                    child: CustomButton(
+                                        isRounded: true,
+                                        text: " Check Ride Payment Details",
+                                        event: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return PaymentScreen(
+                                                  totalPrice: order.grandTotal,
+                                                  extraDistance:
+                                                      order.extraDistance,
+                                                  extraTime: order.extraTime,
+                                                  extraDistancePrice:
+                                                      order.extraDistancePrice,
+                                                  extraMinPrice:
+                                                      order.extraKmPrice,
+                                                  grandTotal: order.grandTotal,
+                                                  distance: order.distance);
+                                            },
+                                          );
+
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           PaymentScreen(
+                                          //               totalPrice:
+                                          //                   order.grandTotal,
+                                          //               extraDistance:
+                                          //                   order.extraDistance,
+                                          //               extraTime:
+                                          //                   order.extraTime,
+                                          //               extraDistancePrice: order
+                                          //                   .extraDistancePrice,
+                                          //               extraMinPrice:
+                                          //                   order.extraKmPrice,
+                                          //               grandTotal:
+                                          //                   order.grandTotal,
+                                          //               distance: order.distance),
+                                          //     ));
+                                        },
+                                        bgColor: black030303),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Payment Information',
+                                        textAlign: TextAlign.start,
+                                        style: titleStyle
+                                            .copyWith(
+                                              fontSize: 16,
+                                            )
+                                            .usePoppinsW6Font(),
+                                      ),
+
+                                      // SizedBox(
+                                      //   width: 100,
+                                      //   child: CustomButton(
+                                      //       text: "Payment Details",
+                                      //       event: () {
+                                      //         Navigator.push(
+                                      //             context,
+                                      //             MaterialPageRoute(
+                                      //               builder: (context) =>
+                                      //                   PaymentScreen(
+                                      //                       totalPrice: order
+                                      //                           .grandTotal,
+                                      //                       extraDistance: order
+                                      //                           .extraDistance,
+                                      //                       extraTime: order
+                                      //                           .extraTime,
+                                      //                       extraDistancePrice:
+                                      //                           order
+                                      //                               .extraDistancePrice,
+                                      //                       extraMinPrice: order
+                                      //                           .extraKmPrice,
+                                      //                       grandTotal: order
+                                      //                           .grandTotal,
+                                      //                       distance:
+                                      //                           order.distance),
+                                      //             ));
+                                      //       },
+                                      //       bgColor: black030303),
+                                      // )
+                                    ],
+                                  ),
                                 ),
                                 smallVerticalSpacing(),
                                 Padding(
@@ -315,65 +404,67 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                   child: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Price',
-                                            textAlign: TextAlign.center,
-                                            style: titleStyle
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                  color: grey7c7c7c,
-                                                )
-                                                .usePoppinsW6Font(),
-                                          ),
-                                          Text(
-                                            '\$${order.total}',
-                                            textAlign: TextAlign.center,
-                                            style: titleStyle
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                )
-                                                .usePoppinsW5Font(),
-                                          ),
-                                        ],
-                                      ),
-                                      smallVerticalSpacing(),
-                                      const Divider(
-                                        color: grey7D7979,
-                                      ),
-                                      smallVerticalSpacing(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Service Price (5%)',
-                                            textAlign: TextAlign.center,
-                                            style: titleStyle
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                  color: grey7c7c7c,
-                                                )
-                                                .usePoppinsW6Font(),
-                                          ),
-                                          Text(
-                                            '\$${(order.total * 5) / 100}',
-                                            textAlign: TextAlign.center,
-                                            style: titleStyle
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                )
-                                                .usePoppinsW5Font(),
-                                          ),
-                                        ],
-                                      ),
-                                      smallVerticalSpacing(),
-                                      const Divider(
-                                        color: grey7D7979,
-                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text(
+                                      //       'Price',
+                                      //       textAlign: TextAlign.center,
+                                      //       style: titleStyle
+                                      //           .copyWith(
+                                      //             fontSize: 16,
+                                      //             color: grey7c7c7c,
+                                      //           )
+                                      //           .usePoppinsW6Font(),
+                                      //     ),
+                                      //     Text(
+                                      //       '\$${order.total}',
+                                      //       textAlign: TextAlign.center,
+                                      //       style: titleStyle
+                                      //           .copyWith(
+                                      //             fontSize: 16,
+                                      //           )
+                                      //           .usePoppinsW5Font(),
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      // smallVerticalSpacing(),
+                                      // const Divider(
+                                      //   color: grey7D7979,
+                                      // ),
+                                      // smallVerticalSpacing(),
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text(
+                                      //       'Service Price (5%)',
+                                      //       textAlign: TextAlign.center,
+                                      //       style: titleStyle
+                                      //           .copyWith(
+                                      //             fontSize: 16,
+                                      //             color: grey7c7c7c,
+                                      //           )
+                                      //           .usePoppinsW6Font(),
+                                      //     ),
+                                      //     Text(
+                                      //       '\$${order.total}',
+
+                                      //       // '\$${(order.total * 5) / 100}',
+                                      //       textAlign: TextAlign.center,
+                                      //       style: titleStyle
+                                      //           .copyWith(
+                                      //             fontSize: 16,
+                                      //           )
+                                      //           .usePoppinsW5Font(),
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      // smallVerticalSpacing(),
+                                      // const Divider(
+                                      //   color: grey7D7979,
+                                      // ),
                                       smallVerticalSpacing(),
                                       Row(
                                         mainAxisAlignment:
@@ -390,7 +481,8 @@ class ReceiptPage extends StatelessWidget {
                                                 .usePoppinsW6Font(),
                                           ),
                                           Text(
-                                            '\$${order.total - ((order.total * 5) / 100)}',
+                                            '\$CA ${order.grandTotal}',
+                                            // '\$${order.total - ((order.total * 5) / 100)}',
                                             textAlign: TextAlign.center,
                                             style: titleStyle
                                                 .copyWith(
@@ -407,7 +499,7 @@ class ReceiptPage extends StatelessWidget {
                                 largeVerticalSpacing(),
                                 CustomButton(
                                   text: Text(
-                                    '${appLoc.continuee}',
+                                    appLoc.continuee,
                                     style: txtButtonStyle,
                                   ),
                                   event: () {

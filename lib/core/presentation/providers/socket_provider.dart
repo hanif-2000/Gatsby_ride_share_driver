@@ -44,13 +44,17 @@ class SocketProvider with ChangeNotifier {
         logMe('Message list data-----> ${response.toString()}');
         if (response['type'] == 'MessageList') {
           logMe('Message list data-----> ${response['data']}');
-          chatProvider.addChatAll(
-            List<ChatModel>.from(
-              response["data"].map(
-                (x) => ChatModel.fromMap(x),
+          if (response['data'] != null) {
+            chatProvider.addChatAll(
+              List<ChatModel>.from(
+                response["data"].map(
+                  (x) => ChatModel.fromMap(x),
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            chatProvider.addChatAll([]);
+          }
         }
         if (response['type'] == 'Chat') {
           chatProvider.addSingleChat(

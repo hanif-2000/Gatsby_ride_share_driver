@@ -244,10 +244,14 @@ String getHistoryStatus(String statusHistory) {
 }
 
 getPaymentType(int type) {
-  if (type == 2) {
-    return 'Online';
-  } else {
+  if (type == 1) {
     return 'Cash';
+  } else if (type == 2) {
+    return 'Credit Card';
+  } else if (type == 3) {
+    return 'Google Pay';
+  } else {
+    return 'Apple Pay';
   }
 }
 

@@ -25,10 +25,16 @@ class OrderReceipt {
   String id;
   String driverId;
   String distance;
-  dynamic total;
+  String total;
   DateTime orderTime;
   DateTime? startTime;
   DateTime? endTime;
+  String grandTotal;
+  String extraTime;
+  String extraKmPrice;
+  String extraDistance;
+  String extraDistancePrice;
+
   String status;
   String image;
   String userName;
@@ -45,6 +51,11 @@ class OrderReceipt {
     required this.orderTime,
     this.startTime,
     this.endTime,
+    required this.grandTotal,
+    required this.extraTime,
+    required this.extraKmPrice,
+    required this.extraDistance,
+    required this.extraDistancePrice,
     required this.status,
     required this.image,
     required this.userName,
@@ -69,6 +80,11 @@ class OrderReceipt {
         image: json["image"],
         userName: json["user_name"],
         userPhone: json["user_phone"],
+        grandTotal: json["grand_total"] ?? "0",
+        extraTime: json["extra_time"] ?? '0',
+        extraKmPrice: json["extra_km_price"] ?? '0',
+        extraDistance: json["extra_distance"] ?? '0',
+        extraDistancePrice: json["extra_distance_price"] ?? '0',
         rating: json["rating"] != null
             ? double.tryParse(json["rating"].toString())
             : 0.0,
@@ -81,6 +97,11 @@ class OrderReceipt {
         "driver_id": driverId,
         "distance": distance,
         "total": total,
+        "grand_total": grandTotal,
+        "extra_time": extraTime,
+        "extra_km_price": extraKmPrice,
+        "extra_distance": extraDistance,
+        "extra_distance_price": extraDistancePrice,
         "order_time": orderTime.toIso8601String(),
         "end_time": endTime!.toIso8601String(),
         "start_time": endTime!.toIso8601String(),

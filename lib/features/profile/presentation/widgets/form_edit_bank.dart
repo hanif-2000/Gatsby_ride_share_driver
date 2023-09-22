@@ -179,7 +179,7 @@ class _FormEditBankState extends State<FormEditBank> {
                         ),
                         largeVerticalSpacing(),
                         Text(
-                          appLoc.ifscCode,
+                          "Transit Number",
                           style: titleNameStyle
                               .copyWith(color: greyB6B6B6, fontSize: 15)
                               .usePoppinsW4Font(),
@@ -204,6 +204,34 @@ class _FormEditBankState extends State<FormEditBank> {
                           ).validate(),
                         ),
                         largeVerticalSpacing(),
+
+                        Text(
+                          "Institution Number",
+                          style: titleNameStyle
+                              .copyWith(color: greyB6B6B6, fontSize: 15)
+                              .usePoppinsW4Font(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        //Transit number
+                        CustomTextField(
+                          enabled: provider.isBankEdit,
+                          placeholder: "Institution Number",
+                          title: "Institution",
+                          controller: provider.bankInstitutionController,
+                          inputType: TextInputType.name,
+                          maxLength: 20,
+                          isError: provider.bankTransitError,
+                          fieldValidator: ValidationHelper(
+                            loc: appLoc,
+                            isError: (bool value) =>
+                                provider.setBankAccountError = value,
+                            typeField: TypeField.name,
+                          ).validate(),
+                        ),
+                        largeVerticalSpacing(),
+
                         Visibility(
                           visible: provider.isBankEdit,
                           child: CustomButton(
