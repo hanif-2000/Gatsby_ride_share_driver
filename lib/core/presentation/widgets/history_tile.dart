@@ -15,7 +15,8 @@ class HistoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, OrderDetailPage.routeName, arguments: order);
+        Navigator.pushNamed(context, OrderDetailPage.routeName,
+            arguments: order);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -46,7 +47,7 @@ class HistoryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                     // '${order!.orderTime.toIso8601String()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -62,19 +63,19 @@ class HistoryTile extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: getStatusColor(
-                            order!.status,
+                            order!.status!,
                           ),
                         ),
                       ),
                       smallHorizontalSpacing(),
                       Text(
-                        getOrderStatus(order!.status),
+                        getOrderStatus(order!.status!),
                         // appLoc.inProgress,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14,
                           color: getStatusColor(
-                            order!.status,
+                            order!.status!,
                           ),
                         ).usePoppinsW6Font(),
                       ),
@@ -105,7 +106,7 @@ class HistoryTile extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 // 'PJCX+6R3, Sector 115',
-                                order!.startAddress,
+                                order!.startAddress!,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
@@ -126,7 +127,7 @@ class HistoryTile extends StatelessWidget {
                             mediumHorizontalSpacing(),
                             Expanded(
                               child: Text(
-                                order!.endAddress,
+                                order!.endAddress!,
                                 // 'PJCX+6R3, Sector 115',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(

@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
+import 'package:location/location.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
@@ -43,6 +44,7 @@ class HomeProvider with ChangeNotifier {
   final DoUpdateLocation doUpdateLocation;
   final session = locator<Session>();
   late BitmapDescriptor pickUpMarker, destinationMarker;
+  Location location = Location();
 
   //Initial
   final lctn.Location locationService = lctn.Location();
@@ -66,6 +68,13 @@ class HomeProvider with ChangeNotifier {
   String originAddress = '';
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylines = {};
+
+  //check if location Changed
+  locationChanged() {
+    location.onLocationChanged;
+    location.changeSettings(
+        accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 10);
+  }
 
   // getter
   bool get isOnline => _isOnline;

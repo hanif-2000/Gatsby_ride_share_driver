@@ -114,7 +114,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         return Padding(
                           padding: const EdgeInsets.all(10.0),
                           // child: HistoryItem(data: _data[index]),
-                          child: Text(_data[index].userName),
+                          child: Text(_data[index].userName!),
                         );
                       },
                     );

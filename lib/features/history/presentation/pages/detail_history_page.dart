@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/presentation/widgets/custom_app_title_bar.dart';
 import '../../data/models/history_response_model.dart';
+
 class DetailHistoryPage extends StatefulWidget {
   final HistoryOrder item;
   static const String routeName = "DetailHistoryPage";
@@ -23,7 +24,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    String orderDate = getDateString(widget.item.orderTime);
+    String orderDate = getDateString(widget.item.orderTime!);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -60,7 +61,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                           Flexible(
                             flex: 2,
                             child: AutoSizeText(
-                              getHistoryStatus(widget.item.status),
+                              getHistoryStatus(widget.item.status!),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: formTextFieldStyle,
@@ -116,11 +117,10 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.startAddress,
+                                          child: Text(widget.item.startAddress!,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
-
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 14)),
                                         ),
@@ -142,8 +142,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Icon(
                                       Icons.location_on,
                                       color: primaryColor,
@@ -169,11 +169,10 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.endAddress,
+                                          child: Text(widget.item.endAddress!,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
-
                                                   fontWeight: FontWeight.w300,
                                                   fontSize: 14)),
                                         ),
@@ -200,9 +199,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                             Text(
                               appLoc.paymentmethod,
                               style: const TextStyle(
-
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                             smallVerticalSpacing(),
                             Text(
@@ -247,11 +244,10 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                       children: [
                                         Text(appLoc.distance,
                                             style: const TextStyle(
-
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergeDistanceTxt(
-                                            widget.item.distance))
+                                            widget.item.distance!))
                                       ],
                                     ),
                                     Row(
@@ -276,7 +272,6 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                       children: [
                                         Text(appLoc.price,
                                             style: const TextStyle(
-
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergePriceTxt(
@@ -293,7 +288,6 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                   children: [
                                     Text(appLoc.total,
                                         style: const TextStyle(
-
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                             color: primaryColor)),
@@ -301,7 +295,6 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         mergePriceTxt(
                                             widget.item.total.toString()),
                                         style: const TextStyle(
-
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                             color: primaryColor)),

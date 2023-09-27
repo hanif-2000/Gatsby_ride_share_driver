@@ -36,26 +36,26 @@ class HistoryResponseModel {
 }
 
 class HistoryOrder {
-  String id;
-  String driverId;
-  String customerId;
-  String startCoordinate;
-  String endCoordinate;
-  String startAddress;
-  String endAddress;
-  String distance;
-  double total;
-  DateTime orderTime;
-  DateTime startTime;
-  DateTime endTime;
-  String status;
-  String image;
-  String userName;
-  String userPhone;
-  int rating;
-  String driverName;
-  String driverPhone;
-  String email;
+  String? id;
+  String? driverId;
+  String? customerId;
+  String? startCoordinate;
+  String? endCoordinate;
+  String? startAddress;
+  String? endAddress;
+  String? distance;
+  double? total;
+  DateTime? orderTime;
+  DateTime? startTime;
+  DateTime? endTime;
+  String? status;
+  String? image;
+  String? userName;
+  String? userPhone;
+  int? rating;
+  String? driverName;
+  String? driverPhone;
+  String? email;
   int paymentMethod;
   int taxiType;
   String timestamp;
@@ -100,9 +100,15 @@ class HistoryOrder {
         endAddress: json["end_address"],
         distance: json["distance"],
         total: json["total"]?.toDouble(),
-        orderTime: DateTime.parse(json["order_time"]),
-        startTime: DateTime.parse(json["start_time"]),
-        endTime: DateTime.parse(json["end_time"]),
+        orderTime: json["order_time"] != null
+            ? DateTime.parse(json["order_time"])
+            : DateTime.now(),
+        startTime: json["start_time"] != null
+            ? DateTime.parse(json["start_time"])
+            : DateTime.now(),
+        endTime: json["end_time"] != null
+            ? DateTime.parse(json["end_time"])
+            : DateTime.now(),
         status: json["status"],
         image: json["image"],
         userName: json["user_name"],
@@ -121,25 +127,31 @@ class HistoryOrder {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "driver_id": driverId,
-        "customer_id": customerId,
+        "driver_id": driverId ?? '',
+        "customer_id": customerId ?? '',
         "start_coordinate": startCoordinate,
-        "end_coordinate": endCoordinate,
-        "start_address": startAddress,
-        "end_address": endAddress,
-        "distance": distance,
-        "total": total,
-        "order_time": orderTime.toIso8601String(),
-        "start_time": startTime.toIso8601String(),
-        "end_time": endTime.toIso8601String(),
-        "status": status,
+        "end_coordinate": endCoordinate ?? '',
+        "start_address": startAddress ?? '',
+        "end_address": endAddress ?? '',
+        "distance": distance ?? '',
+        "total": total ?? 0.0,
+        "order_time": orderTime == null
+            ? DateTime.now().toIso8601String()
+            : orderTime!.toIso8601String(),
+        "start_time": startTime == null
+            ? DateTime.now().toIso8601String()
+            : startTime!.toIso8601String(),
+        "end_time": endTime == null
+            ? DateTime.now().toIso8601String()
+            : endTime!.toIso8601String(),
+        "status": status ?? '',
         "image": image,
-        "user_name": userName,
-        "user_phone": userPhone,
-        "rating": rating,
-        "driver_name": driverName,
-        "driver_phone": driverPhone,
-        "email": email,
+        "user_name": userName ?? '',
+        "user_phone": userPhone ?? '',
+        "rating": rating ?? 0,
+        "driver_name": driverName ?? '',
+        "driver_phone": driverPhone ?? "",
+        "email": email ?? '',
         "payment_method": paymentMethod,
         "taxi_type": taxiType,
         "timestamp": timestamp,
@@ -213,7 +225,7 @@ class VehicleCategory {
   String seat;
   DateTime createdAt;
   DateTime updatedAt;
-  dynamic deletedAt;
+  // dynamic deletedAt;
 
   VehicleCategory({
     required this.id,
@@ -228,7 +240,7 @@ class VehicleCategory {
     required this.seat,
     required this.createdAt,
     required this.updatedAt,
-    required this.deletedAt,
+    // required this.deletedAt,
   });
 
   factory VehicleCategory.fromJson(Map<String, dynamic> json) =>
@@ -245,7 +257,7 @@ class VehicleCategory {
         seat: json["seat"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        deletedAt: json["deleted_at"],
+        // deletedAt: json["deleted_at"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -261,6 +273,6 @@ class VehicleCategory {
         "seat": seat,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
-        "deleted_at": deletedAt,
+        // "deleted_at": deletedAt,
       };
 }
