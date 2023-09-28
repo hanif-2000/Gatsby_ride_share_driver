@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
@@ -27,6 +28,7 @@ import '../../../features/order/presentation/providers/update_status_order_state
 import '../../../features/profile/domain/usecases/get_profile.dart';
 import '../../../features/profile/presentation/providers/profile_state.dart';
 import '../../data/models/customer_detail_model.dart';
+import '../../data/models/google_route_response_modal.dart';
 import '../../utility/direction_helper.dart';
 import '../../utility/firebase_helper.dart';
 import '../../utility/injection.dart';
@@ -467,9 +469,47 @@ class HomeProvider with ChangeNotifier {
       yield OrderDetailFailure(failure: failure.message);
     }, (data) async* {
       _orderDetail = data;
+
+      setActualDistance(
+          originLat:
+              double.parse(_orderDetail!.startCoordinate.split(',').first),
+          originLong:
+              double.parse(_orderDetail!.startCoordinate.split(',').last),
+          destinationLat:
+              double.parse(_orderDetail!.endCoordinate.split(',').first),
+          destinationLong:
+              double.parse(_orderDetail!.endCoordinate.split(',').last));
+
       notifyListeners();
       yield OrderDetailLoaded(data: data);
     });
+  }
+
+  setActualDistance(
+      {destinationLat, destinationLong, originLat, originLong}) async {
+    try {
+      // Get real distance
+      var response = await Dio().get(
+          'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      dev.log(" response of real distance:--->>> ${response.data}");
+
+      var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
+      // distance = data.rows[0].elements[0].distance.text;
+      // estimatedTime = data.rows[0].elements[0].duration.value;
+      // estimatedTimeToShow = data.rows[0].elements[0].duration.text;
+
+      session.setEstimatedDistance =
+          (data.rows[0].elements[0].distance.value / 1000).toString();
+      session.setEstimatedTime =
+          (data.rows[0].elements[0].duration.value / 60).toString();
+
+      notifyListeners();
+
+      dev.log("session distnace:--${session.estimatedDistance}");
+      dev.log("session duration:--${session.estimatedTime}");
+    } catch (e) {
+      print(e);
+    }
   }
 
   Stream<CustomerDetailState> fetchCustomerDetail(String userId) async* {

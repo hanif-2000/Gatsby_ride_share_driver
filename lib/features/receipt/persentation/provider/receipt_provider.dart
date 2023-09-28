@@ -4,6 +4,7 @@ import 'package:appkey_taxiapp_driver/features/receipt/domain/usercases/do_conta
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_state.dart';
 import '../../../../core/presentation/providers/form_provider.dart';
 import '../../../../core/utility/helper.dart';
+import 'dart:developer' as dev;
 
 class ReceiptProvider extends FormProvider {
   final DoReceipt doReceipt;
@@ -13,9 +14,13 @@ class ReceiptProvider extends FormProvider {
   var session = locator<Session>();
 
   Stream<ReceiptState> getReceiptAPI() async* {
+    dev.log("distance:${session.estimatedDistance}");
+    dev.log("distance:${session.estimatedTime}");
+
     yield ReceiptLoading();
 
-    final loginResult = await doReceipt.call(session.runningOrderId.toString());
+    final loginResult = await doReceipt.call(session.runningOrderId.toString(),
+        session.estimatedTime.toString(), session.estimatedDistance.toString());
     yield* loginResult.fold((statusCode) async* {
       logMe(statusCode);
       yield ReceiptFailure(failure: statusCode.message);

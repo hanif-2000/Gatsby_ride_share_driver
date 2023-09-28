@@ -12,6 +12,7 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/providers/orde
 import 'package:appkey_taxiapp_driver/features/order/presentation/widgets/bottom_container_order.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
 import '../../../../core/static/order_status.dart';
@@ -60,11 +61,13 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
+  late StreamSubscription<LocationData> locationSubscription;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     // setDefaultStatus(widget.orderStatus);
   }
 

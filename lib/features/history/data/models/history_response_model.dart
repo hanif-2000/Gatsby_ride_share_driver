@@ -45,6 +45,7 @@ class HistoryOrder {
   String? endAddress;
   String? distance;
   double? total;
+  dynamic tip;
   DateTime? orderTime;
   DateTime? startTime;
   DateTime? endTime;
@@ -86,6 +87,7 @@ class HistoryOrder {
     required this.paymentMethod,
     required this.taxiType,
     required this.timestamp,
+    required this.tip,
     required this.vehicleCategory,
     required this.ratingList,
   });
@@ -99,7 +101,8 @@ class HistoryOrder {
         startAddress: json["start_address"],
         endAddress: json["end_address"],
         distance: json["distance"],
-        total: json["total"]?.toDouble(),
+        tip: json["tip"],
+        total: json["total"] != null ? json["total"]?.toDouble() : 0.0,
         orderTime: json["order_time"] != null
             ? DateTime.parse(json["order_time"])
             : DateTime.now(),
@@ -146,6 +149,7 @@ class HistoryOrder {
             : endTime!.toIso8601String(),
         "status": status ?? '',
         "image": image,
+        "tip": tip,
         "user_name": userName ?? '',
         "user_phone": userPhone ?? '',
         "rating": rating ?? 0,

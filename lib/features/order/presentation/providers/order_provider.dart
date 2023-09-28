@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
+import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/domain/usecases/do_update_location.dart';
 import '../../../../core/presentation/providers/update_location_state.dart';
@@ -46,8 +48,8 @@ class OrderProvider with ChangeNotifier {
   DriverLocationResponseModel? _driverLocation;
   OrderDetail? _orderDetail;
   CustomerDetailModel? _customerDetail;
-  double _driverLat = 0.0;
-  double _driverLng = 0.0;
+  final double _driverLat = 0.0;
+  final double _driverLng = 0.0;
 
   late GoogleMapController googleMapController;
   OrderStatus _orderStatus = OrderStatus.driverAccept;
@@ -65,6 +67,8 @@ class OrderProvider with ChangeNotifier {
   Set<Polyline> polylines = {};
   final session = locator<Session>();
 
+  List driverCoordinatesList = [];
+
   //get
   OrderStatus get orderStatus => _orderStatus;
 
@@ -77,6 +81,8 @@ class OrderProvider with ChangeNotifier {
   double get driverLat => _driverLat;
 
   double? get driverLng => _driverLng;
+
+  late StreamSubscription<LocationData> locationSubscription;
 
   //setter
   set changeOrderStatus(val) {
@@ -266,6 +272,24 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
+  // trackDriverRouteDistance() {
+  //   log("track driver route distance called ");
+
+  //   // Timer.periodic(const Duration(seconds: 10), (timer) {
+  //   // setState(() {
+
+  //   locationService.changeSettings(
+  //       accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
+
+  //   locationService.onLocationChanged
+  //       .distinct()
+  //       .listen((LocationData currentLocation) {
+  //     log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
+  //     // });
+  //   });
+  //   // });
+  // }
+
   setPolylineDirection(bool isFromOrigin) async {
     var latLongOrigin = _orderDetail!.startCoordinate;
     var latLongDestination = _orderDetail!.endCoordinate;
@@ -435,7 +459,30 @@ class OrderProvider with ChangeNotifier {
   }
 
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
-    print('Current order status -----> $_orderStatus');
+    log('Current order status -----> $_orderStatus');
+
+    if (_orderStatus == OrderStatus.departureToDestination) {
+      log("track driver route called");
+      await locationService.changeSettings(
+          accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
+      // trackDriverRouteDistance();
+
+      locationSubscription = locationService.onLocationChanged
+          .listen((LocationData currentLocation) {
+        log("my cuurent location iss:-------- ${currentLocation.latitude},${currentLocation.longitude}");
+
+        driverCoordinatesList
+            .add({currentLocation.latitude, currentLocation.longitude});
+        notifyListeners();
+      });
+
+      log("location subscription is:-->> $locationSubscription");
+    } else if (_orderStatus == OrderStatus.arriveAtDestination) {
+      locationSubscription.cancel();
+
+      log("corridndsfn dsnf ds list are:-->> $driverCoordinatesList");
+    }
+
     // if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
     //   _orderStatus = OrderStatus.departureToDestination;
     //   // showToast(message: appLoc.waitcustconfirmation);
@@ -445,17 +492,24 @@ class OrderProvider with ChangeNotifier {
     yield UpdateStatusOrderLoading();
     String orderStatusBody = "";
     if (_orderStatus == OrderStatus.driverAccept) {
+      //1
       orderStatusBody = Order.departureToCustomerPlace.toString();
     } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
+      //2
       orderStatusBody = Order.arriveAtCustomerPlace.toString();
     } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
+      // trackDriverRouteDistance();
+      //3
       orderStatusBody = Order.departureToDestination.toString();
     } else if (_orderStatus == OrderStatus.customerConfirmation) {
       orderStatusBody = Order.departureToDestination.toString();
     } else if (_orderStatus == OrderStatus.departureToDestination) {
       orderStatusBody = Order.arriveAtDestination.toString();
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
+      //6
       orderStatusBody = Order.complete.toString();
+      locationSubscription.cancel();
+      log("list of coordinates are:--... $driverCoordinatesList");
       dismissLoading();
     }
     logMe("orderStatusBody");

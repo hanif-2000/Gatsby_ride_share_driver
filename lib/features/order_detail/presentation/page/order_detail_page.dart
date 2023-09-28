@@ -616,7 +616,11 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   PriceTile(
                     title: 'Price',
-                    value: '\$${order!.total}',
+                    value: 'CA\$ ${order!.total}',
+                  ),
+                  PriceTile(
+                    title: 'Tip',
+                    value: 'CA\$ ${order!.tip}',
                   ),
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
@@ -626,7 +630,7 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   PriceTile(
                     title: 'Total',
-                    value: '\$${order!.total}',
+                    value: 'CA\$${order!.total}',
                     fontSize: 18,
                   ),
                   largeVerticalSpacing(),

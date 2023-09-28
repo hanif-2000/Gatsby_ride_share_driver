@@ -13,9 +13,10 @@ class ReceiptRepositoryImplementation implements ReceiptRepository {
   ReceiptRepositoryImplementation({required this.dataSource});
 
   @override
-  Future<Either<Failure, ReceiptDataModel>> getReceipt(String id) async {
+  Future<Either<Failure, ReceiptDataModel>> getReceipt(
+      String id, String time, String distance) async {
     try {
-      final data = await dataSource.getReceipt(id);
+      final data = await dataSource.getReceipt(id, time, distance);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure ForgotPassword repository ${e.toString()}");

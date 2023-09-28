@@ -29,7 +29,7 @@ class HistoryModel {
   String startAddress;
   String endAddress;
   String distance;
-  int total;
+  int? total;
   DateTime orderTime;
   String status;
   String name;
@@ -68,7 +68,7 @@ class HistoryModel {
         startAddress: json["start_address"],
         endAddress: json["end_address"],
         distance: json["distance"],
-        total: json["total"],
+        total: json["total"] ?? 0,
         orderTime: DateTime.parse(json["order_time"]),
         status: json["status"],
         name: json["name"],

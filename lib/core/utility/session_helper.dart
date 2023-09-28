@@ -23,6 +23,9 @@ abstract class Session {
 
   set setUserId(String userId);
 
+  set setEstimatedDistance(String distance);
+  set setEstimatedTime(String time);
+
   set setSessionStatusOrder(String sessionStatusOrder);
 
   set setSessionCategoryId(String sessionCategoryId);
@@ -46,6 +49,9 @@ abstract class Session {
   bool get isOnline;
 
   bool get isOrderRunning;
+
+  String get estimatedDistance;
+  String get estimatedTime;
 
   int get runningOrderId;
 
@@ -123,6 +129,16 @@ class SessionHelper implements Session {
   @override
   set setDriverId(String driverId) {
     pref.setString(DRIVER_ID, driverId);
+  }
+
+  @override
+  set setEstimatedDistance(String distance) {
+    pref.setString(ESTIMATED_DISTANCE, distance);
+  }
+
+  @override
+  set setEstimatedTime(String time) {
+    pref.setString(ESTIMATED_TIME, time);
   }
 
   @override
@@ -228,6 +244,12 @@ class SessionHelper implements Session {
 
   @override
   String get sessionCategoryId => pref.getString(SESSION_CATEGORY_ID) ?? '';
+
+  @override
+  String get estimatedDistance => pref.getString(ESTIMATED_DISTANCE) ?? '';
+
+  @override
+  String get estimatedTime => pref.getString(ESTIMATED_TIME) ?? '';
 
   @override
   Future<void> clearSession() async {

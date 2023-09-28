@@ -276,7 +276,7 @@ class ReceiptPage extends StatelessWidget {
                                             context: context,
                                             builder: (context) {
                                               return PaymentScreen(
-                                                  totalPrice: order.grandTotal,
+                                                  totalPrice: order.total,
                                                   extraDistance:
                                                       order.extraDistance,
                                                   extraTime: order.extraTime,
@@ -481,7 +481,7 @@ class ReceiptPage extends StatelessWidget {
                                                 .usePoppinsW6Font(),
                                           ),
                                           Text(
-                                            '\$CA ${order.grandTotal}',
+                                            '\$CA ${order.total}',
                                             // '\$${order.total - ((order.total * 5) / 100)}',
                                             textAlign: TextAlign.center,
                                             style: titleStyle
