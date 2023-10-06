@@ -71,6 +71,8 @@ class HomeProvider with ChangeNotifier {
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylines = {};
 
+  Timer? refreshRequestList;
+
   //check if location Changed
   locationChanged() {
     location.onLocationChanged;

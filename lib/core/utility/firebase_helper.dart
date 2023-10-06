@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:appkey_taxiapp_driver/core/domain/entities/incoming_order.dart';
 import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
@@ -11,12 +12,16 @@ import 'notification_handler.dart';
 
 class FirebaseHelper {
   static late FirebaseMessaging messaging;
+
   static Future<void> init() async {
-    logMe("Firebase helper");
+    logMe("Firebasee helperrrr");
     await Firebase.initializeApp(
+        name: 'gatsbyRideShare',
         options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
+
     await permissionHandler().then((authorized) async {
+      log("IS AUTHORIZED:  $authorized");
       if (authorized) {
         await setupMessaging();
       }

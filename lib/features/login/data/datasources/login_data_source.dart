@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:dio/dio.dart';
 
 import '../../../../core/utility/injection.dart';
@@ -21,7 +20,7 @@ class LoginDataSourceImplementation implements LoginDataSource {
   Future<LoginResponseModel?> doLogin(
       String email, String password, String position) async {
     String url = 'api/webservice/logindriver';
-    await FirebaseHelper.setupMessaging();
+    // await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
     String fcmToken = session.sessionFcmToken;
     FormData data = FormData.fromMap({
