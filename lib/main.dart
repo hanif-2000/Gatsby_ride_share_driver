@@ -1,7 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
-import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
@@ -30,7 +29,12 @@ Future<void> main() async {
     await init();
 
     locator.isReady<Session>().then((_) async {
-      await NotificationHelper().init();
+      FirebaseHelper.init();
+
+      // await FirebaseHelper.init().then((_) async {
+      //   // await NotificationHelper().init();
+      // });
+      // await NotificationHelper().init();
       runApp(
         MultiProvider(
           providers: [
@@ -74,7 +78,6 @@ Future<void> main() async {
           builder: (context, _) => const MyApp(),
         ),
       );
-      await FirebaseHelper.init().then((_) {});
     });
   } catch (e) {
     logMe(e);

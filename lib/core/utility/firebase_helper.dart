@@ -14,15 +14,17 @@ class FirebaseHelper {
   static late FirebaseMessaging messaging;
 
   static Future<void> init() async {
+    await Firebase.initializeApp();
     logMe("Firebasee helperrrr");
     await Firebase.initializeApp(
-        name: 'gatsbyRideShare',
-        options: DefaultFirebaseOptions.currentPlatform);
+        name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
 
     await permissionHandler().then((authorized) async {
       log("IS AUTHORIZED:  $authorized");
       if (authorized) {
+        await NotificationHelper().init();
+
         await setupMessaging();
       }
     });
@@ -40,6 +42,7 @@ class FirebaseHelper {
   static Future<void> incomingNotificationHandling() async {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log("on message listen called");
       fetchRemoteMessage(message);
       NotificationHelper _notificationService = NotificationHelper();
       _notificationService.showNotifications(message);
@@ -47,6 +50,8 @@ class FirebaseHelper {
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
+//  Provider.of<HomeProvider>(context, listen: false);
+    log("remote message called");
     logMe('data: ${message.data}');
     late String? title;
     late String? body;
