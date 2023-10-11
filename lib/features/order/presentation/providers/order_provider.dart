@@ -461,27 +461,27 @@ class OrderProvider with ChangeNotifier {
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
     log('Current order status -----> $_orderStatus');
 
-    if (_orderStatus == OrderStatus.departureToDestination) {
-      log("track driver route called");
-      await locationService.changeSettings(
-          accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
-      // trackDriverRouteDistance();
+    // if (_orderStatus == OrderStatus.departureToDestination) {
+    //   log("track driver route called");
+    // await locationService.changeSettings(
+    //     accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
+    // trackDriverRouteDistance();
 
-      locationSubscription = locationService.onLocationChanged
-          .listen((LocationData currentLocation) {
-        log("my cuurent location iss:-------- ${currentLocation.latitude},${currentLocation.longitude}");
+    //   locationSubscription = locationService.onLocationChanged
+    //       .listen((LocationData currentLocation) {
+    //     log("my cuurent location iss:-------- ${currentLocation.latitude},${currentLocation.longitude}");
 
-        driverCoordinatesList
-            .add({currentLocation.latitude, currentLocation.longitude});
-        notifyListeners();
-      });
+    //     driverCoordinatesList
+    //         .add({currentLocation.latitude, currentLocation.longitude});
+    //     notifyListeners();
+    //   });
 
-      log("location subscription is:-->> $locationSubscription");
-    } else if (_orderStatus == OrderStatus.arriveAtDestination) {
-      locationSubscription.cancel();
+    //   log("location subscription is:-->> $locationSubscription");
+    // } else if (_orderStatus == OrderStatus.arriveAtDestination) {
+    //   // locationSubscription.cancel();
 
-      log("corridndsfn dsnf ds list are:-->> $driverCoordinatesList");
-    }
+    //   log("corridndsfn dsnf ds list are:-->> $driverCoordinatesList");
+    // }
 
     // if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
     //   _orderStatus = OrderStatus.departureToDestination;
@@ -508,7 +508,7 @@ class OrderProvider with ChangeNotifier {
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
       //6
       orderStatusBody = Order.complete.toString();
-      locationSubscription.cancel();
+      // locationSubscription.cancel();
       log("list of coordinates are:--... $driverCoordinatesList");
       dismissLoading();
     }

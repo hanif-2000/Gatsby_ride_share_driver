@@ -5,10 +5,15 @@ import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
+import '../presentation/pages/home_page/home_page.dart';
+import '../presentation/providers/home_provider.dart';
+import '../presentation/providers/request_list_state.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
+import 'package:provider/provider.dart';
 
 class FirebaseHelper {
   static late FirebaseMessaging messaging;
@@ -50,8 +55,24 @@ class FirebaseHelper {
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
-//  Provider.of<HomeProvider>(context, listen: false);
     log("remote message called");
+
+    var homeProvider = Provider.of<HomeProvider>(
+        locator<GlobalKey<NavigatorState>>().currentContext!,
+        listen: false);
+    // final GlobalKey<ScaffoldState> key = GlobalKey();
+    homeProvider.getRequestListData().listen((event) {
+      log("event is -->> $event");
+      if (event is RequestListLoaded) {
+        logMe(
+            'Request list data loaded success----------> ${event.data.length}');
+        Navigator.pushNamedAndRemoveUntil(
+            locator<GlobalKey<NavigatorState>>().currentContext!,
+            HomePage.routeName,
+            (route) => false);
+      }
+    });
+
     logMe('data: ${message.data}');
     late String? title;
     late String? body;

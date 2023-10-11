@@ -23,6 +23,7 @@ import 'core/utility/injection.dart';
 import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
+// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {

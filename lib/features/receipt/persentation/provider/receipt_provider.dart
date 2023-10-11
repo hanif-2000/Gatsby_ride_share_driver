@@ -20,7 +20,7 @@ class ReceiptProvider extends FormProvider {
     yield ReceiptLoading();
 
     final loginResult = await doReceipt.call(session.runningOrderId.toString(),
-        session.estimatedTime.toString(), session.estimatedDistance.toString());
+        session.estimatedTime, session.estimatedDistance.toString());
     yield* loginResult.fold((statusCode) async* {
       logMe(statusCode);
       yield ReceiptFailure(failure: statusCode.message);

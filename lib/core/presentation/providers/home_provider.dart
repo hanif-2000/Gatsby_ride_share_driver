@@ -234,6 +234,10 @@ class HomeProvider with ChangeNotifier {
     });
   }
 
+  checkNotificationCurrentStateCalled() {
+    dev.log("Check notification current state is called ");
+  }
+
   Stream<RejectRequestState> rejectRequest(
       String orderId, String reason) async* {
     showLoading();
@@ -503,7 +507,7 @@ class HomeProvider with ChangeNotifier {
       session.setEstimatedDistance =
           (data.rows[0].elements[0].distance.value / 1000).toString();
       session.setEstimatedTime =
-          (data.rows[0].elements[0].duration.value / 60).toString();
+          (data.rows[0].elements[0].duration.value / 60).toStringAsFixed(1);
 
       notifyListeners();
 

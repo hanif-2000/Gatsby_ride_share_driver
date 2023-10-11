@@ -47,7 +47,7 @@ class UserProfileTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${provider.customerDetail!.data.name}',
+                        provider.customerDetail!.data.name,
                         textAlign: TextAlign.center,
                         style: titleStyle
                             .copyWith(
@@ -93,8 +93,9 @@ class UserProfileTile extends StatelessWidget {
                   const Spacer(),
                   Column(
                     children: [
+                      //Bottom sheet customer ride price
                       Text(
-                        '\$${provider.orderDetail!.totalPrice.toStringAsFixed(0)}',
+                        '\$${provider.orderDetail!.totalPrice.toStringAsFixed(1)}',
                         textAlign: TextAlign.center,
                         style: titleStyle
                             .copyWith(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -31,6 +32,7 @@ class SocketProvider with ChangeNotifier {
     _socket!.connection.listen((event) {
       logMe('Socket on Listen ---> ${event.toString()}');
       if (event is Connected) {
+        log("Socket event is connected");
         listenRequests();
       }
     });
@@ -100,6 +102,7 @@ class SocketProvider with ChangeNotifier {
     _socket!.send(
       jsonEncode(map),
     );
+    listenRequests();
   }
 
   sendChatMessage({
