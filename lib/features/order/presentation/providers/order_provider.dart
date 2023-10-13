@@ -492,24 +492,36 @@ class OrderProvider with ChangeNotifier {
     yield UpdateStatusOrderLoading();
     String orderStatusBody = "";
     if (_orderStatus == OrderStatus.driverAccept) {
+      log("status 1");
       //1
       orderStatusBody = Order.departureToCustomerPlace.toString();
     } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
+      log("status 2");
+
       //2
       orderStatusBody = Order.arriveAtCustomerPlace.toString();
     } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
+      log("status 3");
+
       // trackDriverRouteDistance();
       //3
       orderStatusBody = Order.departureToDestination.toString();
-    } else if (_orderStatus == OrderStatus.customerConfirmation) {
-      orderStatusBody = Order.departureToDestination.toString();
-    } else if (_orderStatus == OrderStatus.departureToDestination) {
+    }
+//     else if (_orderStatus == OrderStatus.customerConfirmation) {
+//       log("status 4");
+// //4
+//       orderStatusBody = Order.departureToDestination.toString();
+    // }
+    else if (_orderStatus == OrderStatus.departureToDestination) {
+      log("status 5");
+//5
       orderStatusBody = Order.arriveAtDestination.toString();
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
       //6
       orderStatusBody = Order.complete.toString();
       // locationSubscription.cancel();
-      log("list of coordinates are:--... $driverCoordinatesList");
+      // log("list of coordinates are:--... $driverCoordinatesList");
+
       dismissLoading();
     }
     logMe("orderStatusBody");

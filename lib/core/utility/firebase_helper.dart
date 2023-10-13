@@ -55,6 +55,23 @@ class FirebaseHelper {
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
+    log("notification category :${message.category}");
+    log("notification collapseKey :${message.collapseKey}");
+    log("notification contentAvailable :${message.contentAvailable}");
+    log("notification data :${message.data}");
+    log("notification contains key startiung point  :${message.data.containsKey('Starting point')}");
+
+    log("notification Destination :${message.data['Destination']}");
+    log("notification from :${message.from}");
+    log("notification messageId :${message.messageId}");
+    log("notification messageType :${message.messageType}");
+    log("notification mutableContent :${message.mutableContent}");
+    log("notification notification :${message.notification}");
+    log("notification senderId :${message.senderId}");
+    log("notification sentTime :${message.sentTime}");
+    log("notification threadId :${message.threadId}");
+    log("notification ttl :${message.ttl}");
+
     log("remote message called");
 
     var homeProvider = Provider.of<HomeProvider>(

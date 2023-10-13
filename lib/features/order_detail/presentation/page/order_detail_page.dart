@@ -354,7 +354,7 @@ class OrderDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
+                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -370,19 +370,19 @@ class OrderDetailPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: getStatusColor(
-                            order!.status!,
+                            order!.status,
                           ),
                         ),
                       ),
                       smallHorizontalSpacing(),
                       Text(
-                        getOrderStatus(order!.status!),
+                        getOrderStatus(order!.status),
                         textAlign: TextAlign.center,
                         style: titleStyle
                             .copyWith(
                               fontSize: 14,
                               color: getStatusColor(
-                                order!.status!,
+                                order!.status,
                               ),
                             )
                             .usePoppinsW5Font(),
@@ -416,14 +416,12 @@ class OrderDetailPage extends StatelessWidget {
                     //     widget.orderDetail, widget.customerDetail);
                     final pickup = LatLng(
                         double.tryParse(
-                            order!.startCoordinate!.split(',').first)!,
+                            order!.startCoordinate.split(',').first)!,
                         double.tryParse(
-                            order!.startCoordinate!.split(',').last)!);
+                            order!.startCoordinate.split(',').last)!);
                     final drop = LatLng(
-                        double.tryParse(
-                            order!.endCoordinate!.split(',').first)!,
-                        double.tryParse(
-                            order!.endCoordinate!.split(',').last)!);
+                        double.tryParse(order!.endCoordinate.split(',').first)!,
+                        double.tryParse(order!.endCoordinate.split(',').last)!);
 
                     await provider.createPickupAndDropMarker(pickup, drop);
                     await provider.setPolylineDirection(pickup, drop);
@@ -464,7 +462,7 @@ class OrderDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${order!.userName}',
+                              order!.userName,
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -515,7 +513,7 @@ class OrderDetailPage extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              '\$${order!.total!.toStringAsFixed(0)}',
+                              '\$${order!.total.toStringAsFixed(2)}',
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -566,7 +564,7 @@ class OrderDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
+                          '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
                           textAlign: TextAlign.center,
                           style: titleStyle
                               .copyWith(
@@ -582,19 +580,19 @@ class OrderDetailPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: getStatusColor(
-                                  order!.status!,
+                                  order!.status,
                                 ),
                               ),
                             ),
                             smallHorizontalSpacing(),
                             Text(
-                              getOrderStatus(order!.status!),
+                              getOrderStatus(order!.status),
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
                                     fontSize: 14,
                                     color: getStatusColor(
-                                      order!.status!,
+                                      order!.status,
                                     ),
                                   )
                                   .usePoppinsW5Font(),

@@ -266,11 +266,12 @@ class ReceiptPage extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SizedBox(
-                                    width: 300,
-                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    height: 40,
                                     child: CustomButton(
                                         isRounded: true,
-                                        text: " Check Ride Payment Details",
+                                        text: "Payment Details",
                                         event: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -284,7 +285,7 @@ class ReceiptPage extends StatelessWidget {
                                                       order.extraDistancePrice,
                                                   extraMinPrice:
                                                       order.extraKmPrice,
-                                                  grandTotal: order.grandTotal,
+                                                  grandTotal: order.total,
                                                   distance: order.distance);
                                             },
                                           );

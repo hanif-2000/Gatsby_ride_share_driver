@@ -106,7 +106,7 @@ class GiveRatingScreen extends StatelessWidget {
                       itemSize: 40,
                       isEditable: false,
                       onUpdate: (value) {
-                        print('Rating ----> ${value}');
+                        print('Rating ----> $value');
                         provider.updateRating(value);
                       },
                     ),

@@ -22,19 +22,19 @@ class HistoryDataModel {
 }
 
 class HistoryModel {
-  String id;
-  String driverId;
+  String? id;
+  String? driverId;
   String startCoordinate;
   String endCoordinate;
   String startAddress;
   String endAddress;
-  String distance;
-  int? total;
+  String? distance;
+  dynamic total;
   DateTime orderTime;
   String status;
-  String name;
-  String phone;
-  String email;
+  String? name;
+  String? phone;
+  String? email;
   int paymentMethod;
   int taxiType;
   String timestamp;
@@ -61,19 +61,19 @@ class HistoryModel {
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) => HistoryModel(
-        id: json["id"],
-        driverId: json["driver_id"],
+        id: json["id"] ?? '',
+        driverId: json["driver_id"] ?? '',
         startCoordinate: json["start_coordinate"],
         endCoordinate: json["end_coordinate"],
-        startAddress: json["start_address"],
-        endAddress: json["end_address"],
-        distance: json["distance"],
+        startAddress: json["start_address"] ?? '',
+        endAddress: json["end_address"] ?? '',
+        distance: json["distance"] ?? '',
         total: json["total"] ?? 0,
         orderTime: DateTime.parse(json["order_time"]),
         status: json["status"],
-        name: json["name"],
-        phone: json["phone"],
-        email: json["email"],
+        name: json["name"] ?? '',
+        phone: json["phone"] ?? '',
+        email: json["email"] ?? '',
         paymentMethod: json["payment_method"],
         taxiType: json["taxi_type"],
         timestamp: json["timestamp"],
@@ -81,8 +81,8 @@ class HistoryModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "driver_id": driverId,
+        "id": id ?? '',
+        "driver_id": driverId ?? '',
         "start_coordinate": startCoordinate,
         "end_coordinate": endCoordinate,
         "start_address": startAddress,

@@ -364,7 +364,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                         Column(
                                           children: [
                                             Text(
-                                              '\$${widget.requestListModel!.total.toStringAsFixed(0)}',
+                                              '\$${widget.requestListModel!.total.toStringAsFixed(2)}',
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(

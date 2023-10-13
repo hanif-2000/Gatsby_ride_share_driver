@@ -2,6 +2,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/cu
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
@@ -10,6 +11,8 @@ import 'package:provider/provider.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
 import '../../static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
+
+import '../../utility/injection.dart';
 
 class ChatDetail {
   String? userName;
@@ -24,6 +27,7 @@ class ButtonOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final session = locator<Session>();
     return Consumer<OrderProvider>(
       builder: (context, provider, _) {
         return Container(
@@ -160,33 +164,78 @@ class ButtonOrder extends StatelessWidget {
                         style: txtButtonStyle,
                       ),
                       event: () {
+                        // session.orderStatus == 1
+                        //     ? provider.callCustomer()
+                        //     : session.orderStatus == 2
+                        //         ? provider.callCustomer()
+                        //         : session.orderStatus == 3
+                        //             ?
                         provider.callCustomer();
+                        // : () {};
+
+                        // provider.callCustomer();
                       },
                       buttonHeight: 48,
                       isRounded: true,
-                      bgColor: green2DAA5F,
+                      bgColor:
+                          //  session.orderStatus == 1
+                          //     ? green2DAA5F
+                          //     : session.orderStatus == 2
+                          //         ? green2DAA5F
+                          //         : session.orderStatus == 3
+                          //             ?
+
+                          green2DAA5F,
+                      // : grey606060Color,
                     ),
                   ),
                   smallHorizontalSpacing(),
                   Expanded(
                     child: CustomButton(
-                      image: 'assets/icons/order/ic_message.svg',
-                      text: Text(
-                        'Message',
-                        style: txtButtonStyle,
-                      ),
-                      event: () {
-                        Navigator.pushNamed(context, ChatPage.routeName,
-                            arguments: ChatDetail(
-                              provider.customerDetail!.data.name,
-                              provider.customerDetail!.data.photo,
-                              provider.customerDetail!.data.id,
-                            ));
-                      },
-                      buttonHeight: 48,
-                      isRounded: true,
-                      bgColor: blue249DE0,
-                    ),
+                        image: 'assets/icons/order/ic_message.svg',
+                        text: Text(
+                          'Message',
+                          style: txtButtonStyle,
+                        ),
+                        event: () {
+                          // session.orderStatus == 1
+                          //     ? Navigator.pushNamed(context, ChatPage.routeName,
+                          //         arguments: ChatDetail(
+                          //           provider.customerDetail!.data.name,
+                          //           provider.customerDetail!.data.photo,
+                          //           provider.customerDetail!.data.id,
+                          //         ))
+                          //     : session.orderStatus == 2
+                          //         ? Navigator.pushNamed(
+                          //             context, ChatPage.routeName,
+                          //             arguments: ChatDetail(
+                          //               provider.customerDetail!.data.name,
+                          //               provider.customerDetail!.data.photo,
+                          //               provider.customerDetail!.data.id,
+                          //             ))
+                          //         : session.orderStatus == 3
+                          //             ?
+                          Navigator.pushNamed(context, ChatPage.routeName,
+                              arguments: ChatDetail(
+                                provider.customerDetail!.data.name,
+                                provider.customerDetail!.data.photo,
+                                provider.customerDetail!.data.id,
+                              ));
+                          // : () {};
+                        },
+                        buttonHeight: 48,
+                        isRounded: true,
+                        bgColor:
+                            //  session.orderStatus == 1
+                            //     ? blue249DE0
+                            //     : session.orderStatus == 2
+                            //         ? blue249DE0
+                            //         : session.orderStatus == 3
+                            //             ?
+                            blue249DE0
+                        // :
+                        // grey606060Color,
+                        ),
                   ),
                 ],
               ),
