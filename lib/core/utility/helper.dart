@@ -125,9 +125,11 @@ String mergePriceTxt(String price) {
 
 bool getStatus(OrderStatus orderStatus) {
   if (orderStatus == OrderStatus.driverAccept ||
-      orderStatus == OrderStatus.departureToCustomerplace ||
-      orderStatus == OrderStatus.arriveAtCustomerPlace ||
-      orderStatus == OrderStatus.customerConfirmation) {
+          orderStatus == OrderStatus.departureToCustomerplace ||
+          orderStatus == OrderStatus.arriveAtCustomerPlace
+      // ||
+      // orderStatus == OrderStatus.customerConfirmation
+      ) {
     //Origin
     return true;
   } else {

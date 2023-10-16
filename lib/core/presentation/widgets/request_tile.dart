@@ -86,7 +86,7 @@ class RequestTile extends StatelessWidget {
                               width: 3,
                             ),
                             Text(
-                              '1.0',
+                              request!.rating.toString(),
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -102,7 +102,7 @@ class RequestTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\$${request!.total}',
+                        'CA\$ ${request!.total}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,

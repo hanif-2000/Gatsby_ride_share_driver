@@ -93,10 +93,10 @@ class OrderProvider with ChangeNotifier {
     } else if (val == OrderStatus.departureToCustomerplace) {
       _orderStatus = OrderStatus.arriveAtCustomerPlace;
     } else if (val == OrderStatus.arriveAtCustomerPlace) {
-      _orderStatus = OrderStatus.customerConfirmation;
-    } else if (val == OrderStatus.customerConfirmation) {
       // _orderStatus = OrderStatus.customerConfirmation;
-      setPolylineDirection(false);
+      // } else if (val == OrderStatus.customerConfirmation) {
+      // _orderStatus = OrderStatus.customerConfirmation;
+      setPolylineDirection(true);
       _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.departureToDestination) {
       setPolylineDirection(false);
@@ -367,8 +367,11 @@ class OrderProvider with ChangeNotifier {
     lctn.LocationData locationData = await location.getLocation();
     var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
     if (_orderStatus == OrderStatus.departureToCustomerplace ||
-        _orderStatus == OrderStatus.arriveAtCustomerPlace ||
-        _orderStatus == OrderStatus.customerConfirmation) {
+            _orderStatus == OrderStatus.arriveAtCustomerPlace
+        // ||
+        // _orderStatus == OrderStatus.customerConfirmation
+
+        ) {
       logMe("Polylinessss origin");
       await DirectionHelper()
           .getRouteBetweenCoordinates(
@@ -461,28 +464,6 @@ class OrderProvider with ChangeNotifier {
   Stream<UpdateStatusOrderState> submitStatusOrder() async* {
     log('Current order status -----> $_orderStatus');
 
-    // if (_orderStatus == OrderStatus.departureToDestination) {
-    //   log("track driver route called");
-    // await locationService.changeSettings(
-    //     accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
-    // trackDriverRouteDistance();
-
-    //   locationSubscription = locationService.onLocationChanged
-    //       .listen((LocationData currentLocation) {
-    //     log("my cuurent location iss:-------- ${currentLocation.latitude},${currentLocation.longitude}");
-
-    //     driverCoordinatesList
-    //         .add({currentLocation.latitude, currentLocation.longitude});
-    //     notifyListeners();
-    //   });
-
-    //   log("location subscription is:-->> $locationSubscription");
-    // } else if (_orderStatus == OrderStatus.arriveAtDestination) {
-    //   // locationSubscription.cancel();
-
-    //   log("corridndsfn dsnf ds list are:-->> $driverCoordinatesList");
-    // }
-
     // if (orderStatus == OrderStatus.arriveAtCustomerPlace) {
     //   _orderStatus = OrderStatus.departureToDestination;
     //   // showToast(message: appLoc.waitcustconfirmation);
@@ -495,17 +476,25 @@ class OrderProvider with ChangeNotifier {
       log("status 1");
       //1
       orderStatusBody = Order.departureToCustomerPlace.toString();
+
+      log("orderStatusBody  is OrderStatus.driverAccept------>>>>>>>  $orderStatusBody");
+      log("departure to customer place called");
     } else if (_orderStatus == OrderStatus.departureToCustomerplace) {
       log("status 2");
 
       //2
       orderStatusBody = Order.arriveAtCustomerPlace.toString();
+      log("orderStatusBody  is OrderStatus.departureToCustomerplace------>>>>>>>  $orderStatusBody");
+
+      log("arrive at customer place called");
     } else if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
       log("status 3");
 
-      // trackDriverRouteDistance();
       //3
       orderStatusBody = Order.departureToDestination.toString();
+      log("orderStatusBody  is OrderStatus.arriveAtCustomerPlace------>>>>>>>  $orderStatusBody");
+
+      log("departure to destination called");
     }
 //     else if (_orderStatus == OrderStatus.customerConfirmation) {
 //       log("status 4");
@@ -514,23 +503,27 @@ class OrderProvider with ChangeNotifier {
     // }
     else if (_orderStatus == OrderStatus.departureToDestination) {
       log("status 5");
-//5
+      //5
       orderStatusBody = Order.arriveAtDestination.toString();
+      log("orderStatusBody  is OrderStatus.departureToDestination------>>>>>>>  $orderStatusBody");
+
+      log("arriver at destination called");
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
       //6
       orderStatusBody = Order.complete.toString();
-      // locationSubscription.cancel();
-      // log("list of coordinates are:--... $driverCoordinatesList");
+      log("orderStatusBody  is OrderStatus.arriveAtDestination------>>>>>>>  $orderStatusBody");
+
+      log("order complete called");
 
       dismissLoading();
     }
-    logMe("orderStatusBody");
+    logMe("orderStatusBody  :$orderStatus");
     logMe(orderStatusBody);
     final formData = FormData.fromMap({
       'id': session.runningOrderId,
       'status': int.parse(orderStatusBody),
     });
-    logMe("Update Status Body :");
+    logMe("Update Status Body :${formData.fields}");
     logMe(session.orderId);
     logMe(int.parse(orderStatusBody));
     final result = await updateStatusOrder.execute(formData);
@@ -540,7 +533,10 @@ class OrderProvider with ChangeNotifier {
       dismissLoading();
       yield UpdateStatusOrderFailure(failure: failure);
     }, (data) async* {
-      if (_orderStatus == OrderStatus.customerConfirmation) {
+      log("=======>>>>  data  <<<<+++++++ $data ");
+      log('updated order status -----> $_orderStatus');
+      // if (_orderStatus == OrderStatus.customerConfirmation) {
+      if (_orderStatus == OrderStatus.arriveAtCustomerPlace) {
         dismissLoading();
 
         changeOrderStatus = OrderStatus.departureToDestination;

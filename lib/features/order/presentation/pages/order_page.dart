@@ -83,9 +83,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
       case Order.arriveAtCustomerPlace:
         orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
         return;
-      case Order.customerConfirmation:
-        orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
-        return;
+      // case Order.customerConfirmation:
+      //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
+      //   return;
       case Order.departureToDestination:
         orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
         return;
@@ -136,7 +136,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 10),
+              const Duration(seconds: 5),
               (Timer timer) async {
                 provider.fetchOrderStatus().listen(
                   (state) async {
@@ -149,11 +149,11 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       //   setDefaultStatus(int.parse(state.data.status));
                       // }
 
-                      if (state.data.status ==
-                          Order.customerConfirmation.toString()) {
-                        provider.changeOrderStatus =
-                            OrderStatus.customerConfirmation;
-                      }
+                      // if (state.data.status ==
+                      //     Order.customerConfirmation.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.customerConfirmation;
+                      // }
                       if (state.data.status ==
                           Order.arriveAtCustomerPlace.toString()) {
                         provider.changeOrderStatus =

@@ -413,6 +413,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                       (event) {
                                                         if (event
                                                             is RejectRequestLoaded) {
+                                                          homeProvider
+                                                              .getRequestListData();
                                                           final data =
                                                               event.data;
                                                           var socketProvider =

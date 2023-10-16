@@ -56,11 +56,15 @@ extension LocalizationStringOrder on OrderStatus {
       case OrderStatus.driverAccept:
         return appLoc.departToCustomerPlace;
       case OrderStatus.departureToCustomerplace:
-        return appLoc.arriveAtCustomerPlace;///Same
+        return appLoc.arriveAtCustomerPlace;
+
+      ///Same
       case OrderStatus.arriveAtCustomerPlace:
-        return appLoc.arriveAtCustomerPlace;///Same
-      case OrderStatus.customerConfirmation:
         return appLoc.departToDestination;
+
+      ///Same
+      // case OrderStatus.customerConfirmation:
+      //   return appLoc.departToDestination;
       case OrderStatus.departureToDestination:
         return appLoc.arriveAtDestination;
       case OrderStatus.arriveAtDestination:

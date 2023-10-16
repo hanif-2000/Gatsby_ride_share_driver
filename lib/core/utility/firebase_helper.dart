@@ -48,6 +48,8 @@ class FirebaseHelper {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("on message listen called");
+
+      log("remote message is------->>>>>. $message");
       fetchRemoteMessage(message);
       NotificationHelper _notificationService = NotificationHelper();
       _notificationService.showNotifications(message);
@@ -55,6 +57,10 @@ class FirebaseHelper {
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
+    // Booking Cancelled//
+    //New Order
+
+    log("notification titilew is---->> ${message.notification!.title}");
     log("notification category :${message.category}");
     log("notification collapseKey :${message.collapseKey}");
     log("notification contentAvailable :${message.contentAvailable}");
@@ -74,21 +80,24 @@ class FirebaseHelper {
 
     log("remote message called");
 
-    var homeProvider = Provider.of<HomeProvider>(
-        locator<GlobalKey<NavigatorState>>().currentContext!,
-        listen: false);
-    // final GlobalKey<ScaffoldState> key = GlobalKey();
-    homeProvider.getRequestListData().listen((event) {
-      log("event is -->> $event");
-      if (event is RequestListLoaded) {
-        logMe(
-            'Request list data loaded success----------> ${event.data.length}');
-        Navigator.pushNamedAndRemoveUntil(
-            locator<GlobalKey<NavigatorState>>().currentContext!,
-            HomePage.routeName,
-            (route) => false);
-      }
-    });
+    if (message.notification!.title == 'New Order' ||
+        message.notification!.title == 'Booking Cancelled') {
+      var homeProvider = Provider.of<HomeProvider>(
+          locator<GlobalKey<NavigatorState>>().currentContext!,
+          listen: false);
+      // final GlobalKey<ScaffoldState> key = GlobalKey();
+      homeProvider.getRequestListData().listen((event) {
+        log("event is -->> $event");
+        if (event is RequestListLoaded) {
+          logMe(
+              'Request list data loaded success----------> ${event.data.length}');
+          Navigator.pushNamedAndRemoveUntil(
+              locator<GlobalKey<NavigatorState>>().currentContext!,
+              HomePage.routeName,
+              (route) => false);
+        }
+      });
+    }
 
     logMe('data: ${message.data}');
     late String? title;

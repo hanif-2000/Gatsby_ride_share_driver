@@ -104,9 +104,15 @@ class HistoryOrder {
         total: json["total"]?.toDouble(),
         grandTotal: json["grand_total"],
         tip: json["tip"],
-        orderTime: DateTime.parse(json["order_time"]),
-        startTime: DateTime.parse(json["start_time"]),
-        endTime: DateTime.parse(json["end_time"]),
+        orderTime: json["order_time"] != null
+            ? DateTime.parse(json["order_time"])
+            : DateTime.now(),
+        startTime: json["start_time"] != null
+            ? DateTime.parse(json["start_time"])
+            : DateTime.now(),
+        endTime: json["end_time"] != null
+            ? DateTime.parse(json["end_time"])
+            : DateTime.now(),
         status: json["status"],
         image: json["image"],
         userName: json["user_name"],

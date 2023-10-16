@@ -33,7 +33,7 @@ enum OrderStatus {
   driverAccept,
   departureToCustomerplace,
   arriveAtCustomerPlace,
-  customerConfirmation,
+  // customerConfirmation,
   departureToDestination,
   arriveAtDestination,
   complete,
