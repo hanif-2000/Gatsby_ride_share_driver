@@ -179,7 +179,7 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 placeholder: appLoc.insuranceNumber,
                 title: appLoc.insuranceNumber,
                 controller: provider.vehicleInsuranceController,
-                inputType: TextInputType.text,
+                inputType: TextInputType.number,
                 isError: provider.vehicleInsuranceError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,

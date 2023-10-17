@@ -47,7 +47,7 @@ class HistoryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                     // '${order!.orderTime.toIso8601String()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -154,10 +154,12 @@ class HistoryTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '\$${order!.total}',
+                        order!.tip == "0"
+                            ? 'CA\$ ${order!.total} '
+                            : 'CA\$ ${order!.grandTotal}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 24,
+                          fontSize: 20,
                           color: Colors.black,
                         ).usePoppinsW6Font(),
                       ),
@@ -208,7 +210,13 @@ class HistoryTile extends StatelessWidget {
                       ),
                       smallVerticalSpacing(),
                       Text(
-                        'Cash Payment',
+                        order!.paymentMethod == 1
+                            ? 'Cash Payment'
+                            : order!.paymentMethod == 2
+                                ? "Credit Card"
+                                : order!.paymentMethod == 3
+                                    ? 'Google Pay'
+                                    : 'Apple Pay',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,

@@ -144,7 +144,7 @@ class _FormEditBankState extends State<FormEditBank> {
                           placeholder: appLoc.accountNumber,
                           title: appLoc.accountNumber,
                           controller: provider.bankAccountController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           isError: provider.bankAccountError,
                           fieldValidator: ValidationHelper(
                             loc: appLoc,

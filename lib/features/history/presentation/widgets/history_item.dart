@@ -116,7 +116,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                       ),
                                       Flexible(
                                         child: Text(
-                                          widget.data.startAddress!,
+                                          widget.data.startAddress.toString(),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       )
@@ -133,7 +133,8 @@ class _HistoryItemState extends State<HistoryItem> {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Text(widget.data.endAddress!,
+                                        child: Text(
+                                            widget.data.endAddress.toString(),
                                             overflow: TextOverflow.ellipsis),
                                       )
                                     ],

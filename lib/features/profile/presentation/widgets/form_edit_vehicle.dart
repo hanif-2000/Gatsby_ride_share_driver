@@ -271,7 +271,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                           placeholder: appLoc.insuranceNumber,
                           title: appLoc.insuranceNumber,
                           controller: provider.vehicleInsuranceController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           maxLength: 20,
                           isError: provider.vehicleInsuranceError,
                           fieldValidator: ValidationHelper(

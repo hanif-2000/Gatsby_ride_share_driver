@@ -134,7 +134,7 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 placeholder: "Transit Number",
                 title: "Transit Number",
                 controller: provider.bankTransitController,
-                inputType: TextInputType.text,
+                inputType: TextInputType.number,
                 isError: provider.bankTransitError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
@@ -148,7 +148,7 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 placeholder: "Institution Number",
                 title: "Institution Number",
                 controller: provider.bankInstitutionController,
-                inputType: TextInputType.text,
+                inputType: TextInputType.number,
                 isError: provider.bankInstitutionCodeError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,

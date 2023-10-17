@@ -354,7 +354,7 @@ class OrderDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -511,9 +511,12 @@ class OrderDetailPage extends StatelessWidget {
                         ),
                         const Spacer(),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '\$${order!.total.toStringAsFixed(2)}',
+                              order!.tip == '0'
+                                  ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                                  : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -564,7 +567,7 @@ class OrderDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                          '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                           textAlign: TextAlign.center,
                           style: titleStyle
                               .copyWith(
@@ -628,7 +631,9 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   PriceTile(
                     title: 'Total',
-                    value: 'CA\$${order!.total}',
+                    value: order!.tip == '0'
+                        ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                        : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
                     fontSize: 18,
                   ),
                   largeVerticalSpacing(),

@@ -41,18 +41,18 @@ class HistoryOrder {
   String endCoordinate;
   String startAddress;
   String endAddress;
-  String distance;
-  double total;
+  dynamic distance;
+  dynamic total;
   dynamic grandTotal;
   dynamic tip;
-  DateTime orderTime;
-  DateTime startTime;
-  DateTime endTime;
+  dynamic orderTime;
+  dynamic startTime;
+  dynamic endTime;
   String status;
   String image;
   String userName;
   String userPhone;
-  int rating;
+  dynamic rating;
   String driverName;
   String driverPhone;
   String email;
@@ -100,10 +100,11 @@ class HistoryOrder {
         endCoordinate: json["end_coordinate"],
         startAddress: json["start_address"],
         endAddress: json["end_address"],
-        distance: json["distance"],
-        total: json["total"]?.toDouble(),
-        grandTotal: json["grand_total"],
-        tip: json["tip"],
+        distance:
+            json["distance"] != null ? json["distance"].toString() : "0.0",
+        total: json["total"] != null ? json["total"].toDouble() : 0.0,
+        grandTotal: json["grand_total"] ?? '',
+        tip: json["tip"] ?? '0',
         orderTime: json["order_time"] != null
             ? DateTime.parse(json["order_time"])
             : DateTime.now(),
@@ -117,7 +118,7 @@ class HistoryOrder {
         image: json["image"],
         userName: json["user_name"],
         userPhone: json["user_phone"],
-        rating: json["rating"],
+        rating: json["rating"] ?? 0,
         driverName: json["driver_name"],
         driverPhone: json["driver_phone"],
         email: json["email"],
@@ -141,9 +142,9 @@ class HistoryOrder {
         "total": total,
         "grand_total": grandTotal,
         "tip": tip,
-        "order_time": orderTime.toIso8601String(),
-        "start_time": startTime.toIso8601String(),
-        "end_time": endTime.toIso8601String(),
+        "order_time": orderTime!.toIso8601String(),
+        "start_time": startTime!.toIso8601String(),
+        "end_time": endTime!.toIso8601String(),
         "status": status,
         "image": image,
         "user_name": userName,
@@ -186,14 +187,25 @@ class RatingList {
   });
 
   factory RatingList.fromJson(Map<String, dynamic> json) => RatingList(
-        id: json["id"],
-        senderId: json["sender_id"],
-        receiverId: json["receiver_id"],
-        orderId: json["order_id"],
-        rating: json["rating"],
-        review: json["review"],
-        type: json["type"],
-        status: json["status"],
+        // id: json["id"],
+        // senderId: json["sender_id"],
+        // receiverId: json["receiver_id"],
+        // orderId: json["order_id"],
+        // rating: json["rating"],
+        // review: json["review"],
+        // type: json["type"],
+        // status: json["status"],
+        // createdAt: DateTime.parse(json["created_at"]),
+        // updatedAt: DateTime.parse(json["updated_at"]),
+
+        id: json["id"] ?? 0,
+        senderId: json["sender_id"] ?? 0,
+        receiverId: json["receiver_id"] ?? 0,
+        orderId: json["order_id"] ?? 0,
+        rating: json["rating"] ?? "0.0",
+        review: json["review"] ?? '',
+        type: json["type"] ?? 1,
+        status: json["status"] ?? 1,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
