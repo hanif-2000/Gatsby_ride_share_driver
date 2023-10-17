@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -23,7 +25,7 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   var socketProvider = locator<SocketProvider>();
   var chatProvider = locator<ChatProvider>();
   var sessionProvider = locator<Session>();
@@ -32,6 +34,18 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    log(" app lifecycle state is ------>>>>>>>   $state");
+    if (state == AppLifecycleState.paused) {
+      socketProvider.joinExitRoom(
+          receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    } else if (state == AppLifecycleState.resumed) {
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
+    }
   }
 
   @override
@@ -40,6 +54,7 @@ class _ChatPageState extends State<ChatPage> {
     chatProvider.clearChatList();
     socketProvider.joinExitRoom(
         receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override

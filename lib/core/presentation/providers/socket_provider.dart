@@ -102,7 +102,7 @@ class SocketProvider with ChangeNotifier {
     _socket!.send(
       jsonEncode(map),
     );
-    listenRequests();
+    // listenRequests();
   }
 
   sendChatMessage({

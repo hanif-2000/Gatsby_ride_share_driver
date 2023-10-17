@@ -100,10 +100,10 @@ class OrderProvider with ChangeNotifier {
       _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.departureToDestination) {
       setPolylineDirection(false);
-      _orderStatus = OrderStatus.departureToDestination;
+      _orderStatus = OrderStatus.arriveAtDestination;
     } else if (val == OrderStatus.arriveAtDestination) {
       showLoading();
-      _orderStatus = OrderStatus.arriveAtDestination;
+      _orderStatus = OrderStatus.complete;
     }
     notifyListeners();
   }

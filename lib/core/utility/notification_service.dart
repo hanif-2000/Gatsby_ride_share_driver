@@ -47,7 +47,7 @@ class NotificationHelper {
       await flutterLocalNotificationsPlugin.show(
         0,
         message.notification?.title,
-        message.notification?.body,
+        message.notification?.body ?? message.data["message"],
         NotificationDetails(android: _androidNotificationDetails),
       );
     } else {

@@ -40,9 +40,9 @@ class RequestListModel extends Equatable {
   final String endCoordinate;
   final String startAddress;
   final String endAddress;
-  final int distance;
+  final dynamic distance;
   final int oneWay;
-  final DateTime orderTime;
+  final dynamic orderTime;
   final int paymentMethod;
   final int status;
   final dynamic total;

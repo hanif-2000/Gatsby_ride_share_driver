@@ -169,5 +169,8 @@ class FirebaseHelper {
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
+  NotificationHelper _notificationService = NotificationHelper();
+  _notificationService.showNotifications(message);
+
   logMe("Handling a background message: ${message.messageId}");
 }

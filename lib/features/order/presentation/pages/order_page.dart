@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
@@ -61,6 +62,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
+
   late StreamSubscription<LocationData> locationSubscription;
 
   @override
@@ -130,8 +132,8 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
               trackingTimer!.cancel();
             }
 
-            trackingTimer = Timer.periodic(const Duration(seconds: 10),
-                (Timer timer) async {
+            trackingTimer =
+                Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
               provider.trackingDriver();
             });
 
@@ -145,6 +147,28 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
 
+                      log("current order state is::==>> ${state.data.status}");
+
+                      if (state.data.status ==
+                          Order.departureToCustomerPlace.toString()) {
+                        log("current status is DEPARTURE TO CUSTOMER");
+                      } else if (state.data.status ==
+                          OrderStatus.arriveAtCustomerPlace.toString()) {
+                        log("current status is ARRIVE AT CUSTOMER PLACE");
+                      } else if (state.data.status ==
+                          OrderStatus.departureToDestination.toString()) {
+                        log("current status is DEPARTURE TO DESTINATION");
+                      } else if (state.data.status ==
+                          OrderStatus.arriveAtDestination.toString()) {
+                        log("current status is ARRIVE AT DESTINATION");
+                      }
+
+                      // if (state.data.status ==
+                      //     Order.departureToCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.departureToDestination;
+                      // }
+
                       // if (true) {
                       //   setDefaultStatus(int.parse(state.data.status));
                       // }
@@ -154,8 +178,20 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       //   provider.changeOrderStatus =
                       //       OrderStatus.customerConfirmation;
                       // }
+
+                      // if (state.data.status ==
+                      //     Order.departureToCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.departureToCustomerplace;
+                      // }
+                      // if (state.data.status ==
+                      //     Order.arriveAtCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.arriveAtCustomerPlace;
+                      // }
+
                       if (state.data.status ==
-                          Order.arriveAtCustomerPlace.toString()) {
+                          Order.departureToDestination.toString()) {
                         provider.changeOrderStatus =
                             OrderStatus.departureToDestination;
                       }
@@ -164,7 +200,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         dismissLoading();
                       }
                       if (state.data.status == Order.cancel.toString()) {
-                        showToast(message: "Order cancelled by the user");
+                        // showToast(message: "Order cancelled by the user");
                         await provider.clearState();
                         var session = locator<Session>();
                         session.setIsOrderRunning = false;
@@ -186,6 +222,8 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         var session = locator<Session>();
                         session.setIsOrderRunning = false;
                         session.setOrderUserId = 0;
+                        // Provider.of<ReceiptProvider>(context, listen: false)
+                        //     .getReceiptAPI();
 
                         Navigator.pushNamedAndRemoveUntil(
                           context,
