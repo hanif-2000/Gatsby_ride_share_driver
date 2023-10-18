@@ -4,7 +4,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/data/model/chat_model.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -19,7 +18,7 @@ class SocketProvider with ChangeNotifier {
 
   WebSocket? _socket;
   final session = locator<Session>();
-  final chatProvider = locator<ChatProvider>();
+  // final chatProvider = locator<ChatProvider>();
 
   connectToSocket() {
     logMe('============= Chat Token ${session.chatToken} ================');
@@ -33,7 +32,7 @@ class SocketProvider with ChangeNotifier {
       logMe('Socket on Listen ---> ${event.toString()}');
       if (event is Connected) {
         log("Socket event is connected");
-        listenRequests();
+        // listenRequests();
       }
     });
   }
@@ -45,9 +44,10 @@ class SocketProvider with ChangeNotifier {
         final response = jsonDecode(event);
         logMe('Message list data-----> ${response.toString()}');
         if (response['type'] == 'MessageList') {
-          logMe('Message list data-----> ${response['data']}');
+          logMe(
+              'Message list data WHEN TYPE IS MESSAGELIST-----> ${response['data']}');
           if (response['data'] != null) {
-            chatProvider.addChatAll(
+            addChatAll(
               List<ChatModel>.from(
                 response["data"].map(
                   (x) => ChatModel.fromMap(x),
@@ -55,11 +55,11 @@ class SocketProvider with ChangeNotifier {
               ),
             );
           } else {
-            chatProvider.addChatAll([]);
+            addChatAll([]);
           }
         }
         if (response['type'] == 'Chat') {
-          chatProvider.addSingleChat(
+          addSingleChat(
             ChatModel.fromMap(
               response['data'],
             ),
@@ -110,7 +110,7 @@ class SocketProvider with ChangeNotifier {
     int? receiverId,
     String? messageType = 'Text',
   }) {
-    final chatProvider = locator<ChatProvider>();
+    // final chatProvider = locator<ChatProvider>();
     final map = {
       "userID": session.userId,
       "serviceType": "Chat",
@@ -126,7 +126,7 @@ class SocketProvider with ChangeNotifier {
     };
     print('Message send ---> ${map.toString()}');
     _socket!.send(jsonEncode(map));
-    chatProvider.addSingleChat(
+    addSingleChat(
       ChatModel(
         id: '1',
         messageType: 'Text',
@@ -159,5 +159,27 @@ class SocketProvider with ChangeNotifier {
       "type": "read"
     };
     _socket!.send(jsonEncode(map));
+  }
+
+  final chatController = TextEditingController();
+
+  List<ChatModel> _chatMessagesList = [];
+
+  List<ChatModel> get chatMessageList => _chatMessagesList;
+
+  clearChatList() {
+    _chatMessagesList.clear();
+    _chatMessagesList = [];
+    notifyListeners();
+  }
+
+  addChatAll(List<ChatModel> list) {
+    _chatMessagesList = list;
+    notifyListeners();
+  }
+
+  addSingleChat(ChatModel chat) {
+    _chatMessagesList.insert(0, chat);
+    notifyListeners();
   }
 }

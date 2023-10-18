@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:app_settings/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart' as hand;
 import '../../../features/login/presentation/pages/login_page.dart';
 import '../../utility/global_function.dart';
 import '../../utility/helper.dart';
@@ -35,6 +38,22 @@ class _SplashPageState extends State<SplashPage> {
           // Navigator.pushNamedAndRemoveUntil(
           //     context, HomePage.routeName, (route) => false);
           context.read<SplashProvider>().fetchCurrency().listen((state) async {
+            hand.PermissionStatus status =
+                await hand.Permission.notification.request();
+            if (status.isGranted) {
+              log("notification permissin is granetd");
+              // notification permission is granted
+            } else {
+              // Permission.notification.request();
+              log("ask for notification permission ");
+              AppSettings.openAppSettings(type: AppSettingsType.notification);
+              // Open settings to enable notification permission
+            }
+            final session = locator<Session>();
+            // log("session token" + session.sessionToken.toString());
+            // log("order id" + session.orderId.toString());
+
+            log("state runtime type:==" + state.runtimeType.toString());
             switch (state.runtimeType) {
               case CurrencyLoaded:
                 checkUserSession().then((value) async {

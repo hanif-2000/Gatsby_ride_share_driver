@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -249,8 +251,15 @@ class ButtonOrder extends StatelessWidget {
                     provider.submitStatusOrder().listen(
                       (event) async {
                         if (event is UpdateStatusOrderLoaded) {
+                          log("UpdateStatusOrderLoaded called");
+
                           if (provider.orderStatus ==
+                              OrderStatus.departureToCustomerplace) {
+                            session.setOrderStatus = 2;
+                          } else if (provider.orderStatus ==
                               OrderStatus.arriveAtCustomerPlace) {
+                            session.setOrderStatus = 3;
+                            log("arrive at customer place called");
                             // showDialog(
                             //   barrierDismissible: false,
                             //   context: context,
@@ -267,6 +276,15 @@ class ButtonOrder extends StatelessWidget {
                             //     );
                             //   },
                             // );
+                          } else if (provider.orderStatus ==
+                              OrderStatus.departureToDestination) {
+                            session.setOrderStatus = 5;
+                          } else if (provider.orderStatus ==
+                              OrderStatus.arriveAtDestination) {
+                            session.setOrderStatus = 6;
+                          } else if (provider.orderStatus ==
+                              OrderStatus.complete) {
+                            session.setOrderStatus = 7;
                           }
                         }
                       },

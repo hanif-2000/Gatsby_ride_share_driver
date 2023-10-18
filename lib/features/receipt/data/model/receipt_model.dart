@@ -34,6 +34,7 @@ class OrderReceipt {
   String extraKmPrice;
   String extraDistance;
   String extraDistancePrice;
+  dynamic tip;
 
   String status;
   String image;
@@ -61,6 +62,7 @@ class OrderReceipt {
     required this.userName,
     required this.userPhone,
     required this.rating,
+    required this.tip,
     required this.paymentMethod,
     required this.timestamp,
   });
@@ -78,6 +80,7 @@ class OrderReceipt {
             json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
         status: json["status"],
         image: json["image"],
+        tip: json["tip"] ?? 0,
         userName: json["user_name"],
         userPhone: json["user_phone"],
         grandTotal: json["grand_total"] ?? "0",
@@ -110,6 +113,7 @@ class OrderReceipt {
         "user_name": userName,
         "user_phone": userPhone,
         "rating": rating,
+        "tip": tip,
         "payment_method": paymentMethod,
         "timestamp": timestamp,
       };

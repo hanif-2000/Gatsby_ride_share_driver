@@ -263,56 +263,57 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                 ),
                                 largeVerticalSpacing(),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 2,
-                                    height: 40,
-                                    child: CustomButton(
-                                        isRounded: true,
-                                        text: "Payment Details",
-                                        event: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) {
-                                              return PaymentScreen(
-                                                  totalPrice: order.total,
-                                                  extraDistance:
-                                                      order.extraDistance,
-                                                  extraTime: order.extraTime,
-                                                  extraDistancePrice:
-                                                      order.extraDistancePrice,
-                                                  extraMinPrice:
-                                                      order.extraKmPrice,
-                                                  grandTotal: order.total,
-                                                  distance: order.distance);
-                                            },
-                                          );
+                                // Padding(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   child: SizedBox(
+                                //     width:
+                                //         MediaQuery.of(context).size.width / 2,
+                                //     height: 40,
+                                //     child: CustomButton(
+                                //         isRounded: true,
+                                //         text: "Payment Details",
+                                //         event: () {
+                                //           showModalBottomSheet(
+                                //             context: context,
+                                //             builder: (context) {
+                                //               return PaymentScreen(
+                                //                   totalPrice: order.total,
+                                //                   extraDistance:
+                                //                       order.extraDistance,
+                                //                   extraTime: order.extraTime,
+                                //                   extraDistancePrice:
+                                //                       order.extraDistancePrice,
+                                //                   extraMinPrice:
+                                //                       order.extraKmPrice,
+                                //                   grandTotal: order.total,
+                                //                   distance: order.distance);
+                                //             },
+                                //           );
 
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           PaymentScreen(
-                                          //               totalPrice:
-                                          //                   order.grandTotal,
-                                          //               extraDistance:
-                                          //                   order.extraDistance,
-                                          //               extraTime:
-                                          //                   order.extraTime,
-                                          //               extraDistancePrice: order
-                                          //                   .extraDistancePrice,
-                                          //               extraMinPrice:
-                                          //                   order.extraKmPrice,
-                                          //               grandTotal:
-                                          //                   order.grandTotal,
-                                          //               distance: order.distance),
-                                          //     ));
-                                        },
-                                        bgColor: black030303),
-                                  ),
-                                ),
+                                //           // Navigator.push(
+                                //           //     context,
+                                //           //     MaterialPageRoute(
+                                //           //       builder: (context) =>
+                                //           //           PaymentScreen(
+                                //           //               totalPrice:
+                                //           //                   order.grandTotal,
+                                //           //               extraDistance:
+                                //           //                   order.extraDistance,
+                                //           //               extraTime:
+                                //           //                   order.extraTime,
+                                //           //               extraDistancePrice: order
+                                //           //                   .extraDistancePrice,
+                                //           //               extraMinPrice:
+                                //           //                   order.extraKmPrice,
+                                //           //               grandTotal:
+                                //           //                   order.grandTotal,
+                                //           //               distance: order.distance),
+                                //           //     ));
+                                //         },
+                                //         bgColor: black030303),
+                                //   ),
+                                // ),
+
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Row(
@@ -326,6 +327,28 @@ class ReceiptPage extends StatelessWidget {
                                             )
                                             .usePoppinsW6Font(),
                                       ),
+
+                                      IconButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) {
+                                                return PaymentScreen(
+                                                    totalPrice: order.total,
+                                                    extraDistance:
+                                                        order.extraDistance,
+                                                    extraTime: order.extraTime,
+                                                    extraDistancePrice: order
+                                                        .extraDistancePrice,
+                                                    extraMinPrice:
+                                                        order.extraKmPrice,
+                                                    grandTotal: order.total,
+                                                    distance: order.distance);
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons
+                                              .arrow_circle_right_outlined))
 
                                       // SizedBox(
                                       //   width: 100,

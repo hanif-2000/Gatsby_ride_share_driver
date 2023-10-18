@@ -48,6 +48,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   web_socket_client: ^0.1.0-dev.3
   timeago: ^3.3.0
+  permission_handler: ^11.0.0
+  app_settings: ^5.1.1
   # permission_handler: ^11.0.1
   # app_settings: ^5.1.1
   # app_settings: ^5.1.1

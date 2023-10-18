@@ -69,6 +69,13 @@ class OrderProvider with ChangeNotifier {
 
   List driverCoordinatesList = [];
 
+  bool isOrderStatusComplete = false;
+
+  updateIsOrderStatus({val}) {
+    isOrderStatusComplete = val;
+    notifyListeners();
+  }
+
   //get
   OrderStatus get orderStatus => _orderStatus;
 
@@ -86,6 +93,7 @@ class OrderProvider with ChangeNotifier {
 
   //setter
   set changeOrderStatus(val) {
+    log("change order Status called  ========>>>>> $val");
     if (val == OrderStatus.driverAccept) {
       showLoading();
       _orderStatus = OrderStatus.departureToCustomerplace;
@@ -99,8 +107,9 @@ class OrderProvider with ChangeNotifier {
       setPolylineDirection(true);
       _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.departureToDestination) {
-      setPolylineDirection(false);
       _orderStatus = OrderStatus.arriveAtDestination;
+
+      setPolylineDirection(true);
     } else if (val == OrderStatus.arriveAtDestination) {
       showLoading();
       _orderStatus = OrderStatus.complete;
@@ -542,7 +551,10 @@ class OrderProvider with ChangeNotifier {
         changeOrderStatus = OrderStatus.departureToDestination;
       } else if (_orderStatus == OrderStatus.departureToDestination) {
         changeOrderStatus = OrderStatus.arriveAtDestination;
+      } else if (_orderStatus == OrderStatus.complete) {
+        changeOrderStatus = OrderStatus.complete;
       } else {
+        log("else called");
         dismissLoading();
         changeOrderStatus = _orderStatus;
       }
@@ -553,6 +565,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   Stream<GetStatusOrderState> fetchOrderStatus() async* {
+    log("fetch status order called ---------->>>>>>>>>>");
     yield GetStatusOrderLoading();
 
     final result = await getStatusOrder.call();

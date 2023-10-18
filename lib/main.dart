@@ -2,7 +2,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_email_provider.dart';
@@ -72,9 +71,9 @@ Future<void> main() async {
             ChangeNotifierProvider<ChangePasswordProvider>(
               create: (context) => locator<ChangePasswordProvider>(),
             ),
-            ChangeNotifierProvider<ChatProvider>(
-              create: (context) => locator<ChatProvider>(),
-            ),
+            // ChangeNotifierProvider<ChatProvider>(
+            //   create: (context) => locator<ChatProvider>(),
+            // ),
           ],
           builder: (context, _) => const MyApp(),
         ),

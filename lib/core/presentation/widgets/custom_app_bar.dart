@@ -43,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         var session = locator<Session>();
-        provider.changeStatus = session.isOnline;
+        // provider.changeStatus = session.isOnline;
 
         return AppBar(
           automaticallyImplyLeading: false,

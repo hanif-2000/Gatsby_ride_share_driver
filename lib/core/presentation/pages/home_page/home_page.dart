@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
@@ -17,7 +18,6 @@ import '../../../../features/profile/presentation/providers/customer_detail_stat
 import '../../../utility/helper.dart';
 import '../../../utility/injection.dart';
 import '../../providers/home_provider.dart';
-import '../../providers/request_list_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,16 +37,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    var session = locator<Session>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      homeProvider.changeStatus = session.isOnline;
+    });
 
     // _fcmProvider.addListener(() async => await fcmListener());
     WidgetsBinding.instance.addObserver(this);
     connectToSocket();
-    homeProvider.getRequestListData().listen((event) {
-      if (event is RequestListLoaded) {
-        logMe(
-            'Request list data loaded success----------> ${event.data.length}');
-      }
-    });
+
+    // !session.isOrderRunning
+    //     ? homeProvider.getRequestListData().listen((event) {
+    //         if (event is RequestListLoaded) {
+    //           logMe(
+    //               'Request list data loaded success----------> ${event.data.length}');
+    //         }
+    //       })
+    //     : null;
   }
 
   connectToSocket() {
@@ -195,6 +203,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         body: Consumer<HomeProvider>(
           builder: (context, provider, _) {
             var session = locator<Session>();
+
+            log("is ORDER RUNNIG :--->>  ${session.isOrderRunning}");
+            log("Order status is :--->>  ${session.orderStatus}");
+
             print('RUNNING order id --> ${session.runningOrderId}');
             if (session.isOrderRunning) {
               provider

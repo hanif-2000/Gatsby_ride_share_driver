@@ -22,7 +22,6 @@ import 'package:appkey_taxiapp_driver/features/about_us/data/datasources/aboutus
 import 'package:appkey_taxiapp_driver/features/about_us/data/repositories/aboutus_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/domain/usecases/get_aboutus.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/data/datasource/contact_us_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/data/repositories/contact_us_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/domain/repositories/contact_us_repository.dart';
@@ -360,5 +359,5 @@ Future<void> init() async {
   locator.registerFactory<ReceiptProvider>(
       () => ReceiptProvider(doReceipt: locator()));
   locator.registerFactory<SocketProvider>(() => SocketProvider());
-  locator.registerFactory<ChatProvider>(() => ChatProvider());
+  // locator.registerFactory<ChatProvider>(() => ChatProvider());
 }

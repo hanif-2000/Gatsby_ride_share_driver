@@ -76,14 +76,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   TextInRow(
                     firstText: 'Estimated Amount',
-                    secondText: r'$' + widget.totalPrice.toString(),
+                    secondText: r'CA$ ' + widget.totalPrice.toString(),
                   ),
                   const Divider(
                     color: whiteAccentColor,
                   ),
-                  TextInRow(
+                  const TextInRow(
                     firstText: 'Extra Distance',
-                    secondText: widget.extraDistance + " Km",
+                    // secondText: widget.extraDistance + " Km",
+                    secondText: "0 Km",
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -91,9 +92,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const Divider(
                     color: whiteAccentColor,
                   ),
-                  TextInRow(
+                  const TextInRow(
                     firstText: 'Extra Time',
-                    secondText: widget.extraTime.toString() + ' Min',
+                    // secondText: widget.extraTime.toString() + ' Min',
+                    secondText: "0" ' Min',
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -104,7 +106,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     secondTextweight: FontWeight.w700,
                     firstText: 'Grand Total',
-                    secondText: r'$' + widget.grandTotal,
+                    secondText: r'CA$ ' + widget.grandTotal,
                   ),
                 ],
               ),

@@ -73,35 +73,35 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     // setDefaultStatus(widget.orderStatus);
   }
 
-  setDefaultStatus(int orderStatus) {
-    logMe('Order already running -----> ${widget.orderStatus}');
-    switch (orderStatus) {
-      case Order.driverAccept:
-        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-        return;
-      case Order.departureToCustomerPlace:
-        orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
-        return;
-      case Order.arriveAtCustomerPlace:
-        orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
-        return;
-      // case Order.customerConfirmation:
-      //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
-      //   return;
-      case Order.departureToDestination:
-        orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
-        return;
-      case Order.arriveAtDestination:
-        orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
-        return;
-      case Order.complete:
-        orderPProvider.changeOrderStatus = OrderStatus.complete;
-        return;
-      default:
-        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-        return;
-    }
-  }
+  // setDefaultStatus(int orderStatus) {
+  //   logMe('Order already running -----> ${widget.orderStatus}');
+  //   switch (orderStatus) {
+  //     case Order.driverAccept:
+  //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+  //       return;
+  //     case Order.departureToCustomerPlace:
+  //       orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+  //       return;
+  //     case Order.arriveAtCustomerPlace:
+  //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+  //       return;
+  //     // case Order.customerConfirmation:
+  //     //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
+  //     //   return;
+  //     case Order.departureToDestination:
+  //       orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+  //       return;
+  //     case Order.arriveAtDestination:
+  //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
+  //       return;
+  //     case Order.complete:
+  //       orderPProvider.changeOrderStatus = OrderStatus.complete;
+  //       return;
+  //     default:
+  //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+  //       return;
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -138,8 +138,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 5),
+              const Duration(seconds: 10),
               (Timer timer) async {
+                log("------>>>>>  this will called every 5 seconds  <<<<<--------");
                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
@@ -147,7 +148,14 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
 
+                      log("curent SAVED order Status is::-->>  ${session.currentOrderState}");
+
                       log("current order state is::==>> ${state.data.status}");
+
+                      log("current order state is check order value string or int is-->>  ${Order.departureToCustomerPlace}");
+                      if (state.data.status == Order.driverAccept.toString()) {
+                        log("current status is DRIVER ACCEPT ");
+                      }
 
                       if (state.data.status ==
                           Order.departureToCustomerPlace.toString()) {

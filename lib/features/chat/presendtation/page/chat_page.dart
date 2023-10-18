@@ -9,7 +9,6 @@ import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/receiver_tile.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/sender_tile.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   var socketProvider = locator<SocketProvider>();
-  var chatProvider = locator<ChatProvider>();
+  // var chatProvider = locator<ChatProvider>();
   var sessionProvider = locator<Session>();
 
   @override
@@ -35,6 +34,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     super.initState();
     socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
     WidgetsBinding.instance.addObserver(this);
+    socketProvider.listenRequests();
   }
 
   @override
@@ -51,7 +51,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    chatProvider.clearChatList();
+    // socketProvider.clearChatList();
     socketProvider.joinExitRoom(
         receiverId: widget.chatDetail!.userId, type: 'unJoin');
     WidgetsBinding.instance.removeObserver(this);
@@ -61,7 +61,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: greyEFEDED,
-      body: Consumer<ChatProvider>(builder: (context, provider, _) {
+      body: Consumer<SocketProvider>(builder: (context, provider, _) {
         return Column(
           children: [
             Container(
@@ -211,11 +211,14 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   ),
                   InkWell(
                     onTap: () {
-                      ///TODO: send the message
-                      socketProvider.sendChatMessage(
-                          message: provider.chatController.text.trim(),
-                          receiverId: widget.chatDetail!.userId);
-                      provider.chatController.text = '';
+                      if (provider.chatController.text.trim() == '') {
+                        showToast(message: "Please Enter your message");
+                      } else {
+                        socketProvider.sendChatMessage(
+                            message: provider.chatController.text.trim(),
+                            receiverId: widget.chatDetail!.userId);
+                        provider.chatController.text = '';
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),

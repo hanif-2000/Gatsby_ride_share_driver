@@ -59,10 +59,7 @@ class _RequestListWidgetState extends State<RequestListWidget> {
     log("request list build widget called");
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, _) {
-        return
-            // Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
-            //   log("this called every 5 seconds");
-            StreamBuilder<RequestListState>(
+        return StreamBuilder<RequestListState>(
           stream: context.read<HomeProvider>().getRequestListData(),
           builder: (context, state) {
             log("this called again and again");
