@@ -26,7 +26,7 @@ class HistoryListWidget extends StatelessWidget {
                 log("History Failure");
 
                 final failure = (state.data as HistoryFailure).failure;
-                showToast(message: failure);
+                showToast(message: "Network slow Please try again");
                 return const SizedBox.shrink();
               case HistoryLoaded:
                 log("History Loaded");

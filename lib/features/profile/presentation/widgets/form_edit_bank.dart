@@ -193,7 +193,7 @@ class _FormEditBankState extends State<FormEditBank> {
                           placeholder: "Transit Number",
                           title: appLoc.ifscCode,
                           controller: provider.bankTransitController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           maxLength: 20,
                           isError: provider.bankTransitError,
                           fieldValidator: ValidationHelper(
@@ -220,7 +220,7 @@ class _FormEditBankState extends State<FormEditBank> {
                           placeholder: "Institution Number",
                           title: "Institution",
                           controller: provider.bankInstitutionController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           maxLength: 20,
                           isError: provider.bankTransitError,
                           fieldValidator: ValidationHelper(
@@ -256,8 +256,11 @@ class _FormEditBankState extends State<FormEditBank> {
                                     "account_holder_name": provider
                                         .bankHolderNameController.text
                                         .trim(),
-                                    "ifsc_code": provider
+                                    "transit_number": provider
                                         .bankTransitController.text
+                                        .trim(),
+                                    "institution_number": provider
+                                        .bankInstitutionController.text
                                         .trim(),
                                   }),
                                 )

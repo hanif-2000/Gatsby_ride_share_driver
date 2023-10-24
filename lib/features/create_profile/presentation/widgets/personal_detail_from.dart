@@ -251,7 +251,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       placeholder: "Postal Code",
                       title: "Postal Code",
                       controller: provider.postalCodeController,
-                      inputType: TextInputType.text,
+                      inputType: TextInputType.number,
                       isError: provider.postalCodeError,
                       fieldValidator: ValidationHelper(
                         loc: appLoc,

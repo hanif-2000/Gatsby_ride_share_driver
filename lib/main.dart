@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         navigatorKey: locator<GlobalKey<NavigatorState>>(),
-        title: 'Flutter Demo',
+        title: 'GatsByRideShare',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: primaryColor,

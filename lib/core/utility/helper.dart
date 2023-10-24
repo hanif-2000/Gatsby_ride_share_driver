@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../features/history/data/models/history_response_model.dart'
     as history;
@@ -51,6 +56,80 @@ late AppLocalizations appLoc;
 
 //Route
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
+Location location = Location();
+
+checkPermissinLocationNotification() async {
+  if (await Permission.location.serviceStatus.isEnabled) {
+    dev.log("location service is enabled");
+
+    var status = await Permission.location.status;
+
+    if (status.isGranted) {
+      dev.log("location permission is granted");
+    } else if (status.isDenied) {
+      dev.log("location permission denied");
+    }
+  } else {
+    bool isturnedon = await location.requestService();
+    if (isturnedon) {
+      print("GPS device is turned ON");
+    } else {
+      print("GPS Device is still OFF");
+    }
+
+    dev.log("location service is disabled");
+  }
+}
+
+Future<bool> showAlertDialog({
+  required BuildContext context,
+}) async {
+  if (!Platform.isIOS) {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Location Services Disabled'),
+        content: const Text('You need to enable Location Services in Setting'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: const Text('Setting'),
+            onPressed: () {
+              openAppSettings();
+              Navigator.of(context).pop(false);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+// todo : showDialog for ios
+  return await showCupertinoDialog(
+    context: context,
+    builder: (context) => CupertinoAlertDialog(
+      title: const Text('Location Services Disabled'),
+      content: const Text('You need to enable location services in setting'),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(false),
+        ),
+        CupertinoDialogAction(
+          child: const Text('Setting'),
+          onPressed: () {
+            openAppSettings();
+            Navigator.of(context).pop(false);
+          },
+        ),
+      ],
+    ),
+  );
+}
 
 Future<bool> checkPermission() async {
   bool serviceEnabled;

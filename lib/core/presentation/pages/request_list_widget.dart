@@ -90,6 +90,7 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                           _data[index].id.toString())
                                       .listen(
                                     (event1) {
+                                      log("fetch order details called on request list widget in home page");
                                       if (event1 is OrderDetailLoaded) {
                                         // var _deviceSize = MediaQuery.of(context).size;
                                         session.setRunningOrderId =
