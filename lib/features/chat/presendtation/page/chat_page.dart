@@ -55,6 +55,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     socketProvider.joinExitRoom(
         receiverId: widget.chatDetail!.userId, type: 'unJoin');
     WidgetsBinding.instance.removeObserver(this);
+    socketProvider.disconnectSocket();
+    socketProvider.connectToSocket();
   }
 
   @override

@@ -104,12 +104,12 @@ class OrderProvider with ChangeNotifier {
       // _orderStatus = OrderStatus.customerConfirmation;
       // } else if (val == OrderStatus.customerConfirmation) {
       // _orderStatus = OrderStatus.customerConfirmation;
-      setPolylineDirection(true);
+      setPolylineDirection(false);
       _orderStatus = OrderStatus.departureToDestination;
     } else if (val == OrderStatus.departureToDestination) {
       _orderStatus = OrderStatus.arriveAtDestination;
 
-      setPolylineDirection(true);
+      setPolylineDirection(false);
     } else if (val == OrderStatus.arriveAtDestination) {
       showLoading();
       _orderStatus = OrderStatus.complete;
@@ -375,8 +375,9 @@ class OrderProvider with ChangeNotifier {
     var location = lctn.Location();
     lctn.LocationData locationData = await location.getLocation();
     var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
-    if (_orderStatus == OrderStatus.departureToCustomerplace ||
-            _orderStatus == OrderStatus.arriveAtCustomerPlace
+    if (_orderStatus == OrderStatus.departureToCustomerplace
+        // ||
+        //         _orderStatus == OrderStatus.arriveAtCustomerPlace
         // ||
         // _orderStatus == OrderStatus.customerConfirmation
 

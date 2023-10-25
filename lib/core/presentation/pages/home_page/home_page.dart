@@ -189,6 +189,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    log("home page build called ");
     return WillPopScope(
       onWillPop: () {
         return Future.value(false); // if true allow back else block it
@@ -214,82 +215,95 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   .listen(
                 (event1) {
                   if (event1 is OrderDetailLoaded) {
+                    log("home page build called : order details loaded");
                     // var _deviceSize = MediaQuery.of(context).size;
-                    provider
-                        .fetchCustomerDetail(event1.data.userId.toString())
-                        .listen(
-                      (event) async {
-                        if (event is CustomerDetailLoaded) {
-                          Navigator.pushNamed(
-                            context,
-                            OrderPage.routeName,
-                            // (route) => false,
-                            arguments: OrderPageArguments(
-                              orderDetail: provider.orderDetail!,
-                              customerDetailModel:
-                                  provider.customerDetailModel!,
-                              orderStatus: event1.data.orderStatus,
-                            ),
-                          );
-                          // provider
-                          //     .submitStatusOrder(Order.driverAccept)
-                          //     .listen(
-                          //   (event) async {
-                          //     if (event is UpdateStatusOrderLoaded) {
-                          //       if (event.data.success == 1) {
-                          //         Navigator.pushNamed(
-                          //           context,
-                          //           OrderPage.routeName,
-                          //           // (route) => false,
-                          //           arguments: OrderPageArguments(
-                          //             orderDetail: provider.orderDetail!,
-                          //             customerDetailModel:
-                          //                 provider.customerDetailModel!,
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 5) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.orderacceptedotherdriver,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 6) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.ordernotfound,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       } else if (event.data.message == 7) {
-                          //         // Navigator.of(context).pop();
-                          //         showDialog(
-                          //           context: context,
-                          //           builder: (context) => CommonDialog(
-                          //             title: appLoc.sorry,
-                          //             msg: appLoc.orderhascancelled,
-                          //             onTap: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //           ),
-                          //         );
-                          //       }
-                          //     }
-                          //   },
-                          // );
-                        }
-                      },
-                    );
+
+                    bool isOrderLoaded = true;
+
+                    event1.data.userId != null
+                        ? provider
+                            .fetchCustomerDetail(event1.data.userId.toString())
+                            .listen(
+                            (event) async {
+                              if (event is CustomerDetailLoaded) {
+                                log("home page build called : Customer details loaded");
+
+                                bool isCustomerLoaded = true;
+
+                                if (isCustomerLoaded && isOrderLoaded) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    OrderPage.routeName,
+                                    // (route) => false,
+                                    arguments: OrderPageArguments(
+                                      orderDetail: provider.orderDetail!,
+                                      customerDetailModel:
+                                          provider.customerDetailModel!,
+                                      orderStatus: event1.data.orderStatus,
+                                    ),
+                                  );
+                                }
+
+                                // provider
+                                //     .submitStatusOrder(Order.driverAccept)
+                                //     .listen(
+                                //   (event) async {
+                                //     if (event is UpdateStatusOrderLoaded) {
+                                //       if (event.data.success == 1) {
+                                //         Navigator.pushNamed(
+                                //           context,
+                                //           OrderPage.routeName,
+                                //           // (route) => false,
+                                //           arguments: OrderPageArguments(
+                                //             orderDetail: provider.orderDetail!,
+                                //             customerDetailModel:
+                                //                 provider.customerDetailModel!,
+                                //           ),
+                                //         );
+                                //       } else if (event.data.message == 5) {
+                                //         // Navigator.of(context).pop();
+                                //         showDialog(
+                                //           context: context,
+                                //           builder: (context) => CommonDialog(
+                                //             title: appLoc.sorry,
+                                //             msg: appLoc.orderacceptedotherdriver,
+                                //             onTap: () {
+                                //               Navigator.of(context).pop();
+                                //             },
+                                //           ),
+                                //         );
+                                //       } else if (event.data.message == 6) {
+                                //         // Navigator.of(context).pop();
+                                //         showDialog(
+                                //           context: context,
+                                //           builder: (context) => CommonDialog(
+                                //             title: appLoc.sorry,
+                                //             msg: appLoc.ordernotfound,
+                                //             onTap: () {
+                                //               Navigator.of(context).pop();
+                                //             },
+                                //           ),
+                                //         );
+                                //       } else if (event.data.message == 7) {
+                                //         // Navigator.of(context).pop();
+                                //         showDialog(
+                                //           context: context,
+                                //           builder: (context) => CommonDialog(
+                                //             title: appLoc.sorry,
+                                //             msg: appLoc.orderhascancelled,
+                                //             onTap: () {
+                                //               Navigator.of(context).pop();
+                                //             },
+                                //           ),
+                                //         );
+                                //       }
+                                //     }
+                                //   },
+                                // );
+                              }
+                            },
+                          )
+                        : const SizedBox();
                   }
                 },
               );

@@ -25,7 +25,9 @@ class OriginWidget extends StatelessWidget {
               width: deviceWidth,
               height: 60,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: blackColor,
+                ),
               ),
             ),
           );

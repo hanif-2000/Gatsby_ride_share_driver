@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/history_tile.dart';
+import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
@@ -21,7 +22,10 @@ class HistoryListWidget extends StatelessWidget {
             switch (state.data.runtimeType) {
               case HistoryLoading:
                 log("History Loading");
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: blackColor,
+                ));
               case HistoryFailure:
                 log("History Failure");
 

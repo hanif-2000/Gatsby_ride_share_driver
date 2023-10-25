@@ -37,8 +37,13 @@ class SocketProvider with ChangeNotifier {
     });
   }
 
+  Future<void> disconnectSocket() async {
+    _socket!.close();
+  }
+
   listenRequests() {
     logMe('============= Listening to requests ================');
+
     _socket!.messages.listen(
       (event) {
         final response = jsonDecode(event);

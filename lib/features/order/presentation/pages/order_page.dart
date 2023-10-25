@@ -70,6 +70,8 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    log("current order status is :-->> ${widget.orderStatus}");
+
     // setDefaultStatus(widget.orderStatus);
   }
 
@@ -98,7 +100,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   //       orderPProvider.changeOrderStatus = OrderStatus.complete;
   //       return;
   //     default:
-  //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+  //       // orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
   //       return;
   //   }
   // }
