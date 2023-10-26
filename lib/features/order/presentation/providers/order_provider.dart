@@ -300,6 +300,7 @@ class OrderProvider with ChangeNotifier {
   // }
 
   setPolylineDirection(bool isFromOrigin) async {
+    // showLoading();
     var latLongOrigin = _orderDetail!.startCoordinate;
     var latLongDestination = _orderDetail!.endCoordinate;
     var splitOrigin = latLongOrigin.split(",");

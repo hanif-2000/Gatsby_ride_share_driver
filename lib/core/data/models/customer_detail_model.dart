@@ -50,7 +50,7 @@ class CustomerDataModel extends Equatable {
 
   factory CustomerDataModel.fromJson(Map<String, dynamic> json) =>
       CustomerDataModel(
-          name: json['name'],
+          name: json['name'] ?? '',
           phoneNumber: json['phone'] ?? '',
           photo: json['image'] ?? '',
           rating: json['rating'] != null

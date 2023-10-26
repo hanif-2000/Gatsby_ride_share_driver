@@ -61,7 +61,7 @@ class _RequestListWidgetState extends State<RequestListWidget> {
   Widget build(BuildContext context) {
     log("request list build widget called");
     return session.isOrderRunning
-        ? const SizedBox()
+        ? const Center(child: CircularProgressIndicator())
         : Consumer<HomeProvider>(
             builder: (context, homeProvider, _) {
               return StreamBuilder<RequestListState>(

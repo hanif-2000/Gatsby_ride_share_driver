@@ -86,17 +86,21 @@ class FirebaseHelper {
           locator<GlobalKey<NavigatorState>>().currentContext!,
           listen: false);
       // final GlobalKey<ScaffoldState> key = GlobalKey();
-      homeProvider.getRequestListData().listen((event) {
-        log("event is -->> $event");
-        if (event is RequestListLoaded) {
-          logMe(
-              'Request list data loaded success----------> ${event.data.length}');
-          Navigator.pushNamedAndRemoveUntil(
-              locator<GlobalKey<NavigatorState>>().currentContext!,
-              HomePage.routeName,
-              (route) => false);
-        }
-      });
+
+      Session session = locator<Session>();
+      if (!session.isOrderRunning) {
+        homeProvider.getRequestListData().listen((event) {
+          log("event is -->> $event");
+          if (event is RequestListLoaded) {
+            logMe(
+                'Request list data loaded success----------> ${event.data.length}');
+            Navigator.pushNamedAndRemoveUntil(
+                locator<GlobalKey<NavigatorState>>().currentContext!,
+                HomePage.routeName,
+                (route) => false);
+          }
+        });
+      }
     }
 
     logMe('data: ${message.data}');

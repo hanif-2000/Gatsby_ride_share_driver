@@ -52,8 +52,14 @@ class ReceiptPage extends StatelessWidget {
                     }
                     OrderReceipt order = _data.orderReceipt.first;
 
-                    int time =
-                        (order.endTime!.difference(order.startTime!).inMinutes);
+                    int time = (order.endTime!
+                                .difference(order.startTime!)
+                                .inMinutes) !=
+                            (-330)
+                        ? (order.endTime!
+                            .difference(order.startTime!)
+                            .inMinutes)
+                        : 0;
 
                     return SingleChildScrollView(
                       child: Column(
@@ -163,8 +169,15 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        DateFormat.yMMMd()
-                                            .format(order.orderTime),
+                                        DateFormat.yMMMd().format(
+                                            (DateFormat("yyyy-MM-dd HH:mm:ss")
+                                                    .parse(
+                                                        order.orderTime
+                                                            .toString(),
+                                                        true))
+                                                .toLocal()),
+                                        // DateFormat.yMMMd()
+                                        // .format(order.orderTime),
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -193,7 +206,14 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        DateFormat.jm().format(order.orderTime),
+                                        DateFormat.jm().format(
+                                            (DateFormat("yyyy-MM-dd HH:mm:ss")
+                                                    .parse(
+                                                        order.orderTime
+                                                            .toString(),
+                                                        true))
+                                                .toLocal()),
+                                        // DateFormat.jm().format(order.orderTime),
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(

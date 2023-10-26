@@ -24,7 +24,7 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
         url,
       );
       final model = HistoryResponseModel.fromJson(response.data);
-      return model.historyOrder!;
+      return model.historyOrder;
     } catch (e) {
       rethrow;
     }

@@ -47,7 +47,11 @@ class HistoryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
+                    "${DateFormat.yMMMd().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())} ${DateFormat.jm().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())}",
+
+                    // "${(DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal()}",
+
+                    // '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                     // '${order!.orderTime.toIso8601String()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

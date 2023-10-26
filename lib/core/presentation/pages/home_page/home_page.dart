@@ -231,17 +231,33 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 bool isCustomerLoaded = true;
 
                                 if (isCustomerLoaded && isOrderLoaded) {
-                                  Navigator.pushNamed(
+                                  Navigator.pushAndRemoveUntil<dynamic>(
                                     context,
-                                    OrderPage.routeName,
-                                    // (route) => false,
-                                    arguments: OrderPageArguments(
-                                      orderDetail: provider.orderDetail!,
-                                      customerDetailModel:
-                                          provider.customerDetailModel!,
-                                      orderStatus: event1.data.orderStatus,
+                                    MaterialPageRoute<dynamic>(
+                                      builder: (BuildContext context) =>
+                                          OrderPage(
+                                              customerDetail:
+                                                  provider.customerDetailModel!,
+                                              orderDetail:
+                                                  provider.orderDetail!,
+                                              orderStatus:
+                                                  event1.data.orderStatus),
                                     ),
+                                    (route) =>
+                                        false, //if you want to disable back feature set to false
                                   );
+
+                                  // Navigator.pushNamed(
+                                  //   context,
+                                  //   OrderPage.routeName,
+                                  //   // (route) => false,
+                                  //   arguments: OrderPageArguments(
+                                  //     orderDetail: provider.orderDetail!,
+                                  //     customerDetailModel:
+                                  //         provider.customerDetailModel!,
+                                  //     orderStatus: event1.data.orderStatus,
+                                  //   ),
+                                  // );
                                 }
 
                                 // provider

@@ -75,7 +75,7 @@ class OrderReceipt {
         orderTime: DateTime.parse(json["order_time"]),
         startTime: json["start_time"] != null
             ? DateTime.parse(json["start_time"])
-            : null,
+            : DateTime.now(),
         endTime:
             json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
         status: json["status"],
