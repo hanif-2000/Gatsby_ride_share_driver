@@ -70,40 +70,66 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    showLoading();
+
     log("current order status is :-->> ${widget.orderStatus}");
+    log("current order status is on order page init :-->> ${widget.orderStatus}");
 
-    // setDefaultStatus(widget.orderStatus);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (widget.orderStatus == 1) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //     log("current status is DEPARTURE TO CUSTOMER");
+    //   }
+    //   if (widget.orderStatus == 2) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+
+    //     log("current status is ARRIVE AT CUSTOMER PLACE");
+    //   }
+    //   if (widget.orderStatus == 3) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+
+    //     log("current status is DEPARTURE TO DESTINATION");
+    //   }
+    //   if (widget.orderStatus == 5) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+
+    //     log("current status is ARRIVE AT DESTINATION");
+    //   }
+
+    //   dismissLoading();
+
+    //   // setDefaultStatus(widget.orderStatus);
+    // });
+
+    // setDefaultStatus(int orderStatus) {
+    //   logMe('Order already running -----> ${widget.orderStatus}');
+    //   switch (orderStatus) {
+    //     case Order.driverAccept:
+    //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //       return;
+    //     case Order.departureToCustomerPlace:
+    //       orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+    //       return;
+    //     case Order.arriveAtCustomerPlace:
+    //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+    //       return;
+    //     // case Order.customerConfirmation:
+    //     //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
+    //     //   return;
+    //     case Order.departureToDestination:
+    //       orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+    //       return;
+    //     case Order.arriveAtDestination:
+    //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
+    //       return;
+    //     case Order.complete:
+    //       orderPProvider.changeOrderStatus = OrderStatus.complete;
+    //       return;
+    //     default:
+    //       // orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //       return;
+    //   }
   }
-
-  // setDefaultStatus(int orderStatus) {
-  //   logMe('Order already running -----> ${widget.orderStatus}');
-  //   switch (orderStatus) {
-  //     case Order.driverAccept:
-  //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-  //       return;
-  //     case Order.departureToCustomerPlace:
-  //       orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
-  //       return;
-  //     case Order.arriveAtCustomerPlace:
-  //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
-  //       return;
-  //     // case Order.customerConfirmation:
-  //     //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
-  //     //   return;
-  //     case Order.departureToDestination:
-  //       orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
-  //       return;
-  //     case Order.arriveAtDestination:
-  //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
-  //       return;
-  //     case Order.complete:
-  //       orderPProvider.changeOrderStatus = OrderStatus.complete;
-  //       return;
-  //     default:
-  //       // orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-  //       return;
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -115,6 +141,10 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    log("order page build widget called");
+    orderPProvider.updateOrderStatusAfterAppRestart(
+        orderStatus: widget.orderStatus);
+
     var _deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () {
@@ -140,7 +170,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 10),
+              const Duration(seconds: 5),
               (Timer timer) async {
                 log("------>>>>>  this will called every 5 seconds  <<<<<--------");
                 provider.fetchOrderStatus().listen(
@@ -223,7 +253,6 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       }
 
                       if (state.data.status == Order.complete.toString()) {
-                        dismissLoading();
                         trackingTimer!.cancel();
                         timer.cancel();
 
@@ -234,7 +263,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         session.setOrderUserId = 0;
                         // Provider.of<ReceiptProvider>(context, listen: false)
                         //     .getReceiptAPI();
-
+                        dismissLoading();
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           GiveRatingScreen.routeName,

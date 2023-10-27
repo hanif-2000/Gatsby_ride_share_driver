@@ -75,9 +75,10 @@ class OrderReceipt {
         orderTime: DateTime.parse(json["order_time"]),
         startTime: json["start_time"] != null
             ? DateTime.parse(json["start_time"])
-            : DateTime.now(),
-        endTime:
-            json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
+            : DateTime.parse(json["end_time"]),
+        endTime: json["end_time"] != null
+            ? DateTime.parse(json["end_time"])
+            : DateTime.parse(json["start_time"]),
         status: json["status"],
         image: json["image"],
         tip: json["tip"] ?? 0,

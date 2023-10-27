@@ -117,6 +117,40 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  updateOrderStatusAfterAppRestart({orderStatus}) {
+    if (orderStatus == 1) {
+      changeOrderStatus = OrderStatus.driverAccept;
+      // showLoading();
+      // _orderStatus = OrderStatus.departureToCustomerplace;
+      // setPolylineDirection(true);
+
+      log("current status is DEPARTURE TO CUSTOMER");
+    }
+    if (orderStatus == 2) {
+      // _orderStatus = OrderStatus.arriveAtCustomerPlace;
+
+      changeOrderStatus = OrderStatus.departureToCustomerplace;
+
+      log("current status is ARRIVE AT CUSTOMER PLACE");
+    }
+    if (orderStatus == 3) {
+      // setPolylineDirection(false);
+      // _orderStatus = OrderStatus.departureToDestination;
+      changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+
+      log("current status is DEPARTURE TO DESTINATION");
+    }
+    if (orderStatus == 5) {
+      // _orderStatus = OrderStatus.arriveAtDestination;
+
+      // setPolylineDirection(false);
+      changeOrderStatus = OrderStatus.departureToDestination;
+
+      log("current status is ARRIVE AT DESTINATION");
+    }
+    notifyListeners();
+  }
+
   set changeFirstTracking(val) {
     isFirstTracking = val;
   }
