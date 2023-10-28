@@ -18,6 +18,8 @@ class SocketProvider with ChangeNotifier {
 
   WebSocket? _socket;
   final session = locator<Session>();
+
+  int unreadMessageCount = 0;
   // final chatProvider = locator<ChatProvider>();
 
   connectToSocket() {
@@ -69,6 +71,11 @@ class SocketProvider with ChangeNotifier {
               response['data'],
             ),
           );
+        }
+        if (response['type'] == 'UnreadCount') {
+          log("unread message count called");
+
+          updateUnReadMessages(count: response['data']);
         }
       },
     );
@@ -154,7 +161,7 @@ class SocketProvider with ChangeNotifier {
   }) {
     final map = {
       "userID": session.userId,
-      "serviceType": "Chat",
+      "serviceType": "",
       "recieverID": receiverId,
       "room": (int.parse(session.userId) > receiverId!)
           ? '$receiverId-${session.userId}'
@@ -185,6 +192,11 @@ class SocketProvider with ChangeNotifier {
 
   addSingleChat(ChatModel chat) {
     _chatMessagesList.insert(0, chat);
+    notifyListeners();
+  }
+
+  updateUnReadMessages({required int count}) {
+    unreadMessageCount = count;
     notifyListeners();
   }
 }

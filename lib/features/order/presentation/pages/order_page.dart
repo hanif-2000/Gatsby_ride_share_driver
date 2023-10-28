@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
@@ -62,6 +63,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
+  var socketProvider = locator<SocketProvider>();
 
   late StreamSubscription<LocationData> locationSubscription;
 
@@ -69,6 +71,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    socketProvider.listenRequests();
 
     showLoading();
 
@@ -332,9 +335,12 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                CurrentLocationOrderWidget(),
-                                BottomContainerOrder()
+                              children: [
+                                const CurrentLocationOrderWidget(),
+                                BottomContainerOrder(
+                                  newMessgeCount:
+                                      socketProvider.unreadMessageCount,
+                                )
                               ],
                             ),
                           ),

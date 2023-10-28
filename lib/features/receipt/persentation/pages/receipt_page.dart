@@ -93,6 +93,7 @@ class ReceiptPage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Customer details section
                                 Row(
                                   children: [
                                     Container(
@@ -142,6 +143,8 @@ class ReceiptPage extends StatelessWidget {
                                   ],
                                 ),
                                 largeVerticalSpacing(),
+
+                                //Fare breakdown section
                                 Text(
                                   'Fare Breakdown ',
                                   textAlign: TextAlign.start,
@@ -448,74 +451,13 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                   child: Column(
                                     children: [
-                                      // Row(
-                                      //   mainAxisAlignment:
-                                      //       MainAxisAlignment.spaceBetween,
-                                      //   children: [
-                                      //     Text(
-                                      //       'Price',
-                                      //       textAlign: TextAlign.center,
-                                      //       style: titleStyle
-                                      //           .copyWith(
-                                      //             fontSize: 16,
-                                      //             color: grey7c7c7c,
-                                      //           )
-                                      //           .usePoppinsW6Font(),
-                                      //     ),
-                                      //     Text(
-                                      //       '\$${order.total}',
-                                      //       textAlign: TextAlign.center,
-                                      //       style: titleStyle
-                                      //           .copyWith(
-                                      //             fontSize: 16,
-                                      //           )
-                                      //           .usePoppinsW5Font(),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      // smallVerticalSpacing(),
-                                      // const Divider(
-                                      //   color: grey7D7979,
-                                      // ),
-                                      // smallVerticalSpacing(),
-                                      // Row(
-                                      //   mainAxisAlignment:
-                                      //       MainAxisAlignment.spaceBetween,
-                                      //   children: [
-                                      //     Text(
-                                      //       'Service Price (5%)',
-                                      //       textAlign: TextAlign.center,
-                                      //       style: titleStyle
-                                      //           .copyWith(
-                                      //             fontSize: 16,
-                                      //             color: grey7c7c7c,
-                                      //           )
-                                      //           .usePoppinsW6Font(),
-                                      //     ),
-                                      //     Text(
-                                      //       '\$${order.total}',
-
-                                      //       // '\$${(order.total * 5) / 100}',
-                                      //       textAlign: TextAlign.center,
-                                      //       style: titleStyle
-                                      //           .copyWith(
-                                      //             fontSize: 16,
-                                      //           )
-                                      //           .usePoppinsW5Font(),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      // smallVerticalSpacing(),
-                                      // const Divider(
-                                      //   color: grey7D7979,
-                                      // ),
                                       smallVerticalSpacing(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'Total Price',
+                                            'Total Fare',
                                             textAlign: TextAlign.center,
                                             style: titleStyle
                                                 .copyWith(
@@ -525,7 +467,7 @@ class ReceiptPage extends StatelessWidget {
                                                 .usePoppinsW6Font(),
                                           ),
                                           Text(
-                                            '\$CA ${order.total}',
+                                            'CA\$ ${order.total}',
                                             // '\$${order.total - ((order.total * 5) / 100)}',
                                             textAlign: TextAlign.center,
                                             style: titleStyle
@@ -539,7 +481,49 @@ class ReceiptPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                largeVerticalSpacing(),
+                                mediumVerticalSpacing(),
+
+                                Visibility(
+                                  visible: order.tip != 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                      color: greyB6B6B6.withOpacity(.3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        smallVerticalSpacing(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Tip',
+                                              textAlign: TextAlign.center,
+                                              style: titleStyle
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                    color: grey7c7c7c,
+                                                  )
+                                                  .usePoppinsW6Font(),
+                                            ),
+                                            Text(
+                                              'CA\$ ${order.tip}',
+                                              // '\$${order.total - ((order.total * 5) / 100)}',
+                                              textAlign: TextAlign.center,
+                                              style: titleStyle
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                  )
+                                                  .usePoppinsW5Font(),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 largeVerticalSpacing(),
                                 CustomButton(
                                   text: Text(

@@ -18,3 +18,5 @@ const String SESSION_STATUS_ORDER = 'sessionStatusOrder';
 const String SESSION_CATEGORY_ID = 'sessionCategoryId';
 const String ESTIMATED_DISTANCE = 'estimated_distance';
 const String ESTIMATED_TIME = 'estimated_time';
+const String RIDE_START_TIME = 'ride_start_time';
+const String RIDE_END_TIME = 'ride_end_time';

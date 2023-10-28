@@ -18,9 +18,9 @@ class ReceiptDataSourceImplementation implements ReceiptDataSource {
   Future<ReceiptDataModel> getReceipt(
       String id, String time, String distance) async {
     String url = 'api/webservice/driver/order/receipt';
-    logMe('Request data ---> $id');
-    logMe('Request data ---> $time');
-    logMe('Request data ---> $distance');
+    logMe('Request data order id---> $id');
+    logMe('Request data time ---> $time');
+    logMe('Request data distance ---> $distance');
 
     final session = locator<Session>();
 

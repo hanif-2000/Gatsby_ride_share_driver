@@ -540,6 +540,10 @@ class OrderProvider with ChangeNotifier {
       log("orderStatusBody  is OrderStatus.arriveAtCustomerPlace------>>>>>>>  $orderStatusBody");
 
       log("departure to destination called");
+
+      log("Ride start time is :---- ${DateTime.now()}");
+
+      session.setStartTime = DateTime.now().toString();
     }
 //     else if (_orderStatus == OrderStatus.customerConfirmation) {
 //       log("status 4");
@@ -559,6 +563,29 @@ class OrderProvider with ChangeNotifier {
       log("orderStatusBody  is OrderStatus.arriveAtDestination------>>>>>>>  $orderStatusBody");
 
       log("order complete called");
+
+      log("ride complete end time is:--->>>>${DateTime.now()}");
+      session.setEndTime = DateTime.now().toString();
+      DateTime startTime = DateTime.parse(session.rideStartTime);
+
+      log("ride start time from local storage is :-->$startTime");
+
+      Duration difference = (DateTime.now()).difference(startTime);
+      log(difference.toString());
+
+      int days = difference.inDays;
+      int hours = difference.inHours % 24;
+      int minutes = difference.inMinutes % 60;
+      int seconds = difference.inSeconds % 60;
+
+      log("total distnce in seconds :-->> ${difference.inSeconds}");
+
+      log("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
+
+      log("estimated time ::==>>${session.estimatedTime}");
+      log("estimated time ::==>>${session.estimatedDistance}");
+
+      // log("actual time taken by ride is::-->> $");
 
       dismissLoading();
     }

@@ -41,8 +41,12 @@ abstract class Session {
   set setCurrentOrderState(int state);
 
   set setChatToken(String chatToken);
+  set setStartTime(String rideStartTime);
+  set setEndTime(String rideEndTime);
 
   String get chatToken;
+  String get rideStartTime;
+  String get rideEndTime;
 
   bool get isLoggedIn;
 
@@ -114,6 +118,16 @@ class SessionHelper implements Session {
   @override
   set setSessionStatusOrder(String sessionStatusOrder) {
     pref.setString(SESSION_STATUS_ORDER, sessionStatusOrder);
+  }
+
+  @override
+  set setRideStartTime(String rideStartTime) {
+    pref.setString(RIDE_START_TIME, rideStartTime);
+  }
+
+  @override
+  set setRideEndTime(String rideEndTime) {
+    pref.setString(RIDE_END_TIME, rideEndTime);
   }
 
   @override
@@ -192,6 +206,16 @@ class SessionHelper implements Session {
   }
 
   @override
+  set setStartTime(String rideStartTime) {
+    pref.setString(RIDE_START_TIME, rideStartTime);
+  }
+
+  @override
+  set setEndTime(String rideEndTime) {
+    pref.setString(RIDE_END_TIME, rideEndTime);
+  }
+
+  @override
   String get chatToken => pref.getString(CHAT_TOKEN) ?? '';
 
   @override
@@ -250,6 +274,11 @@ class SessionHelper implements Session {
 
   @override
   String get estimatedTime => pref.getString(ESTIMATED_TIME) ?? '';
+
+  @override
+  String get rideStartTime => pref.getString(RIDE_START_TIME) ?? '';
+  @override
+  String get rideEndTime => pref.getString(RIDE_END_TIME) ?? '';
 
   @override
   Future<void> clearSession() async {

@@ -111,8 +111,8 @@ class RatingListPage extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const CustomRatingBar(
-                                                initialRating: 5,
+                                              CustomRatingBar(
+                                                initialRating: _data.rating,
                                                 isEditable: true,
                                                 itemSize: 25,
                                               ),

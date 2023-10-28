@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -25,7 +26,10 @@ class ChatDetail {
 }
 
 class ButtonOrder extends StatelessWidget {
-  const ButtonOrder({Key? key}) : super(key: key);
+  int newMessgeCount;
+  ButtonOrder({Key? key, required this.newMessgeCount}) : super(key: key);
+
+  SocketProvider socketProvider = locator<SocketProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +200,8 @@ class ButtonOrder extends StatelessWidget {
                     child: CustomButton(
                         image: 'assets/icons/order/ic_message.svg',
                         text: Text(
-                          'Message',
+                          'Message ' +
+                              socketProvider.unreadMessageCount.toString(),
                           style: txtButtonStyle,
                         ),
                         event: () {
