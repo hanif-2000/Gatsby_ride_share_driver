@@ -1,6 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:flutter/material.dart';
@@ -24,24 +24,28 @@ class UserProfileTile extends StatelessWidget {
             : Row(
                 children: [
                   InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, OtherUserProfile.routeName);
-                    },
-                    child: Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: redD03B3B,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            '$BASE_URL${provider.customerDetail!.data.photo}',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, OtherUserProfile.routeName);
+                      },
+                      child: CustomCacheNetworkImage(
+                          img: provider.customerDetail!.data.photo!, size: 45)
+
+                      //  Container(
+                      //   height: 45,
+                      //   width: 45,
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     color: redD03B3B,
+                      //     image: DecorationImage(
+                      //       image: NetworkImage(
+                      //         '$BASE_URL${provider.customerDetail!.data.photo}',
+                      //       ),
+                      //       fit: BoxFit.cover,
+                      //     ),
+                      //   ),
+                      // ),
                       ),
-                    ),
-                  ),
                   mediumHorizontalSpacing(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

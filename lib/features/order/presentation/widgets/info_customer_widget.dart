@@ -1,10 +1,10 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/presentation/widgets/rounded_upper_container.dart';
-import '../../../../core/static/assets.dart';
 import '../../../../core/static/colors.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
@@ -54,31 +54,35 @@ class CustomerInfoWidget extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      SizedBox(
-                                        height: 60,
-                                        width: 60,
-                                        // child: CircleAvatar(
-                                        //   backgroundImage:
-                                        //       AssetImage(userAvatarImage),
-                                        //   maxRadius: 15,
-                                        //   minRadius: 15,
-                                        // ),
-                                        child: provider.customerDetail!.data
-                                                .photo.isEmpty
-                                            ? const CircleAvatar(
-                                                radius: 33,
-                                                backgroundImage:
-                                                    AssetImage(userAvatarImage),
-                                              )
-                                            : CircleAvatar(
-                                                radius: 33,
-                                                backgroundImage: NetworkImage(
-                                                    mergePhotoUrl(provider
-                                                        .customerDetail!
-                                                        .data
-                                                        .photo)),
-                                              ),
-                                      ),
+                                      CustomCacheNetworkImage(
+                                          img: provider
+                                              .customerDetail!.data.photo!,
+                                          size: 60),
+                                      // SizedBox(
+                                      //   height: 60,
+                                      //   width: 60,
+                                      //   // child: CircleAvatar(
+                                      //   //   backgroundImage:
+                                      //   //       AssetImage(userAvatarImage),
+                                      //   //   maxRadius: 15,
+                                      //   //   minRadius: 15,
+                                      //   // ),
+                                      //   child: provider.customerDetail!.data
+                                      //           .photo.isEmpty
+                                      //       ? const CircleAvatar(
+                                      //           radius: 33,
+                                      //           backgroundImage:
+                                      //               AssetImage(userAvatarImage),
+                                      //         )
+                                      //       : CircleAvatar(
+                                      //           radius: 33,
+                                      //           backgroundImage: NetworkImage(
+                                      //               mergePhotoUrl(provider
+                                      //                   .customerDetail!
+                                      //                   .data
+                                      //                   .photo)),
+                                      //         ),
+                                      // ),
                                       mediumHorizontalSpacing(),
                                       Column(
                                         crossAxisAlignment:

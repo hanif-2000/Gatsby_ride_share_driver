@@ -71,7 +71,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    socketProvider.listenRequests();
+    //socketProvider.listenRequests();
 
     showLoading();
 
@@ -337,9 +337,19 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 const CurrentLocationOrderWidget(),
-                                BottomContainerOrder(
-                                  newMessgeCount:
-                                      socketProvider.unreadMessageCount,
+                                Stack(
+                                  children: [
+                                    BottomContainerOrder(
+                                      newMessgeCount:
+                                          socketProvider.unreadMessageCount,
+                                    ),
+                                    Text(
+                                      socketProvider.unreadMessageCount
+                                          .toString(),
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 18.0),
+                                    )
+                                  ],
                                 )
                               ],
                             ),

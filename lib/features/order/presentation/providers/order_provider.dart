@@ -701,8 +701,12 @@ class OrderProvider with ChangeNotifier {
   }
 
   callCustomer() async {
-    final call = Uri.parse('tel:${_customerDetail!.data.phoneNumber}');
-    launchUrl(call);
+    if (_customerDetail!.data.phoneNumber != '') {
+      final call = Uri.parse('tel:${_customerDetail!.data.phoneNumber}');
+      launchUrl(call);
+    } else {
+      showToast(message: "No Phone number");
+    }
   }
 
   updateLocation() async {

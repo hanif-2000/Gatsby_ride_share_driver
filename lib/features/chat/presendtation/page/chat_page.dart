@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -55,7 +55,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     // socketProvider.clearChatList();
     socketProvider.joinExitRoom(
         receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    socketProvider.getTotalUnreadCount(widget.chatDetail!.userId);
+
     WidgetsBinding.instance.removeObserver(this);
+
     socketProvider.disconnectSocket();
     socketProvider.connectToSocket();
   }
@@ -88,19 +91,22 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                           ),
                         ),
                         smallHorizontalSpacing(),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: redD03B3B,
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                  '$BASE_URL${widget.chatDetail!.userPhoto}',
-                                ),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
+
+                        CustomCacheNetworkImage(
+                            img: widget.chatDetail!.userPhoto!, size: 50),
+                        // Container(
+                        //   height: 50,
+                        //   width: 50,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: redD03B3B,
+                        //     image: DecorationImage(
+                        //         image: NetworkImage(
+                        //           '$BASE_URL${widget.chatDetail!.userPhoto}',
+                        //         ),
+                        //         fit: BoxFit.cover),
+                        //   ),
+                        // ),
                         mediumHorizontalSpacing(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

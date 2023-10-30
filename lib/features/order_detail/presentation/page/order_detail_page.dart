@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -9,8 +12,8 @@ import 'package:appkey_taxiapp_driver/features/history/data/models/history_respo
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
-import 'package:provider/provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utility/helper.dart';
+import '../../../rating/presentation/page/give_rating_screen.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({Key? key, this.order}) : super(key: key);
@@ -440,24 +444,27 @@ class OrderDetailPage extends StatelessWidget {
                     child: Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, OtherUserProfile.routeName);
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: redD03B3B,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  '$BASE_URL${order!.image}',
-                                ),
-                              ),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, OtherUserProfile.routeName);
+                            },
+                            child: CustomCacheNetworkImage(
+                                img: order!.image, size: 45)
+
+                            // Container(
+                            //   height: 45,
+                            //   width: 45,
+                            //   decoration: BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: redD03B3B,
+                            //     image: DecorationImage(
+                            //       image: NetworkImage(
+                            //         '$BASE_URL${order!.image}',
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             ),
-                          ),
-                        ),
                         mediumHorizontalSpacing(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,11 +480,12 @@ class OrderDetailPage extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                log(order!.customerId);
                                 Navigator.pushNamed(
                                     context, RatingListPage.routeName,
-                                    arguments: order!.customerId);
+                                    arguments: int.parse(order!.customerId));
                                 // context,
-                                // GiveRatingScreen.routeName);
+                                GiveRatingScreen.routeName;
                               },
                               child: Row(
                                 children: [

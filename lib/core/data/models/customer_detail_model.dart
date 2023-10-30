@@ -27,7 +27,7 @@ class CustomerDetailModel extends Equatable {
 class CustomerDataModel extends Equatable {
   final String name;
   final String phoneNumber;
-  final String photo;
+  final String? photo;
   final int id;
   final double rating;
 

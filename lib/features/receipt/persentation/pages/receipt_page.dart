@@ -1,8 +1,8 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/data/model/receipt_model.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_provider.dart';
@@ -96,19 +96,21 @@ class ReceiptPage extends StatelessWidget {
                                 // Customer details section
                                 Row(
                                   children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: redD03B3B,
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            '$BASE_URL${order.image}',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    CustomCacheNetworkImage(
+                                        img: order.image!, size: 50),
+                                    // Container(
+                                    //   height: 50,
+                                    //   width: 50,
+                                    //   decoration: BoxDecoration(
+                                    //     shape: BoxShape.circle,
+                                    //     color: redD03B3B,
+                                    //     image: DecorationImage(
+                                    //       image: NetworkImage(
+                                    //         '$BASE_URL${order.image}',
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     mediumHorizontalSpacing(),
                                     Column(
                                       children: [

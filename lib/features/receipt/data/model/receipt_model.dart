@@ -37,7 +37,7 @@ class OrderReceipt {
   dynamic tip;
 
   String status;
-  String image;
+  String? image;
   String userName;
   String userPhone;
   double? rating;
@@ -80,7 +80,7 @@ class OrderReceipt {
             ? DateTime.parse(json["end_time"])
             : DateTime.parse(json["start_time"]),
         status: json["status"],
-        image: json["image"],
+        image: json["image"] ?? '',
         tip: json["tip"] ?? 0,
         userName: json["user_name"],
         userPhone: json["user_phone"],

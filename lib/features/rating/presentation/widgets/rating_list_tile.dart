@@ -1,7 +1,7 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/rating/data/model/rating_list_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,25 +35,26 @@ class RatingListTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: redD03B3B,
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        '$BASE_URL${ratingItem!.image}',
-                      ),
-                      fit: BoxFit.cover),
-                ),
-              ),
+              CustomCacheNetworkImage(img: ratingItem!.image, size: 45),
+              // Container(
+              //   height: 45,
+              //   width: 45,
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     color: redD03B3B,
+              //     image: DecorationImage(
+              //         image: NetworkImage(
+              //           '$BASE_URL${ratingItem!.image}',
+              //         ),
+              //         fit: BoxFit.cover),
+              //   ),
+              // ),
               mediumHorizontalSpacing(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${ratingItem!.name}',
+                    ratingItem!.name,
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -62,7 +63,7 @@ class RatingListTile extends StatelessWidget {
                         .usePoppinsW5Font(),
                   ),
                   Text(
-                    '${DateFormat.yMMMd().format(ratingItem!.createdAt)}',
+                    DateFormat.yMMMd().format(ratingItem!.createdAt),
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -93,7 +94,7 @@ class RatingListTile extends StatelessWidget {
           ),
           mediumVerticalSpacing(),
           Text(
-            '${ratingItem!.review ?? ''}',
+            ratingItem!.review ?? '',
             style: titleStyle
                 .copyWith(
                   fontSize: 14,

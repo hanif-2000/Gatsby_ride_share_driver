@@ -33,9 +33,12 @@ class ButtonOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _deviceSize = MediaQuery.of(context).size;
     final session = locator<Session>();
     return Consumer<OrderProvider>(
       builder: (context, provider, _) {
+        log("unread message count is --------->>>>>>:" +
+            socketProvider.unreadMessageCount.toString());
         return Container(
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(
@@ -161,8 +164,10 @@ class ButtonOrder extends StatelessWidget {
               const UserProfileTile(),
               mediumVerticalSpacing(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  SizedBox(
+                    width: _deviceSize.width * .42,
                     child: CustomButton(
                       image: 'assets/icons/order/ic_call.svg',
                       text: Text(
@@ -176,6 +181,7 @@ class ButtonOrder extends StatelessWidget {
                         //         ? provider.callCustomer()
                         //         : session.orderStatus == 3
                         //             ?
+
                         provider.callCustomer();
                         // : () {};
 
@@ -196,53 +202,72 @@ class ButtonOrder extends StatelessWidget {
                     ),
                   ),
                   smallHorizontalSpacing(),
-                  Expanded(
-                    child: CustomButton(
-                        image: 'assets/icons/order/ic_message.svg',
-                        text: Text(
-                          'Message ' +
+                  Stack(
+                    children: [
+                      SizedBox(
+                        width: _deviceSize.width * .42,
+                        child: CustomButton(
+                            image: 'assets/icons/order/ic_message.svg',
+                            text: Text(
+                              'Message',
+                              style: txtButtonStyle,
+                            ),
+                            event: () {
+                              // session.orderStatus == 1
+                              //     ? Navigator.pushNamed(context, ChatPage.routeName,
+                              //         arguments: ChatDetail(
+                              //           provider.customerDetail!.data.name,
+                              //           provider.customerDetail!.data.photo,
+                              //           provider.customerDetail!.data.id,
+                              //         ))
+                              //     : session.orderStatus == 2
+                              //         ? Navigator.pushNamed(
+                              //             context, ChatPage.routeName,
+                              //             arguments: ChatDetail(
+                              //               provider.customerDetail!.data.name,
+                              //               provider.customerDetail!.data.photo,
+                              //               provider.customerDetail!.data.id,
+                              //             ))
+                              //         : session.orderStatus == 3
+                              //             ?
+                              Navigator.pushNamed(context, ChatPage.routeName,
+                                  arguments: ChatDetail(
+                                    provider.customerDetail!.data.name,
+                                    provider.customerDetail!.data.photo,
+                                    provider.customerDetail!.data.id,
+                                  ));
+                              // : () {};
+                            },
+                            buttonHeight: 48,
+                            isRounded: true,
+                            bgColor:
+                                //  session.orderStatus == 1
+                                //     ? blue249DE0
+                                //     : session.orderStatus == 2
+                                //         ? blue249DE0
+                                //         : session.orderStatus == 3
+                                //             ?
+                                blue249DE0
+                            // :
+                            // grey606060Color,
+                            ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: blackColor, shape: BoxShape.circle),
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
                               socketProvider.unreadMessageCount.toString(),
-                          style: txtButtonStyle,
+                              style: const TextStyle(color: whiteColor),
+                            ),
+                          ),
                         ),
-                        event: () {
-                          // session.orderStatus == 1
-                          //     ? Navigator.pushNamed(context, ChatPage.routeName,
-                          //         arguments: ChatDetail(
-                          //           provider.customerDetail!.data.name,
-                          //           provider.customerDetail!.data.photo,
-                          //           provider.customerDetail!.data.id,
-                          //         ))
-                          //     : session.orderStatus == 2
-                          //         ? Navigator.pushNamed(
-                          //             context, ChatPage.routeName,
-                          //             arguments: ChatDetail(
-                          //               provider.customerDetail!.data.name,
-                          //               provider.customerDetail!.data.photo,
-                          //               provider.customerDetail!.data.id,
-                          //             ))
-                          //         : session.orderStatus == 3
-                          //             ?
-                          Navigator.pushNamed(context, ChatPage.routeName,
-                              arguments: ChatDetail(
-                                provider.customerDetail!.data.name,
-                                provider.customerDetail!.data.photo,
-                                provider.customerDetail!.data.id,
-                              ));
-                          // : () {};
-                        },
-                        buttonHeight: 48,
-                        isRounded: true,
-                        bgColor:
-                            //  session.orderStatus == 1
-                            //     ? blue249DE0
-                            //     : session.orderStatus == 2
-                            //         ? blue249DE0
-                            //         : session.orderStatus == 3
-                            //             ?
-                            blue249DE0
-                        // :
-                        // grey606060Color,
-                        ),
+                      )
+                    ],
                   ),
                 ],
               ),

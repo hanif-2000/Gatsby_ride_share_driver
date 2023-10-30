@@ -34,7 +34,9 @@ class SocketProvider with ChangeNotifier {
       logMe('Socket on Listen ---> ${event.toString()}');
       if (event is Connected) {
         log("Socket event is connected");
-        // listenRequests();
+        Future.delayed(const Duration(seconds: 1), () {
+          listenRequests();
+        });
       }
     });
   }
@@ -43,11 +45,11 @@ class SocketProvider with ChangeNotifier {
     _socket!.close();
   }
 
-  listenRequests() {
+  Future<void> listenRequests() async {
     logMe('============= Listening to requests ================');
-
     _socket!.messages.listen(
       (event) {
+        logMe('============= event recived ================');
         final response = jsonDecode(event);
         logMe('Message list data-----> ${response.toString()}');
         if (response['type'] == 'MessageList') {
@@ -72,6 +74,7 @@ class SocketProvider with ChangeNotifier {
             ),
           );
         }
+        logMe('============= UnreadCount ================');
         if (response['type'] == 'UnreadCount') {
           log("unread message count called");
 
@@ -115,6 +118,21 @@ class SocketProvider with ChangeNotifier {
       jsonEncode(map),
     );
     // listenRequests();
+  }
+
+  getTotalUnreadCount(int? receiverId) {
+    log("get total count");
+    final map = {
+      "userID": session.userId,
+      "serviceType": "UnreadCount",
+      "room": (int.parse(session.userId) > receiverId!)
+          ? '$receiverId-${session.userId}'
+          : '${session.userId}-$receiverId',
+      "UserType": 'Customer'
+    };
+    log(map.toString());
+    _socket!.send(jsonEncode(map));
+    listenRequests();
   }
 
   sendChatMessage({
@@ -198,5 +216,7 @@ class SocketProvider with ChangeNotifier {
   updateUnReadMessages({required int count}) {
     unreadMessageCount = count;
     notifyListeners();
+
+    log("unread messages are:--> $unreadMessageCount");
   }
 }
