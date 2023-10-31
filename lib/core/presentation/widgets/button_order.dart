@@ -252,21 +252,24 @@ class ButtonOrder extends StatelessWidget {
                             // grey606060Color,
                             ),
                       ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: blackColor, shape: BoxShape.circle),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Text(
-                              socketProvider.unreadMessageCount.toString(),
-                              style: const TextStyle(color: whiteColor),
-                            ),
-                          ),
-                        ),
-                      )
+                      socketProvider.unreadMessageCount != 0
+                          ? Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: blackColor, shape: BoxShape.circle),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Text(
+                                    socketProvider.unreadMessageCount
+                                        .toString(),
+                                    style: const TextStyle(color: whiteColor),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const SizedBox()
                     ],
                   ),
                 ],

@@ -120,6 +120,7 @@ class SocketProvider with ChangeNotifier {
     // listenRequests();
   }
 
+//Get total number of unread message
   getTotalUnreadCount(int? receiverId) {
     log("get total count");
     final map = {
@@ -128,7 +129,7 @@ class SocketProvider with ChangeNotifier {
       "room": (int.parse(session.userId) > receiverId!)
           ? '$receiverId-${session.userId}'
           : '${session.userId}-$receiverId',
-      "UserType": 'Customer'
+      "UserType": 'driver'
     };
     log(map.toString());
     _socket!.send(jsonEncode(map));
@@ -177,6 +178,7 @@ class SocketProvider with ChangeNotifier {
   markMessageAsRead({
     int? receiverId,
   }) {
+    log("mark as read called");
     final map = {
       "userID": session.userId,
       "serviceType": "",

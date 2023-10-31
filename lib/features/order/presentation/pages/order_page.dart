@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
@@ -17,6 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
+import '../../../../core/presentation/providers/socket_provider.dart';
 import '../../../../core/static/order_status.dart';
 import '../../domain/entities/order_detail.dart';
 import '../widgets/current_location_order.dart';
@@ -71,7 +71,9 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    //socketProvider.listenRequests();
+    socketProvider.listenRequests();
+
+    socketProvider.getTotalUnreadCount(widget.customerDetail.data.id);
 
     showLoading();
 
@@ -145,8 +147,8 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     log("order page build widget called");
-    orderPProvider.updateOrderStatusAfterAppRestart(
-        orderStatus: widget.orderStatus);
+    // orderPProvider.updateOrderStatusAfterAppRestart(
+    //     orderStatus: widget.orderStatus);
 
     var _deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
@@ -337,20 +339,24 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 const CurrentLocationOrderWidget(),
-                                Stack(
-                                  children: [
-                                    BottomContainerOrder(
-                                      newMessgeCount:
-                                          socketProvider.unreadMessageCount,
-                                    ),
-                                    Text(
-                                      socketProvider.unreadMessageCount
-                                          .toString(),
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 18.0),
-                                    )
-                                  ],
-                                )
+                                // Stack(
+                                //   children: [
+                                BottomContainerOrder(
+                                  newMessgeCount: Provider.of<SocketProvider>(
+                                          context,
+                                          listen: true)
+                                      .unreadMessageCount,
+                                ),
+                                //     Text(
+                                //       Provider.of<SocketProvider>(context,
+                                //               listen: true)
+                                //           .unreadMessageCount
+                                //           .toString(),
+                                //       style: const TextStyle(
+                                //           color: Colors.red, fontSize: 18.0),
+                                //     )
+                                //   ],
+                                // )
                               ],
                             ),
                           ),
