@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -10,6 +9,7 @@ import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/rec
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/presentation/pages/home_page/home_page.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
@@ -24,6 +24,7 @@ class ReceiptPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _deviceSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) => locator<ReceiptProvider>(),
       child: Scaffold(
@@ -529,12 +530,79 @@ class ReceiptPage extends StatelessWidget {
                                 largeVerticalSpacing(),
                                 CustomButton(
                                   text: Text(
-                                    appLoc.continuee,
+                                    "Continue",
+                                    // appLoc.continuee,
                                     style: txtButtonStyle,
                                   ),
                                   event: () {
-                                    Navigator.pushNamedAndRemoveUntil(context,
-                                        HomePage.routeName, (route) => false);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(32.0))),
+                                          elevation: 15.0,
+                                          actionsAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          title: const Text(
+                                              "Please Confirm Payment"),
+                                          content: const Text(
+                                              "Did you receive the payment from customer?"),
+                                          actions: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                // width: _deviceSize.width * 3,
+                                                child: CustomButton(
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    32.0))),
+                                                    text: "Yes",
+                                                    event: () {
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                              context,
+                                                              HomePage
+                                                                  .routeName,
+                                                              (route) => false);
+                                                    },
+                                                    bgColor: green2DAA5FColor),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                // width: _deviceSize.width * 3,
+                                                child: CustomButton(
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    32.0))),
+                                                    text: "No",
+                                                    event: () {
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                              context,
+                                                              HomePage
+                                                                  .routeName,
+                                                              (route) => false);
+                                                    },
+                                                    bgColor: redf52d56Color),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+
+                                    // Navigator.pushNamedAndRemoveUntil(context,
+                                    //     HomePage.routeName, (route) => false);
                                   },
                                   buttonHeight: 48,
                                   isRounded: true,

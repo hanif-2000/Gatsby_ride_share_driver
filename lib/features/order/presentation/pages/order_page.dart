@@ -71,7 +71,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    socketProvider.listenRequests();
+    // socketProvider.listenRequests();
 
     socketProvider.getTotalUnreadCount(widget.customerDetail.data.id);
 

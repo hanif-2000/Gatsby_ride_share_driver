@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -57,22 +56,22 @@ class JobCompletedPage extends StatelessWidget {
                   children: [
                     largeVerticalSpacing(),
                     largeVerticalSpacing(),
-                    CustomButton(
-                      text: Text(
-                        appLoc.findNextRide,
-                        style: txtButtonStyle,
-                      ),
-                      event: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          HomePage.routeName,
-                          (route) => false,
-                        );
-                      },
-                      buttonHeight: 48,
-                      isRounded: true,
-                      bgColor: blackColor,
-                    ),
+                    // CustomButton(
+                    //   text: Text(
+                    //     appLoc.findNextRide,
+                    //     style: txtButtonStyle,
+                    //   ),
+                    //   event: () {
+                    //     Navigator.pushNamedAndRemoveUntil(
+                    //       context,
+                    //       HomePage.routeName,
+                    //       (route) => false,
+                    //     );
+                    //   },
+                    //   buttonHeight: 48,
+                    //   isRounded: true,
+                    //   bgColor: blackColor,
+                    // ),
                     largeVerticalSpacing(),
                     CustomButton(
                       text: Text(

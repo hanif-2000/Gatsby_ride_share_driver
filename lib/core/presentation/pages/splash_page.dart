@@ -13,6 +13,7 @@ import '../../utility/helper.dart';
 import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import '../providers/currency_state.dart';
+import '../providers/socket_provider.dart';
 import '../providers/splash_provider.dart';
 import 'home_page/home_page.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +27,12 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final socketProvider = locator<SocketProvider>();
+
   @override
   void initState() {
     super.initState();
+    socketProvider.connectToSocket();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer(const Duration(seconds: 2), () async {
         if (await checkPermission()) {

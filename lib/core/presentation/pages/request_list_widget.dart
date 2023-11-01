@@ -78,7 +78,8 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                       final failure =
                           (state.data as RequestListFailure).failure;
                       // showToast(message: failure.message);
-                      showToast(message: "Network slow Please try again");
+                      showToast(
+                          message: "Network slow Please Wait or try again");
                       return const SizedBox.shrink();
                     case RequestListLoaded:
                       final data = (state.data as RequestListLoaded).data;

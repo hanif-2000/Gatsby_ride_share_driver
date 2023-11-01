@@ -1,11 +1,11 @@
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
@@ -53,28 +53,31 @@ class GiveRatingScreen extends StatelessWidget {
                       //     icon: SvgPicture.asset('assets/icons/auth/ic_back.svg'),
                       //   ),
                       // ),
-                      Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          color: greenF0F9F1,
-                          border: Border.all(color: greenF0F9F1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red,
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                '$BASE_URL${customerDataModel.photo}',
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
+
+                      CustomCacheNetworkImage(
+                          img: customerDataModel.photo!, size: 150),
+                      // Container(
+                      //   height: 150,
+                      //   width: 150,
+                      //   decoration: BoxDecoration(
+                      //     color: greenF0F9F1,
+                      //     border: Border.all(color: greenF0F9F1),
+                      //     shape: BoxShape.circle,
+                      //   ),
+                      //   child: Container(
+                      //     margin: const EdgeInsets.all(10),
+                      //     decoration: BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //       color: Colors.red,
+                      //       image: DecorationImage(
+                      //         image: NetworkImage(
+                      //           '$BASE_URL${customerDataModel.photo}',
+                      //         ),
+                      //         fit: BoxFit.cover,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Text(
                         customerDataModel.name,
                         textAlign: TextAlign.center,

@@ -40,7 +40,7 @@ class ButtonOrder extends StatelessWidget {
         log("unread message count is --------->>>>>>:" +
             socketProvider.unreadMessageCount.toString());
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(8),
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -163,115 +163,123 @@ class ButtonOrder extends StatelessWidget {
               //     : const SizedBox(),
               const UserProfileTile(),
               mediumVerticalSpacing(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Stack(
                 children: [
-                  SizedBox(
-                    width: _deviceSize.width * .42,
-                    child: CustomButton(
-                      image: 'assets/icons/order/ic_call.svg',
-                      text: Text(
-                        'Call now',
-                        style: txtButtonStyle,
-                      ),
-                      event: () {
-                        // session.orderStatus == 1
-                        //     ? provider.callCustomer()
-                        //     : session.orderStatus == 2
-                        //         ? provider.callCustomer()
-                        //         : session.orderStatus == 3
-                        //             ?
-
-                        provider.callCustomer();
-                        // : () {};
-
-                        // provider.callCustomer();
-                      },
-                      buttonHeight: 48,
-                      isRounded: true,
-                      bgColor:
-                          //  session.orderStatus == 1
-                          //     ? green2DAA5F
-                          //     : session.orderStatus == 2
-                          //         ? green2DAA5F
-                          //         : session.orderStatus == 3
-                          //             ?
-
-                          green2DAA5F,
-                      // : grey606060Color,
-                    ),
-                  ),
-                  smallHorizontalSpacing(),
-                  Stack(
-                    children: [
-                      SizedBox(
-                        width: _deviceSize.width * .42,
-                        child: CustomButton(
-                            image: 'assets/icons/order/ic_message.svg',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: _deviceSize.width * .44,
+                          child: CustomButton(
+                            image: 'assets/icons/order/ic_call.svg',
                             text: Text(
-                              'Message',
+                              'Call now',
                               style: txtButtonStyle,
                             ),
                             event: () {
                               // session.orderStatus == 1
-                              //     ? Navigator.pushNamed(context, ChatPage.routeName,
-                              //         arguments: ChatDetail(
-                              //           provider.customerDetail!.data.name,
-                              //           provider.customerDetail!.data.photo,
-                              //           provider.customerDetail!.data.id,
-                              //         ))
+                              //     ? provider.callCustomer()
                               //     : session.orderStatus == 2
-                              //         ? Navigator.pushNamed(
-                              //             context, ChatPage.routeName,
-                              //             arguments: ChatDetail(
-                              //               provider.customerDetail!.data.name,
-                              //               provider.customerDetail!.data.photo,
-                              //               provider.customerDetail!.data.id,
-                              //             ))
+                              //         ? provider.callCustomer()
                               //         : session.orderStatus == 3
                               //             ?
-                              Navigator.pushNamed(context, ChatPage.routeName,
-                                  arguments: ChatDetail(
-                                    provider.customerDetail!.data.name,
-                                    provider.customerDetail!.data.photo,
-                                    provider.customerDetail!.data.id,
-                                  ));
+
+                              provider.callCustomer();
                               // : () {};
+
+                              // provider.callCustomer();
                             },
                             buttonHeight: 48,
                             isRounded: true,
                             bgColor:
                                 //  session.orderStatus == 1
-                                //     ? blue249DE0
+                                //     ? green2DAA5F
                                 //     : session.orderStatus == 2
-                                //         ? blue249DE0
+                                //         ? green2DAA5F
                                 //         : session.orderStatus == 3
                                 //             ?
-                                blue249DE0
-                            // :
-                            // grey606060Color,
-                            ),
-                      ),
-                      socketProvider.unreadMessageCount != 0
-                          ? Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: blackColor, shape: BoxShape.circle),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Text(
-                                    socketProvider.unreadMessageCount
-                                        .toString(),
-                                    style: const TextStyle(color: whiteColor),
+
+                                green2DAA5F,
+                            // : grey606060Color,
+                          ),
+                        ),
+                        smallHorizontalSpacing(),
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: _deviceSize.width * .44,
+                              child: CustomButton(
+                                  image: 'assets/icons/order/ic_message.svg',
+                                  text: Text(
+                                    'Message',
+                                    style: txtButtonStyle,
                                   ),
-                                ),
-                              ),
-                            )
-                          : const SizedBox()
-                    ],
+                                  event: () {
+                                    // session.orderStatus == 1
+                                    //     ? Navigator.pushNamed(context, ChatPage.routeName,
+                                    //         arguments: ChatDetail(
+                                    //           provider.customerDetail!.data.name,
+                                    //           provider.customerDetail!.data.photo,
+                                    //           provider.customerDetail!.data.id,
+                                    //         ))
+                                    //     : session.orderStatus == 2
+                                    //         ? Navigator.pushNamed(
+                                    //             context, ChatPage.routeName,
+                                    //             arguments: ChatDetail(
+                                    //               provider.customerDetail!.data.name,
+                                    //               provider.customerDetail!.data.photo,
+                                    //               provider.customerDetail!.data.id,
+                                    //             ))
+                                    //         : session.orderStatus == 3
+                                    //             ?
+                                    Navigator.pushNamed(
+                                        context, ChatPage.routeName,
+                                        arguments: ChatDetail(
+                                          provider.customerDetail!.data.name,
+                                          provider.customerDetail!.data.photo,
+                                          provider.customerDetail!.data.id,
+                                        ));
+                                    // : () {};
+                                  },
+                                  buttonHeight: 48,
+                                  isRounded: true,
+                                  bgColor:
+                                      //  session.orderStatus == 1
+                                      //     ? blue249DE0
+                                      //     : session.orderStatus == 2
+                                      //         ? blue249DE0
+                                      //         : session.orderStatus == 3
+                                      //             ?
+                                      blue249DE0
+                                  // :
+                                  // grey606060Color,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                  socketProvider.unreadMessageCount != 0
+                      ? Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: redf52d56Color, shape: BoxShape.circle),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Text(
+                                socketProvider.unreadMessageCount.toString(),
+                                style: const TextStyle(color: whiteColor),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
               mediumVerticalSpacing(),

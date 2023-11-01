@@ -3,6 +3,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/common_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
@@ -11,7 +12,6 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -289,19 +289,24 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                             Navigator.pushNamed(context,
                                                 OtherUserProfile.routeName);
                                           },
-                                          child: Container(
-                                            height: 45,
-                                            width: 45,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: redD03B3B,
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                    '$BASE_URL${widget.requestListModel!.image}',
-                                                  ),
-                                                  fit: BoxFit.cover),
-                                            ),
-                                          ),
+                                          child: CustomCacheNetworkImage(
+                                              img: widget
+                                                  .requestListModel!.image!,
+                                              size: 50),
+
+                                          //  Container(
+                                          //   height: 45,
+                                          //   width: 45,
+                                          //   decoration: BoxDecoration(
+                                          //     shape: BoxShape.circle,
+                                          //     color: redD03B3B,
+                                          //     image: DecorationImage(
+                                          //         image: NetworkImage(
+                                          //           '$BASE_URL${widget.requestListModel!.image}',
+                                          //         ),
+                                          //         fit: BoxFit.cover),
+                                          //   ),
+                                          // ),
                                         ),
                                         mediumHorizontalSpacing(),
                                         Column(
