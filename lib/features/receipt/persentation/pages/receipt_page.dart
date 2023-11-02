@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -6,6 +8,7 @@ import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/data/model/receipt_model.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_provider.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_state.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -562,15 +565,80 @@ class ReceiptPage extends StatelessWidget {
                                                                 Radius.circular(
                                                                     32.0))),
                                                     text: "Yes",
-                                                    event: () {
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                              context,
-                                                              HomePage
-                                                                  .routeName,
-                                                              (route) => false);
+                                                    event: () async {
+                                                      var dio = Dio();
+
+                                                      FormData data =
+                                                          FormData.fromMap({
+                                                        'payment_status': 'yes',
+                                                        'order_id': provider
+                                                            .session
+                                                            .runningOrderId,
+                                                      });
+                                                      // var body = {
+                                                      //   'payment_status': paymentStatus,
+                                                      //   'order_id': session.runningOrderId,
+                                                      // };
+
+                                                      log(data.toString());
+                                                      log("session token :${provider.session.sessionToken}");
+
+                                                      try {
+                                                        var response =
+                                                            await dio.request(
+                                                          'https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation',
+                                                          data: data,
+                                                          options: Options(
+                                                              method: 'POST',
+                                                              headers: {
+                                                                "Authorization":
+                                                                    "Bearer ${provider.session.sessionToken}"
+                                                              }),
+                                                        );
+
+                                                        log("res is:${response.data}");
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                          Navigator
+                                                              .pushNamedAndRemoveUntil(
+                                                                  context,
+                                                                  HomePage
+                                                                      .routeName,
+                                                                  (route) =>
+                                                                      false);
+                                                        } else {
+                                                          dismissLoading();
+
+                                                          showToast(
+                                                              message:
+                                                                  "Something went wrong ,Please try again");
+                                                        }
+                                                      } catch (e) {
+                                                        dismissLoading();
+
+                                                        showToast(
+                                                            message:
+                                                                e.toString());
+
+                                                        log(e.toString());
+                                                      }
+
+                                                      // provider
+                                                      //     .paymentConfirmation(
+                                                      //         paymentStatus:
+                                                      //             'yes',
+                                                      //         context: context);
+
+                                                      // Navigator
+                                                      //     .pushNamedAndRemoveUntil(
+                                                      //         context,
+                                                      //         HomePage
+                                                      //             .routeName,
+                                                      //         (route) => false);
                                                     },
-                                                    bgColor: green2DAA5FColor),
+                                                    bgColor: black030303),
                                               ),
                                             ),
                                             Padding(
@@ -585,7 +653,73 @@ class ReceiptPage extends StatelessWidget {
                                                                 Radius.circular(
                                                                     32.0))),
                                                     text: "No",
-                                                    event: () {
+                                                    event: () async {
+                                                      var dio = Dio();
+
+                                                      FormData data =
+                                                          FormData.fromMap({
+                                                        'payment_status': 'no',
+                                                        'order_id': provider
+                                                            .session
+                                                            .runningOrderId,
+                                                      });
+
+                                                      log("id: ${provider.session.runningOrderId}");
+                                                      // var body = {
+                                                      //   'payment_status': paymentStatus,
+                                                      //   'order_id': session.runningOrderId,
+                                                      // };
+
+                                                      log(data.toString());
+                                                      log("session token :${provider.session.sessionToken}");
+
+                                                      try {
+                                                        var response =
+                                                            await dio.post(
+                                                          'https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation',
+                                                          data: data,
+                                                          options: Options(
+                                                              // method: 'POST',
+                                                              headers: {
+                                                                "Authorization":
+                                                                    "Bearer ${provider.session.sessionToken}"
+                                                              }),
+                                                        );
+
+                                                        log("res is:${response.data}");
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                          Navigator
+                                                              .pushNamedAndRemoveUntil(
+                                                                  context,
+                                                                  HomePage
+                                                                      .routeName,
+                                                                  (route) =>
+                                                                      false);
+                                                        } else {
+                                                          dismissLoading();
+
+                                                          showToast(
+                                                              message:
+                                                                  "Something went wrong ,Please try again");
+                                                        }
+                                                      } catch (e) {
+                                                        dismissLoading();
+
+                                                        showToast(
+                                                            message:
+                                                                e.toString());
+
+                                                        log(e.toString());
+                                                      }
+
+                                                      // provider
+                                                      //     .paymentConfirmation(
+                                                      //         paymentStatus:
+                                                      //             'no',
+                                                      //         context: context);
                                                       Navigator
                                                           .pushNamedAndRemoveUntil(
                                                               context,
@@ -593,7 +727,7 @@ class ReceiptPage extends StatelessWidget {
                                                                   .routeName,
                                                               (route) => false);
                                                     },
-                                                    bgColor: redf52d56Color),
+                                                    bgColor: redD03B3B),
                                               ),
                                             ),
                                           ],

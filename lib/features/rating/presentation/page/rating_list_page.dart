@@ -9,6 +9,7 @@ import 'package:appkey_taxiapp_driver/features/rating/presentation/widgets/ratin
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/static/assets.dart';
 import '../../../../core/utility/injection.dart';
 
 class RatingListPage extends StatelessWidget {
@@ -18,10 +19,29 @@ class RatingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _deviceSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) => locator<RatingProvider>(),
       child: Scaffold(
         backgroundColor: whiteColor,
+        appBar: AppBar(
+          title: const Text(
+            "Ratings",
+            style: TextStyle(color: blackColor),
+          ),
+          centerTitle: true,
+          backgroundColor: whiteColor,
+          elevation: 0.0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: blackColor,
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Consumer<RatingProvider>(builder: (context, provider, _) {
             return StreamBuilder<RatingListState>(
@@ -38,8 +58,28 @@ class RatingListPage extends StatelessWidget {
                     case RatingListSuccess:
                       final _data = (snapshot.data as RatingListSuccess).data;
                       return _data!.list.isEmpty
-                          ? const Center(
-                              child: Text('No rating yet!'),
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      noRating,
+                                      width: _deviceSize.width / 2,
+                                      height: _deviceSize.width / 2,
+                                    ),
+                                    const Text(
+                                      "No Rating Yet, Please Give rating once ride completed",
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                              ),
                             )
                           : ListView(
                               children: [

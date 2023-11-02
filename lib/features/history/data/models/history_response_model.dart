@@ -22,8 +22,10 @@ class HistoryResponseModel {
   factory HistoryResponseModel.fromJson(Map<String, dynamic> json) =>
       HistoryResponseModel(
         success: json["success"],
-        historyOrder: List<HistoryOrder>.from(
-            json["history_order"].map((x) => HistoryOrder.fromJson(x))),
+        historyOrder: json["history_order"] != null
+            ? List<HistoryOrder>.from(
+                json["history_order"].map((x) => HistoryOrder.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {

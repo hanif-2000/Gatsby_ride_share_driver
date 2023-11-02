@@ -20,3 +20,4 @@ const String driverMarkerIcon = 'assets/icons/driverMarker.png';
 const String cashIcon = 'assets/icons/cash.png';
 const String creditIcon = 'assets/icons/credit.png';
 const String userAvatarImage = 'assets/images/user_avatar.png';
+const String noRating = 'assets/icons/no_rating.png';

@@ -578,12 +578,12 @@ class OrderProvider with ChangeNotifier {
       int minutes = difference.inMinutes % 60;
       int seconds = difference.inSeconds % 60;
 
-      log("total distnce in seconds :-->> ${difference.inSeconds}");
+      log(" trip end:-->> total actual distnce in seconds after trip end :-->> ${difference.inSeconds}");
 
       log("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
 
-      log("estimated time ::==>>${session.estimatedTime}");
-      log("estimated time ::==>>${session.estimatedDistance}");
+      log("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
+      log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
       // log("actual time taken by ride is::-->> $");
 
