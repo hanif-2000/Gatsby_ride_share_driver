@@ -61,7 +61,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                           Flexible(
                             flex: 2,
                             child: AutoSizeText(
-                              getHistoryStatus(widget.item.status!),
+                              getHistoryStatus(widget.item.status),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: formTextFieldStyle,
@@ -117,7 +117,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.startAddress!,
+                                          child: Text(widget.item.startAddress,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
@@ -169,7 +169,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.endAddress!,
+                                          child: Text(widget.item.endAddress,
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
@@ -275,7 +275,7 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14)),
                                         Text(mergePriceTxt(
-                                            widget.item.total.toString()))
+                                            widget.item.newTotal.toString()))
                                       ],
                                     )
                                   ],

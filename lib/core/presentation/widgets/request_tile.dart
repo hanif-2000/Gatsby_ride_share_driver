@@ -103,7 +103,10 @@ class RequestTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'CA\$ ${request!.total}',
+                        // 'CA\$ ${request!.total}',
+
+                        'CA\$ ${request!.newTotal.toStringAsFixed(2)}',
+
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,

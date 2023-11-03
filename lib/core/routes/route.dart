@@ -98,7 +98,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     case ReceiptPage.routeName:
-      return MaterialPageRoute(builder: (_) => const ReceiptPage());
+      final args = settings.arguments as RatingPageArguments;
+      return MaterialPageRoute(
+          builder: (_) => ReceiptPage(
+                customerDataModel: args.customerDataModel,
+                customerId: args.customerId!,
+              ));
     case OtherUserProfile.routeName:
       return MaterialPageRoute(builder: (_) => const OtherUserProfile());
     case HistoryPage.routeName:

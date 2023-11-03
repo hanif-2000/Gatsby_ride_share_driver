@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/static/enums.dart';
 import '../../../../core/utility/validation_helper.dart';
+import '../../../order/presentation/pages/order_page.dart';
 import '../../../order_detail/presentation/widget/custom_rating_bar.dart';
 
 class GiveRatingScreen extends StatelessWidget {
@@ -163,8 +164,15 @@ class GiveRatingScreen extends StatelessWidget {
                                           break;
                                         case RatingSuccess:
                                           dismissLoading();
-                                          Navigator.pushNamed(context,
-                                              JobCompletedPage.routeName);
+                                          Navigator.pushNamed(
+                                            context,
+                                            JobCompletedPage.routeName,
+                                            arguments: RatingPageArguments(
+                                              customerDataModel:
+                                                  customerDataModel,
+                                              customerId: customerId,
+                                            ),
+                                          );
 
                                           break;
                                         default:

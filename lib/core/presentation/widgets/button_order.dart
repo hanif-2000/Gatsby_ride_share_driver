@@ -161,8 +161,12 @@ class ButtonOrder extends StatelessWidget {
               //         ),
               //       )
               //     : const SizedBox(),
+
+              /**   SHOW CUSTOMER PROFILE TILE SECTION */
               const UserProfileTile(),
               mediumVerticalSpacing(),
+
+              /** CALL NOW / MESSAGE BUTTON SECTION */
               Stack(
                 children: [
                   Padding(

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -18,6 +17,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
 import '../../../../core/presentation/providers/socket_provider.dart';
 import '../../../../core/static/order_status.dart';
+import '../../../receipt/persentation/pages/receipt_page.dart';
 import '../../domain/entities/order_detail.dart';
 import '../widgets/current_location_order.dart';
 
@@ -269,15 +269,27 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         // Provider.of<ReceiptProvider>(context, listen: false)
                         //     .getReceiptAPI();
                         dismissLoading();
+
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          GiveRatingScreen.routeName,
+                          ReceiptPage.routeName,
                           (route) => false,
                           arguments: RatingPageArguments(
                             customerDataModel: provider.customerDetail!.data,
                             customerId: provider.orderDetail!.userId,
                           ),
                         );
+
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //   context,
+                        //   GiveRatingScreen.routeName,dsfgdfg
+                        //   (route) => false,
+                        //   arguments: RatingPageArguments(
+                        //     customerDataModel: provider.customerDetail!.data,
+                        //     customerId: provider.orderDetail!.userId,
+                        //   ),
+                        // );
+
                         // showDialog(
                         //   barrierDismissible: false,
                         //   context: context,

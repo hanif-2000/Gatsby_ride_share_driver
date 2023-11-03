@@ -13,6 +13,8 @@ class PaymentScreen extends StatefulWidget {
   final dynamic extraDistance;
   final dynamic extraTime;
   final String distance;
+  final dynamic newTotal;
+  final dynamic pendingAmount;
 
   const PaymentScreen({
     Key? key,
@@ -23,6 +25,8 @@ class PaymentScreen extends StatefulWidget {
     required this.extraMinPrice,
     required this.grandTotal,
     required this.distance,
+    required this.newTotal,
+    required this.pendingAmount,
   }) : super(key: key);
 
   @override
@@ -89,9 +93,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const Divider(
                     color: whiteAccentColor,
                   ),
-                  const Divider(
-                    color: whiteAccentColor,
-                  ),
                   const TextInRow(
                     firstText: 'Extra Time',
                     // secondText: widget.extraTime.toString() + ' Min',
@@ -100,13 +101,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const Divider(
                     color: whiteAccentColor,
                   ),
+                  TextInRow(
+                    firstText: 'Actual Payment',
+                    // secondText: widget.extraTime.toString() + ' Min',
+                    secondText: "CA\$ " + widget.grandTotal,
+                  ),
+                  const Divider(
+                    color: whiteAccentColor,
+                  ),
+                  TextInRow(
+                    firstText: 'Customer Pending Payment',
+                    // secondText: widget.extraTime.toString() + ' Min',
+                    secondText: "CA\$ " + widget.pendingAmount,
+                  ),
                   const Divider(
                     color: whiteAccentColor,
                   ),
                   TextInRow(
                     secondTextweight: FontWeight.w700,
                     firstText: 'Grand Total',
-                    secondText: r'CA$ ' + widget.grandTotal,
+                    secondText: r'CA$ ' + widget.newTotal,
                   ),
                 ],
               ),

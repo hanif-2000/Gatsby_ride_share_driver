@@ -12,18 +12,27 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/presentation/pages/home_page/home_page.dart';
+import '../../../../core/data/models/customer_detail_model.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
 
+import '../../../order/presentation/pages/order_page.dart';
+import '../../../rating/presentation/page/give_rating_screen.dart';
 import 'detailed_payment_screen.dart';
 
 class ReceiptPage extends StatelessWidget {
-  const ReceiptPage({Key? key, this.id}) : super(key: key);
+  const ReceiptPage(
+      {Key? key,
+      this.id,
+      required this.customerDataModel,
+      required this.customerId})
+      : super(key: key);
   static const routeName = '/ReceiptPage';
   final String? id;
+  final CustomerDataModel customerDataModel;
+  final int customerId;
 
   @override
   Widget build(BuildContext context) {
@@ -363,6 +372,9 @@ class ReceiptPage extends StatelessWidget {
                                               context: context,
                                               builder: (context) {
                                                 return PaymentScreen(
+                                                    newTotal: order.newTotal,
+                                                    pendingAmount:
+                                                        order.pendingAmount,
                                                     totalPrice: order.total,
                                                     extraDistance:
                                                         order.extraDistance,
@@ -473,7 +485,9 @@ class ReceiptPage extends StatelessWidget {
                                                 .usePoppinsW6Font(),
                                           ),
                                           Text(
-                                            'CA\$ ${order.total}',
+                                            // 'CA\$ ${order.total}',
+                                            'CA\$ ${order.newTotal}',
+
                                             // '\$${order.total - ((order.total * 5) / 100)}',
                                             textAlign: TextAlign.center,
                                             style: titleStyle
@@ -603,11 +617,25 @@ class ReceiptPage extends StatelessWidget {
                                                             200) {
                                                           Navigator
                                                               .pushNamedAndRemoveUntil(
-                                                                  context,
-                                                                  HomePage
-                                                                      .routeName,
-                                                                  (route) =>
-                                                                      false);
+                                                            context,
+                                                            GiveRatingScreen
+                                                                .routeName,
+                                                            (route) => false,
+                                                            arguments:
+                                                                RatingPageArguments(
+                                                              customerDataModel:
+                                                                  customerDataModel,
+                                                              customerId:
+                                                                  customerId,
+                                                            ),
+                                                          );
+                                                          // Navigator
+                                                          //     .pushNamedAndRemoveUntil(
+                                                          //         context,
+                                                          //         HomePage
+                                                          //             .routeName,
+                                                          //         (route) =>
+                                                          //             false);
                                                         } else {
                                                           dismissLoading();
 
@@ -693,11 +721,25 @@ class ReceiptPage extends StatelessWidget {
                                                             200) {
                                                           Navigator
                                                               .pushNamedAndRemoveUntil(
-                                                                  context,
-                                                                  HomePage
-                                                                      .routeName,
-                                                                  (route) =>
-                                                                      false);
+                                                            context,
+                                                            GiveRatingScreen
+                                                                .routeName,
+                                                            (route) => false,
+                                                            arguments:
+                                                                RatingPageArguments(
+                                                              customerDataModel:
+                                                                  customerDataModel,
+                                                              customerId:
+                                                                  customerId,
+                                                            ),
+                                                          );
+                                                          // Navigator
+                                                          //     .pushNamedAndRemoveUntil(
+                                                          //         context,
+                                                          //         HomePage
+                                                          //             .routeName,
+                                                          //         (route) =>
+                                                          //             false);
                                                         } else {
                                                           dismissLoading();
 
@@ -715,17 +757,32 @@ class ReceiptPage extends StatelessWidget {
                                                         log(e.toString());
                                                       }
 
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        GiveRatingScreen
+                                                            .routeName,
+                                                        (route) => false,
+                                                        arguments:
+                                                            RatingPageArguments(
+                                                          customerDataModel:
+                                                              customerDataModel,
+                                                          customerId:
+                                                              customerId,
+                                                        ),
+                                                      );
+
                                                       // provider
                                                       //     .paymentConfirmation(
                                                       //         paymentStatus:
                                                       //             'no',
                                                       //         context: context);
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                              context,
-                                                              HomePage
-                                                                  .routeName,
-                                                              (route) => false);
+                                                      // Navigator
+                                                      //     .pushNamedAndRemoveUntil(
+                                                      //         context,
+                                                      //         HomePage
+                                                      //             .routeName,
+                                                      //         (route) => false);
                                                     },
                                                     bgColor: redD03B3B),
                                               ),

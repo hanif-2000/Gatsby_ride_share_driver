@@ -1,4 +1,3 @@
-import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -6,6 +5,8 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'home_page/home_page.dart';
 
 class JobCompletedPage extends StatelessWidget {
   const JobCompletedPage({Key? key}) : super(key: key);
@@ -56,38 +57,49 @@ class JobCompletedPage extends StatelessWidget {
                   children: [
                     largeVerticalSpacing(),
                     largeVerticalSpacing(),
-                    // CustomButton(
-                    //   text: Text(
-                    //     appLoc.findNextRide,
-                    //     style: txtButtonStyle,
-                    //   ),
-                    //   event: () {
-                    //     Navigator.pushNamedAndRemoveUntil(
-                    //       context,
-                    //       HomePage.routeName,
-                    //       (route) => false,
-                    //     );
-                    //   },
-                    //   buttonHeight: 48,
-                    //   isRounded: true,
-                    //   bgColor: blackColor,
-                    // ),
-                    largeVerticalSpacing(),
                     CustomButton(
                       text: Text(
-                        appLoc.getReceipt,
-                        style: txtButtonStyle.copyWith(color: blackColor),
+                        appLoc.findNextRide,
+                        style: txtButtonStyle,
                       ),
                       event: () {
-                        ///TODO: receipt
-                        Navigator.pushNamed(context, ReceiptPage.routeName);
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          HomePage.routeName,
+                          (route) => false,
+                        );
                       },
-                      showBorder: true,
                       buttonHeight: 48,
                       isRounded: true,
-                      bgColor: Colors.white,
+                      bgColor: blackColor,
                     ),
                     largeVerticalSpacing(),
+                    // CustomButton(
+                    //   text: Text(
+                    //     appLoc.getReceipt,
+                    //     style: txtButtonStyle.copyWith(color: blackColor),
+                    //   ),
+                    //   event: () {
+                    //     // Navigator.pushNamedAndRemoveUntil(
+                    //     //   context,
+                    //     //   GiveRatingScreen.routeName,
+                    //     //   (route) => false,
+                    //     //   arguments: RatingPageArguments(
+                    //     //     customerDataModel: provider.customerDetail!.data,
+                    //     //     customerId: provider.orderDetail!.userId,
+                    //     //   ),
+                    //     // );
+                    //     // bubh
+
+                    //     //   ///TODO: receipt
+                    //     //   Navigator.pushNamed(context, ReceiptPage.routeName);
+                    //   },
+                    //   showBorder: true,
+                    //   buttonHeight: 48,
+                    //   isRounded: true,
+                    //   bgColor: Colors.white,
+                    // ),
+                    // largeVerticalSpacing(),
                   ],
                 ),
               ),

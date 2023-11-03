@@ -60,16 +60,16 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 );
 
-                return ListView.builder(
-                  itemCount: _data.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: HistoryItem(data: _data[index]),
-                    );
-                  },
-                );
+              // return ListView.builder(
+              //   itemCount: _data.length,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   itemBuilder: (context, index) {
+              //     return Padding(
+              //       padding: const EdgeInsets.all(10.0),
+              //       child: HistoryItem(data: _data[index]),
+              //     );
+              //   },
+              // );
             }
             return const SizedBox.shrink();
           },

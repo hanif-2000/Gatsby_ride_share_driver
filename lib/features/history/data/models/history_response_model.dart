@@ -46,6 +46,9 @@ class HistoryOrder {
   dynamic distance;
   dynamic total;
   dynamic grandTotal;
+  dynamic pendingAmount;
+  dynamic newTotal;
+
   dynamic tip;
   dynamic orderTime;
   dynamic startTime;
@@ -75,6 +78,8 @@ class HistoryOrder {
     required this.distance,
     required this.total,
     required this.grandTotal,
+    required this.pendingAmount,
+    required this.newTotal,
     required this.tip,
     required this.orderTime,
     required this.startTime,
@@ -106,6 +111,8 @@ class HistoryOrder {
             json["distance"] != null ? json["distance"].toString() : "0.0",
         total: json["total"] != null ? json["total"].toDouble() : 0.0,
         grandTotal: json["grand_total"] ?? '',
+        pendingAmount: json["pending_amount"] ?? 0.0,
+        newTotal: json["new_total"] ?? 0.0,
         tip: json["tip"] ?? '0',
         orderTime: json["order_time"] != null
             ? DateTime.parse(json["order_time"])
@@ -155,6 +162,8 @@ class HistoryOrder {
         "driver_name": driverName,
         "driver_phone": driverPhone,
         "email": email,
+        "pending_amount": pendingAmount,
+        "new_total": newTotal,
         "payment_method": paymentMethod,
         "taxi_type": taxiType,
         "timestamp": timestamp,

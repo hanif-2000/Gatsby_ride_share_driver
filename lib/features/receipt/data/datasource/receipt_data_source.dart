@@ -27,7 +27,11 @@ class ReceiptDataSourceImplementation implements ReceiptDataSource {
     try {
       final response = await dio.post(
         url,
-        data: FormData.fromMap({'id': id, 'time': time, 'distance': distance}),
+        data: FormData.fromMap({
+          'id': id,
+          'time': time,
+          'distance': double.parse(distance).toStringAsFixed(1)
+        }),
       );
       final model = ReceiptDataModel.fromJson(response.data);
       return model;

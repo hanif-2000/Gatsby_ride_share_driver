@@ -16,6 +16,7 @@ import 'package:appkey_taxiapp_driver/features/order/domain/usecases/update_stat
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/get_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,6 +67,7 @@ class OrderProvider with ChangeNotifier {
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylines = {};
   final session = locator<Session>();
+  var receiptProvider = locator<ReceiptProvider>();
 
   List driverCoordinatesList = [];
 
@@ -584,6 +586,8 @@ class OrderProvider with ChangeNotifier {
 
       log("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
       log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
+
+      // receiptProvider.getReceiptAPI();
 
       // log("actual time taken by ride is::-->> $");
 

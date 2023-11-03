@@ -18,9 +18,11 @@ class UserProfileTile extends StatelessWidget {
     return Consumer<OrderProvider>(
       builder: (context, provider, _) {
         return provider.customerDetail == null
-            ? const CircularProgressIndicator(
-                color: Colors.blue,
-              )
+            ? const Text("Fetching data Please Wait ... ")
+
+            //  const CircularProgressIndicator(
+            //     color: Colors.blue,
+            //   )
             : Row(
                 children: [
                   InkWell(
@@ -99,7 +101,9 @@ class UserProfileTile extends StatelessWidget {
                     children: [
                       //Bottom sheet customer ride price
                       Text(
-                        '\$${provider.orderDetail!.totalPrice.toStringAsFixed(2)}',
+                        // '\$${provider.orderDetail!.totalPrice.toStringAsFixed(2)}',
+                        '\$${provider.orderDetail!.newTotal.toStringAsFixed(2)}',
+
                         textAlign: TextAlign.center,
                         style: titleStyle
                             .copyWith(
