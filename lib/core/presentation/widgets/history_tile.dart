@@ -158,9 +158,10 @@ class HistoryTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        order!.tip == "0"
-                            ? 'CA\$ ${order!.total} '
-                            : 'CA\$ ${order!.grandTotal}',
+                        'CA\$ ${order!.newTotal}',
+                        // order!.tip == "0"
+                        //     ? 'CA\$ ${order!.total} '
+                        //     : 'CA\$ ${order!.grandTotal}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 20,

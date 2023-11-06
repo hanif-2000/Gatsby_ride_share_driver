@@ -625,9 +625,17 @@ class OrderDetailPage extends StatelessWidget {
                     value:
                         '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
                   ),
+                  // PriceTile(
+                  //   title: 'Price',
+                  //   value: 'CA\$ ${order!.total}',
+                  // ),
                   PriceTile(
-                    title: 'Price',
-                    value: 'CA\$ ${order!.total}',
+                    title: 'Current Ride Payment',
+                    value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                  ),
+                  PriceTile(
+                    title: 'Pending Ride Payment',
+                    value: 'CA\$ ${order!.pendingAmount}',
                   ),
                   PriceTile(
                     title: 'Tip',
@@ -641,9 +649,11 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   PriceTile(
                     title: 'Total',
-                    value: order!.tip == '0'
-                        ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
-                        : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                    value:
+                        'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                    // value: order!.tip == '0'
+                    //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                    //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
                     fontSize: 18,
                   ),
                   largeVerticalSpacing(),

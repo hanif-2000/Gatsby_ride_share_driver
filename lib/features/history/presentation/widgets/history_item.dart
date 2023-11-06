@@ -151,7 +151,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                 children: [
                                   Flexible(
                                     child: AutoSizeText(
-                                      mergePriceTxt(widget.data.newTotal),
+                                      mergePriceTxt("widget.data.newTotal"),
                                       maxLines: 1,
                                       style: const TextStyle(
                                           color: primaryColor,
