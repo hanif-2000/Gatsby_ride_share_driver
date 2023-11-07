@@ -37,6 +37,7 @@ class FormProvider with ChangeNotifier {
   final _vehicleNumberController = TextEditingController();
   final _vehicleModelController = TextEditingController();
   final _vehicleInsuranceController = TextEditingController();
+  final _vehicleTypeController = TextEditingController();
 
   ///Bank Detail
   final _bankNameController = TextEditingController();
@@ -296,6 +297,7 @@ class FormProvider with ChangeNotifier {
   TextEditingController get vehicleNameController => _vehicleNameController;
 
   TextEditingController get vehicleNumberController => _vehicleNumberController;
+  TextEditingController get vehicleTypeController => _vehicleTypeController;
 
   TextEditingController get vehicleModelController => _vehicleModelController;
 

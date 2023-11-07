@@ -523,9 +523,10 @@ class OrderDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              order!.tip == '0'
-                                  ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
-                                  : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                              'CA\$ ${order!.newTotal}',
+                              // order!.tip == '0'
+                              //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                              //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -631,7 +632,8 @@ class OrderDetailPage extends StatelessWidget {
                   // ),
                   PriceTile(
                     title: 'Current Ride Payment',
-                    value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                    // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                    value: 'CA\$ ${(order!.grandTotal)}',
                   ),
                   PriceTile(
                     title: 'Pending Ride Payment',
@@ -650,7 +652,9 @@ class OrderDetailPage extends StatelessWidget {
                   PriceTile(
                     title: 'Total',
                     value:
-                        'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                        // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                        'CA\$ ${(double.parse(order!.newTotal))}',
+
                     // value: order!.tip == '0'
                     //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
                     //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
