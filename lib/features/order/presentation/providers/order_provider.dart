@@ -508,7 +508,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  Stream<UpdateStatusOrderState> submitStatusOrder() async* {
+  Stream<UpdateStatusOrderState> submitStatusOrder(bool? isCanceled) async* {
     log('Current order status -----> $_orderStatus');
 
     // if (orderStatus == OrderStatus.arriveAtCustomerPlace) {

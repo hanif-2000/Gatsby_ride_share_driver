@@ -6,7 +6,12 @@ import '../../../../core/presentation/widgets/button_order.dart';
 
 class BottomContainerOrder extends StatelessWidget {
   int newMessgeCount;
-  BottomContainerOrder({Key? key, required this.newMessgeCount})
+  int currentOrderStatus;
+
+  BottomContainerOrder(
+      {Key? key,
+      required this.newMessgeCount,
+      required this.currentOrderStatus})
       : super(key: key);
 
   @override
@@ -17,7 +22,9 @@ class BottomContainerOrder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // CustomerInfoWidget(),
-            ButtonOrder(newMessgeCount: newMessgeCount),
+            ButtonOrder(
+                newMessgeCount: newMessgeCount,
+                currentOrderStatus: currentOrderStatus),
           ],
         );
       },

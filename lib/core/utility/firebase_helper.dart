@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
 import '../presentation/pages/home_page/home_page.dart';
 import '../presentation/providers/home_provider.dart';
-import '../presentation/providers/request_list_state.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
@@ -91,14 +90,14 @@ class FirebaseHelper {
       if (!session.isOrderRunning) {
         homeProvider.getRequestListData().listen((event) {
           log("event is -->> $event");
-          if (event is RequestListLoaded) {
-            logMe(
-                'Request list data loaded success----------> ${event.data.length}');
-            Navigator.pushNamedAndRemoveUntil(
-                locator<GlobalKey<NavigatorState>>().currentContext!,
-                HomePage.routeName,
-                (route) => false);
-          }
+          // if (event is RequestListLoaded) {
+          //   logMe(
+          //       'Request list data loaded success----------> ${event.data.length}');
+          Navigator.pushNamedAndRemoveUntil(
+              locator<GlobalKey<NavigatorState>>().currentContext!,
+              HomePage.routeName,
+              (route) => false);
+          // }
         });
       }
     }

@@ -9,6 +9,7 @@ import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
@@ -16,6 +17,7 @@ import '../../static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 
 import '../../utility/injection.dart';
+import '../pages/home_page/home_page.dart';
 
 class ChatDetail {
   String? userName;
@@ -27,9 +29,17 @@ class ChatDetail {
 
 class ButtonOrder extends StatelessWidget {
   int newMessgeCount;
-  ButtonOrder({Key? key, required this.newMessgeCount}) : super(key: key);
+  int currentOrderStatus;
+  ButtonOrder(
+      {Key? key,
+      required this.newMessgeCount,
+      required this.currentOrderStatus})
+      : super(key: key);
 
   SocketProvider socketProvider = locator<SocketProvider>();
+  Session session = locator<Session>();
+
+  var dio = Dio();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +49,8 @@ class ButtonOrder extends StatelessWidget {
       builder: (context, provider, _) {
         log("unread message count is --------->>>>>>:" +
             socketProvider.unreadMessageCount.toString());
+
+        log("session order status is:-->>${session.currentOrderState}");
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: const BoxDecoration(
@@ -184,30 +196,25 @@ class ButtonOrder extends StatelessWidget {
                               style: txtButtonStyle,
                             ),
                             event: () {
-                              // session.orderStatus == 1
-                              //     ? provider.callCustomer()
-                              //     : session.orderStatus == 2
-                              //         ? provider.callCustomer()
-                              //         : session.orderStatus == 3
-                              //             ?
-
-                              provider.callCustomer();
-                              // : () {};
+                              session.currentOrderState == 1
+                                  ? provider.callCustomer()
+                                  : session.currentOrderState == 2
+                                      ? provider.callCustomer()
+                                      : session.currentOrderState == 3
+                                          ? provider.callCustomer()
+                                          : () {};
 
                               // provider.callCustomer();
                             },
                             buttonHeight: 48,
                             isRounded: true,
-                            bgColor:
-                                //  session.orderStatus == 1
-                                //     ? green2DAA5F
-                                //     : session.orderStatus == 2
-                                //         ? green2DAA5F
-                                //         : session.orderStatus == 3
-                                //             ?
-
-                                green2DAA5F,
-                            // : grey606060Color,
+                            bgColor: session.currentOrderState == 1
+                                ? green2DAA5F
+                                : session.currentOrderState == 2
+                                    ? green2DAA5F
+                                    : session.currentOrderState == 3
+                                        ? green2DAA5F
+                                        : grey606060Color,
                           ),
                         ),
                         smallHorizontalSpacing(),
@@ -216,51 +223,54 @@ class ButtonOrder extends StatelessWidget {
                             SizedBox(
                               width: _deviceSize.width * .44,
                               child: CustomButton(
-                                  image: 'assets/icons/order/ic_message.svg',
-                                  text: Text(
-                                    'Message',
-                                    style: txtButtonStyle,
-                                  ),
-                                  event: () {
-                                    // session.orderStatus == 1
-                                    //     ? Navigator.pushNamed(context, ChatPage.routeName,
-                                    //         arguments: ChatDetail(
-                                    //           provider.customerDetail!.data.name,
-                                    //           provider.customerDetail!.data.photo,
-                                    //           provider.customerDetail!.data.id,
-                                    //         ))
-                                    //     : session.orderStatus == 2
-                                    //         ? Navigator.pushNamed(
-                                    //             context, ChatPage.routeName,
-                                    //             arguments: ChatDetail(
-                                    //               provider.customerDetail!.data.name,
-                                    //               provider.customerDetail!.data.photo,
-                                    //               provider.customerDetail!.data.id,
-                                    //             ))
-                                    //         : session.orderStatus == 3
-                                    //             ?
-                                    Navigator.pushNamed(
-                                        context, ChatPage.routeName,
-                                        arguments: ChatDetail(
-                                          provider.customerDetail!.data.name,
-                                          provider.customerDetail!.data.photo,
-                                          provider.customerDetail!.data.id,
-                                        ));
-                                    // : () {};
-                                  },
-                                  buttonHeight: 48,
-                                  isRounded: true,
-                                  bgColor:
-                                      //  session.orderStatus == 1
-                                      //     ? blue249DE0
-                                      //     : session.orderStatus == 2
-                                      //         ? blue249DE0
-                                      //         : session.orderStatus == 3
-                                      //             ?
-                                      blue249DE0
-                                  // :
-                                  // grey606060Color,
-                                  ),
+                                image: 'assets/icons/order/ic_message.svg',
+                                text: Text(
+                                  'Message',
+                                  style: txtButtonStyle,
+                                ),
+                                event: () {
+                                  session.currentOrderState == 1
+                                      ? Navigator.pushNamed(
+                                          context, ChatPage.routeName,
+                                          arguments: ChatDetail(
+                                            provider.customerDetail!.data.name,
+                                            provider.customerDetail!.data.photo,
+                                            provider.customerDetail!.data.id,
+                                          ))
+                                      : session.currentOrderState == 2
+                                          ? Navigator.pushNamed(
+                                              context, ChatPage.routeName,
+                                              arguments: ChatDetail(
+                                                provider
+                                                    .customerDetail!.data.name,
+                                                provider
+                                                    .customerDetail!.data.photo,
+                                                provider
+                                                    .customerDetail!.data.id,
+                                              ))
+                                          : session.currentOrderState == 3
+                                              ? Navigator.pushNamed(
+                                                  context, ChatPage.routeName,
+                                                  arguments: ChatDetail(
+                                                    provider.customerDetail!
+                                                        .data.name,
+                                                    provider.customerDetail!
+                                                        .data.photo,
+                                                    provider.customerDetail!
+                                                        .data.id,
+                                                  ))
+                                              : () {};
+                                },
+                                buttonHeight: 48,
+                                isRounded: true,
+                                bgColor: session.currentOrderState == 1
+                                    ? blue249DE0
+                                    : session.currentOrderState == 2
+                                        ? blue249DE0
+                                        : session.currentOrderState == 3
+                                            ? blue249DE0
+                                            : grey606060Color,
+                              ),
                             ),
                           ],
                         ),
@@ -287,13 +297,15 @@ class ButtonOrder extends StatelessWidget {
                 ],
               ),
               mediumVerticalSpacing(),
+
+              /** ------- RIDE STATUS INTO STRING Section ------- */
               CustomButton(
                   text: Text(
                     provider.orderStatus.getString(),
                     style: txtButtonStyle,
                   ),
                   event: () {
-                    provider.submitStatusOrder().listen(
+                    provider.submitStatusOrder(false).listen(
                       (event) async {
                         if (event is UpdateStatusOrderLoaded) {
                           log("UpdateStatusOrderLoaded called");
@@ -338,6 +350,79 @@ class ButtonOrder extends StatelessWidget {
                   buttonHeight: 48,
                   isRounded: true,
                   bgColor: Colors.black),
+              mediumVerticalSpacing(),
+              /** ------ CANCEL RIDE Button Section ------ */
+              Visibility(
+                visible: (session.currentOrderState == 1)
+                    ? true
+                    : (session.currentOrderState == 2)
+                        ? true
+                        : (session.currentOrderState == 3)
+                            ? true
+                            : false,
+                child: CustomButton(
+                    text: Text(
+                      'Cancel Ride',
+                      style: txtButtonStyle,
+                    ),
+                    event: () {
+                      showCancelConfirmationAlertDialog(
+                          context: context,
+                          onTap: () async {
+                            dio.options.headers["Authorization"] =
+                                "Bearer +${session.sessionToken}";
+                            String updateStatusUrl =
+                                'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status';
+
+                            final formData = FormData.fromMap({
+                              'id': session.runningOrderId,
+                              'status': 8,
+                            });
+
+                            try {
+                              var res = await dio.post(updateStatusUrl,
+                                  data: formData);
+
+                              if (res.statusCode == 200) {
+                                if (res.data["success"] == 1) {
+                                  log("Ride is canceled");
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    HomePage.routeName,
+                                    (route) => false,
+                                  );
+                                } else {
+                                  showToast(
+                                      message:
+                                          "Something went wrong Please try again");
+                                }
+                              }
+                            } catch (e) {
+                              log(e.toString());
+                            }
+
+                            // provider
+                            //     .submitStatusOrder(true)
+                            //     .listen((event) async {
+                            //   if (event is UpdateStatusOrderLoaded) {
+                            //     log("UpdateStatusOrderLoaded called");
+                            //   }
+                            // });
+
+                            // Navigator.pushNamedAndRemoveUntil(
+                            //   context,
+                            //   HomePage.routeName,
+                            //   (route) => false,
+                            // );
+                            // log("Ride is canceled");
+                          });
+                    },
+                    buttonHeight: 48,
+                    isRounded: true,
+                    bgColor: Colors.red),
+              ),
+
+              mediumVerticalSpacing(),
             ],
           ),
         );

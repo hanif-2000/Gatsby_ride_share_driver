@@ -82,6 +82,34 @@ checkPermissinLocationNotification() async {
   }
 }
 
+Future<bool> showCancelConfirmationAlertDialog(
+    {required BuildContext context, onTap}) async {
+  return await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Cancel Confirmation'),
+      content: const Text('Do you really want to cancel the Ride'),
+      actions: <Widget>[
+        ElevatedButton(
+          child: const Text('Cancel Ride'),
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(backgroundColor: black15141FColor),
+        ),
+        OutlinedButton(
+          child: const Text(
+            'Go back',
+            style: TextStyle(color: black15141FColor),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+      ],
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+    ),
+  );
+}
+
 Future<bool> showAlertDialog({
   required BuildContext context,
 }) async {

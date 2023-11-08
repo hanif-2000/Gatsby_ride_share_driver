@@ -147,6 +147,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     log("order page build widget called");
+    var session = locator<Session>();
     // orderPProvider.updateOrderStatusAfterAppRestart(
     //     orderStatus: widget.orderStatus);
 
@@ -181,7 +182,6 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
-                      var session = locator<Session>();
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
 
@@ -351,24 +351,13 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 const CurrentLocationOrderWidget(),
-                                // Stack(
-                                //   children: [
                                 BottomContainerOrder(
                                   newMessgeCount: Provider.of<SocketProvider>(
                                           context,
                                           listen: true)
                                       .unreadMessageCount,
+                                  currentOrderStatus: session.currentOrderState,
                                 ),
-                                //     Text(
-                                //       Provider.of<SocketProvider>(context,
-                                //               listen: true)
-                                //           .unreadMessageCount
-                                //           .toString(),
-                                //       style: const TextStyle(
-                                //           color: Colors.red, fontSize: 18.0),
-                                //     )
-                                //   ],
-                                // )
                               ],
                             ),
                           ),

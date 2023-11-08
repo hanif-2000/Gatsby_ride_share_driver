@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             log("is ORDER RUNNIG :--->>  ${session.isOrderRunning}");
             log("Order status is :--->>  ${session.orderStatus}");
 
-            print('RUNNING order id --> ${session.runningOrderId}');
+            log('RUNNING order id --> ${session.runningOrderId}');
             if (session.isOrderRunning) {
               provider
                   .fetchOrderDetail(session.runningOrderId.toString())
