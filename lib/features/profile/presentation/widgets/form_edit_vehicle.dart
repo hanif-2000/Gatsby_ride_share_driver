@@ -221,6 +221,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         CustomTextField(
+                          textCapitalization: TextCapitalization.characters,
                           enabled: provider.isVehicleEdit,
                           placeholder: appLoc.vehicleNumber,
                           title: appLoc.vehicleNumber,

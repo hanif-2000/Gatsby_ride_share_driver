@@ -10,7 +10,6 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
-import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +21,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utility/helper.dart';
 import '../../../rating/presentation/page/give_rating_screen.dart';
+import '../widget/price_tile.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({Key? key, this.order}) : super(key: key);
@@ -617,49 +617,143 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                   ),
                   largeVerticalSpacing(),
-                  PriceTile(
-                    title: 'Distance',
-                    value: '${order!.distance} KM',
-                  ),
-                  PriceTile(
-                    title: 'Cab Type',
-                    value:
-                        '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
-                  ),
-                  // PriceTile(
-                  //   title: 'Price',
-                  //   value: 'CA\$ ${order!.total}',
-                  // ),
-                  PriceTile(
-                    title: 'Current Ride Payment',
-                    // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
-                    value: 'CA\$ ${(order!.grandTotal)}',
-                  ),
-                  PriceTile(
-                    title: 'Pending Ride Payment',
-                    value: 'CA\$ ${order!.pendingAmount}',
-                  ),
-                  PriceTile(
-                    title: 'Tip',
-                    value: 'CA\$ ${order!.tip}',
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Divider(
-                      color: grey9c9c9c,
-                    ),
-                  ),
-                  PriceTile(
-                    title: 'Total',
-                    value:
-                        // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
-                        'CA\$ ${(double.parse(order!.newTotal))}',
 
-                    // value: order!.tip == '0'
-                    //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
-                    //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
-                    fontSize: 18,
-                  ),
+                  getOrderStatus(order!.status) != appLoc.cancelled
+                      ? Container(
+                          child: Column(children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: whiteAccentColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Container(
+                                  //   width: 6,
+                                  //   height: 6,
+                                  //   decoration: BoxDecoration(
+                                  //     shape: BoxShape.circle,
+                                  //     color: getStatusColor(
+                                  //       order!.status,
+                                  //     ),
+                                  //   ),
+                                  // ),
+
+                                  const Text(
+                                    "Payment Status",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  // smallHorizontalSpacing(),
+                                  Text(
+                                    order!.paymentStatus == "no"
+                                        ? "Pending"
+                                        : "Paid",
+                                    textAlign: TextAlign.center,
+                                    style: titleStyle
+                                        .copyWith(
+                                            fontSize: 14,
+                                            color: order!.paymentStatus == "no"
+                                                ? redf52d56Color
+                                                : green2DAA5FColor)
+                                        .usePoppinsW5Font(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PriceTile(
+                              title: 'Distance',
+                              value: '${order!.distance} KM',
+                            ),
+                            PriceTile(
+                              title: 'Cab Type',
+                              value:
+                                  '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
+                            ),
+                            // PriceTile(
+                            //   title: 'Price',
+                            //   value: 'CA\$ ${order!.total}',
+                            // ),
+                            PriceTile(
+                              title: 'Current Ride Payment',
+                              // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(order!.grandTotal)}',
+                            ),
+                            PriceTile(
+                              title: 'Pending Ride Payment',
+                              value: 'CA\$ ${order!.pendingAmount}',
+                            ),
+                            PriceTile(
+                              title: 'Tip',
+                              value: 'CA\$ ${order!.tip}',
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Divider(
+                                color: grey9c9c9c,
+                              ),
+                            ),
+                            PriceTile(
+                              title: 'Total',
+                              value:
+                                  // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                                  'CA\$ ${(double.parse(order!.newTotal))}',
+
+                              // value: order!.tip == '0'
+                              //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                              //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                              fontSize: 18,
+                            ),
+                          ]),
+                        )
+                      : const SizedBox()
+                  // PriceTile(
+                  //   title: 'Distance',
+                  //   value: '${order!.distance} KM',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Cab Type',
+                  //   value:
+                  //       '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
+                  // ),
+                  // // PriceTile(
+                  // //   title: 'Price',
+                  // //   value: 'CA\$ ${order!.total}',
+                  // // ),
+                  // PriceTile(
+                  //   title: 'Current Ride Payment',
+                  //   // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                  //   value: 'CA\$ ${(order!.grandTotal)}',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Pending Ride Payment',
+                  //   value: 'CA\$ ${order!.pendingAmount}',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Tip',
+                  //   value: 'CA\$ ${order!.tip}',
+                  // ),
+                  // const Padding(
+                  //   padding: EdgeInsets.only(top: 16.0),
+                  //   child: Divider(
+                  //     color: grey9c9c9c,
+                  //   ),
+                  // ),
+                  // PriceTile(
+                  //   title: 'Total',
+                  //   value:
+                  //       // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                  //       'CA\$ ${(double.parse(order!.newTotal))}',
+
+                  //   // value: order!.tip == '0'
+                  //   //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                  //   //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                  //   fontSize: 18,
+                  // ),
+                  ,
                   largeVerticalSpacing(),
 
                   ...List.generate(

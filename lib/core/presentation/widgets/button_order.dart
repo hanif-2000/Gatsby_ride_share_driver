@@ -190,32 +190,36 @@ class ButtonOrder extends StatelessWidget {
                         SizedBox(
                           width: _deviceSize.width * .44,
                           child: CustomButton(
-                            image: 'assets/icons/order/ic_call.svg',
-                            text: Text(
-                              'Call now',
-                              style: txtButtonStyle,
-                            ),
-                            event: () {
-                              session.currentOrderState == 1
-                                  ? provider.callCustomer()
-                                  : session.currentOrderState == 2
-                                      ? provider.callCustomer()
-                                      : session.currentOrderState == 3
-                                          ? provider.callCustomer()
-                                          : () {};
+                              image: 'assets/icons/order/ic_call.svg',
+                              text: Text(
+                                'Call now',
+                                style: txtButtonStyle,
+                              ),
+                              event: () {
+                                // session.currentOrderState == 1
+                                //     ? provider.callCustomer()
+                                //     : session.currentOrderState == 2
+                                //         ? provider.callCustomer()
+                                //         : session.currentOrderState == 3
+                                //             ?
 
-                              // provider.callCustomer();
-                            },
-                            buttonHeight: 48,
-                            isRounded: true,
-                            bgColor: session.currentOrderState == 1
-                                ? green2DAA5F
-                                : session.currentOrderState == 2
-                                    ? green2DAA5F
-                                    : session.currentOrderState == 3
-                                        ? green2DAA5F
-                                        : grey606060Color,
-                          ),
+                                provider.callCustomer();
+                                // : () {};
+
+                                // provider.callCustomer();
+                              },
+                              buttonHeight: 48,
+                              isRounded: true,
+                              bgColor:
+                                  //  session.currentOrderState == 1
+                                  //     ?
+                                  green2DAA5F
+                              // : session.currentOrderState == 2
+                              //     ? green2DAA5F
+                              //     : session.currentOrderState == 3
+                              //         ? green2DAA5F
+                              //         : grey606060Color,
+                              ),
                         ),
                         smallHorizontalSpacing(),
                         Stack(
@@ -223,54 +227,60 @@ class ButtonOrder extends StatelessWidget {
                             SizedBox(
                               width: _deviceSize.width * .44,
                               child: CustomButton(
-                                image: 'assets/icons/order/ic_message.svg',
-                                text: Text(
-                                  'Message',
-                                  style: txtButtonStyle,
-                                ),
-                                event: () {
-                                  session.currentOrderState == 1
-                                      ? Navigator.pushNamed(
-                                          context, ChatPage.routeName,
-                                          arguments: ChatDetail(
-                                            provider.customerDetail!.data.name,
-                                            provider.customerDetail!.data.photo,
-                                            provider.customerDetail!.data.id,
-                                          ))
-                                      : session.currentOrderState == 2
-                                          ? Navigator.pushNamed(
-                                              context, ChatPage.routeName,
-                                              arguments: ChatDetail(
-                                                provider
-                                                    .customerDetail!.data.name,
-                                                provider
-                                                    .customerDetail!.data.photo,
-                                                provider
-                                                    .customerDetail!.data.id,
-                                              ))
-                                          : session.currentOrderState == 3
-                                              ? Navigator.pushNamed(
-                                                  context, ChatPage.routeName,
-                                                  arguments: ChatDetail(
-                                                    provider.customerDetail!
-                                                        .data.name,
-                                                    provider.customerDetail!
-                                                        .data.photo,
-                                                    provider.customerDetail!
-                                                        .data.id,
-                                                  ))
-                                              : () {};
-                                },
-                                buttonHeight: 48,
-                                isRounded: true,
-                                bgColor: session.currentOrderState == 1
-                                    ? blue249DE0
-                                    : session.currentOrderState == 2
-                                        ? blue249DE0
-                                        : session.currentOrderState == 3
-                                            ? blue249DE0
-                                            : grey606060Color,
-                              ),
+                                  image: 'assets/icons/order/ic_message.svg',
+                                  text: Text(
+                                    'Message',
+                                    style: txtButtonStyle,
+                                  ),
+                                  event: () {
+                                    // session.currentOrderState == 1
+                                    //     ?
+                                    Navigator.pushNamed(
+                                      context,
+                                      ChatPage.routeName,
+                                      arguments: ChatDetail(
+                                        provider.customerDetail!.data.name,
+                                        provider.customerDetail!.data.photo,
+                                        provider.customerDetail!.data.id,
+                                      ),
+                                    );
+                                    //     : session.currentOrderState == 2
+                                    //         ? Navigator.pushNamed(
+                                    //             context, ChatPage.routeName,
+                                    //             arguments: ChatDetail(
+                                    //               provider
+                                    //                   .customerDetail!.data.name,
+                                    //               provider
+                                    //                   .customerDetail!.data.photo,
+                                    //               provider
+                                    //                   .customerDetail!.data.id,
+                                    //             ))
+                                    //         : session.currentOrderState == 3
+                                    //             ? Navigator.pushNamed(
+                                    //                 context, ChatPage.routeName,
+                                    //                 arguments: ChatDetail(
+                                    //                   provider.customerDetail!
+                                    //                       .data.name,
+                                    //                   provider.customerDetail!
+                                    //                       .data.photo,
+                                    //                   provider.customerDetail!
+                                    //                       .data.id,
+                                    //                 ))
+                                    //             : () {};
+                                  },
+                                  buttonHeight: 48,
+                                  isRounded: true,
+                                  bgColor:
+                                      //  session.currentOrderState == 1
+                                      //     ?
+
+                                      blue249DE0
+                                  // : session.currentOrderState == 2
+                                  //     ? blue249DE0
+                                  //     : session.currentOrderState == 3
+                                  //         ? blue249DE0
+                                  //         : grey606060Color,
+                                  ),
                             ),
                           ],
                         ),
@@ -353,13 +363,15 @@ class ButtonOrder extends StatelessWidget {
               mediumVerticalSpacing(),
               /** ------ CANCEL RIDE Button Section ------ */
               Visibility(
-                visible: (session.currentOrderState == 1)
-                    ? true
-                    : (session.currentOrderState == 2)
-                        ? true
-                        : (session.currentOrderState == 3)
-                            ? true
-                            : false,
+                visible: (session.currentOrderState == 5)
+                    ? false
+                    : (session.currentOrderState == 6)
+                        ? false
+                        : (session.currentOrderState == 7)
+                            ? false
+                            : (session.currentOrderState == 8)
+                                ? true
+                                : true,
                 child: CustomButton(
                     text: Text(
                       'Cancel Ride',
@@ -369,23 +381,65 @@ class ButtonOrder extends StatelessWidget {
                       showCancelConfirmationAlertDialog(
                           context: context,
                           onTap: () async {
-                            dio.options.headers["Authorization"] =
-                                "Bearer +${session.sessionToken}";
+                            Navigator.pop(context);
+                            showLoading();
                             String updateStatusUrl =
                                 'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status';
 
-                            final formData = FormData.fromMap({
-                              'id': session.runningOrderId,
-                              'status': 8,
-                            });
+                            var data = FormData.fromMap(
+                                {'id': session.runningOrderId, 'status': '8'});
+
+                            log("form data is: ${data.fields}");
+                            log("Session token: ${session.sessionToken}");
+                            dio.options.headers["Authorization"] =
+                                "Bearer +${session.sessionToken}";
+
+                            // var res =
+                            //     await dio.post(updateStatusUrl, data: data);
+
+                            // log("status code is" + res.statusCode.toString());
+
+                            // if (res.statusCode == 200) {
+                            //   if (res.data["success"] == 1) {
+                            //     log("Ride is canceled");
+                            //     Navigator.pushNamedAndRemoveUntil(
+                            //       context,
+                            //       HomePage.routeName,
+                            //       (route) => false,
+                            //     );
+                            //   } else {
+                            //     showToast(
+                            //         message:
+                            //             "Something went wrong Please try again");
+                            //   }
+                            // }
 
                             try {
-                              var res = await dio.post(updateStatusUrl,
-                                  data: formData);
+                              var response = await dio.request(
+                                'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status',
+                                options: Options(
+                                  method: 'POST',
+                                  headers: {
+                                    "Authorization":
+                                        "Bearer ${provider.session.sessionToken}"
+                                  },
+                                ),
+                                data: data,
+                              );
+                              // Response res =
+                              //     await dio.post(updateStatusUrl, data: data);
 
-                              if (res.statusCode == 200) {
-                                if (res.data["success"] == 1) {
+                              log("status code is" +
+                                  response.statusCode.toString());
+
+                              if (response.statusCode == 200) {
+                                dismissLoading();
+                                if (response.data["success"] == 1) {
+                                  dismissLoading();
+
                                   log("Ride is canceled");
+                                  session.setIsOrderRunning = false;
+
                                   Navigator.pushNamedAndRemoveUntil(
                                     context,
                                     HomePage.routeName,
@@ -398,6 +452,9 @@ class ButtonOrder extends StatelessWidget {
                                 }
                               }
                             } catch (e) {
+                              dismissLoading();
+
+                              log("exception :-->> " + e.toString());
                               log(e.toString());
                             }
 

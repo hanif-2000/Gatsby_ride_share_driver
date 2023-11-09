@@ -28,6 +28,7 @@ class CustomTextField extends StatefulWidget {
   final EdgeInsets padding;
   final int maxLine;
   final Color backgroundColor;
+  final TextCapitalization? textCapitalization;
 
   const CustomTextField(
       {Key? key,
@@ -53,6 +54,7 @@ class CustomTextField extends StatefulWidget {
       this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       this.suffixWidget,
       this.isReadOnly,
+      this.textCapitalization,
       this.prefixWidget})
       : super(key: key);
 
@@ -122,6 +124,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
             ),
             child: TextFormField(
+              textCapitalization:
+                  widget.textCapitalization ?? TextCapitalization.none,
               readOnly: widget.isReadOnly ?? false,
               maxLength: widget.maxLength,
               maxLines: widget.maxLine,
