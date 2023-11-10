@@ -32,7 +32,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    socketProvider.connectToSocket();
+    // socketProvider.connectToSocket();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer(const Duration(seconds: 2), () async {
         if (await checkPermission()) {
@@ -64,6 +64,7 @@ class _SplashPageState extends State<SplashPage> {
                   if (value) {
                     checkProfileSession().then((value1) {
                       if (value1) {
+                        socketProvider.connectToSocket();
                         Navigator.pushNamedAndRemoveUntil(
                             context, HomePage.routeName, (route) => false);
                       } else {

@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     // _fcmProvider.addListener(() async => await fcmListener());
     WidgetsBinding.instance.addObserver(this);
-    connectToSocket();
+    // connectToSocket();
 
     // !session.isOrderRunning
     //     ? homeProvider.getRequestListData().listen((event) {
@@ -57,9 +57,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     //     : null;
   }
 
-  connectToSocket() {
-    socketProvider.connectToSocket();
-  }
+  // connectToSocket() {
+  //   socketProvider.connectToSocket();
+  // }
 
   @override
   void dispose() {

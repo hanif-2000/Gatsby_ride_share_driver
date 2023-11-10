@@ -51,6 +51,7 @@ class ButtonOrder extends StatelessWidget {
             socketProvider.unreadMessageCount.toString());
 
         log("session order status is:-->>${session.currentOrderState}");
+        log("is order runnig : ${session.isOrderRunning}");
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: const BoxDecoration(
@@ -371,7 +372,9 @@ class ButtonOrder extends StatelessWidget {
                             ? false
                             : (session.currentOrderState == 8)
                                 ? true
-                                : true,
+                                : (!session.isOrderRunning)
+                                    ? true
+                                    : true,
                 child: CustomButton(
                     text: Text(
                       'Cancel Ride',
@@ -435,10 +438,11 @@ class ButtonOrder extends StatelessWidget {
                               if (response.statusCode == 200) {
                                 dismissLoading();
                                 if (response.data["success"] == 1) {
+                                  session.setCurrentOrderState = 100;
+                                  session.setIsOrderRunning = false;
                                   dismissLoading();
 
                                   log("Ride is canceled");
-                                  session.setIsOrderRunning = false;
 
                                   Navigator.pushNamedAndRemoveUntil(
                                     context,

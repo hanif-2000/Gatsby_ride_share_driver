@@ -172,12 +172,12 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             }
 
             trackingTimer =
-                Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
+                Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
               provider.trackingDriver();
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 5),
+              const Duration(seconds: 3),
               (Timer timer) async {
                 log("------>>>>>  this will called every 5 seconds  <<<<<--------");
                 provider.fetchOrderStatus().listen(

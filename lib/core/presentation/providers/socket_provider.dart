@@ -25,10 +25,16 @@ class SocketProvider with ChangeNotifier {
   connectToSocket() async {
     final wsUrl = Uri.parse(
         'ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+
+    log("socket url -->> $wsUrl");
     channel = WebSocketChannel.connect(wsUrl);
 
     await channel!.ready;
     listenToSocket();
+  }
+
+  disconnectSocket() {
+    channel!.sink.close();
   }
 
   listenToSocket() {
@@ -40,6 +46,7 @@ class SocketProvider with ChangeNotifier {
         print(data);
 
         final response = jsonDecode(data);
+
         logMe('Message list data-----> ${response.toString()}');
         if (response['type'] == 'MessageList') {
           log("messgae type is MESSAGE LIST");
