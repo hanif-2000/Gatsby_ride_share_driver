@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
@@ -48,24 +47,28 @@ class CustomCacheNetworkImage extends StatelessWidget {
                   downloadProgress.progress.toString());
               // log("DOWNLOAD PROGRESS IS:-->> " + progress.toString());
 
-              return CircularPercentIndicator(
-                animation: true,
-                radius: size / 2,
-                lineWidth: 5.0,
-                percent: (downloadProgress.progress != null)
-                    ? (downloadProgress.progress)!
-                    : 1.0,
-                center: Text(
-                  downloadProgress.progress != null
-                      ? (((downloadProgress.progress!) * 100)
-                              .toInt()
-                              .toString() +
-                          '%')
-                      : '',
-                  style: const TextStyle(color: blackColor),
-                ),
-                progressColor: Colors.green,
+              return CircularProgressIndicator(
+                value: downloadProgress.progress,
               );
+
+              // return CircularPercentIndicator(
+              //   animation: true,
+              //   radius: size / 2,
+              //   lineWidth: 5.0,
+              //   percent: (downloadProgress.progress != null)
+              //       ? (downloadProgress.progress)!
+              //       : 1.0,
+              //   center: Text(
+              //     downloadProgress.progress != null
+              //         ? (((downloadProgress.progress!) * 100)
+              //                 .toInt()
+              //                 .toString() +
+              //             '%')
+              //         : '',
+              //     style: const TextStyle(color: blackColor),
+              //   ),
+              //   progressColor: Colors.green,
+              // );
               // Stack(
               //   children: [
 

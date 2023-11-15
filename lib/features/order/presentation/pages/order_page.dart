@@ -69,7 +69,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    socketProvider.connectToSocket();
+    // socketProvider.connectToSocket();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // socketProvider.listenRequests();
@@ -149,8 +149,17 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     log("order page build widget called");
     var session = locator<Session>();
+    var orderProvider = locator<OrderProvider>();
+
+    log("session order status " + session.currentOrderState.toString());
     // orderPProvider.updateOrderStatusAfterAppRestart(
-    //     orderStatus: widget.orderStatus);
+    //     orderStatus: session.currentOrderState);
+
+    //   if(session.orderStatus==1){
+    //  orderProvider. changeOrderStatus=OrderStatus.}
+
+    // orderProvider.updateOrderStatusAfterAppRestart(
+    //     orderStatus: session.currentOrderState);
 
     var _deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
@@ -179,12 +188,15 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             checkOrderStatusTimer = Timer.periodic(
               const Duration(seconds: 3),
               (Timer timer) async {
-                log("------>>>>>  this will called every 5 seconds  <<<<<--------");
+                log("------>>>>>  this will called every 3 seconds  <<<<<--------");
                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
+
+                      // provider.updateOrderStatusAfterAppRestart(
+                      //     orderStatus: int.parse(state.data.status));
 
                       log("curent SAVED order Status is::-->>  ${session.currentOrderState}");
 

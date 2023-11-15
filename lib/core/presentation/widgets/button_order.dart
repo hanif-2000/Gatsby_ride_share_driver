@@ -4,6 +4,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provide
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
+import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
 import '../../static/styles.dart';
-import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 
 import '../../utility/injection.dart';
 import '../pages/home_page/home_page.dart';
@@ -49,6 +49,17 @@ class ButtonOrder extends StatelessWidget {
       builder: (context, provider, _) {
         log("unread message count is --------->>>>>>:" +
             socketProvider.unreadMessageCount.toString());
+        log("current status from previous screen  is $currentOrderStatus}");
+
+        // if (currentOrderStatus == 1) {
+        //   provider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+        // } else if (currentOrderStatus == 2) {
+        //   provider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+        // } else if (currentOrderStatus == 3) {
+        //   provider.changeOrderStatus = OrderStatus.departureToDestination;
+        // } else if (currentOrderStatus == 5) {
+        //   provider.changeOrderStatus = OrderStatus.complete;
+        // }
 
         log("session order status is:-->>${session.currentOrderState}");
         log("is order runnig : ${session.isOrderRunning}");

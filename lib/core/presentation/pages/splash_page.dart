@@ -41,45 +41,62 @@ class _SplashPageState extends State<SplashPage> {
           ///TODO: comment this when APIs will start working
           // Navigator.pushNamedAndRemoveUntil(
           //     context, HomePage.routeName, (route) => false);
-          context.read<SplashProvider>().fetchCurrency().listen((state) async {
-            hand.PermissionStatus status =
-                await hand.Permission.notification.request();
-            if (status.isGranted) {
-              log("notification permissin is granetd");
-              // notification permission is granted
-            } else {
-              // Permission.notification.request();
-              log("ask for notification permission ");
-              AppSettings.openAppSettings(type: AppSettingsType.notification);
-              // Open settings to enable notification permission
-            }
-            final session = locator<Session>();
-            // log("session token" + session.sessionToken.toString());
-            // log("order id" + session.orderId.toString());
 
-            log("state runtime type:==" + state.runtimeType.toString());
-            switch (state.runtimeType) {
-              case CurrencyLoaded:
-                checkUserSession().then((value) async {
-                  if (value) {
-                    checkProfileSession().then((value1) {
-                      if (value1) {
-                        socketProvider.connectToSocket();
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, HomePage.routeName, (route) => false);
-                      } else {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            CreateProfilePage.routeName, (route) => false);
-                      }
-                    });
-                  } else {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, LoginPage.routeName, (route) => false);
-                  }
-                });
-                break;
-            }
-          });
+          hand.PermissionStatus status =
+              await hand.Permission.notification.request();
+          if (status.isGranted) {
+            log("notification permissin is granetd");
+
+            context
+                .read<SplashProvider>()
+                .fetchCurrency()
+                .listen((state) async {
+              // hand.PermissionStatus status =
+              //     await hand.Permission.notification.request();
+              // if (status.isGranted) {
+              //   log("notification permissin is granetd");
+              //   // notification permission is granted
+              // } else {
+              //   // Permission.notification.request();
+              //   log("ask for notification permission ");
+              //   AppSettings.openAppSettings(type: AppSettingsType.notification);
+              //   // Open settings to enable notification permission
+              // }
+              final session = locator<Session>();
+              // log("session token" + session.sessionToken.toString());
+              // log("order id" + session.orderId.toString());
+
+              log("state runtime type:==" + state.runtimeType.toString());
+              switch (state.runtimeType) {
+                case CurrencyLoaded:
+                  checkUserSession().then((value) async {
+                    if (value) {
+                      checkProfileSession().then((value1) {
+                        if (value1) {
+                          socketProvider.connectToSocket();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, HomePage.routeName, (route) => false);
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              CreateProfilePage.routeName, (route) => false);
+                        }
+                      });
+                    } else {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, LoginPage.routeName, (route) => false);
+                    }
+                  });
+                  break;
+              }
+            });
+
+            // notification permission is granted
+          } else {
+            // Permission.notification.request();
+            log("ask for notification permission ");
+            AppSettings.openAppSettings(type: AppSettingsType.notification);
+            // Open settings to enable notification permission
+          }
         }
       });
     });

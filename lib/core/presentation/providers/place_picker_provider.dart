@@ -129,6 +129,7 @@ class PlacePickerProvider with ChangeNotifier {
       if (serviceStatus) {
         lctn.LocationData locationData = await locationService.getLocation();
         originLatLng = LatLng(locationData.latitude!, locationData.longitude!);
+
         List<Placemark> p = await placemarkFromCoordinates(
             originLatLng.latitude, originLatLng.longitude);
 

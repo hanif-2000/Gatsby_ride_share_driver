@@ -574,6 +574,7 @@ class HomeProvider with ChangeNotifier {
       submitLocation(coordinate, bearing.toString()).listen((event) {
         if (event is UpdateLocationLoaded) {
           logMe("Sukses Update Location");
+          logMe("curent coordinates are:-->> $coordinate");
         }
       });
     });

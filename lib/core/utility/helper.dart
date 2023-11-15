@@ -230,6 +230,7 @@ String mergePriceTxt(String price) {
   return result;
 }
 
+/// RETURN TRUE IF TO SHOW ORIGIN OR DESTINATION WIDGET AT TOP
 bool getStatus(OrderStatus orderStatus) {
   if (orderStatus == OrderStatus.driverAccept ||
           orderStatus == OrderStatus.departureToCustomerplace ||

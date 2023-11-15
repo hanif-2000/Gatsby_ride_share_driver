@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/cu
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/data/model/receipt_model.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_provider.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/receipt_state.dart';
@@ -36,6 +37,7 @@ class ReceiptPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var session = locator<Session>();
     var _deviceSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) => locator<ReceiptProvider>(),
@@ -63,6 +65,9 @@ class ReceiptPage extends StatelessWidget {
                         ),
                       );
                     }
+
+                    session.setCurrentOrderState = 100;
+                    session.setIsOrderRunning = false;
                     OrderReceipt order = _data.orderReceipt.first;
 
                     int time = (order.endTime!
@@ -279,7 +284,7 @@ class ReceiptPage extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Time taken',
+                                        'Time Taken',
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
