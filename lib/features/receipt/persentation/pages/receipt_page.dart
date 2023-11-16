@@ -38,7 +38,7 @@ class ReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var session = locator<Session>();
-    var _deviceSize = MediaQuery.of(context).size;
+    // var _deviceSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) => locator<ReceiptProvider>(),
       child: Scaffold(

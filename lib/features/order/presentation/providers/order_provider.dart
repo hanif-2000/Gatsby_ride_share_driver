@@ -119,46 +119,46 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  updateOrderStatusAfterAppRestart({required int orderStatus}) {
-    log("restart order status is:  ---- $orderStatus");
-    if (orderStatus == 1) {
-      changeOrderStatus = OrderStatus.driverAccept;
-      // showLoading();
-      // _orderStatus = OrderStatus.departureToCustomerplace;
-      // setPolylineDirection(true);
+  // updateOrderStatusAfterAppRestart({required int orderStatus}) {
+  //   log("restart order status is:  ---- $orderStatus");
+  //   if (orderStatus == 1) {
+  //     changeOrderStatus = OrderStatus.driverAccept;
+  //     // showLoading();
+  //     // _orderStatus = OrderStatus.departureToCustomerplace;
+  //     // setPolylineDirection(true);
 
-      log("current status is DEPARTURE TO CUSTOMER");
-      notifyListeners();
-    }
-    if (orderStatus == 2) {
-      // _orderStatus = OrderStatus.arriveAtCustomerPlace;
+  //     log("current status is DEPARTURE TO CUSTOMER");
+  //     notifyListeners();
+  //   }
+  //   if (orderStatus == 2) {
+  //     // _orderStatus = OrderStatus.arriveAtCustomerPlace;
 
-      changeOrderStatus = OrderStatus.departureToCustomerplace;
-      notifyListeners();
+  //     changeOrderStatus = OrderStatus.departureToCustomerplace;
+  //     notifyListeners();
 
-      log("current status is ARRIVE AT CUSTOMER PLACE");
-      notifyListeners();
-    }
-    if (orderStatus == 3) {
-      // setPolylineDirection(false);
-      // _orderStatus = OrderStatus.departureToDestination;
-      changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
-      //
+  //     log("current status is ARRIVE AT CUSTOMER PLACE");
+  //     notifyListeners();
+  //   }
+  //   if (orderStatus == 3) {
+  //     // setPolylineDirection(false);
+  //     // _orderStatus = OrderStatus.departureToDestination;
+  //     changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+  //     //
 
-      log("current status is DEPARTURE TO DESTINATION");
-      notifyListeners();
-    }
-    if (orderStatus == 5) {
-      // _orderStatus = OrderStatus.arriveAtDestination;
+  //     log("current status is DEPARTURE TO DESTINATION");
+  //     notifyListeners();
+  //   }
+  //   if (orderStatus == 5) {
+  //     // _orderStatus = OrderStatus.arriveAtDestination;
 
-      // setPolylineDirection(false);
-      changeOrderStatus = OrderStatus.departureToDestination;
-      notifyListeners();
+  //     // setPolylineDirection(false);
+  //     changeOrderStatus = OrderStatus.departureToDestination;
+  //     notifyListeners();
 
-      log("current status is ARRIVE AT DESTINATION");
-    }
-    notifyListeners();
-  }
+  //     log("current status is ARRIVE AT DESTINATION");
+  //   }
+  //   notifyListeners();
+  // }
 
   set changeFirstTracking(val) {
     isFirstTracking = val;
@@ -515,6 +515,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
+  /// ------------------SUBMIT ORDER STATUS---------------- *
   Stream<UpdateStatusOrderState> submitStatusOrder(bool? isCanceled) async* {
     log('Current order status -----> $_orderStatus');
 

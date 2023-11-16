@@ -451,6 +451,7 @@ class ButtonOrder extends StatelessWidget {
                                 if (response.data["success"] == 1) {
                                   session.setCurrentOrderState = 100;
                                   session.setIsOrderRunning = false;
+                                  provider.clearState();
                                   dismissLoading();
 
                                   log("Ride is canceled");
