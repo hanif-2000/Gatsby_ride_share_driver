@@ -40,18 +40,21 @@ class RequestListModel extends Equatable {
   final String endCoordinate;
   final String startAddress;
   final String endAddress;
-  final int distance;
+  final dynamic distance;
   final int oneWay;
-  final DateTime orderTime;
+  final dynamic orderTime;
   final int paymentMethod;
   final int status;
-  final int total;
+  final dynamic total;
+  final dynamic pendingAmount;
+  final dynamic newTotal;
+
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? firstName;
   final String? lastName;
   final String? image;
-  final double? rating;
+  final dynamic rating;
 
   const RequestListModel({
     required this.id,
@@ -73,6 +76,8 @@ class RequestListModel extends Equatable {
     this.firstName,
     this.lastName,
     this.image,
+    this.pendingAmount,
+    this.newTotal,
     this.rating,
   });
 
@@ -97,6 +102,8 @@ class RequestListModel extends Equatable {
         firstName,
         lastName,
         image,
+        pendingAmount,
+        newTotal,
         rating,
       ];
 
@@ -112,12 +119,14 @@ class RequestListModel extends Equatable {
         endAddress: json["end_address"],
         distance: json["distance"],
         oneWay: json["one_way"],
+        pendingAmount: json["pending_amount"],
+        newTotal: json["new_total"],
         orderTime: DateTime.parse(json["order_time"]),
         paymentMethod: json["payment_method"],
         status: json["status"],
         total: json["total"],
         rating: json["rating"] != null
-            ? double.tryParse(json['rating'].toString())
+            ? int.tryParse(json['rating'].toString())
             : 0,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -147,5 +156,7 @@ class RequestListModel extends Equatable {
         "last_name": lastName,
         "image": image,
         "rating": rating,
+        "pendingAmount": pendingAmount,
+        "newTotal": newTotal,
       };
 }

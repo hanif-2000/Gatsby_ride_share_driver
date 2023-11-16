@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:appkey_taxiapp_driver/features/signup/data/model/signup_response_model.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/utility/injection.dart';
@@ -20,7 +19,7 @@ class SignupDataSourceImplementation implements SignupDataSource {
   Future<SignupResponseModel?> doSignup(
       String email, String password, String position) async {
     String url = 'api/webservice/driver/signup';
-    await FirebaseHelper.setupMessaging();
+    // await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
     String fcmToken = session.sessionFcmToken;
     FormData data = FormData.fromMap({

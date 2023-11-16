@@ -27,7 +27,7 @@ class CustomerDetailModel extends Equatable {
 class CustomerDataModel extends Equatable {
   final String name;
   final String phoneNumber;
-  final String photo;
+  final String? photo;
   final int id;
   final double rating;
 
@@ -50,8 +50,8 @@ class CustomerDataModel extends Equatable {
 
   factory CustomerDataModel.fromJson(Map<String, dynamic> json) =>
       CustomerDataModel(
-          name: json['name'],
-          phoneNumber: json['phone'],
+          name: json['name'] ?? '',
+          phoneNumber: json['phone'] ?? '',
           photo: json['image'] ?? '',
           rating: json['rating'] != null
               ? double.tryParse(json['rating'].toString())!

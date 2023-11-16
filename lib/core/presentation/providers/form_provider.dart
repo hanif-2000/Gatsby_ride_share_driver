@@ -6,6 +6,15 @@ import '../../utility/image_picker_helper.dart';
 
 class FormProvider with ChangeNotifier {
   // initial
+
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _idNumberController = TextEditingController();
+  // final TextEditingController _cityController=TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _vehicleController = TextEditingController();
   final TextEditingController _carModelController = TextEditingController();
@@ -28,14 +37,24 @@ class FormProvider with ChangeNotifier {
   final _vehicleNumberController = TextEditingController();
   final _vehicleModelController = TextEditingController();
   final _vehicleInsuranceController = TextEditingController();
+  final _vehicleTypeController = TextEditingController();
 
   ///Bank Detail
   final _bankNameController = TextEditingController();
   final _bankAccountController = TextEditingController();
   final _bankHolderNameController = TextEditingController();
-  final _bankIFSCCodeController = TextEditingController();
+  final _bankTransitCodeController = TextEditingController();
+  final _bankInstitutionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool _cityError = false;
+  bool _stateError = false;
+  bool _addressError = false;
+  bool _postalCodeError = false;
+  bool _dobError = false;
+  bool _idNumberError = false;
+
   bool _emailError = false;
   bool _emailConfirmError = false;
   bool _passwordError = false;
@@ -61,6 +80,8 @@ class FormProvider with ChangeNotifier {
   bool _bankAccountError = false;
   bool _bankHolderNameError = false;
   bool _bankIFSCCodeError = false;
+  bool _bankTransitCodeError = false;
+  bool _bankInstitutionCodeError = false;
 
   final _imagePicker = ImagePicker();
   dynamic _imagePickerError;
@@ -70,6 +91,43 @@ class FormProvider with ChangeNotifier {
 
   set setEmailError(val) {
     _emailError = val;
+    notifyListeners();
+  }
+
+  //City
+
+  set setCityError(val) {
+    _cityError = val;
+    notifyListeners();
+  }
+
+//state
+  set setStateError(val) {
+    _stateError = val;
+    notifyListeners();
+  }
+
+  //address
+  set setAddressError(val) {
+    _addressError = val;
+    notifyListeners();
+  }
+
+  //Date of Birth
+  set setDobError(val) {
+    _dobError = val;
+    notifyListeners();
+  }
+
+  //Postal Code
+  set setPostalCodeError(val) {
+    _postalCodeError = val;
+    notifyListeners();
+  }
+  //Id Number
+
+  set setIdNumberError(val) {
+    _idNumberError = val;
     notifyListeners();
   }
 
@@ -176,6 +234,21 @@ class FormProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  set setdobController(val) {
+    _dobController.text = val;
+    notifyListeners();
+  }
+
+  set setBankTransitErr(val) {
+    _bankTransitCodeError = val;
+    notifyListeners();
+  }
+
+  set setBankInstitutionErr(val) {
+    _bankInstitutionCodeError = val;
+    notifyListeners();
+  }
+
   ///Confirm password
   String? _password;
 
@@ -187,6 +260,13 @@ class FormProvider with ChangeNotifier {
   String? get password => _password;
 
   // getter
+  TextEditingController get addressController => _addressController;
+  TextEditingController get cityController => _cityController;
+  TextEditingController get stateController => _stateController;
+  TextEditingController get postalCodeController => _postalCodeController;
+  TextEditingController get dobController => _dobController;
+  TextEditingController get idNumberController => _idNumberController;
+// TextEditingController get addressController=>_addressController;
 
   TextEditingController get phoneController => _phoneController;
 
@@ -217,6 +297,7 @@ class FormProvider with ChangeNotifier {
   TextEditingController get vehicleNameController => _vehicleNameController;
 
   TextEditingController get vehicleNumberController => _vehicleNumberController;
+  TextEditingController get vehicleTypeController => _vehicleTypeController;
 
   TextEditingController get vehicleModelController => _vehicleModelController;
 
@@ -230,9 +311,18 @@ class FormProvider with ChangeNotifier {
   TextEditingController get bankHolderNameController =>
       _bankHolderNameController;
 
-  TextEditingController get bankIFSCCodeController => _bankIFSCCodeController;
+  TextEditingController get bankTransitController => _bankTransitCodeController;
+  TextEditingController get bankInstitutionController =>
+      _bankInstitutionController;
 
   GlobalKey<FormState> get formKey => _formKey;
+
+  bool get cityError => _cityError;
+  bool get stateError => _stateError;
+  bool get addressError => _addressError;
+  bool get postalCodeError => _postalCodeError;
+  bool get dobError => _dobError;
+  bool get idNumberError => _idNumberError;
 
   bool get emailError => _emailError;
 
@@ -280,6 +370,8 @@ class FormProvider with ChangeNotifier {
   bool get bankHolderNameError => _bankHolderNameError;
 
   bool get bankIFSCCodeError => _bankIFSCCodeError;
+  bool get bankTransitError => _bankTransitCodeError;
+  bool get bankInstitutionCodeError => _bankInstitutionCodeError;
 
   ImagePicker get imagePicker => _imagePicker;
 
@@ -303,6 +395,12 @@ class FormProvider with ChangeNotifier {
     _firstNameController.clear();
     _lastNameController.clear();
     _mobileNumberController.clear();
+    _cityController.clear();
+    _stateController.clear();
+    _addressController.clear();
+    _postalCodeController.clear();
+    _dobController.clear();
+    _idNumberController.clear();
     notifyListeners();
   }
 
@@ -315,7 +413,8 @@ class FormProvider with ChangeNotifier {
   }
 
   refreshBankDetail() {
-    _bankIFSCCodeController.clear();
+    _bankTransitCodeController.clear();
+    _bankInstitutionController.clear();
     _bankHolderNameController.clear();
     _bankAccountController.clear();
     _bankNameController.clear();

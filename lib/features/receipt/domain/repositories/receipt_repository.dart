@@ -3,5 +3,6 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 
 abstract class ReceiptRepository {
-  Future<Either<Failure, ReceiptDataModel>> getReceipt(String id);
+  Future<Either<Failure, ReceiptDataModel>> getReceipt(
+      String id, String time, String distance);
 }

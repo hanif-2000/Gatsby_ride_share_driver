@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final String placeholder;
   final bool isSecure;
   final bool isError;
+  final bool? isReadOnly;
   final TextEditingController controller;
   final FormFieldValidator? fieldValidator;
   final TextInputType inputType;
@@ -27,6 +28,7 @@ class CustomTextField extends StatefulWidget {
   final EdgeInsets padding;
   final int maxLine;
   final Color backgroundColor;
+  final TextCapitalization? textCapitalization;
 
   const CustomTextField(
       {Key? key,
@@ -51,6 +53,8 @@ class CustomTextField extends StatefulWidget {
       this.backgroundColor = shadowColor,
       this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       this.suffixWidget,
+      this.isReadOnly,
+      this.textCapitalization,
       this.prefixWidget})
       : super(key: key);
 
@@ -120,6 +124,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
             ),
             child: TextFormField(
+              textCapitalization:
+                  widget.textCapitalization ?? TextCapitalization.none,
+              readOnly: widget.isReadOnly ?? false,
               maxLength: widget.maxLength,
               maxLines: widget.maxLine,
               inputFormatters: widget.inputFormatters,
@@ -145,7 +152,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 hintText: widget.placeholder,
-                hintStyle: titleNameStyle.copyWith(color: grey9c9c9c, fontSize: 14),
+                hintStyle:
+                    titleNameStyle.copyWith(color: grey9c9c9c, fontSize: 14),
                 counterText: "",
                 prefixIcon: widget.prefixWidget == null
                     ? null

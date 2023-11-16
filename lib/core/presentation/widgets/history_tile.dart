@@ -15,7 +15,8 @@ class HistoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, OrderDetailPage.routeName, arguments: order);
+        Navigator.pushNamed(context, OrderDetailPage.routeName,
+            arguments: order);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -46,7 +47,11 @@ class HistoryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    "${DateFormat.yMMMd().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())} ${DateFormat.jm().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())}",
+
+                    // "${(DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal()}",
+
+                    // '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                     // '${order!.orderTime.toIso8601String()}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -153,10 +158,13 @@ class HistoryTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '\$${order!.total}',
+                        'CA\$ ${order!.newTotal}',
+                        // order!.tip == "0"
+                        //     ? 'CA\$ ${order!.total} '
+                        //     : 'CA\$ ${order!.grandTotal}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 24,
+                          fontSize: 20,
                           color: Colors.black,
                         ).usePoppinsW6Font(),
                       ),
@@ -207,7 +215,13 @@ class HistoryTile extends StatelessWidget {
                       ),
                       smallVerticalSpacing(),
                       Text(
-                        'Cash Payment',
+                        order!.paymentMethod == 1
+                            ? 'Cash Payment'
+                            : order!.paymentMethod == 2
+                                ? "Credit Card"
+                                : order!.paymentMethod == 3
+                                    ? 'Google Pay'
+                                    : 'Apple Pay',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,

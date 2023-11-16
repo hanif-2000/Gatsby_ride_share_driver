@@ -5,7 +5,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class RatingTile extends StatelessWidget {
   const RatingTile({Key? key, this.rating}) : super(key: key);
@@ -24,8 +23,8 @@ class RatingTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CustomRatingBar(
-                initialRating: 5,
+              CustomRatingBar(
+                initialRating: double.tryParse(rating!.rating),
                 isEditable: true,
                 itemSize: 18,
               ),
@@ -38,15 +37,15 @@ class RatingTile extends StatelessWidget {
                     .usePoppinsW6Font(),
               ),
               const Spacer(),
-              Text(
-                '${timeago.format(rating!.createdAt)}',
-                style: titleStyle
-                    .copyWith(
-                      fontSize: 12,
-                      color: greyB6B6B6,
-                    )
-                    .usePoppinsW4Font(),
-              ),
+              // Text(
+              //   // timeago.format(rating!.createdAt),
+              //   style: titleStyle
+              //       .copyWith(
+              //         fontSize: 12,
+              //         color: greyB6B6B6,
+              //       )
+              //       .usePoppinsW4Font(),
+              // ),
             ],
           ),
           mediumVerticalSpacing(),

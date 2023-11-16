@@ -24,6 +24,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profil
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
+import 'package:appkey_taxiapp_driver/features/terms_and_conditions/terms_and_conditions.dart';
 import 'package:flutter/material.dart';
 import '../../features/history/data/models/history_response_model.dart';
 import '../presentation/pages/splash_page.dart';
@@ -60,6 +61,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
     case PrivacyPolicyPage.routeName:
       return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+
+    case TermsAndConditionsPage.routeName:
+      return MaterialPageRoute(builder: (_) => const TermsAndConditionsPage());
     case OrderDetailPage.routeName:
       final args = settings.arguments as HistoryOrder;
       return MaterialPageRoute(
@@ -94,7 +98,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
     case ReceiptPage.routeName:
-      return MaterialPageRoute(builder: (_) => const ReceiptPage());
+      final args = settings.arguments as RatingPageArguments;
+      return MaterialPageRoute(
+          builder: (_) => ReceiptPage(
+                customerDataModel: args.customerDataModel,
+                customerId: args.customerId!,
+              ));
     case OtherUserProfile.routeName:
       return MaterialPageRoute(builder: (_) => const OtherUserProfile());
     case HistoryPage.routeName:

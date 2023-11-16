@@ -1,5 +1,4 @@
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
@@ -240,19 +239,28 @@ class _FormEditProfileState extends State<FormEditProfile> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      CustomDropDown(
-                        values: const [
-                          'India',
-                          'United State',
-                          'England',
-                          'Canada'
-                        ],
-                        selectedValue: provider.countryName,
-                        hint: appLoc.country,
-                        onChange: (value) {
-                          provider.setCountryName(value);
-                        },
-                      ),
+
+                      CustomTextField(
+                          placeholder: appLoc.country,
+                          title: appLoc.country,
+                          controller: TextEditingController(text: 'Canada'),
+                          inputType: TextInputType.phone,
+                          maxLength: 20,
+                          isError: provider.phoneError,
+                          fieldValidator: null),
+                      // CustomDropDown(
+                      //   values: const [
+                      //     'India',
+                      //     'United State',
+                      //     'England',
+                      //     'Canada'
+                      //   ],
+                      //   selectedValue: provider.countryName,
+                      //   hint: appLoc.country,
+                      //   onChange: (value) {
+                      //     provider.setCountryName(value);
+                      //   },
+                      // ),
                       // mediumVerticalSpacing(),
                       // CustomTextField(
                       //   placeholder: appLoc.vehicleNumber,
@@ -397,7 +405,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                 'last_name':
                                     provider.lastNameController.text.trim(),
                                 'phone': provider.phoneController.text.trim(),
-                                'country': provider.countryName,
+                                'country': 'Canada',
                                 'image': provider.profileUploadImage,
                               }),
                             )

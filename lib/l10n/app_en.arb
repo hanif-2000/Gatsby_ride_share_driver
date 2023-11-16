@@ -192,7 +192,7 @@
     "departToCustomerPlace": "Start Ride to Pickup Location",
     "arriveAtCustomerPlace": "Reached Pickup Location",
     "departToDestination": "Start Trip",
-    "arriveAtDestination": "Start Trip",
+    "arriveAtDestination": "Reached to destination",
     "endTrip": "End Trip",
     "yesIhave": "Yes, I have.",
     "nocontactcust": "No. Contact the customer.",

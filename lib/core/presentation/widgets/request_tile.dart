@@ -1,7 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/request_detail_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
-import 'package:appkey_taxiapp_driver/core/static/assets.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
@@ -56,16 +56,17 @@ class RequestTile extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  request!.image == ''
-                      ? const CircleAvatar(
-                          radius: 25,
-                          backgroundImage: AssetImage(userAvatarImage),
-                        )
-                      : CircleAvatar(
-                          radius: 25,
-                          backgroundImage:
-                              NetworkImage(mergePhotoUrl(request!.image!)),
-                        ),
+                  CustomCacheNetworkImage(img: request!.image!, size: 50),
+                  // request!.image == ''
+                  // ? const CircleAvatar(
+                  //     radius: 25,
+                  //     backgroundImage: AssetImage(userAvatarImage),
+                  //   )
+                  // : CircleAvatar(
+                  //     radius: 25,
+                  //     backgroundImage:
+                  //         NetworkImage(mergePhotoUrl(request!.image!)),
+                  //   ),
                   smallHorizontalSpacing(),
                   Expanded(
                     child: Column(
@@ -86,7 +87,7 @@ class RequestTile extends StatelessWidget {
                               width: 3,
                             ),
                             Text(
-                              '1.0',
+                              request!.rating.toString(),
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -102,7 +103,10 @@ class RequestTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\$${request!.total}',
+                        // 'CA\$ ${request!.total}',
+
+                        'CA\$ ${request!.newTotal.toStringAsFixed(2)}',
+
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,

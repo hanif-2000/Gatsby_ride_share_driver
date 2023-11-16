@@ -12,7 +12,7 @@ extension DynamicHeader on Dio {
 
 enum AddressType { origin, destination }
 
-enum ProjectType {requests, history}
+enum ProjectType { requests, history }
 
 enum TypeField {
   email,
@@ -20,6 +20,12 @@ enum TypeField {
   password,
   confirmPassword,
   name,
+  city,
+  state,
+  address,
+  dob,
+  postalCode,
+  idNumber
 }
 
 enum OrderStatus {
@@ -27,7 +33,7 @@ enum OrderStatus {
   driverAccept,
   departureToCustomerplace,
   arriveAtCustomerPlace,
-  customerConfirmation,
+  // customerConfirmation,
   departureToDestination,
   arriveAtDestination,
   complete,

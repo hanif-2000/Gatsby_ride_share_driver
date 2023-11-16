@@ -1,3 +1,5 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/pages/history_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/profile_page.dart';
@@ -20,6 +22,7 @@ class AppBarLoggedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var socketProvider = locator<SocketProvider>();
     return SizedBox(
       width: boxConstraints.maxWidth * 0.6,
       height: appbarHeight,
@@ -75,6 +78,7 @@ class AppBarLoggedIn extends StatelessWidget {
                   context: context,
                   builder: (_) => CustomLogoutDialog(
                     positiveAction: () async {
+                      await socketProvider.disconnectSocket();
                       await sessionLogOut().then((_) => Navigator.of(context)
                           .pushNamedAndRemoveUntil(
                               SplashPage.routeName, (route) => false));

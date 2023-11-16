@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
@@ -7,10 +10,9 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/address_tile.dart';
-import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/price_tile.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/rating_tile.dart';
-import 'package:provider/provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utility/helper.dart';
+import '../../../rating/presentation/page/give_rating_screen.dart';
+import '../widget/price_tile.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({Key? key, this.order}) : super(key: key);
@@ -354,7 +358,8 @@ class OrderDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                    // '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
+                    "${DateFormat.yMMMd().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())} ${DateFormat.jm().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())}",
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(
@@ -397,8 +402,7 @@ class OrderDetailPage extends StatelessWidget {
                 height: 216,
                 child: GoogleMap(
                   mapType: MapType.normal,
-                  gestureRecognizers: Set()
-                    ..add(
+                  gestureRecognizers: {}..add(
                       Factory<PanGestureRecognizer>(
                         () => PanGestureRecognizer(),
                       ),
@@ -440,30 +444,33 @@ class OrderDetailPage extends StatelessWidget {
                     child: Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, OtherUserProfile.routeName);
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: redD03B3B,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  '$BASE_URL${order!.image}',
-                                ),
-                              ),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, OtherUserProfile.routeName);
+                            },
+                            child: CustomCacheNetworkImage(
+                                img: order!.image, size: 45)
+
+                            // Container(
+                            //   height: 45,
+                            //   width: 45,
+                            //   decoration: BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: redD03B3B,
+                            //     image: DecorationImage(
+                            //       image: NetworkImage(
+                            //         '$BASE_URL${order!.image}',
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             ),
-                          ),
-                        ),
                         mediumHorizontalSpacing(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${order!.userName}',
+                              order!.userName,
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -473,11 +480,12 @@ class OrderDetailPage extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                log(order!.customerId);
                                 Navigator.pushNamed(
                                     context, RatingListPage.routeName,
-                                    arguments: order!.customerId);
+                                    arguments: int.parse(order!.customerId));
                                 // context,
-                                // GiveRatingScreen.routeName);
+                                GiveRatingScreen.routeName;
                               },
                               child: Row(
                                 children: [
@@ -512,9 +520,13 @@ class OrderDetailPage extends StatelessWidget {
                         ),
                         const Spacer(),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '\$${order!.total.toStringAsFixed(0)}',
+                              'CA\$ ${order!.newTotal}',
+                              // order!.tip == '0'
+                              //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                              //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
                               textAlign: TextAlign.center,
                               style: titleStyle
                                   .copyWith(
@@ -565,7 +577,8 @@ class OrderDetailPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${DateFormat.yMMMd().format(order!.orderTime)}, ${DateFormat.jm().format(order!.orderTime)}',
+                          "${DateFormat.yMMMd().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())} ${DateFormat.jm().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(order!.orderTime.toString(), true)).toLocal())}",
+                          // '${DateFormat.yMMMd().format(order!.orderTime!)}, ${DateFormat.jm().format(order!.orderTime!)}',
                           textAlign: TextAlign.center,
                           style: titleStyle
                               .copyWith(
@@ -604,30 +617,143 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                   ),
                   largeVerticalSpacing(),
-                  PriceTile(
-                    title: 'Distance',
-                    value: '${order!.distance} KM',
-                  ),
-                  PriceTile(
-                    title: 'Cab Type',
-                    value:
-                        '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
-                  ),
-                  PriceTile(
-                    title: 'Price',
-                    value: '\$${order!.total}',
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Divider(
-                      color: grey9c9c9c,
-                    ),
-                  ),
-                  PriceTile(
-                    title: 'Total',
-                    value: '\$${order!.total}',
-                    fontSize: 18,
-                  ),
+
+                  getOrderStatus(order!.status) != appLoc.cancelled
+                      ? Container(
+                          child: Column(children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: whiteAccentColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Container(
+                                  //   width: 6,
+                                  //   height: 6,
+                                  //   decoration: BoxDecoration(
+                                  //     shape: BoxShape.circle,
+                                  //     color: getStatusColor(
+                                  //       order!.status,
+                                  //     ),
+                                  //   ),
+                                  // ),
+
+                                  const Text(
+                                    "Payment Status",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  // smallHorizontalSpacing(),
+                                  Text(
+                                    order!.paymentStatus == "no"
+                                        ? "Pending"
+                                        : "Paid",
+                                    textAlign: TextAlign.center,
+                                    style: titleStyle
+                                        .copyWith(
+                                            fontSize: 14,
+                                            color: order!.paymentStatus == "no"
+                                                ? redf52d56Color
+                                                : green2DAA5FColor)
+                                        .usePoppinsW5Font(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PriceTile(
+                              title: 'Distance',
+                              value: '${order!.distance} KM',
+                            ),
+                            PriceTile(
+                              title: 'Cab Type',
+                              value:
+                                  '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
+                            ),
+                            // PriceTile(
+                            //   title: 'Price',
+                            //   value: 'CA\$ ${order!.total}',
+                            // ),
+                            PriceTile(
+                              title: 'Current Ride Payment',
+                              // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(order!.grandTotal)}',
+                            ),
+                            PriceTile(
+                              title: 'Pending Ride Payment',
+                              value: 'CA\$ ${order!.pendingAmount}',
+                            ),
+                            PriceTile(
+                              title: 'Tip',
+                              value: 'CA\$ ${order!.tip}',
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Divider(
+                                color: grey9c9c9c,
+                              ),
+                            ),
+                            PriceTile(
+                              title: 'Total',
+                              value:
+                                  // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                                  'CA\$ ${(double.parse(order!.newTotal))}',
+
+                              // value: order!.tip == '0'
+                              //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                              //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                              fontSize: 18,
+                            ),
+                          ]),
+                        )
+                      : const SizedBox()
+                  // PriceTile(
+                  //   title: 'Distance',
+                  //   value: '${order!.distance} KM',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Cab Type',
+                  //   value:
+                  //       '${order!.vehicleCategory.category}( ${order!.vehicleCategory.seat} Persons)',
+                  // ),
+                  // // PriceTile(
+                  // //   title: 'Price',
+                  // //   value: 'CA\$ ${order!.total}',
+                  // // ),
+                  // PriceTile(
+                  //   title: 'Current Ride Payment',
+                  //   // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                  //   value: 'CA\$ ${(order!.grandTotal)}',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Pending Ride Payment',
+                  //   value: 'CA\$ ${order!.pendingAmount}',
+                  // ),
+                  // PriceTile(
+                  //   title: 'Tip',
+                  //   value: 'CA\$ ${order!.tip}',
+                  // ),
+                  // const Padding(
+                  //   padding: EdgeInsets.only(top: 16.0),
+                  //   child: Divider(
+                  //     color: grey9c9c9c,
+                  //   ),
+                  // ),
+                  // PriceTile(
+                  //   title: 'Total',
+                  //   value:
+                  //       // 'CA\$ ${(double.parse(order!.newTotal)).toStringAsFixed(2)}',
+                  //       'CA\$ ${(double.parse(order!.newTotal))}',
+
+                  //   // value: order!.tip == '0'
+                  //   //     ? 'CA\$ ${order!.total.toStringAsFixed(2)}'
+                  //   //     : 'CA\$ ${order!.grandTotal.toStringAsFixed(2)}',
+                  //   fontSize: 18,
+                  // ),
+                  ,
                   largeVerticalSpacing(),
 
                   ...List.generate(

@@ -23,6 +23,9 @@ abstract class Session {
 
   set setUserId(String userId);
 
+  set setEstimatedDistance(String distance);
+  set setEstimatedTime(String time);
+
   set setSessionStatusOrder(String sessionStatusOrder);
 
   set setSessionCategoryId(String sessionCategoryId);
@@ -38,14 +41,21 @@ abstract class Session {
   set setCurrentOrderState(int state);
 
   set setChatToken(String chatToken);
+  set setStartTime(String rideStartTime);
+  set setEndTime(String rideEndTime);
 
   String get chatToken;
+  String get rideStartTime;
+  String get rideEndTime;
 
   bool get isLoggedIn;
 
   bool get isOnline;
 
   bool get isOrderRunning;
+
+  String get estimatedDistance;
+  String get estimatedTime;
 
   int get runningOrderId;
 
@@ -111,6 +121,16 @@ class SessionHelper implements Session {
   }
 
   @override
+  set setRideStartTime(String rideStartTime) {
+    pref.setString(RIDE_START_TIME, rideStartTime);
+  }
+
+  @override
+  set setRideEndTime(String rideEndTime) {
+    pref.setString(RIDE_END_TIME, rideEndTime);
+  }
+
+  @override
   set setSessionCategoryId(String sessionCategoryId) {
     pref.setString(SESSION_CATEGORY_ID, sessionCategoryId);
   }
@@ -123,6 +143,16 @@ class SessionHelper implements Session {
   @override
   set setDriverId(String driverId) {
     pref.setString(DRIVER_ID, driverId);
+  }
+
+  @override
+  set setEstimatedDistance(String distance) {
+    pref.setString(ESTIMATED_DISTANCE, distance);
+  }
+
+  @override
+  set setEstimatedTime(String time) {
+    pref.setString(ESTIMATED_TIME, time);
   }
 
   @override
@@ -173,6 +203,16 @@ class SessionHelper implements Session {
   @override
   set setChatToken(String chatToken) {
     pref.setString(CHAT_TOKEN, chatToken);
+  }
+
+  @override
+  set setStartTime(String rideStartTime) {
+    pref.setString(RIDE_START_TIME, rideStartTime);
+  }
+
+  @override
+  set setEndTime(String rideEndTime) {
+    pref.setString(RIDE_END_TIME, rideEndTime);
   }
 
   @override
@@ -228,6 +268,17 @@ class SessionHelper implements Session {
 
   @override
   String get sessionCategoryId => pref.getString(SESSION_CATEGORY_ID) ?? '';
+
+  @override
+  String get estimatedDistance => pref.getString(ESTIMATED_DISTANCE) ?? '';
+
+  @override
+  String get estimatedTime => pref.getString(ESTIMATED_TIME) ?? '';
+
+  @override
+  String get rideStartTime => pref.getString(RIDE_START_TIME) ?? '';
+  @override
+  String get rideEndTime => pref.getString(RIDE_END_TIME) ?? '';
 
   @override
   Future<void> clearSession() async {

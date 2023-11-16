@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../data/models/customer_detail_model.dart';
-import '../../static/assets.dart';
 import 'custom_button/custom_button_widget.dart';
 
 class MainDialog extends StatelessWidget {
@@ -48,20 +48,24 @@ class MainDialog extends StatelessWidget {
                   isOrderDialog!
                       ? ListTile(
                           leading: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: customerDetailModel!.data.photo.isEmpty
-                                ? const CircleAvatar(
-                                    radius: 33,
-                                    backgroundImage:
-                                        AssetImage(userAvatarImage),
-                                  )
-                                : CircleAvatar(
-                                    radius: 33,
-                                    backgroundImage: NetworkImage(mergePhotoUrl(
-                                        customerDetailModel!.data.photo)),
-                                  ),
-                          ),
+                              width: 40,
+                              height: 40,
+                              child: CustomCacheNetworkImage(
+                                  img: customerDetailModel!.data.photo!,
+                                  size: 66)
+                              //  customerDetailModel!.data.photo.isEmpty
+                              //     ? const CircleAvatar(
+                              //         radius: 33,
+                              //         backgroundImage:
+                              //             AssetImage(userAvatarImage),
+                              //       )
+                              //     : CircleAvatar(
+                              //         radius: 33,
+                              //         backgroundImage: NetworkImage(mergePhotoUrl(
+                              //             customerDetailModel!.data.photo)),
+                              //       ),
+
+                              ),
                           title: Text(
                             customerDetailModel!.data.name,
                             style: const TextStyle(

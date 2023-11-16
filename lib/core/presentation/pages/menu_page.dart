@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_polic
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_bank_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:flutter/material.dart';
+import '../../../features/terms_and_conditions/terms_and_conditions.dart';
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
 import '../providers/change_status_state.dart';
@@ -79,7 +80,7 @@ class HomeDrawerPage extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            PrivacyPolicyPage.routeName,
+                            TermsAndConditionsPage.routeName,
                           );
                         },
                       ),

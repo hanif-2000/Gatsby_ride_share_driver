@@ -13,11 +13,17 @@ class CreateProfileProvider extends FormProvider {
 
   int _currentStep = 1;
   String _profileImage = '';
-  String _dlImage = '';
+  String _dlImageFront = '';
+  String _dlImageBack = '';
+
   String _idProofImage = '';
   String? _countryName;
+  String _shortCountryName = '';
+
   String _profileUploadName = '';
-  String _dlImageUploadName = '';
+  String _dlImageUploadNameFront = '';
+  String _dlImageUploadNameBack = '';
+
   String _idProofImageUploadName = '';
   List<VehicleTypeDataModel> _vehicleDataModel = [];
   VehicleTypeDataModel? _selectedVehicleType;
@@ -32,6 +38,11 @@ class CreateProfileProvider extends FormProvider {
     notifyListeners();
   }
 
+  setShortCountryName(String name) {
+    _shortCountryName = name;
+    notifyListeners();
+  }
+
   setProfileImage(String image) {
     _profileImage = image;
     notifyListeners();
@@ -42,8 +53,15 @@ class CreateProfileProvider extends FormProvider {
     notifyListeners();
   }
 
-  setDlImage(String image) {
-    _dlImage = image;
+//Front Driving License
+  setDlImageFront(String image) {
+    _dlImageFront = image;
+    notifyListeners();
+  }
+
+  //Front Driving License
+  setDlImageBack(String image) {
+    _dlImageBack = image;
     notifyListeners();
   }
 
@@ -52,8 +70,16 @@ class CreateProfileProvider extends FormProvider {
     notifyListeners();
   }
 
-  setDlImageUploadName(String image) {
-    _dlImageUploadName = image;
+//Front driving license
+  setDlImageUploadNameFront(String image) {
+    _dlImageUploadNameFront = image;
+    notifyListeners();
+  }
+
+  //Back Driving License
+
+  setDlImageUploadNameBack(String image) {
+    _dlImageUploadNameBack = image;
     notifyListeners();
   }
 
@@ -72,14 +98,17 @@ class CreateProfileProvider extends FormProvider {
   String get profileImage => _profileImage;
 
   String? get countryName => _countryName;
+  String get shortCountryName => _shortCountryName;
 
   String get profileUploadName => _profileUploadName;
 
-  String get dlImage => _dlImage;
+  String get dlImageFront => _dlImageFront;
+  String get dlImageBack => _dlImageBack;
 
   String get idProofImage => _idProofImage;
 
-  String get dlImageUploadName => _dlImageUploadName;
+  String get dlImageUploadNameFront => _dlImageUploadNameFront;
+  String get dlImageUploadNameBack => _dlImageUploadNameBack;
 
   String get idProofImageUploadName => _idProofImageUploadName;
 

@@ -23,7 +23,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       getVersion();
     });
   }
@@ -40,70 +40,73 @@ class _AboutUsPageState extends State<AboutUsPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => locator<AboutUsProvider>(),
-        child: Scaffold(
-            backgroundColor: whiteColor,
-            appBar: CustomAppTtitleBar(
-              centerTitle: true,
-              canBack: true,
-              title: appLoc.appname.toUpperCase(),
-              hideShadow: false,
-            ),
-            bottomNavigationBar: BottomAppBar(
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 25,
-                      child: Text(
-                        "Driver App",
-                        style: versionAppHeadTextStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                      child: Text(
-                        "Version ${appVersion}",
-                        style: versionAppTextStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+      create: (context) => locator<AboutUsProvider>(),
+      child: Scaffold(
+        backgroundColor: whiteColor,
+        appBar: CustomAppTtitleBar(
+          centerTitle: true,
+          canBack: true,
+          title: appLoc.appname.toUpperCase(),
+          hideShadow: false,
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 25,
+                  child: Text(
+                    "Driver App",
+                    style: versionAppHeadTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              elevation: 0,
+                SizedBox(
+                  height: 25,
+                  child: Text(
+                    "Version $appVersion",
+                    style: versionAppTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-            body: SafeArea(
-              child: StreamBuilder<AboutUsState>(
-                  stream: context.read<AboutUsProvider>().fetchAboutUs(),
-                  builder: (context, state) {
-                    switch (state.data.runtimeType) {
-                      case AboutUsLoading:
-                        return const Center(child: CircularProgressIndicator());
-                      case AboutUsFailure:
-                        final failure = (state.data as AboutUsFailure).failure;
-                        showToast(message: failure);
-                        return const SizedBox.shrink();
-                      case AboutUsLoaded:
-                        final data = (state.data as AboutUsLoaded).data;
+          ),
+          elevation: 0,
+        ),
+        body: SafeArea(
+          child: StreamBuilder<AboutUsState>(
+            stream: context.read<AboutUsProvider>().fetchAboutUs(),
+            builder: (context, state) {
+              switch (state.data.runtimeType) {
+                case AboutUsLoading:
+                  return const Center(child: CircularProgressIndicator());
+                case AboutUsFailure:
+                  final failure = (state.data as AboutUsFailure).failure;
+                  showToast(message: failure);
+                  return const SizedBox.shrink();
+                case AboutUsLoaded:
+                  final data = (state.data as AboutUsLoaded).data;
 
-                        return const SingleChildScrollView(
-                          child: SizedBox(),
-                        //     child: Html(
-                        //   data: data!.text ?? '',
-                        //   style: {
-                        //     'html': Style(fontFamily: "Yu Gothic"),
-                        //     'h1': Style(textAlign: TextAlign.center)
-                        //   },
-                        // ),
-                        );
-                    }
-                    return const SizedBox.shrink();
-                  },),
-            ),),);
+                  return const SingleChildScrollView(
+                    child: SizedBox(),
+                    //     child: Html(
+                    //   data: data!.text ?? '',
+                    //   style: {
+                    //     'html': Style(fontFamily: "Yu Gothic"),
+                    //     'h1': Style(textAlign: TextAlign.center)
+                    //   },
+                    // ),
+                  );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

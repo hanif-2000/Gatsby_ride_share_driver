@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:app_settings/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart' as hand;
 import '../../../features/login/presentation/pages/login_page.dart';
 import '../../utility/global_function.dart';
 import '../../utility/helper.dart';
 import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import '../providers/currency_state.dart';
+import '../providers/socket_provider.dart';
 import '../providers/splash_provider.dart';
 import 'home_page/home_page.dart';
 import 'package:provider/provider.dart';
@@ -23,10 +27,13 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final socketProvider = locator<SocketProvider>();
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    // socketProvider.connectToSocket();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer(const Duration(seconds: 2), () async {
         if (await checkPermission()) {
           await sessionClearOrder();
@@ -34,28 +41,62 @@ class _SplashPageState extends State<SplashPage> {
           ///TODO: comment this when APIs will start working
           // Navigator.pushNamedAndRemoveUntil(
           //     context, HomePage.routeName, (route) => false);
-          context.read<SplashProvider>().fetchCurrency().listen((state) async {
-            switch (state.runtimeType) {
-              case CurrencyLoaded:
-                checkUserSession().then((value) async {
-                  if (value) {
-                    checkProfileSession().then((value1) {
-                      if (value1) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, HomePage.routeName, (route) => false);
-                      } else {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            CreateProfilePage.routeName, (route) => false);
-                      }
-                    });
-                  } else {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, LoginPage.routeName, (route) => false);
-                  }
-                });
-                break;
-            }
-          });
+
+          hand.PermissionStatus status =
+              await hand.Permission.notification.request();
+          if (status.isGranted) {
+            log("notification permissin is granetd");
+
+            context
+                .read<SplashProvider>()
+                .fetchCurrency()
+                .listen((state) async {
+              // hand.PermissionStatus status =
+              //     await hand.Permission.notification.request();
+              // if (status.isGranted) {
+              //   log("notification permissin is granetd");
+              //   // notification permission is granted
+              // } else {
+              //   // Permission.notification.request();
+              //   log("ask for notification permission ");
+              //   AppSettings.openAppSettings(type: AppSettingsType.notification);
+              //   // Open settings to enable notification permission
+              // }
+              final session = locator<Session>();
+              // log("session token" + session.sessionToken.toString());
+              // log("order id" + session.orderId.toString());
+
+              log("state runtime type:==" + state.runtimeType.toString());
+              switch (state.runtimeType) {
+                case CurrencyLoaded:
+                  checkUserSession().then((value) async {
+                    if (value) {
+                      checkProfileSession().then((value1) {
+                        if (value1) {
+                          socketProvider.connectToSocket();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, HomePage.routeName, (route) => false);
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              CreateProfilePage.routeName, (route) => false);
+                        }
+                      });
+                    } else {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, LoginPage.routeName, (route) => false);
+                    }
+                  });
+                  break;
+              }
+            });
+
+            // notification permission is granted
+          } else {
+            // Permission.notification.request();
+            log("ask for notification permission ");
+            AppSettings.openAppSettings(type: AppSettingsType.notification);
+            // Open settings to enable notification permission
+          }
         }
       });
     });

@@ -1,4 +1,6 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
@@ -22,6 +24,7 @@ class BottomProfile extends StatefulWidget {
 }
 
 class _BottomProfileState extends State<BottomProfile> {
+  var socketProvider = locator<SocketProvider>();
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(builder: (context, provider, _) {
@@ -83,6 +86,7 @@ class _BottomProfileState extends State<BottomProfile> {
                           context: context,
                           builder: (_) => CustomLogoutDialog(
                             positiveAction: () async {
+                              await socketProvider.disconnectSocket();
                               await sessionLogOut().then((_) =>
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       SplashPage.routeName, (route) => false));

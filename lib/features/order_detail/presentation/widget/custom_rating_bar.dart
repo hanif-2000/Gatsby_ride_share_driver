@@ -2,7 +2,6 @@ import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-
 class CustomRatingBar extends StatelessWidget {
   const CustomRatingBar({
     Key? key,
@@ -20,7 +19,9 @@ class CustomRatingBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RatingBar.builder(
       initialRating: initialRating!,
-      minRating: 1,
+      minRating: 0,
+      unratedColor: greyEFEFF4Color,
+      glow: false,
       direction: Axis.horizontal,
       allowHalfRating: true,
       itemCount: 5,
@@ -34,7 +35,7 @@ class CustomRatingBar extends StatelessWidget {
       ),
       onRatingUpdate: (rating) {
         ///Update rating
-        print('Rating Rating ----> ${rating}');
+        print('Rating Rating ----> $rating');
         if (onUpdate != null) {
           onUpdate!(rating);
         }

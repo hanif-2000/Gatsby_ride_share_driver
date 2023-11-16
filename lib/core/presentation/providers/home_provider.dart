@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
@@ -20,12 +21,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
+import 'package:location/location.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
 import '../../../features/profile/domain/usecases/get_profile.dart';
 import '../../../features/profile/presentation/providers/profile_state.dart';
 import '../../data/models/customer_detail_model.dart';
+import '../../data/models/google_route_response_modal.dart';
 import '../../utility/direction_helper.dart';
 import '../../utility/firebase_helper.dart';
 import '../../utility/injection.dart';
@@ -43,6 +46,7 @@ class HomeProvider with ChangeNotifier {
   final DoUpdateLocation doUpdateLocation;
   final session = locator<Session>();
   late BitmapDescriptor pickUpMarker, destinationMarker;
+  Location location = Location();
 
   //Initial
   final lctn.Location locationService = lctn.Location();
@@ -52,7 +56,7 @@ class HomeProvider with ChangeNotifier {
   );
   CustomerDetailModel? _customerDetailModel;
   OrderDetail? _orderDetail;
-  late bool _isOnline = false;
+  bool _isOnline = false;
   late ProjectType _projectType = ProjectType.requests;
 
   // late bool _isOrderExist = false;
@@ -66,6 +70,15 @@ class HomeProvider with ChangeNotifier {
   String originAddress = '';
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylines = {};
+
+  Timer? refreshRequestList;
+
+  //check if location Changed
+  locationChanged() {
+    location.onLocationChanged;
+    location.changeSettings(
+        accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 10);
+  }
 
   // getter
   bool get isOnline => _isOnline;
@@ -82,14 +95,17 @@ class HomeProvider with ChangeNotifier {
   GlobalKey get globalKey => _key;
 
   //setter
-  set changeStatusOld(val) {
-    _isOnline = val;
-    // notifyListeners();
-  }
+  // set changeStatusOld(val) {
+  //   _isOnline = val;
+  //   // notifyListeners();
+  // }
 
   set changeStatus(val) {
     _isOnline = val;
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
+    // });
   }
 
   set projectType(value) {
@@ -216,6 +232,10 @@ class HomeProvider with ChangeNotifier {
       dismissLoading();
       yield RequestListLoaded(data: data.data);
     });
+  }
+
+  checkNotificationCurrentStateCalled() {
+    dev.log("Check notification current state is called ");
   }
 
   Stream<RejectRequestState> rejectRequest(
@@ -439,7 +459,7 @@ class HomeProvider with ChangeNotifier {
       } else {
         changeStatus = false;
       }
-      await FirebaseHelper.setTopicDriver(data.statusOrder).then((_) {});
+      await FirebaseHelper.setTopicDriver(data.statusOrder!).then((_) {});
       dismissLoading();
 
       yield ProfileLoaded(data: data);
@@ -455,9 +475,47 @@ class HomeProvider with ChangeNotifier {
       yield OrderDetailFailure(failure: failure.message);
     }, (data) async* {
       _orderDetail = data;
+
+      setActualDistance(
+          originLat:
+              double.parse(_orderDetail!.startCoordinate.split(',').first),
+          originLong:
+              double.parse(_orderDetail!.startCoordinate.split(',').last),
+          destinationLat:
+              double.parse(_orderDetail!.endCoordinate.split(',').first),
+          destinationLong:
+              double.parse(_orderDetail!.endCoordinate.split(',').last));
+
       notifyListeners();
       yield OrderDetailLoaded(data: data);
     });
+  }
+
+  setActualDistance(
+      {destinationLat, destinationLong, originLat, originLong}) async {
+    try {
+      // Get real distance
+      var response = await Dio().get(
+          'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      dev.log(" response of real distance:--->>> ${response.data}");
+
+      var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
+      // distance = data.rows[0].elements[0].distance.text;
+      // estimatedTime = data.rows[0].elements[0].duration.value;
+      // estimatedTimeToShow = data.rows[0].elements[0].duration.text;
+
+      session.setEstimatedDistance =
+          (data.rows[0].elements[0].distance.value / 1000).toString();
+      session.setEstimatedTime =
+          (data.rows[0].elements[0].duration.value / 60).toStringAsFixed(1);
+
+      notifyListeners();
+
+      dev.log("session distnace:--${session.estimatedDistance}");
+      dev.log("session duration:--${session.estimatedTime}");
+    } catch (e) {
+      print(e);
+    }
   }
 
   Stream<CustomerDetailState> fetchCustomerDetail(String userId) async* {
@@ -516,6 +574,7 @@ class HomeProvider with ChangeNotifier {
       submitLocation(coordinate, bearing.toString()).listen((event) {
         if (event is UpdateLocationLoaded) {
           logMe("Sukses Update Location");
+          logMe("curent coordinates are:-->> $coordinate");
         }
       });
     });

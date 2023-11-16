@@ -144,7 +144,7 @@ class _FormEditBankState extends State<FormEditBank> {
                           placeholder: appLoc.accountNumber,
                           title: appLoc.accountNumber,
                           controller: provider.bankAccountController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           isError: provider.bankAccountError,
                           fieldValidator: ValidationHelper(
                             loc: appLoc,
@@ -179,29 +179,59 @@ class _FormEditBankState extends State<FormEditBank> {
                         ),
                         largeVerticalSpacing(),
                         Text(
-                          appLoc.ifscCode,
+                          "Transit Number",
                           style: titleNameStyle
                               .copyWith(color: greyB6B6B6, fontSize: 15)
                               .usePoppinsW4Font(),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+
+                        //Transit number
                         CustomTextField(
                           enabled: provider.isBankEdit,
-                          placeholder: appLoc.ifscCode,
+                          placeholder: "Transit Number",
                           title: appLoc.ifscCode,
-                          controller: provider.bankIFSCCodeController,
-                          inputType: TextInputType.name,
+                          controller: provider.bankTransitController,
+                          inputType: TextInputType.number,
                           maxLength: 20,
-                          isError: provider.bankIFSCCodeError,
+                          isError: provider.bankTransitError,
                           fieldValidator: ValidationHelper(
                             loc: appLoc,
                             isError: (bool value) =>
-                                provider.setBankISCCodeError = value,
+                                provider.setBankAccountError = value,
                             typeField: TypeField.name,
                           ).validate(),
                         ),
                         largeVerticalSpacing(),
+
+                        Text(
+                          "Institution Number",
+                          style: titleNameStyle
+                              .copyWith(color: greyB6B6B6, fontSize: 15)
+                              .usePoppinsW4Font(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        //Transit number
+                        CustomTextField(
+                          enabled: provider.isBankEdit,
+                          placeholder: "Institution Number",
+                          title: "Institution",
+                          controller: provider.bankInstitutionController,
+                          inputType: TextInputType.number,
+                          maxLength: 20,
+                          isError: provider.bankTransitError,
+                          fieldValidator: ValidationHelper(
+                            loc: appLoc,
+                            isError: (bool value) =>
+                                provider.setBankAccountError = value,
+                            typeField: TypeField.name,
+                          ).validate(),
+                        ),
+                        largeVerticalSpacing(),
+
                         Visibility(
                           visible: provider.isBankEdit,
                           child: CustomButton(
@@ -226,8 +256,11 @@ class _FormEditBankState extends State<FormEditBank> {
                                     "account_holder_name": provider
                                         .bankHolderNameController.text
                                         .trim(),
-                                    "ifsc_code": provider
-                                        .bankIFSCCodeController.text
+                                    "transit_number": provider
+                                        .bankTransitController.text
+                                        .trim(),
+                                    "institution_number": provider
+                                        .bankInstitutionController.text
                                         .trim(),
                                   }),
                                 )

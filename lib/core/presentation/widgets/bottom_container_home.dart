@@ -6,7 +6,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class BottomContainerHome extends StatelessWidget {
   const BottomContainerHome({
     Key? key,
@@ -93,7 +92,7 @@ class BottomContainerHome extends StatelessWidget {
                     ],
                     innerColor: provider.isOnline ? primaryColor : Colors.black,
                     onChanged: (b) {
-                      provider.updateStatus().listen((event) async {});
+                      // provider.updateStatus().listen((event) async {});
                       provider.changeStatus = b;
                       return Future.delayed(const Duration(seconds: 2));
                     },

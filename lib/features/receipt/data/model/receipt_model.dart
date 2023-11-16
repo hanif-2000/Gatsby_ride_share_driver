@@ -25,12 +25,22 @@ class OrderReceipt {
   String id;
   String driverId;
   String distance;
-  int total;
+  String total;
   DateTime orderTime;
   DateTime? startTime;
   DateTime? endTime;
+  String grandTotal;
+  dynamic newTotal;
+  dynamic pendingAmount;
+
+  String extraTime;
+  String extraKmPrice;
+  String extraDistance;
+  String extraDistancePrice;
+  dynamic tip;
+
   String status;
-  String image;
+  String? image;
   String userName;
   String userPhone;
   double? rating;
@@ -45,11 +55,19 @@ class OrderReceipt {
     required this.orderTime,
     this.startTime,
     this.endTime,
+    this.newTotal,
+    this.pendingAmount,
+    required this.grandTotal,
+    required this.extraTime,
+    required this.extraKmPrice,
+    required this.extraDistance,
+    required this.extraDistancePrice,
     required this.status,
     required this.image,
     required this.userName,
     required this.userPhone,
     required this.rating,
+    required this.tip,
     required this.paymentMethod,
     required this.timestamp,
   });
@@ -62,13 +80,22 @@ class OrderReceipt {
         orderTime: DateTime.parse(json["order_time"]),
         startTime: json["start_time"] != null
             ? DateTime.parse(json["start_time"])
-            : null,
-        endTime:
-            json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
+            : DateTime.parse(json["end_time"]),
+        endTime: json["end_time"] != null
+            ? DateTime.parse(json["end_time"])
+            : DateTime.parse(json["start_time"]),
         status: json["status"],
-        image: json["image"],
+        image: json["image"] ?? '',
+        newTotal: json["new_total"] ?? 0.0,
+        pendingAmount: json["pending_amount"] ?? 0.0,
+        tip: json["tip"] ?? 0,
         userName: json["user_name"],
         userPhone: json["user_phone"],
+        grandTotal: json["grand_total"] ?? "0",
+        extraTime: json["extra_time"] ?? '0',
+        extraKmPrice: json["extra_km_price"] ?? '0',
+        extraDistance: json["extra_distance"] ?? '0',
+        extraDistancePrice: json["extra_distance_price"] ?? '0',
         rating: json["rating"] != null
             ? double.tryParse(json["rating"].toString())
             : 0.0,
@@ -81,6 +108,11 @@ class OrderReceipt {
         "driver_id": driverId,
         "distance": distance,
         "total": total,
+        "grand_total": grandTotal,
+        "extra_time": extraTime,
+        "extra_km_price": extraKmPrice,
+        "extra_distance": extraDistance,
+        "extra_distance_price": extraDistancePrice,
         "order_time": orderTime.toIso8601String(),
         "end_time": endTime!.toIso8601String(),
         "start_time": endTime!.toIso8601String(),
@@ -89,7 +121,10 @@ class OrderReceipt {
         "user_name": userName,
         "user_phone": userPhone,
         "rating": rating,
+        "tip": tip,
         "payment_method": paymentMethod,
         "timestamp": timestamp,
+        "newTotal": newTotal,
+        "pendingAmount": pendingAmount,
       };
 }

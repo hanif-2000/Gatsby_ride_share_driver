@@ -82,11 +82,11 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
           // if (data.success == 1) {
           //   provider.setCurrentStep(3);
           // } else {
-            // if (data.message == '1') {
-            //   showToast(message: appLoc.emailnotmatch);
-            // } else {
-            //   showToast(message: appLoc.failed);
-            // }
+          // if (data.message == '1') {
+          //   showToast(message: appLoc.emailnotmatch);
+          // } else {
+          //   showToast(message: appLoc.failed);
+          // }
           // }
 
           break;
@@ -117,6 +117,8 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 width: 136,
               ),
               largeVerticalSpacing(),
+
+              //Vehicle  type List
               CustomTypeDropDown(
                 values: provider.vehicleTypeList,
                 selectedValue: provider.selectedVehicleType,
@@ -126,6 +128,8 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 },
               ),
               smallVerticalSpacing(),
+
+              // Vehicle name
               CustomTextField(
                 placeholder: appLoc.vehicleName,
                 title: appLoc.vehicleName,
@@ -139,6 +143,8 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 ).validate(),
               ),
               smallVerticalSpacing(),
+
+              //Vehicle number
               CustomTextField(
                 placeholder: appLoc.vehicleNumber,
                 title: appLoc.vehicleNumber,
@@ -173,7 +179,7 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 placeholder: appLoc.insuranceNumber,
                 title: appLoc.insuranceNumber,
                 controller: provider.vehicleInsuranceController,
-                inputType: TextInputType.text,
+                inputType: TextInputType.number,
                 isError: provider.vehicleInsuranceError,
                 fieldValidator: ValidationHelper(
                   loc: appLoc,

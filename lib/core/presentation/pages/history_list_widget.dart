@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/history_tile.dart';
+import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
@@ -18,12 +21,20 @@ class HistoryListWidget extends StatelessWidget {
           builder: (context, state) {
             switch (state.data.runtimeType) {
               case HistoryLoading:
-                return const Center(child: CircularProgressIndicator());
+                log("History Loading");
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: blackColor,
+                ));
               case HistoryFailure:
+                log("History Failure");
+
                 final failure = (state.data as HistoryFailure).failure;
-                showToast(message: failure);
+                showToast(message: "Network slow Please try again");
                 return const SizedBox.shrink();
               case HistoryLoaded:
+                log("History Loaded");
+
                 final _data = (state.data as HistoryLoaded).data;
                 logMe('History length --> ${_data.length}');
                 if (_data.isEmpty) {
@@ -37,7 +48,7 @@ class HistoryListWidget extends StatelessWidget {
                 return Column(
                   children: List.generate(
                     _data.length,
-                        (index) => HistoryTile(
+                    (index) => HistoryTile(
                       order: _data[index],
                     ),
                   ),

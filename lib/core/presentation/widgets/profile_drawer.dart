@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_profile_page.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../features/profile/presentation/providers/profile_provider.dart';
 import '../../../features/profile/presentation/providers/profile_state.dart';
-import '../../static/assets.dart';
 import '../../static/styles.dart';
 import '../../utility/helper.dart';
 
@@ -34,24 +34,26 @@ class ProfileInformationDrawer extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                data.image.isEmpty
-                    ? const CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage(userAvatarImage),
-                      )
-                    : CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            NetworkImage(mergePhotoUrl(data.image)),
-                      ),
+                CustomCacheNetworkImage(img: data.image!, size: 100),
+
+                // data.image!.isEmpty
+                //     ? const CircleAvatar(
+                //         radius: 50,
+                //         backgroundImage: AssetImage(userAvatarImage),
+                //       )
+                //     : CircleAvatar(
+                //         radius: 50,
+                //         backgroundImage:
+                //             NetworkImage(mergePhotoUrl(data.image!)),
+                //       ),
                 smallVerticalSpacing(),
                 Text(
-                  data.name,
+                  data.name!,
                   style: formTextFieldStyle,
                 ),
                 smallVerticalSpacing(),
                 Text(
-                  data.email,
+                  data.email!,
                   style: formTextFieldStyle,
                 ),
                 InkWell(

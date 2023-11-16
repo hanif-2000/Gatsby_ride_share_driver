@@ -21,7 +21,7 @@ class HistoryItem extends StatefulWidget {
 class _HistoryItemState extends State<HistoryItem> {
   @override
   Widget build(BuildContext context) {
-    String orderDate = getDateString(widget.data.orderTime);
+    String orderDate = getDateString(widget.data.orderTime!);
 
     return GestureDetector(
         onTap: () {
@@ -116,7 +116,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                       ),
                                       Flexible(
                                         child: Text(
-                                          widget.data.startAddress,
+                                          widget.data.startAddress.toString(),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       )
@@ -133,7 +133,8 @@ class _HistoryItemState extends State<HistoryItem> {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Text(widget.data.endAddress,
+                                        child: Text(
+                                            widget.data.endAddress.toString(),
                                             overflow: TextOverflow.ellipsis),
                                       )
                                     ],
@@ -150,8 +151,7 @@ class _HistoryItemState extends State<HistoryItem> {
                                 children: [
                                   Flexible(
                                     child: AutoSizeText(
-                                      mergePriceTxt(
-                                          widget.data.total.toString()),
+                                      mergePriceTxt("widget.data.newTotal"),
                                       maxLines: 1,
                                       style: const TextStyle(
                                           color: primaryColor,

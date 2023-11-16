@@ -1,10 +1,10 @@
-import 'package:appkey_taxiapp_driver/core/domain/entities/price_category.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:appkey_taxiapp_driver/features/create_profile/data/model/vehicle_type_respose_model.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_edit_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_state.dart';
 import 'package:dio/dio.dart';
@@ -135,28 +135,29 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<PriceCategory>(
+                                  child: DropdownButton<VehicleTypeDataModel>(
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down,
                                         color: primaryColor,
                                         size: 30,
                                       ),
                                       hint: Text(
-                                        appLoc.choosetaxi,
+                                        provider.vehicleTypeController.text,
                                         style:
                                             const TextStyle(color: Colors.grey),
                                       ),
-                                      value: provider.selectedCategory,
+                                      value: provider.selectedVehicle,
                                       onChanged: provider.isVehicleEdit
-                                          ? (PriceCategory? item) {
-                                              provider.setSelectedCategory =
+                                          ? (VehicleTypeDataModel? item) {
+                                              provider.setSelectedVehicle =
                                                   item;
-                                              logMe(provider.selectedCategory);
+                                              logMe(provider.selectedVehicle);
                                             }
                                           : null,
-                                      items: provider.priceCategory
-                                          .map((PriceCategory category) {
-                                        return DropdownMenuItem<PriceCategory>(
+                                      items: provider.vehicleCategory
+                                          .map((VehicleTypeDataModel category) {
+                                        return DropdownMenuItem<
+                                            VehicleTypeDataModel>(
                                           value: category,
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
@@ -164,7 +165,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Text(
-                                                category.categoryCar,
+                                                category.category,
                                                 style: const TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -220,6 +221,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         CustomTextField(
+                          textCapitalization: TextCapitalization.characters,
                           enabled: provider.isVehicleEdit,
                           placeholder: appLoc.vehicleNumber,
                           title: appLoc.vehicleNumber,
@@ -271,7 +273,7 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                           placeholder: appLoc.insuranceNumber,
                           title: appLoc.insuranceNumber,
                           controller: provider.vehicleInsuranceController,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           maxLength: 20,
                           isError: provider.vehicleInsuranceError,
                           fieldValidator: ValidationHelper(

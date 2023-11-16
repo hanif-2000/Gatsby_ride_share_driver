@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class PriceCategory extends Equatable {
-  final num categoryId, priceKm, priceMin, seat;
-  final String categoryCar;
+  final dynamic categoryId, priceKm, priceMin, seat;
+  final dynamic categoryCar;
 
   const PriceCategory({
     required this.categoryId,

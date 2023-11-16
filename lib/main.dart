@@ -2,7 +2,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_email_provider.dart';
@@ -20,17 +19,22 @@ import 'core/static/colors.dart';
 import 'core/utility/firebase_helper.dart';
 import 'core/utility/helper.dart';
 import 'core/utility/injection.dart';
-import 'core/utility/notification_service.dart';
 import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
+// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await init();
 
     locator.isReady<Session>().then((_) async {
-      await NotificationHelper().init();
+      FirebaseHelper.init();
+
+      // await FirebaseHelper.init().then((_) async {
+      //   // await NotificationHelper().init();
+      // });
+      // await NotificationHelper().init();
       runApp(
         MultiProvider(
           providers: [
@@ -67,14 +71,13 @@ Future<void> main() async {
             ChangeNotifierProvider<ChangePasswordProvider>(
               create: (context) => locator<ChangePasswordProvider>(),
             ),
-            ChangeNotifierProvider<ChatProvider>(
-              create: (context) => locator<ChatProvider>(),
-            ),
+            // ChangeNotifierProvider<ChatProvider>(
+            //   create: (context) => locator<ChatProvider>(),
+            // ),
           ],
           builder: (context, _) => const MyApp(),
         ),
       );
-      await FirebaseHelper.init().then((_) {});
     });
   } catch (e) {
     logMe(e);
@@ -88,7 +91,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         navigatorKey: locator<GlobalKey<NavigatorState>>(),
-        title: 'Flutter Demo',
+        title: 'GatsByRideShare',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: primaryColor,

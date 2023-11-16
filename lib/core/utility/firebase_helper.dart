@@ -1,23 +1,34 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:appkey_taxiapp_driver/core/domain/entities/incoming_order.dart';
 import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
+import '../presentation/pages/home_page/home_page.dart';
+import '../presentation/providers/home_provider.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
+import 'package:provider/provider.dart';
 
 class FirebaseHelper {
   static late FirebaseMessaging messaging;
+
   static Future<void> init() async {
-    logMe("Firebase helper");
+    await Firebase.initializeApp();
+    logMe("Firebasee helperrrr");
     await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+        name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
+
     await permissionHandler().then((authorized) async {
+      log("IS AUTHORIZED:  $authorized");
       if (authorized) {
+        await NotificationHelper().init();
+
         await setupMessaging();
       }
     });
@@ -35,6 +46,9 @@ class FirebaseHelper {
   static Future<void> incomingNotificationHandling() async {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log("on message listen called");
+
+      log("remote message is------->>>>>. $message");
       fetchRemoteMessage(message);
       NotificationHelper _notificationService = NotificationHelper();
       _notificationService.showNotifications(message);
@@ -42,6 +56,52 @@ class FirebaseHelper {
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
+    // Booking Cancelled//
+    //New Order
+
+    log("notification titilew is---->> ${message.notification!.title}");
+    log("notification category :${message.category}");
+    log("notification collapseKey :${message.collapseKey}");
+    log("notification contentAvailable :${message.contentAvailable}");
+    log("notification data :${message.data}");
+    log("notification contains key startiung point  :${message.data.containsKey('Starting point')}");
+
+    log("notification Destination :${message.data['Destination']}");
+    log("notification from :${message.from}");
+    log("notification messageId :${message.messageId}");
+    log("notification messageType :${message.messageType}");
+    log("notification mutableContent :${message.mutableContent}");
+    log("notification notification :${message.notification}");
+    log("notification senderId :${message.senderId}");
+    log("notification sentTime :${message.sentTime}");
+    log("notification threadId :${message.threadId}");
+    log("notification ttl :${message.ttl}");
+
+    log("remote message called");
+
+    if (message.notification!.title == 'New Order' ||
+        message.notification!.title == 'Booking Cancelled') {
+      var homeProvider = Provider.of<HomeProvider>(
+          locator<GlobalKey<NavigatorState>>().currentContext!,
+          listen: false);
+      // final GlobalKey<ScaffoldState> key = GlobalKey();
+
+      Session session = locator<Session>();
+      if (!session.isOrderRunning) {
+        // homeProvider.getRequestListData().listen((event) {
+        //   log("event is -->> $event");
+        // if (event is RequestListLoaded) {
+        //   logMe(
+        //       'Request list data loaded success----------> ${event.data.length}');
+        Navigator.pushNamedAndRemoveUntil(
+            locator<GlobalKey<NavigatorState>>().currentContext!,
+            HomePage.routeName,
+            (route) => false);
+        // }
+        // });
+      }
+    }
+
     logMe('data: ${message.data}');
     late String? title;
     late String? body;
@@ -111,6 +171,9 @@ class FirebaseHelper {
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+
+  NotificationHelper _notificationService = NotificationHelper();
+  _notificationService.showNotifications(message);
 
   logMe("Handling a background message: ${message.messageId}");
 }

@@ -1,13 +1,13 @@
-
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
-
 
 class DetailOrderModel extends OrderDetail {
   const DetailOrderModel(
       {required int orderId,
       required int driverId,
       required int userId,
-      required int totalPrice,
+      required dynamic totalPrice,
+      required dynamic pendingAmount,
+      required dynamic newTotal,
       required String startCoordinate,
       required String endCoordinate,
       required String startAddress,
@@ -25,6 +25,8 @@ class DetailOrderModel extends OrderDetail {
           endAddress: endAddress,
           orderStatus: orderStatus,
           endCoordinate: endCoordinate,
+          pendingAmount: pendingAmount,
+          newTotal: newTotal,
         );
 
   factory DetailOrderModel.fromJson(Map<String, dynamic> json) =>
@@ -39,6 +41,8 @@ class DetailOrderModel extends OrderDetail {
         endAddress: json['end_address'],
         startAddress: json['start_address'],
         endCoordinate: json['end_coordinate'],
+        pendingAmount: json['pending_amount'],
+        newTotal: json['new_total'],
       );
 
   @override
@@ -53,5 +57,7 @@ class DetailOrderModel extends OrderDetail {
         'order_status': orderStatus,
         "start_address": startAddress,
         "end_address": endAddress,
+        "pending_amount": pendingAmount,
+        "new_total": newTotal,
       };
 }

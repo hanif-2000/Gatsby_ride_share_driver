@@ -1,13 +1,14 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/chat/presendtation/provider/chat_provider.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/receiver_tile.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/sender_tile.dart';
 import 'package:flutter/material.dart';
@@ -23,30 +24,54 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   var socketProvider = locator<SocketProvider>();
-  var chatProvider = locator<ChatProvider>();
+  // var chatProvider = locator<ChatProvider>();
   var sessionProvider = locator<Session>();
 
   @override
   void initState() {
     super.initState();
+
     socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
+    showLoading();
+    WidgetsBinding.instance.addObserver(this);
+    // socketProvider.markMessageAsRead(receiverId: widget.chatDetail!.userId);
+    // socketProvider.listenRequests();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    log(" app lifecycle state is ------>>>>>>>   $state");
+    if (state == AppLifecycleState.paused) {
+      socketProvider.joinExitRoom(
+          receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    } else if (state == AppLifecycleState.resumed) {
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
+    }
   }
 
   @override
   void dispose() {
+    socketProvider.getTotalUnreadCount(widget.chatDetail!.userId);
     super.dispose();
-    chatProvider.clearChatList();
+    // Future.delayed(const Duration(seconds: 1), () {
+    // socketProvider.clearChatList();
     socketProvider.joinExitRoom(
         receiverId: widget.chatDetail!.userId, type: 'unJoin');
+
+    WidgetsBinding.instance.removeObserver(this);
+
+    // socketProvider.disconnectSocket();
+    // socketProvider.connectToSocket();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: greyEFEDED,
-      body: Consumer<ChatProvider>(builder: (context, provider, _) {
+      body: Consumer<SocketProvider>(builder: (context, provider, _) {
         return Column(
           children: [
             Container(
@@ -70,19 +95,22 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                         ),
                         smallHorizontalSpacing(),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: redD03B3B,
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                  '$BASE_URL${widget.chatDetail!.userPhoto}',
-                                ),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
+
+                        CustomCacheNetworkImage(
+                            img: widget.chatDetail!.userPhoto!, size: 50),
+                        // Container(
+                        //   height: 50,
+                        //   width: 50,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: redD03B3B,
+                        //     image: DecorationImage(
+                        //         image: NetworkImage(
+                        //           '$BASE_URL${widget.chatDetail!.userPhoto}',
+                        //         ),
+                        //         fit: BoxFit.cover),
+                        //   ),
+                        // ),
                         mediumHorizontalSpacing(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,11 +224,14 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      ///TODO: send the message
-                      socketProvider.sendChatMessage(
-                          message: provider.chatController.text.trim(),
-                          receiverId: widget.chatDetail!.userId);
-                      provider.chatController.text = '';
+                      if (provider.chatController.text.trim() == '') {
+                        showToast(message: "Please Enter your message");
+                      } else {
+                        socketProvider.sendChatMessage(
+                            message: provider.chatController.text.trim(),
+                            receiverId: widget.chatDetail!.userId);
+                        provider.chatController.text = '';
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),

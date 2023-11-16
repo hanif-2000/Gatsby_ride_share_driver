@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
-import 'package:appkey_taxiapp_driver/features/rating/presentation/page/give_rating_screen.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -12,9 +12,12 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/providers/orde
 import 'package:appkey_taxiapp_driver/features/order/presentation/widgets/bottom_container_order.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
+import '../../../../core/presentation/providers/socket_provider.dart';
 import '../../../../core/static/order_status.dart';
+import '../../../receipt/persentation/pages/receipt_page.dart';
 import '../../domain/entities/order_detail.dart';
 import '../widgets/current_location_order.dart';
 
@@ -60,42 +63,78 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
+  var socketProvider = locator<SocketProvider>();
+
+  late StreamSubscription<LocationData> locationSubscription;
 
   @override
   void initState() {
+    // socketProvider.connectToSocket();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // setDefaultStatus(widget.orderStatus);
-  }
+    // socketProvider.listenRequests();
 
-  setDefaultStatus(int orderStatus) {
-    logMe('Order already running -----> ${widget.orderStatus}');
-    switch (orderStatus) {
-      case Order.driverAccept:
-        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-        return;
-      case Order.departureToCustomerPlace:
-        orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
-        return;
-      case Order.arriveAtCustomerPlace:
-        orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
-        return;
-      case Order.customerConfirmation:
-        orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
-        return;
-      case Order.departureToDestination:
-        orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
-        return;
-      case Order.arriveAtDestination:
-        orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
-        return;
-      case Order.complete:
-        orderPProvider.changeOrderStatus = OrderStatus.complete;
-        return;
-      default:
-        orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
-        return;
-    }
+    socketProvider.getTotalUnreadCount(widget.customerDetail.data.id);
+
+    showLoading();
+
+    log("current order status is :-->> ${widget.orderStatus}");
+    log("current order status is on order page init :-->> ${widget.orderStatus}");
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (widget.orderStatus == 1) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //     log("current status is DEPARTURE TO CUSTOMER");
+    //   }
+    //   if (widget.orderStatus == 2) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+
+    //     log("current status is ARRIVE AT CUSTOMER PLACE");
+    //   }
+    //   if (widget.orderStatus == 3) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+
+    //     log("current status is DEPARTURE TO DESTINATION");
+    //   }
+    //   if (widget.orderStatus == 5) {
+    //     orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+
+    //     log("current status is ARRIVE AT DESTINATION");
+    //   }
+
+    //   dismissLoading();
+
+    //   // setDefaultStatus(widget.orderStatus);
+    // });
+
+    // setDefaultStatus(int orderStatus) {
+    //   logMe('Order already running -----> ${widget.orderStatus}');
+    //   switch (orderStatus) {
+    //     case Order.driverAccept:
+    //       orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //       return;
+    //     case Order.departureToCustomerPlace:
+    //       orderPProvider.changeOrderStatus = OrderStatus.departureToCustomerplace;
+    //       return;
+    //     case Order.arriveAtCustomerPlace:
+    //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
+    //       return;
+    //     // case Order.customerConfirmation:
+    //     //   orderPProvider.changeOrderStatus = OrderStatus.customerConfirmation;
+    //     //   return;
+    //     case Order.departureToDestination:
+    //       orderPProvider.changeOrderStatus = OrderStatus.departureToDestination;
+    //       return;
+    //     case Order.arriveAtDestination:
+    //       orderPProvider.changeOrderStatus = OrderStatus.arriveAtDestination;
+    //       return;
+    //     case Order.complete:
+    //       orderPProvider.changeOrderStatus = OrderStatus.complete;
+    //       return;
+    //     default:
+    //       // orderPProvider.changeOrderStatus = OrderStatus.driverAccept;
+    //       return;
+    //   }
   }
 
   @override
@@ -108,6 +147,20 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    log("order page build widget called");
+    var session = locator<Session>();
+    var orderProvider = locator<OrderProvider>();
+
+    log("session order status " + session.currentOrderState.toString());
+    // orderPProvider.updateOrderStatusAfterAppRestart(
+    //     orderStatus: session.currentOrderState);
+
+    //   if(session.orderStatus==1){
+    //  orderProvider. changeOrderStatus=OrderStatus.}
+
+    // orderProvider.updateOrderStatusAfterAppRestart(
+    //     orderStatus: session.currentOrderState);
+
     var _deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () {
@@ -128,31 +181,75 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             }
 
             trackingTimer =
-                Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
+                Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
               provider.trackingDriver();
             });
 
             checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 2),
+              const Duration(seconds: 3),
               (Timer timer) async {
+                log("------>>>>>  this will called every 3 seconds  <<<<<--------");
                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
-                      var session = locator<Session>();
                       session.setCurrentOrderState =
                           int.parse(state.data.status);
+
+                      // provider.updateOrderStatusAfterAppRestart(
+                      //     orderStatus: int.parse(state.data.status));
+
+                      log("curent SAVED order Status is::-->>  ${session.currentOrderState}");
+
+                      log("current order state is::==>> ${state.data.status}");
+
+                      log("current order state is check order value string or int is-->>  ${Order.departureToCustomerPlace}");
+                      if (state.data.status == Order.driverAccept.toString()) {
+                        log("current status is DRIVER ACCEPT ");
+                      }
+
+                      if (state.data.status ==
+                          Order.departureToCustomerPlace.toString()) {
+                        log("current status is DEPARTURE TO CUSTOMER");
+                      } else if (state.data.status ==
+                          OrderStatus.arriveAtCustomerPlace.toString()) {
+                        log("current status is ARRIVE AT CUSTOMER PLACE");
+                      } else if (state.data.status ==
+                          OrderStatus.departureToDestination.toString()) {
+                        log("current status is DEPARTURE TO DESTINATION");
+                      } else if (state.data.status ==
+                          OrderStatus.arriveAtDestination.toString()) {
+                        log("current status is ARRIVE AT DESTINATION");
+                      }
+
+                      // if (state.data.status ==
+                      //     Order.departureToCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.departureToDestination;
+                      // }
 
                       // if (true) {
                       //   setDefaultStatus(int.parse(state.data.status));
                       // }
 
+                      // if (state.data.status ==
+                      //     Order.customerConfirmation.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.customerConfirmation;
+                      // }
+
+                      // if (state.data.status ==
+                      //     Order.departureToCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.departureToCustomerplace;
+                      // }
+                      // if (state.data.status ==
+                      //     Order.arriveAtCustomerPlace.toString()) {
+                      //   provider.changeOrderStatus =
+                      //       OrderStatus.arriveAtCustomerPlace;
+                      // }
+
                       if (state.data.status ==
-                          Order.customerConfirmation.toString()) {
-                        provider.changeOrderStatus =
-                            OrderStatus.customerConfirmation;
-                      }
-                      if (state.data.status ==
-                          Order.arriveAtCustomerPlace.toString()) {
+                          Order.departureToDestination.toString()) {
                         provider.changeOrderStatus =
                             OrderStatus.departureToDestination;
                       }
@@ -161,7 +258,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         dismissLoading();
                       }
                       if (state.data.status == Order.cancel.toString()) {
-                        showToast(message: "Order cancelled by the user");
+                        // showToast(message: "Order cancelled by the user");
                         await provider.clearState();
                         var session = locator<Session>();
                         session.setIsOrderRunning = false;
@@ -174,7 +271,6 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       }
 
                       if (state.data.status == Order.complete.toString()) {
-                        dismissLoading();
                         trackingTimer!.cancel();
                         timer.cancel();
 
@@ -183,16 +279,30 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         var session = locator<Session>();
                         session.setIsOrderRunning = false;
                         session.setOrderUserId = 0;
+                        // Provider.of<ReceiptProvider>(context, listen: false)
+                        //     .getReceiptAPI();
+                        dismissLoading();
 
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          GiveRatingScreen.routeName,
+                          ReceiptPage.routeName,
                           (route) => false,
                           arguments: RatingPageArguments(
                             customerDataModel: provider.customerDetail!.data,
                             customerId: provider.orderDetail!.userId,
                           ),
                         );
+
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //   context,
+                        //   GiveRatingScreen.routeName,dsfgdfg
+                        //   (route) => false,
+                        //   arguments: RatingPageArguments(
+                        //     customerDataModel: provider.customerDetail!.data,
+                        //     customerId: provider.orderDetail!.userId,
+                        //   ),
+                        // );
+
                         // showDialog(
                         //   barrierDismissible: false,
                         //   context: context,
@@ -252,9 +362,15 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                CurrentLocationOrderWidget(),
-                                BottomContainerOrder()
+                              children: [
+                                const CurrentLocationOrderWidget(),
+                                BottomContainerOrder(
+                                  newMessgeCount: Provider.of<SocketProvider>(
+                                          context,
+                                          listen: true)
+                                      .unreadMessageCount,
+                                  currentOrderStatus: session.currentOrderState,
+                                ),
                               ],
                             ),
                           ),
