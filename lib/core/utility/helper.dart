@@ -16,7 +16,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as hand;
 
 import '../../features/history/data/models/history_response_model.dart'
     as history;
@@ -60,10 +60,10 @@ final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 Location location = Location();
 
 checkPermissinLocationNotification() async {
-  if (await Permission.location.serviceStatus.isEnabled) {
+  if (await hand.Permission.location.serviceStatus.isEnabled) {
     dev.log("location service is enabled");
 
-    var status = await Permission.location.status;
+    var status = await hand.Permission.location.status;
 
     if (status.isGranted) {
       dev.log("location permission is granted");
@@ -127,7 +127,7 @@ Future<bool> showAlertDialog({
           TextButton(
             child: const Text('Setting'),
             onPressed: () {
-              openAppSettings();
+              hand.openAppSettings();
               Navigator.of(context).pop(false);
             },
           ),
@@ -150,7 +150,7 @@ Future<bool> showAlertDialog({
         CupertinoDialogAction(
           child: const Text('Setting'),
           onPressed: () {
-            openAppSettings();
+            hand.openAppSettings();
             Navigator.of(context).pop(false);
           },
         ),
@@ -161,6 +161,7 @@ Future<bool> showAlertDialog({
 
 Future<bool> checkPermission() async {
   bool serviceEnabled;
+
   LocationPermission permission;
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -169,6 +170,9 @@ Future<bool> checkPermission() async {
   }
 
   permission = await Geolocator.checkPermission();
+  // var notificationPermission = await Permission.notification.request();
+
+  // dev.log("notification permission is :-->> $notificationPermission");/
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
