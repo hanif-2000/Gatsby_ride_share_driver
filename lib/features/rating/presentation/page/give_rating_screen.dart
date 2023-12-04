@@ -128,12 +128,13 @@ class GiveRatingScreen extends StatelessWidget {
                               controller: provider.firstNameController,
                               inputType: TextInputType.multiline,
                               isError: provider.firstNameError,
-                              fieldValidator: ValidationHelper(
-                                loc: appLoc,
-                                isError: (bool value) =>
-                                    provider.setFirstNameError = value,
-                                typeField: TypeField.name,
-                              ).validate(),
+                              fieldValidator: null,
+                              // fieldValidator: ValidationHelper(
+                              //   loc: appLoc,
+                              //   isError: (bool value) =>
+                              //       provider.setFirstNameError = value,
+                              //   typeField: TypeField.name,
+                              // ).validate(),
                             ),
                             largeVerticalSpacing(),
                             largeVerticalSpacing(),
@@ -145,43 +146,43 @@ class GiveRatingScreen extends StatelessWidget {
                               event: () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
-                                if (provider.formKey.currentState!.validate()) {
-                                  provider
-                                      .addRating(
-                                    customerId: customerId,
-                                  )
-                                      .listen(
-                                    (event) async {
-                                      switch (event.runtimeType) {
-                                        case RatingLoading:
-                                          showLoading();
-                                          break;
-                                        case RatingFailure:
-                                          final msg =
-                                              (event as RatingFailure).failure;
-                                          showToast(message: msg);
-                                          dismissLoading();
-                                          break;
-                                        case RatingSuccess:
-                                          dismissLoading();
-                                          Navigator.pushNamed(
-                                            context,
-                                            JobCompletedPage.routeName,
-                                            arguments: RatingPageArguments(
-                                              customerDataModel:
-                                                  customerDataModel,
-                                              customerId: customerId,
-                                            ),
-                                          );
+                                // if (provider.formKey.currentState!.validate()) {
+                                provider
+                                    .addRating(
+                                  customerId: customerId,
+                                )
+                                    .listen(
+                                  (event) async {
+                                    switch (event.runtimeType) {
+                                      case RatingLoading:
+                                        showLoading();
+                                        break;
+                                      case RatingFailure:
+                                        final msg =
+                                            (event as RatingFailure).failure;
+                                        showToast(message: msg);
+                                        dismissLoading();
+                                        break;
+                                      case RatingSuccess:
+                                        dismissLoading();
+                                        Navigator.pushNamed(
+                                          context,
+                                          JobCompletedPage.routeName,
+                                          arguments: RatingPageArguments(
+                                            customerDataModel:
+                                                customerDataModel,
+                                            customerId: customerId,
+                                          ),
+                                        );
 
-                                          break;
-                                        default:
-                                          showLoading();
-                                          break;
-                                      }
-                                    },
-                                  );
-                                }
+                                        break;
+                                      default:
+                                        showLoading();
+                                        break;
+                                    }
+                                  },
+                                );
+                                // }
                               },
                               buttonHeight: 48,
                               isRounded: true,
