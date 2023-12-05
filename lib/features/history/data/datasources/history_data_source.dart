@@ -1,4 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
+import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
@@ -24,7 +25,16 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
         url,
       );
       final model = HistoryResponseModel.fromJson(response.data);
-      return model.historyOrder;
+
+      if (model.success == 1) {
+        return model.historyOrder;
+      } else if (response.data["message"] == "Account Suspended") {
+        showToast(message: "Account Suspended");
+
+        return response.data["message"];
+      } else {
+        return response.data["message"];
+      }
     } catch (e) {
       rethrow;
     }

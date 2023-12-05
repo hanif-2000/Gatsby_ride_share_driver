@@ -41,7 +41,7 @@ class SocketProvider with ChangeNotifier {
     var res = channel!.ready.asStream();
 
     /// Listen for all incoming data
-    channel!.stream.listen(
+    channel?.stream.listen(
       (data) {
         print(data);
 

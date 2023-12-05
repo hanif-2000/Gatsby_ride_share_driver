@@ -69,16 +69,16 @@ class _SplashPageState extends State<SplashPage> {
                   case CurrencyLoaded:
                     checkUserSession().then((value) async {
                       if (value) {
-                        checkProfileSession().then((value1) {
-                          if (value1) {
-                            socketProvider.connectToSocket();
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, HomePage.routeName, (route) => false);
-                          } else {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                CreateProfilePage.routeName, (route) => false);
-                          }
-                        });
+                        // checkProfileSession().then((value1) {
+                        //   if (value1) {
+                        socketProvider.connectToSocket();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, HomePage.routeName, (route) => false);
+                        // } else {
+                        //   Navigator.pushNamedAndRemoveUntil(context,
+                        //       CreateProfilePage.routeName, (route) => false);
+                        // }
+                        // });
                       } else {
                         Navigator.pushNamedAndRemoveUntil(
                             context, LoginPage.routeName, (route) => false);

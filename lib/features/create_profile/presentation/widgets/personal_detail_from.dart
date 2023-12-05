@@ -19,6 +19,10 @@ import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/utility/injection.dart';
+import '../../../../core/utility/session_helper.dart';
+import '../../../login/presentation/pages/login_page.dart';
+
 class FormPersonalDetail extends StatefulWidget {
   const FormPersonalDetail({
     Key? key,
@@ -251,7 +255,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       placeholder: "Postal Code",
                       title: "Postal Code",
                       controller: provider.postalCodeController,
-                      inputType: TextInputType.number,
+                      inputType: TextInputType.text,
                       isError: provider.postalCodeError,
                       fieldValidator: ValidationHelper(
                         loc: appLoc,
@@ -334,8 +338,8 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   //Select State
                   Expanded(
                     child: CustomTextField(
-                      placeholder: "State",
-                      title: "State",
+                      placeholder: "Province",
+                      title: "Province",
                       controller: provider.stateController,
                       inputType: TextInputType.name,
                       isError: provider.stateError,
@@ -582,6 +586,35 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 isRounded: true,
                 bgColor: blackColor,
               ),
+              smallVerticalSpacing(),
+
+// Login Button
+
+              CustomButton(
+                text: Text(
+                  appLoc.login,
+                  style: txtButtonStyle,
+                ),
+                event: () {
+                  final session = locator<Session>();
+
+                  session.setIsProfileCompleted = true;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginPage.routeName, (route) => false);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const LoginPage(),
+                  //   ),
+                  // );
+                  log("click on login button");
+                },
+                buttonHeight: 48,
+                isRounded: true,
+                bgColor: blackColor,
+              ),
+
               largeVerticalSpacing(),
             ],
           ),

@@ -48,7 +48,7 @@ class _SignUpFormState extends State<SignUpForm> {
           case SignupSuccess:
             dismissLoading();
             final session = locator<Session>();
-            session.setLoggedIn = true;
+            // session.setLoggedIn = true;
             session.setIsProfileCompleted = false;
             // showToast(message: appLoc.success);
             Navigator.pushNamedAndRemoveUntil(
@@ -60,175 +60,172 @@ class _SignUpFormState extends State<SignUpForm> {
     }
 
     return Consumer<SignupProvider>(
-      builder: (context, provider, _) =>
-          Form(
-            key: provider.formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: sizeMedium,
+      builder: (context, provider, _) => Form(
+        key: provider.formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: sizeMedium,
+          ),
+          child: Column(
+            children: [
+              CustomTextField(
+                prefixWidget: const Icon(Icons.email_outlined),
+                placeholder: appLoc.emailaddress,
+                title: appLoc.emailaddress,
+                controller: provider.emailController,
+                inputType: TextInputType.emailAddress,
+                // fieldValidator: (value) {},
+                isError: provider.emailError,
+                fieldValidator: ValidationHelper(
+                  loc: appLoc,
+                  isError: (bool value) => provider.setEmailError = value,
+                  typeField: TypeField.email,
+                ).validate(),
               ),
-              child: Column(
-                children: [
-                  CustomTextField(
-                    prefixWidget: const Icon(Icons.email_outlined),
-                    placeholder: appLoc.emailaddress,
-                    title: appLoc.emailaddress,
-                    controller: provider.emailController,
-                    inputType: TextInputType.emailAddress,
-                    // fieldValidator: (value) {},
-                    isError: provider.emailError,
-                    fieldValidator: ValidationHelper(
-                      loc: appLoc,
-                      isError: (bool value) => provider.setEmailError = value,
-                      typeField: TypeField.email,
-                    ).validate(),
-                  ),
-                  mediumVerticalSpacing(),
-                  CustomTextField(
-                    prefixWidget: const Icon(Icons.lock_outline),
-                    placeholder: appLoc.password,
-                    title: appLoc.password,
-                    controller: provider.passwordController,
-                    inputType: TextInputType.visiblePassword,
-                    isSecure: true,
-                    // fieldValidator: (value) {},
-                    isError: provider.passwordError,
-                    onChanged: (value){
-                      provider.setPassword(value);
-                    },
-                    fieldValidator: ValidationHelper(
-                      loc: appLoc,
-                      isError: (bool value) =>
-                      provider.setPasswordError = value,
-                      typeField: TypeField.password,
-                    ).validate(),
-                  ),
-                  mediumVerticalSpacing(),
-                  CustomTextField(
-                    prefixWidget: const Icon(Icons.lock_outline),
-                    placeholder: appLoc.confirmpassword,
-                    title: appLoc.confirmpassword,
-                    controller: provider.passwordConfirmController,
-                    inputType: TextInputType.visiblePassword,
-                    isSecure: true,
-                    // fieldValidator: (value) {},
-                    isError: provider.passwordConfirmError,
-                    fieldValidator: ValidationHelper(
-                      loc: appLoc,
-                      isError: (bool value) =>
+              mediumVerticalSpacing(),
+              CustomTextField(
+                prefixWidget: const Icon(Icons.lock_outline),
+                placeholder: appLoc.password,
+                title: appLoc.password,
+                controller: provider.passwordController,
+                inputType: TextInputType.visiblePassword,
+                isSecure: true,
+                // fieldValidator: (value) {},
+                isError: provider.passwordError,
+                onChanged: (value) {
+                  provider.setPassword(value);
+                },
+                fieldValidator: ValidationHelper(
+                  loc: appLoc,
+                  isError: (bool value) => provider.setPasswordError = value,
+                  typeField: TypeField.password,
+                ).validate(),
+              ),
+              mediumVerticalSpacing(),
+              CustomTextField(
+                prefixWidget: const Icon(Icons.lock_outline),
+                placeholder: appLoc.confirmpassword,
+                title: appLoc.confirmpassword,
+                controller: provider.passwordConfirmController,
+                inputType: TextInputType.visiblePassword,
+                isSecure: true,
+                // fieldValidator: (value) {},
+                isError: provider.passwordConfirmError,
+                fieldValidator: ValidationHelper(
+                  loc: appLoc,
+                  isError: (bool value) =>
                       provider.setPasswordConfirmError = value,
-                      typeField: TypeField.confirmPassword,
-                      pwd: provider.password,
-                    ).validate(),
-                  ),
-                  mediumVerticalSpacing(),
-                  Row(
-                    children: [
-                      Transform.scale(
-                        scale: 1,
-                        child: Checkbox(
-                          value: isChecked,
-                          checkColor: Colors.white,
-                          activeColor: primaryColor,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
+                  typeField: TypeField.confirmPassword,
+                  pwd: provider.password,
+                ).validate(),
+              ),
+              mediumVerticalSpacing(),
+              Row(
+                children: [
+                  Transform.scale(
+                    scale: 1,
+                    child: Checkbox(
+                      value: isChecked,
+                      checkColor: Colors.white,
+                      activeColor: primaryColor,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
                         ),
                       ),
-                      RichText(
-                        text: TextSpan(
-                          text: appLoc.iAgreeOn,
-                          style: blactStyle.copyWith(
-                            fontSize: 12,
-                            color: grey7c7c7c,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: appLoc.term,
-                              style: blactStyle.copyWith(fontSize: 12),
-                            ),
-                            TextSpan(
-                              text: appLoc.and,
-                              style: blactStyle.copyWith(
-                                fontSize: 12,
-                                color: grey7c7c7c,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            TextSpan(
-                              text: appLoc.conditions,
-                              style: blactStyle.copyWith(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  mediumVerticalSpacing(),
-                  CustomButton(
-                    text: Text(
-                      appLoc.signup,
-                      style: txtButtonStyle,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
                     ),
-                    // buttonHeight: MediaQuery.of(context).size.height * 0.080,
-                    buttonHeight: 48,
-                    isRounded: true,
-                    event: () async {
-                      provider.formKey.currentState!.validate();
-                      if (provider.formKey.currentState!.validate()) {
-                        if (isChecked) {
-                          submit();
-                        } else {
-                          showToast(
-                              message: 'Please accept term and condition!');
-                        }
-                      }
-                    },
-                    bgColor: blackColor,
                   ),
-                  mediumVerticalSpacing(),
                   RichText(
                     text: TextSpan(
-                      text: appLoc.haveAccount,
+                      text: appLoc.iAgreeOn,
                       style: blactStyle.copyWith(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: grey7c7c7c,
                         fontWeight: FontWeight.w400,
                       ),
                       children: [
                         TextSpan(
-                          text: appLoc.login,
-                          style: blactStyle.copyWith(fontSize: 14),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   SignUpPage.routeName,
-                              // );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ),
-                              );
-                            },
-                        )
+                          text: appLoc.term,
+                          style: blactStyle.copyWith(fontSize: 12),
+                        ),
+                        TextSpan(
+                          text: appLoc.and,
+                          style: blactStyle.copyWith(
+                            fontSize: 12,
+                            color: grey7c7c7c,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextSpan(
+                          text: appLoc.conditions,
+                          style: blactStyle.copyWith(fontSize: 12),
+                        ),
                       ],
                     ),
                   ),
-                  largeVerticalSpacing(),
                 ],
               ),
-            ),
+              mediumVerticalSpacing(),
+              CustomButton(
+                text: Text(
+                  appLoc.signup,
+                  style: txtButtonStyle,
+                ),
+                // buttonHeight: MediaQuery.of(context).size.height * 0.080,
+                buttonHeight: 48,
+                isRounded: true,
+                event: () async {
+                  provider.formKey.currentState!.validate();
+                  if (provider.formKey.currentState!.validate()) {
+                    if (isChecked) {
+                      submit();
+                    } else {
+                      showToast(message: 'Please accept term and condition!');
+                    }
+                  }
+                },
+                bgColor: blackColor,
+              ),
+              mediumVerticalSpacing(),
+              RichText(
+                text: TextSpan(
+                  text: appLoc.haveAccount,
+                  style: blactStyle.copyWith(
+                    fontSize: 14,
+                    color: grey7c7c7c,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: appLoc.login,
+                      style: blactStyle.copyWith(fontSize: 14),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   SignUpPage.routeName,
+                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                    )
+                  ],
+                ),
+              ),
+              largeVerticalSpacing(),
+            ],
           ),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_drop_down.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -14,6 +16,10 @@ import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/utility/injection.dart';
+import '../../../../core/utility/session_helper.dart';
+import '../../../login/presentation/pages/login_page.dart';
 
 class FormVehicleDetail extends StatefulWidget {
   const FormVehicleDetail({
@@ -207,7 +213,30 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
                 isRounded: true,
                 bgColor: blackColor,
               ),
-              largeVerticalSpacing(),
+              // largeVerticalSpacing(),
+
+              smallVerticalSpacing(),
+
+// Login Button
+
+              CustomButton(
+                text: Text(
+                  appLoc.login,
+                  style: txtButtonStyle,
+                ),
+                event: () {
+                  final session = locator<Session>();
+
+                  session.setIsProfileCompleted = true;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginPage.routeName, (route) => false);
+                  log("click on login button");
+                },
+                buttonHeight: 48,
+                isRounded: true,
+                bgColor: blackColor,
+              ),
             ],
           ),
         ),

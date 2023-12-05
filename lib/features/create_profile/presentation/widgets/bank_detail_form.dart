@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -173,7 +175,29 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 isRounded: true,
                 bgColor: blackColor,
               ),
-              largeVerticalSpacing(),
+              // largeVerticalSpacing(),
+              smallVerticalSpacing(),
+
+// Login Button
+
+              CustomButton(
+                text: Text(
+                  appLoc.login,
+                  style: txtButtonStyle,
+                ),
+                event: () {
+                  final session = locator<Session>();
+
+                  session.setIsProfileCompleted = true;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginPage.routeName, (route) => false);
+                  log("click on login button");
+                },
+                buttonHeight: 48,
+                isRounded: true,
+                bgColor: blackColor,
+              ),
             ],
           ),
         ),

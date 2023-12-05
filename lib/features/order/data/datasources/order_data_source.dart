@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/data/models/history_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/reject_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
@@ -7,6 +9,7 @@ import 'package:appkey_taxiapp_driver/features/order/data/models/detail_order_re
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:dio/dio.dart';
+import '../../../../core/utility/helper.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 import '../models/create_order_response_model.dart';
@@ -65,6 +68,15 @@ class OrderDataSourceImplementation implements OrderDataSource {
         // data: formData,
       );
       final model = RequestListDataModel.fromMap(response.data);
+
+      if (model.success == 1) {
+        return model;
+      } else if (response.data["message"] == "Account Suspended") {
+        log("account suspended");
+        showToast(message: "Account Suspended");
+
+        return response.data["message"];
+      }
       return model;
     } catch (e) {
       rethrow;
