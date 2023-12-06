@@ -12,8 +12,6 @@ import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rat
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/static/enums.dart';
-import '../../../../core/utility/validation_helper.dart';
 import '../../../order/presentation/pages/order_page.dart';
 import '../../../order_detail/presentation/widget/custom_rating_bar.dart';
 

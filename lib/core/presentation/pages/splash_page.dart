@@ -65,13 +65,15 @@ class _SplashPageState extends State<SplashPage> {
                 // log("order id" + session.orderId.toString());
 
                 log("state runtime type:==" + state.runtimeType.toString());
+
+                log("socket chat token is:-->> ${session.chatToken}");
                 switch (state.runtimeType) {
                   case CurrencyLoaded:
                     checkUserSession().then((value) async {
                       if (value) {
                         // checkProfileSession().then((value1) {
                         //   if (value1) {
-                        socketProvider.connectToSocket();
+                        // socketProvider.connectToSocket();
                         Navigator.pushNamedAndRemoveUntil(
                             context, HomePage.routeName, (route) => false);
                         // } else {
