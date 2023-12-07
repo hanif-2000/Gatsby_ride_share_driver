@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
@@ -48,12 +50,13 @@ class _SignUpFormState extends State<SignUpForm> {
           case SignupSuccess:
             dismissLoading();
             final session = locator<Session>();
-            // session.setLoggedIn = true;
+            session.setLoggedIn = true;
             session.setIsProfileCompleted = false;
             // showToast(message: appLoc.success);
             Navigator.pushNamedAndRemoveUntil(
                 context, CreateProfilePage.routeName, (route) => false);
             logMe("Authorization Token: ${session.sessionToken}");
+            log("set is profile completed is:-->>  ${session.isProfileCompleted}");
             break;
         }
       });

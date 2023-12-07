@@ -19,10 +19,6 @@ import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/utility/injection.dart';
-import '../../../../core/utility/session_helper.dart';
-import '../../../login/presentation/pages/login_page.dart';
-
 class FormPersonalDetail extends StatefulWidget {
   const FormPersonalDetail({
     Key? key,
@@ -586,34 +582,34 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 isRounded: true,
                 bgColor: blackColor,
               ),
-              smallVerticalSpacing(),
+//               smallVerticalSpacing(),
 
-// Login Button
+// // Login Button
 
-              CustomButton(
-                text: Text(
-                  appLoc.login,
-                  style: txtButtonStyle,
-                ),
-                event: () {
-                  final session = locator<Session>();
+//               CustomButton(
+//                 text: Text(
+//                   appLoc.login,
+//                   style: txtButtonStyle,
+//                 ),
+//                 event: () {
+//                   final session = locator<Session>();
 
-                  session.setIsProfileCompleted = true;
+//                   session.setIsProfileCompleted = true;
 
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, LoginPage.routeName, (route) => false);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const LoginPage(),
-                  //   ),
-                  // );
-                  log("click on login button");
-                },
-                buttonHeight: 48,
-                isRounded: true,
-                bgColor: blackColor,
-              ),
+//                   Navigator.pushNamedAndRemoveUntil(
+//                       context, LoginPage.routeName, (route) => false);
+//                   // Navigator.push(
+//                   //   context,
+//                   //   MaterialPageRoute(
+//                   //     builder: (context) => const LoginPage(),
+//                   //   ),
+//                   // );
+//                   log("click on login button");
+//                 },
+//                 buttonHeight: 48,
+//                 isRounded: true,
+//                 bgColor: blackColor,
+//               ),
 
               largeVerticalSpacing(),
             ],

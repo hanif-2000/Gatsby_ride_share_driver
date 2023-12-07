@@ -208,7 +208,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: a4d7910e4af663c9cbfc1071c5bef34651690949
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  fluttertoast: 74526702fea2c060ea55dde75895b7e1bde1c86b
+  fluttertoast: d410097af3a920745c7bb589f26967c6d35f92c0
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoding: 32cfcdb16d38d907caaba65e2e42ad10d38bee58
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
@@ -233,4 +233,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 702b69ca3f24a277c7a64c3a2485f5b04268ff74
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.3

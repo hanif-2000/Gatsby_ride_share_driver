@@ -57,8 +57,8 @@ class RatingItem {
         image: json["image"],
         rating: json["rating"] != null
             ? double.tryParse(json["rating"].toString())!
-            : 0,
-        review: json["review"],
+            : 0.0,
+        review: json["review"] ?? '',
         createdAt: DateTime.parse(json["created_at"]),
       );
 
