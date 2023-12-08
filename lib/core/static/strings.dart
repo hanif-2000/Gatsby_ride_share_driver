@@ -12,6 +12,8 @@ const String CURRENCY = 'currency';
 const String ORDER_ID = 'orderId';
 const String USER_ID = 'user_id';
 const String FCM_TOKEN = 'fcm_token';
+const String FCM_OLD_TOKEN = 'fcm_old_token';
+
 const String ORDER_STATUS = 'order_status';
 const String DRIVER_ID = 'driver_id';
 const String SESSION_STATUS_ORDER = 'sessionStatusOrder';

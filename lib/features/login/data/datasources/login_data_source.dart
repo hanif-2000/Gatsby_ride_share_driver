@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
@@ -22,7 +23,18 @@ class LoginDataSourceImplementation implements LoginDataSource {
     String url = 'api/webservice/logindriver';
     // await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
+
+    if (session.sessionFcmToken == '') {
+      FirebaseMessaging _firebaseMessaging =
+          FirebaseMessaging.instance; // Change here
+      _firebaseMessaging.getToken().then((token) {
+        session.setFcmToken = token!;
+
+        print("fcm token token is $token");
+      });
+    }
     String fcmToken = session.sessionFcmToken;
+
     FormData data = FormData.fromMap({
       'email': email,
       'password': password,
