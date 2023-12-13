@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
@@ -151,7 +153,18 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                                           ? (VehicleTypeDataModel? item) {
                                               provider.setSelectedVehicle =
                                                   item;
-                                              logMe(provider.selectedVehicle);
+
+                                              provider.updateNewSelectedVehicle(
+                                                  val: item!.id);
+
+                                              log("selected vehice--> ${item.id}");
+
+                                              // provider.selectedCategory=provider.
+                                              // logMe(
+                                              // "Form data validated ------------>>>>." +
+                                              //     provider
+                                              //         .selectedVehicle!.id
+                                              //         .toString());
                                             }
                                           : null,
                                       items: provider.vehicleCategory
@@ -296,13 +309,17 @@ class _FormEditVehicleState extends State<FormEditVehicle> {
                             bgColor: blackColor,
                             event: () {
                               if (provider.formKey.currentState!.validate()) {
+                                log("Form data validated ------------>>>>.");
                                 provider
                                     .updateProfileForm(
                                   url:
                                       'api/webservice/driver/vehicle/details/add',
                                   data: FormData.fromMap({
                                     'vehicle_type':
-                                        provider.selectedCategory!.categoryId,
+                                        provider.newSelectedVehicle == 0
+                                            ? provider
+                                                .selectedCategory!.categoryId
+                                            : provider.newSelectedVehicle,
                                     'vehicle_name': provider
                                         .vehicleNameController.text
                                         .trim(),

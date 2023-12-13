@@ -94,7 +94,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                           //     provider.profileImage,
                                           //   ),
                                           // ),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fitHeight,
                                         ),
                                       ),
                                     ),

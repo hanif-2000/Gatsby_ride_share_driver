@@ -53,6 +53,13 @@ class ProfileEditProvider extends FormProvider {
 
   PriceCategory? get defaultSelectedCategory => _defaultSelectedCategory;
 
+  int newSelectedVehicle = 0;
+
+  updateNewSelectedVehicle({val}) {
+    newSelectedVehicle = val;
+    notifyListeners();
+  }
+
   // List<VehicleTypeDataModel> vehicleDataModel = [];
 
   var dio = Dio();

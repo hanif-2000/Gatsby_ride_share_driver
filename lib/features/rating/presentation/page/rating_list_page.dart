@@ -1,16 +1,15 @@
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/custom_rating_bar.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_list_state.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/widgets/rating_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/static/assets.dart';
+import '../../../../core/static/styles.dart';
 import '../../../../core/utility/injection.dart';
+import '../../../order_detail/presentation/widget/custom_rating_bar.dart';
 
 class RatingListPage extends StatelessWidget {
   const RatingListPage({Key? key, required this.userId}) : super(key: key);
@@ -87,35 +86,35 @@ class RatingListPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 20, bottom: 16),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            icon: SvgPicture.asset(
-                                                'assets/icons/auth/ic_back.svg'),
-                                          ),
-                                          Text(
-                                            appLoc.ratings,
-                                            textAlign: TextAlign.center,
-                                            style: titleStyle
-                                                .copyWith(
-                                                  fontSize: 18,
-                                                )
-                                                .usePoppinsW5Font(),
-                                          ),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(
+                                    //       top: 20, bottom: 16),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       IconButton(
+                                    //         onPressed: () {
+                                    //           Navigator.pop(context);
+                                    //         },
+                                    //         icon: SvgPicture.asset(
+                                    //             'assets/icons/auth/ic_back.svg'),
+                                    //       ),
+                                    //       Text(
+                                    //         appLoc.ratings,
+                                    //         textAlign: TextAlign.center,
+                                    //         style: titleStyle
+                                    //             .copyWith(
+                                    //               fontSize: 18,
+                                    //             )
+                                    //             .usePoppinsW5Font(),
+                                    //       ),
+                                    //       const SizedBox(
+                                    //         width: 30,
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     largeVerticalSpacing(),
                                     Container(
                                       margin: const EdgeInsets.symmetric(

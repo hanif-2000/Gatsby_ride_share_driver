@@ -12,7 +12,7 @@ class RatingProvider extends FormProvider {
 
   RatingProvider({required this.doRating});
 
-  double rating = 0;
+  double rating = 1;
 
   updateRating(double value) {
     rating = value;

@@ -550,6 +550,7 @@ class HomeProvider with ChangeNotifier {
       'api_token': session.sessionToken,
       'status': driverStatus,
     });
+
     final result = await changeStatus.execute(formData);
     yield* result.fold((failure) async* {
       logMe(failure);

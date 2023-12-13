@@ -5,7 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class CustomRatingBar extends StatelessWidget {
   const CustomRatingBar({
     Key? key,
-    this.initialRating = 5,
+    this.initialRating = 1,
     this.isEditable = true,
     this.onUpdate,
     this.itemSize = 24,
@@ -19,7 +19,7 @@ class CustomRatingBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RatingBar.builder(
       initialRating: initialRating!,
-      minRating: 0,
+      minRating: 1,
       unratedColor: greyEFEFF4Color,
       glow: false,
       direction: Axis.horizontal,
