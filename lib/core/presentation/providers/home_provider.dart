@@ -70,6 +70,7 @@ class HomeProvider with ChangeNotifier {
   String originAddress = '';
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> polylines = {};
+  var dio = Dio();
 
   Timer? refreshRequestList;
 
@@ -598,5 +599,26 @@ class HomeProvider with ChangeNotifier {
     }, (data) async* {
       yield UpdateLocationLoaded(data: data);
     });
+  }
+
+  getDriverStatus() async {
+    var response = await dio.get(
+        'https://php.parastechnologies.in/taxi/public/api/webservice/driver/get-status',
+        options: Options(
+          headers: {"Authorization": "Bearer ${session.sessionToken}"},
+        ));
+
+    if (response.statusCode == 200) {
+      if (response.data["status"] == "online") {
+        session.setIsOnline = true;
+        changeStatus = true;
+        notifyListeners();
+      } else if (response.data["status"] == "offline") {
+        session.setIsOnline = false;
+        changeStatus = false;
+        notifyListeners();
+      }
+    }
+    dev.log("driver status is :--->>  ${response.data}");
   }
 }

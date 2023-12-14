@@ -30,6 +30,10 @@ class FirebaseHelper {
         await NotificationHelper().init();
 
         await setupMessaging();
+      } else {
+        await NotificationHelper().init();
+
+        await setupMessaging();
       }
     });
   }

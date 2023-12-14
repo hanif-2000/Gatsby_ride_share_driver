@@ -28,9 +28,18 @@ class SocketProvider with ChangeNotifier {
 
     log("socket url -->> $wsUrl");
     channel = WebSocketChannel.connect(wsUrl);
+    checkIfSocketConnectedOrNot();
 
-    await channel!.ready;
+    await channel!.ready.then((value) {});
     listenToSocket();
+  }
+
+  checkIfSocketConnectedOrNot() {
+    log("channel connection is :-- $channel");
+
+    if (channel == null) {
+      connectToSocket();
+    }
   }
 
   disconnectSocket() {
