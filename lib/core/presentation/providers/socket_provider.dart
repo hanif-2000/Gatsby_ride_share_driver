@@ -93,6 +93,13 @@ class SocketProvider with ChangeNotifier {
         log("websoceet data is:-->>$data");
       },
       onError: (error) => print("errot is" + error),
+      onDone: () {
+        Future.delayed(const Duration(seconds: 5)).then(
+          (value) {
+            connectToSocket();
+          },
+        );
+      },
     );
 
     log("res is res:${res.length}");

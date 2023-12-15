@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
     var session = locator<Session>();
 
-    homeProvider.getDriverStatus();
+    // homeProvider.getDriverStatus();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeProvider.changeStatus = session.isOnline;

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart' as hand;
+import 'package:permission_handler/permission_handler.dart';
 import '../../../features/login/presentation/pages/login_page.dart';
 import '../../utility/global_function.dart';
 import '../../utility/helper.dart';
@@ -26,12 +27,13 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
   final socketProvider = locator<SocketProvider>();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // socketProvider.connectToSocket();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer(const Duration(seconds: 2), () async {
@@ -94,7 +96,9 @@ class _SplashPageState extends State<SplashPage> {
           } else {
             // Permission.notification.request();
             log("ask for notification permission ");
-            AppSettings.openAppSettings(type: AppSettingsType.notification);
+            await AppSettings.openAppSettings(
+                type: AppSettingsType.notification);
+
             // Open settings to enable notification permission
           }
         }
@@ -105,6 +109,32 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print("sdfInactive");
+        break;
+      case AppLifecycleState.paused:
+        print("Paused");
+        break;
+      case AppLifecycleState.resumed:
+        if (await Permission.notification.request().isGranted) {
+          log("notification is granted");
+          //notifications permission is granted do some stuff
+        } else {
+          log("notification is not granted");
+        }
+        print("Resumed");
+        break;
+
+      case AppLifecycleState.detached:
+        print("detached");
+
+        break;
+    }
   }
 
   @override
