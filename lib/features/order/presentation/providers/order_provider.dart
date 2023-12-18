@@ -722,6 +722,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   updateLocation() async {
+    log("update driver locatin iN updateLocation() function in order provider screen");
     locationService.getLocation().then((value) {
       var bearing = value.heading;
       var lat = value.latitude;
@@ -737,6 +738,7 @@ class OrderProvider with ChangeNotifier {
 
   Stream<UpdateLocationState> submitLocation(
       String latLng, String bearing) async* {
+    log("submit location called------>>>>");
     yield UpdateLocationLoading();
 
     final formData = FormData.fromMap({
@@ -744,6 +746,8 @@ class OrderProvider with ChangeNotifier {
       'coordinate': latLng,
       'bearing': bearing,
     });
+
+    log("update location data is-->> ${formData.fields}");
     final result = await doUpdateLocation.execute(formData);
     yield* result.fold((failure) async* {
       logMe(failure);
