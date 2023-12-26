@@ -29,10 +29,13 @@ class RequestListWidget extends StatefulWidget {
   State<RequestListWidget> createState() => _RequestListWidgetState();
 }
 
-class _RequestListWidgetState extends State<RequestListWidget> {
+class _RequestListWidgetState extends State<RequestListWidget>
+    with WidgetsBindingObserver {
   Timer? timer;
 
   Session session = locator<Session>();
+
+  String myText = '';
 
   // StreamController<List<RequestListState>> controller =
   // StreamController << CurrencyModel > [];
@@ -40,6 +43,7 @@ class _RequestListWidgetState extends State<RequestListWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     //   timer = Timer.periodic(
     //       const Duration(seconds: 10),
@@ -55,7 +59,27 @@ class _RequestListWidgetState extends State<RequestListWidget> {
   @override
   void dispose() {
     // timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print("Inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("Paused");
+        break;
+      case AppLifecycleState.resumed:
+        setState(() {
+          myText = '';
+        });
+        print("Resumed");
+        break;
+    }
   }
 
   @override
@@ -88,9 +112,14 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                       var session = locator<Session>();
                       return !session.isOnline
                           ? Center(
-                              child: NoProjects(isOffline: !session.isOnline))
+                              child: NoProjects(
+                                  isOffline: !session.isOnline, text: myText),
+                            )
                           : _data.isEmpty
-                              ? const Center(child: NoProjects())
+                              ? Center(
+                                  child: NoProjects(
+                                  text: myText,
+                                ))
                               : Column(
                                   children: List.generate(
                                     _data.length,
@@ -276,7 +305,7 @@ class _RequestListWidgetState extends State<RequestListWidget> {
                                   ),
                                 );
                     default:
-                      return const NoProjects();
+                      return NoProjects(text: myText);
                   }
                 },
               );

@@ -16,7 +16,9 @@ class RatingDataSourceImplementation implements RatingDataSource {
 
   @override
   Future<RatingModel> doRating(FormData formData) async {
-    String url = 'api/webservice/order/rating';
+    // String url = 'api/webservice/order/rating';
+    String url = 'api/webservice/driver/order/rating';
+
     print('User request data ---> ${formData.fields.toString()}');
     dio.withToken();
     try {

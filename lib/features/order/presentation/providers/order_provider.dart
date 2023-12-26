@@ -73,6 +73,12 @@ class OrderProvider with ChangeNotifier {
 
   bool isOrderStatusComplete = false;
 
+  String driverUpdatedLatLong = '';
+  updateDriverLatLong({val}) {
+    driverUpdatedLatLong = val;
+    notifyListeners();
+  }
+
   updateIsOrderStatus({val}) {
     isOrderStatusComplete = val;
     notifyListeners();
@@ -229,6 +235,7 @@ class OrderProvider with ChangeNotifier {
         MarkerId markerIdDriver = const MarkerId("driver");
 
         final Marker markerOrigin = Marker(
+          anchor: const Offset(0.5, 0.5),
           markerId: markerIdOrigin,
           position: originLatLng,
           infoWindow: InfoWindow(title: appLoc.customerplace),
@@ -238,6 +245,7 @@ class OrderProvider with ChangeNotifier {
           onTap: () {},
         );
         final Marker markerDestination = Marker(
+          anchor: const Offset(0.5, 0.5),
           markerId: markerIdDestination,
           position: destinationLatLng,
           infoWindow: InfoWindow(title: appLoc.destinationplace),
@@ -253,6 +261,7 @@ class OrderProvider with ChangeNotifier {
             LatLng(locationData.latitude!, locationData.longitude!);
 
         final Marker markerDriver = Marker(
+          anchor: const Offset(0.5, 0.5),
           markerId: markerIdDriver,
           position: coordinate,
           icon: driverMarker,
@@ -312,12 +321,15 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+// Trcking driver
   trackingDriver() async {
+    log(_orderStatus.name);
+    log("tracking driver function called in order provider");
     if (_orderStatus == OrderStatus.driverAccept ||
-        _orderStatus == OrderStatus.arriveAtDestination) {
+        _orderStatus == OrderStatus.complete) {
       logMe("Not Listen");
     } else {
-      logMe("Listen Tracking");
+      logMe("Listen Not Listen");
       await createMarker();
       await updateLocation();
       notifyListeners();
@@ -440,10 +452,14 @@ class OrderProvider with ChangeNotifier {
             MarkerId markerIdDriver = const MarkerId("driver");
 
             final Marker markerDriver = Marker(
+              anchor: const Offset(0.5, 0.5),
               markerId: markerIdDriver,
               position: coordinate,
               icon: driverMarker,
               rotation: locationData.heading!,
+              infoWindow: InfoWindow(
+                  title:
+                      "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
             );
 
             markers[markerIdDriver] = markerDriver;
@@ -483,6 +499,7 @@ class OrderProvider with ChangeNotifier {
             MarkerId markerIdDriver = const MarkerId("driver");
 
             final Marker markerDriver = Marker(
+              anchor: const Offset(0.5, 0.5),
               markerId: markerIdDriver,
               position: coordinate,
               icon: driverMarker,
@@ -722,8 +739,15 @@ class OrderProvider with ChangeNotifier {
   }
 
   updateLocation() async {
-    log("update driver locatin iN updateLocation() function in order provider screen");
+    log("tracking update driver locatin iN updateLocation() function in order provider screen");
     locationService.getLocation().then((value) {
+      log("tracking " +
+          value.latitude.toString() +
+          ' , ' +
+          value.longitude.toString() +
+          "and towards " +
+          value.heading.toString());
+
       var bearing = value.heading;
       var lat = value.latitude;
       var lng = value.longitude;
@@ -754,6 +778,7 @@ class OrderProvider with ChangeNotifier {
 
       yield UpdateLocationFailure(failure: failure);
     }, (data) async* {
+      updateDriverLatLong(val: latLng);
       yield UpdateLocationLoaded(data: data);
     });
   }

@@ -301,6 +301,7 @@ class HomeProvider with ChangeNotifier {
       logMe('Create in creating marker --> ');
       MarkerId markerId = const MarkerId("origin");
       final Marker marker = Marker(
+        anchor: const Offset(0.5, 0.5),
         markerId: markerId,
         position: LatLng(locationData.latitude!, locationData.longitude!),
         // icon: driverMarker,
@@ -335,6 +336,7 @@ class HomeProvider with ChangeNotifier {
       MarkerId pickupMarkerId = const MarkerId("pickup");
       MarkerId dropMarkerId = const MarkerId("drop");
       final Marker marker = Marker(
+        anchor: const Offset(0.5, 0.5),
         markerId: pickupMarkerId,
         position: LatLng(pickup.latitude, pickup.longitude),
         icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
@@ -344,6 +346,7 @@ class HomeProvider with ChangeNotifier {
         onTap: () {},
       );
       final Marker dropMarker = Marker(
+        anchor: const Offset(0.5, 0.5),
         markerId: dropMarkerId,
         position: LatLng(drop.latitude, drop.longitude),
         icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
@@ -568,6 +571,8 @@ class HomeProvider with ChangeNotifier {
   }
 
   updateLocation() async {
+    dev.log("Update location function called");
+
     locationService.getLocation().then((value) {
       var bearing = value.heading;
       var lat = value.latitude;
@@ -584,6 +589,7 @@ class HomeProvider with ChangeNotifier {
 
   Stream<UpdateLocationState> submitLocation(
       String latLng, String bearing) async* {
+    dev.log("Submt location function called");
     yield UpdateLocationLoading();
 
     final formData = FormData.fromMap({

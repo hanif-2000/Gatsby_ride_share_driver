@@ -21,7 +21,7 @@ class SignupProvider extends FormProvider {
     final signupResult = await doSignup.call(
         emailController.text,
         passwordConfirmController.text,
-        '${locationData.longitude},${locationData.longitude}');
+        '${locationData.latitude},${locationData.longitude}');
     yield* signupResult.fold((statusCode) async* {
       logMe('signup error $statusCode');
       yield SignupFailure(failure: statusCode.message);

@@ -427,7 +427,6 @@ class OrderDetailPage extends StatelessWidget {
                     final drop = LatLng(
                         double.tryParse(order!.endCoordinate.split(',').first)!,
                         double.tryParse(order!.endCoordinate.split(',').last)!);
-
                     await provider.createPickupAndDropMarker(pickup, drop);
                     await provider.setPolylineDirection(pickup, drop);
                   },

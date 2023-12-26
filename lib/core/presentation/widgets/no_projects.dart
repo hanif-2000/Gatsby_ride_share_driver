@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NoProjects extends StatelessWidget {
+  final String text;
   const NoProjects({
     Key? key,
     this.isOffline = false,
+    required this.text,
   }) : super(key: key);
   final bool isOffline;
 
@@ -32,7 +34,7 @@ class NoProjects extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 28.0),
           child: Text(
             isOffline
-                ? 'You are currently offline go online to get rides.'
+                ? 'You are currently offline go online to get rides.' + text
                 : appLoc.waitForTheReside,
             textAlign: TextAlign.center,
             style: formTextFieldStyle.copyWith(

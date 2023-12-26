@@ -358,6 +358,14 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               : DestinationWidget(
                                   deviceWidth: _deviceSize.width,
                                 ),
+                          // Column(
+                          //   children: [
+                          //     Text(
+                          //         "Driver latlong realtime: ${provider.driverUpdatedLatLong}"),
+                          //     // Text(
+                          //     //     "Polyline is: ${provider.polylineCoordinates}"),
+                          //   ],
+                          // ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,

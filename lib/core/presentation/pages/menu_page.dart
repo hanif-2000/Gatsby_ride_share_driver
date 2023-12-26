@@ -104,6 +104,13 @@ class HomeDrawerPage extends StatelessWidget {
                                           SplashPage.routeName,
                                           (route) => false),
                                 );
+                              } else {
+                                await sessionLogOut().then(
+                                  (_) => Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                          SplashPage.routeName,
+                                          (route) => false),
+                                );
                               }
                             },
                           );

@@ -69,7 +69,6 @@ class FirebaseHelper {
     log("notification contentAvailable :${message.contentAvailable}");
     log("notification data :${message.data}");
     log("notification contains key startiung point  :${message.data.containsKey('Starting point')}");
-
     log("notification Destination :${message.data['Destination']}");
     log("notification from :${message.from}");
     log("notification messageId :${message.messageId}");

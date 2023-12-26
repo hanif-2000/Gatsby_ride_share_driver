@@ -33,30 +33,31 @@ class NotificationHelper {
   }
 
   final AndroidNotificationDetails _androidNotificationDetails =
-      const AndroidNotificationDetails(
-    'GatesByDriver',
-    'GatesBy Driver',
-    playSound: true,
-    priority: Priority.high,
-    importance: Importance.high,
-    // color: Color(0xff000000),
-  );
+      const AndroidNotificationDetails('GatesByDriver', 'GatesBy Driver',
+          playSound: true,
+          priority: Priority.high,
+          importance: Importance.high,
+          onlyAlertOnce: true
+
+          // color: Color(0xff000000),
+          );
 
   Future<void> showNotifications(RemoteMessage message) async {
     if (message.notification != null) {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification?.title,
-        message.notification?.body ?? message.data["message"],
-        NotificationDetails(android: _androidNotificationDetails),
-      );
+      // await flutterLocalNotificationsPlugin.show(
+      //   0,
+      //   message.notification?.title,
+      //   message.notification?.body ?? message.data["message"],
+      //   NotificationDetails(android: _androidNotificationDetails),
+      // );
     } else {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.data['action'],
-        '',
-        NotificationDetails(android: _androidNotificationDetails),
-      );
+      return;
+      // await flutterLocalNotificationsPlugin.show(
+      //   0,
+      //   message.data['action'],
+      //   '',
+      //   NotificationDetails(android: _androidNotificationDetails),
+      // );
     }
   }
 

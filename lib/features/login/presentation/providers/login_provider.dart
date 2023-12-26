@@ -18,7 +18,7 @@ class LoginProvider extends FormProvider {
     final loginResult = await doLogin.call(
         emailController.text,
         passwordController.text,
-        '${locationData.longitude},${locationData.longitude}');
+        '${locationData.latitude},${locationData.longitude}');
     yield* loginResult.fold((statusCode) async* {
       logMe(statusCode);
       yield LoginFailure(failure: statusCode.message);
