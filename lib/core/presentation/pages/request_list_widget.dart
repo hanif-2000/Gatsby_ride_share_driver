@@ -10,15 +10,16 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bo
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/request_tile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../features/order/presentation/pages/order_page.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
 import '../../../features/profile/presentation/providers/customer_detail_state.dart';
 import '../../../features/profile/presentation/providers/order_detail_state.dart';
+import '../../static/order_status.dart';
 import '../../utility/session_helper.dart';
 import '../widgets/common_dialog.dart';
 
@@ -36,6 +37,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
   Session session = locator<Session>();
 
   String myText = '';
+  var dio = Dio();
 
   // StreamController<List<RequestListState>> controller =
   // StreamController << CurrencyModel > [];
@@ -125,143 +127,185 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     _data.length,
                                     (index) => RequestTile(
                                       request: _data[index],
-                                      onAccept: () {
-                                        final session = locator<Session>();
-                                        homeProvider
-                                            .fetchOrderDetail(
-                                                _data[index].id.toString())
-                                            .listen(
-                                          (event1) {
-                                            log("fetch order details called on request list widget in home page");
-                                            if (event1 is OrderDetailLoaded) {
-                                              // var _deviceSize = MediaQuery.of(context).size;
-                                              session.setRunningOrderId =
-                                                  _data[index].id;
-                                              session.setOrderId =
-                                                  _data[index].id.toString();
-                                              homeProvider
-                                                  .fetchCustomerDetail(event1
-                                                      .data.userId
-                                                      .toString())
-                                                  .listen(
-                                                (event) async {
-                                                  if (event
-                                                      is CustomerDetailLoaded) {
-                                                    session.setOrderUserId =
-                                                        event1.data.userId;
-                                                    print(
-                                                        'RUNNING order id --> ${_data[index].id}');
-                                                    homeProvider
-                                                        .submitStatusOrder(
-                                                            Order.driverAccept)
-                                                        .listen(
-                                                      (event) async {
-                                                        if (event
-                                                            is UpdateStatusOrderLoaded) {
-                                                          if (event.data
-                                                                  .success ==
-                                                              1) {
-                                                            // var session =
-                                                            //     locator<Session>();
-                                                            session.setIsOrderRunning =
-                                                                true;
-                                                            var socketProvider =
-                                                                locator<
-                                                                    SocketProvider>();
-                                                            socketProvider
-                                                                .acceptRequestSocket();
-                                                            Navigator
-                                                                .pushNamedAndRemoveUntil(
-                                                              context,
-                                                              OrderPage
-                                                                  .routeName,
-                                                              (route) => false,
-                                                              arguments:
-                                                                  OrderPageArguments(
-                                                                orderDetail:
-                                                                    homeProvider
-                                                                        .orderDetail!,
-                                                                customerDetailModel:
-                                                                    homeProvider
-                                                                        .customerDetailModel!,
-                                                                orderStatus: event1
-                                                                    .data
-                                                                    .orderStatus,
-                                                              ),
-                                                            );
-                                                          } else if (event.data
-                                                                  .message ==
-                                                              5) {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  CommonDialog(
-                                                                title: appLoc
-                                                                    .sorry,
-                                                                msg: appLoc
-                                                                    .orderacceptedotherdriver,
-                                                                onTap: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              ),
-                                                            );
-                                                          } else if (event.data
-                                                                  .message ==
-                                                              6) {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  CommonDialog(
-                                                                title: appLoc
-                                                                    .sorry,
-                                                                msg: appLoc
-                                                                    .ordernotfound,
-                                                                onTap: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              ),
-                                                            );
-                                                          } else if (event.data
-                                                                  .message ==
-                                                              7) {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  CommonDialog(
-                                                                title: appLoc
-                                                                    .sorry,
-                                                                msg: appLoc
-                                                                    .orderhascancelled,
-                                                                onTap: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              ),
-                                                            );
-                                                          }
-                                                        }
-                                                      },
-                                                    );
-                                                  }
-                                                },
-                                              );
-                                            }
-                                          },
+                                      onAccept: () async {
+                                        log("_data[index].id : ${_data[index].id}");
+                                        var response = await dio.get(
+                                          'https://php.parastechnologies.in/taxi/public/api/webservice/getOrder?id=${_data[index].id}',
+                                          options: Options(headers: {
+                                            "Authorization":
+                                                "Bearer ${session.sessionToken}"
+                                          }),
                                         );
+
+                                        log("my response data is:  " +
+                                            response.data.toString());
+
+                                        if (response.data["order"]
+                                                ["driver_id"] ==
+                                            null) {
+                                          final session = locator<Session>();
+                                          homeProvider
+                                              .fetchOrderDetail(
+                                                  _data[index].id.toString())
+                                              .listen(
+                                            (event1) {
+                                              log("fetch order details called on request list widget in home page");
+                                              if (event1 is OrderDetailLoaded) {
+                                                // var _deviceSize = MediaQuery.of(context).size;
+                                                session.setRunningOrderId =
+                                                    _data[index].id;
+                                                session.setOrderId =
+                                                    _data[index].id.toString();
+                                                homeProvider
+                                                    .fetchCustomerDetail(event1
+                                                        .data.userId
+                                                        .toString())
+                                                    .listen(
+                                                  (event) async {
+                                                    if (event
+                                                        is CustomerDetailLoaded) {
+                                                      session.setOrderUserId =
+                                                          event1.data.userId;
+                                                      print(
+                                                          'RUNNING order id --> ${_data[index].id}');
+                                                      homeProvider
+                                                          .submitStatusOrder(
+                                                              Order
+                                                                  .driverAccept)
+                                                          .listen(
+                                                        (event) async {
+                                                          if (event
+                                                              is UpdateStatusOrderLoaded) {
+                                                            if (event.data
+                                                                    .success ==
+                                                                1) {
+                                                              // var session =
+                                                              //     locator<Session>();
+                                                              session.setIsOrderRunning =
+                                                                  true;
+                                                              var socketProvider =
+                                                                  locator<
+                                                                      SocketProvider>();
+                                                              socketProvider
+                                                                  .acceptRequestSocket();
+                                                              Navigator
+                                                                  .pushNamedAndRemoveUntil(
+                                                                context,
+                                                                OrderPage
+                                                                    .routeName,
+                                                                (route) =>
+                                                                    false,
+                                                                arguments:
+                                                                    OrderPageArguments(
+                                                                  orderDetail:
+                                                                      homeProvider
+                                                                          .orderDetail!,
+                                                                  customerDetailModel:
+                                                                      homeProvider
+                                                                          .customerDetailModel!,
+                                                                  orderStatus:
+                                                                      event1
+                                                                          .data
+                                                                          .orderStatus,
+                                                                ),
+                                                              );
+                                                            } else if (event
+                                                                    .data
+                                                                    .message ==
+                                                                5) {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        CommonDialog(
+                                                                  title: appLoc
+                                                                      .sorry,
+                                                                  msg: appLoc
+                                                                      .orderacceptedotherdriver,
+                                                                  onTap: () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              );
+                                                            } else if (event
+                                                                    .data
+                                                                    .message ==
+                                                                6) {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        CommonDialog(
+                                                                  title: appLoc
+                                                                      .sorry,
+                                                                  msg: appLoc
+                                                                      .ordernotfound,
+                                                                  onTap: () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              );
+                                                            } else if (event
+                                                                    .data
+                                                                    .message ==
+                                                                7) {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        CommonDialog(
+                                                                  title: appLoc
+                                                                      .sorry,
+                                                                  msg: appLoc
+                                                                      .orderhascancelled,
+                                                                  onTap: () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              );
+                                                            }
+                                                          }
+                                                        },
+                                                      );
+                                                    }
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          );
+                                        } else {
+                                          showToast(
+                                              message:
+                                                  "Order is Already Accepted by Other Driver");
+                                          // showDialog(
+                                          //   context: context,
+                                          //   builder: (context) {
+                                          //     return const Text(
+                                          //         "Order is Already Accepted by Other Driver");
+                                          //   },
+                                          // );
+                                          setState(() {
+                                            myText = '';
+                                          });
+                                        }
                                       },
                                       onReject: () {
                                         CustomBottomSheet.showBottomSheet(

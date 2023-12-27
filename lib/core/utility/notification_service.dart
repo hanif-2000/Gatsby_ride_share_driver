@@ -44,20 +44,20 @@ class NotificationHelper {
 
   Future<void> showNotifications(RemoteMessage message) async {
     if (message.notification != null) {
-      // await flutterLocalNotificationsPlugin.show(
-      //   0,
-      //   message.notification?.title,
-      //   message.notification?.body ?? message.data["message"],
-      //   NotificationDetails(android: _androidNotificationDetails),
-      // );
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        message.notification?.title,
+        message.notification?.body ?? message.data["message"],
+        NotificationDetails(android: _androidNotificationDetails),
+      );
     } else {
-      return;
-      // await flutterLocalNotificationsPlugin.show(
-      //   0,
-      //   message.data['action'],
-      //   '',
-      //   NotificationDetails(android: _androidNotificationDetails),
-      // );
+      // return;
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        message.data['action'],
+        '',
+        NotificationDetails(android: _androidNotificationDetails),
+      );
     }
   }
 

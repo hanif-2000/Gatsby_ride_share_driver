@@ -471,6 +471,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   Stream<OrderDetailState> fetchOrderDetail(String orderId) async* {
+    dev.log("fetch order details called");
     yield OrderDetailLoading();
     final result = await getOrderDetail(orderId);
     yield* result.fold((failure) async* {

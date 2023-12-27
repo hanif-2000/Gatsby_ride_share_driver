@@ -82,7 +82,7 @@ class FirebaseHelper {
 
     log("remote message called");
 
-    if (message.notification!.title == 'New Order' ||
+    if (message.notification!.title == 'New Booking' ||
         message.notification!.title == 'Booking Cancelled') {
       var homeProvider = Provider.of<HomeProvider>(
           locator<GlobalKey<NavigatorState>>().currentContext!,
