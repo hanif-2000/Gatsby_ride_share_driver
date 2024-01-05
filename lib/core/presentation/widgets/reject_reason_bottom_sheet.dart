@@ -29,7 +29,7 @@ class RejectReasonBottomSheet extends StatelessWidget {
             ).usePoppinsW6Font(),
           ),
           Text(
-            'Lorem ipsum dolor sit amet consectetur. ',
+            'Please Select the reason for rejection ',
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 12,

@@ -35,7 +35,7 @@ Future<void> main() async {
 
       // await FirebaseHelper.init().then((_) async {
       //   // await NotificationHelper().init();
-      // });
+      // });--------
       // await NotificationHelper().init();
       runApp(
         MultiProvider(

@@ -605,12 +605,18 @@ class OrderProvider with ChangeNotifier {
       int minutes = difference.inMinutes % 60;
       int seconds = difference.inSeconds % 60;
 
-      log(" trip end:-->> total actual distnce in seconds after trip end :-->> ${difference.inSeconds}");
+      log(" trip end:-->> total actual distnce in seconds after trip end :-->> ${difference.inMinutes}");
+
+      double actualTime = double.parse(difference.inMinutes.toString());
 
       log("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
 
       log("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
       log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
+
+      if ((double.parse(session.estimatedTime)) < actualTime) {
+        session.setEstimatedTime = actualTime.toString();
+      }
 
       // receiptProvider.getReceiptAPI();
 

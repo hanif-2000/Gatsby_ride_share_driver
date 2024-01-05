@@ -271,6 +271,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                       }
 
                       if (state.data.status == Order.complete.toString()) {
+                        log("order complete called");
                         trackingTimer!.cancel();
                         timer.cancel();
 

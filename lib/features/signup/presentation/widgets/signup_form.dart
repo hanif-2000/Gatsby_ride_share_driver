@@ -11,6 +11,7 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages
 import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/provider/signup_provider.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/provider/signup_state.dart';
+import 'package:appkey_taxiapp_driver/features/terms_and_conditions/terms_and_conditions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -153,21 +154,27 @@ class _SignUpFormState extends State<SignUpForm> {
                       ),
                       children: [
                         TextSpan(
-                          text: appLoc.term,
-                          style: blactStyle.copyWith(fontSize: 12),
-                        ),
-                        TextSpan(
-                          text: appLoc.and,
-                          style: blactStyle.copyWith(
-                            fontSize: 12,
-                            color: grey7c7c7c,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        TextSpan(
-                          text: appLoc.conditions,
-                          style: blactStyle.copyWith(fontSize: 12),
-                        ),
+                            text: appLoc.term + appLoc.and + appLoc.conditions,
+                            style: blactStyle.copyWith(fontSize: 12),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushNamed(
+                                  context,
+                                  TermsAndConditionsPage.routeName,
+                                );
+                              }),
+                        // TextSpan(
+                        //   text: appLoc.and,
+                        //   style: blactStyle.copyWith(
+                        //     fontSize: 12,
+                        //     color: grey7c7c7c,
+                        //     fontWeight: FontWeight.w400,
+                        //   ),
+                        // ),
+                        // TextSpan(
+                        //   text: appLoc.conditions,
+                        //   style: blactStyle.copyWith(fontSize: 12),
+                        // ),
                       ],
                     ),
                   ),
