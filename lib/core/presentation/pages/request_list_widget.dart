@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
@@ -185,7 +186,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                                                   true;
                                                               var socketProvider =
                                                                   locator<
-                                                                      SocketProvider>();
+                                                                      LatestSocketProvider>();
                                                               socketProvider
                                                                   .acceptRequestSocket();
                                                               Navigator
@@ -323,8 +324,8 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                                 if (event
                                                     is RejectRequestLoaded) {
                                                   final data = event.data;
-                                                  var socketProvider =
-                                                      locator<SocketProvider>();
+                                                  var socketProvider = locator<
+                                                      LatestSocketProvider>();
                                                   Navigator.pop(context);
 
                                                   Navigator

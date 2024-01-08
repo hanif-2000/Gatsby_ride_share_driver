@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -35,7 +36,7 @@ class ButtonOrder extends StatelessWidget {
       required this.currentOrderStatus})
       : super(key: key);
 
-  SocketProvider socketProvider = locator<SocketProvider>();
+  LatestSocketProvider socketProvider = locator<LatestSocketProvider>();
   Session session = locator<Session>();
 
   var dio = Dio();

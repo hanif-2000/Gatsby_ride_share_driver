@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
@@ -22,7 +23,7 @@ class BottomProfile extends StatefulWidget {
 }
 
 class _BottomProfileState extends State<BottomProfile> {
-  var socketProvider = locator<SocketProvider>();
+  var socketProvider = locator<LatestSocketProvider>();
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(builder: (context, provider, _) {

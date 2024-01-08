@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -26,7 +27,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  var socketProvider = locator<SocketProvider>();
+  var socketProvider = locator<LatestSocketProvider>();
   void submit() {
     FocusManager.instance.primaryFocus?.unfocus();
     final provider = context.read<LoginProvider>();
@@ -46,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
           session.setLoggedIn = true;
           session.setIsProfileCompleted = true;
 
-          socketProvider.connectToSocket();
+          socketProvider.connectToSocket(context);
           // showToast(message: appLoc.success);
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);

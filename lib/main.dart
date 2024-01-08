@@ -1,4 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
@@ -43,8 +44,8 @@ Future<void> main() async {
             ChangeNotifierProvider<SplashProvider>(
               create: (context) => locator<SplashProvider>(),
             ),
-            ChangeNotifierProvider<SocketProvider>(
-              create: (context) => locator<SocketProvider>(),
+            ChangeNotifierProvider<LatestSocketProvider>(
+              create: (context) => locator<LatestSocketProvider>(),
             ),
             ChangeNotifierProvider<HomeProvider>(
               create: (context) => locator<HomeProvider>(),

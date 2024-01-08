@@ -58,6 +58,7 @@ late AppLocalizations appLoc;
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 Location location = Location();
+final Location _location = Location();
 
 checkPermissinLocationNotification() async {
   if (await hand.Permission.location.serviceStatus.isEnabled) {
@@ -184,6 +185,37 @@ Future<bool> checkPermission() async {
     return false;
   }
   return true;
+}
+
+/// CHECK LOCATION AND PERMISSION
+Future<bool> checkLocationAndPermission() async {
+  PermissionStatus permission;
+  //Check location permission
+  permission = await _location.hasPermission();
+  if (permission == PermissionStatus.granted) {
+    //If location permission is granted then return true
+    return true;
+  } else if (permission == PermissionStatus.denied) {
+// If location permission is denied then ask for location permission again
+
+    await Geolocator.requestPermission().whenComplete(() async {
+// Again check the location permission
+
+      permission = await _location.hasPermission();
+    });
+    if (permission == PermissionStatus.granted) {
+      //if location is granted then return true
+      return true;
+    } else {
+      //if location is denied then return false
+      return false;
+    }
+  } else if (permission == PermissionStatus.deniedForever) {
+    // if location permission is denied forever then return false
+    return false;
+  } else {
+    return false;
+  }
 }
 
 String mergeAddress(String placeName, String address) {

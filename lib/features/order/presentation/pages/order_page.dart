@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -63,7 +64,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
   var orderPProvider = locator<OrderProvider>();
-  var socketProvider = locator<SocketProvider>();
+  var socketProvider = locator<LatestSocketProvider>();
 
   late StreamSubscription<LocationData> locationSubscription;
 
@@ -374,10 +375,10 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                               children: [
                                 const CurrentLocationOrderWidget(),
                                 BottomContainerOrder(
-                                  newMessgeCount: Provider.of<SocketProvider>(
-                                          context,
-                                          listen: true)
-                                      .unreadMessageCount,
+                                  newMessgeCount:
+                                      Provider.of<LatestSocketProvider>(context,
+                                              listen: true)
+                                          .unreadMessageCount,
                                   currentOrderStatus: session.currentOrderState,
                                 ),
                               ],

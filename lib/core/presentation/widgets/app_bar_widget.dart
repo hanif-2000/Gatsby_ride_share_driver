@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
@@ -22,7 +23,7 @@ class AppBarLoggedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var socketProvider = locator<SocketProvider>();
+    var socketProvider = locator<LatestSocketProvider>();
     return SizedBox(
       width: boxConstraints.maxWidth * 0.6,
       height: appbarHeight,

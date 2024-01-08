@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
@@ -25,7 +26,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
-  var socketProvider = locator<SocketProvider>();
+  var socketProvider = locator<LatestSocketProvider>();
   // var chatProvider = locator<ChatProvider>();
   var sessionProvider = locator<Session>();
 
@@ -48,7 +49,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       socketProvider.joinExitRoom(
           receiverId: widget.chatDetail!.userId, type: 'unJoin');
     } else if (state == AppLifecycleState.resumed) {
-      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId);
+      socketProvider.joinExitRoom(
+          receiverId: widget.chatDetail!.userId, type: "unJoin");
     }
   }
 
@@ -72,7 +74,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: greyEFEDED,
-      body: Consumer<SocketProvider>(builder: (context, provider, _) {
+      body: Consumer<LatestSocketProvider>(builder: (context, provider, _) {
         return Column(
           children: [
             Container(
