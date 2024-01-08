@@ -20,6 +20,7 @@ import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/rec
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
 import 'package:location/location.dart';
@@ -72,6 +73,7 @@ class OrderProvider with ChangeNotifier {
   List driverCoordinatesList = [];
 
   bool isOrderStatusComplete = false;
+  geo.Position? _currentPosition;
 
   String driverUpdatedLatLong = '';
   updateDriverLatLong({val}) {
@@ -98,6 +100,33 @@ class OrderProvider with ChangeNotifier {
   double? get driverLng => _driverLng;
 
   late StreamSubscription<LocationData> locationSubscription;
+  double _distanceCovered = 0.0;
+
+  _getCurrentLocation() async {
+    var position = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.high);
+    // setState(() {
+    _currentPosition = position;
+    notifyListeners();
+    // });
+  }
+
+  _updateDistance(geo.Position newPosition) {
+    if (_currentPosition != null) {
+      double distance = geo.Geolocator.distanceBetween(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+        newPosition.latitude,
+        newPosition.longitude,
+      );
+
+      // setState(() {
+      _distanceCovered += distance;
+      _currentPosition = newPosition;
+      notifyListeners();
+      // });
+    }
+  }
 
   //setter
   set changeOrderStatus(val) {
@@ -788,4 +817,8 @@ class OrderProvider with ChangeNotifier {
       yield UpdateLocationLoaded(data: data);
     });
   }
+
+  /// Track Live Tracking Distance
+
+  trackLiveTrackingDistance() {}
 }

@@ -386,8 +386,8 @@ class ReceiptPage extends StatelessWidget {
                                                     extraTime: order.extraTime,
                                                     extraDistancePrice: order
                                                         .extraDistancePrice,
-                                                    extraMinPrice:
-                                                        order.extraKmPrice,
+                                                    extraTimePrice:
+                                                        order.extraTimePrice,
                                                     grandTotal: order.total,
                                                     distance: order.distance);
                                               },

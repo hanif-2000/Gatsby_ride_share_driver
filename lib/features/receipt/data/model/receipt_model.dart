@@ -32,8 +32,9 @@ class OrderReceipt {
   String grandTotal;
   dynamic newTotal;
   dynamic pendingAmount;
-
   String extraTime;
+  String extraTimePrice;
+
   String extraKmPrice;
   String extraDistance;
   String extraDistancePrice;
@@ -59,6 +60,7 @@ class OrderReceipt {
     this.pendingAmount,
     required this.grandTotal,
     required this.extraTime,
+    required this.extraTimePrice,
     required this.extraKmPrice,
     required this.extraDistance,
     required this.extraDistancePrice,
@@ -86,6 +88,7 @@ class OrderReceipt {
             : DateTime.parse(json["start_time"]),
         status: json["status"],
         image: json["image"] ?? '',
+        extraTimePrice: json["extra_time_price"] ?? '0',
         newTotal: json["new_total"] ?? 0.0,
         pendingAmount: json["pending_amount"] ?? 0.0,
         tip: json["tip"] ?? 0,
@@ -121,6 +124,7 @@ class OrderReceipt {
         "user_name": userName,
         "user_phone": userPhone,
         "rating": rating,
+        "extra_time_price": extraTimePrice,
         "tip": tip,
         "payment_method": paymentMethod,
         "timestamp": timestamp,

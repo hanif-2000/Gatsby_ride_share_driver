@@ -9,9 +9,10 @@ class PaymentScreen extends StatefulWidget {
   final dynamic grandTotal;
 
   final dynamic extraDistancePrice;
-  final dynamic extraMinPrice;
+  final dynamic extraTimePrice;
   final dynamic extraDistance;
   final dynamic extraTime;
+
   final String distance;
   final dynamic newTotal;
   final dynamic pendingAmount;
@@ -22,7 +23,7 @@ class PaymentScreen extends StatefulWidget {
     required this.extraDistance,
     required this.extraTime,
     required this.extraDistancePrice,
-    required this.extraMinPrice,
+    required this.extraTimePrice,
     required this.grandTotal,
     required this.distance,
     required this.newTotal,
@@ -85,18 +86,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const Divider(
                     color: whiteAccentColor,
                   ),
-                  const TextInRow(
+                  TextInRow(
                     firstText: 'Extra Distance',
                     // secondText: widget.extraDistance + " Km",
-                    secondText: "0 Km",
+                    secondText: widget.extraDistance + " Km",
                   ),
                   const Divider(
                     color: whiteAccentColor,
                   ),
-                  const TextInRow(
+                  TextInRow(
+                    firstText: 'Extra Distance Price',
+                    // secondText: widget.extraDistance + " Km",
+                    secondText: "CA\$ " + widget.extraDistancePrice,
+                  ),
+                  const Divider(
+                    color: whiteAccentColor,
+                  ),
+                  TextInRow(
                     firstText: 'Extra Time',
                     // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: "0" ' Min',
+                    secondText: widget.extraTime + ' min',
+                  ),
+                  const Divider(
+                    color: whiteAccentColor,
+                  ),
+                  TextInRow(
+                    firstText: 'Extra Time Price',
+                    // secondText: widget.extraTime.toString() + ' Min',
+                    secondText: "CA\$ " + widget.extraTimePrice,
                   ),
                   const Divider(
                     color: whiteAccentColor,
