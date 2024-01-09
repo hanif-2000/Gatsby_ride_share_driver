@@ -189,34 +189,30 @@ Future<bool> checkPermission() async {
 
 /// CHECK LOCATION AND PERMISSION
 Future<bool> checkLocationAndPermission() async {
-  PermissionStatus permission;
-  //Check location permission
-  permission = await _location.hasPermission();
+  // Check location permission status
+  PermissionStatus permission = await _location.hasPermission();
+
   if (permission == PermissionStatus.granted) {
-    //If location permission is granted then return true
+    // Location permission is already granted, return true
     return true;
-  } else if (permission == PermissionStatus.denied) {
-// If location permission is denied then ask for location permission again
+  }
 
-    await Geolocator.requestPermission().whenComplete(() async {
-// Again check the location permission
+  if (permission == PermissionStatus.denied) {
+    // Request location permission
+    await Geolocator.requestPermission();
+    // Re-check permission status after requesting
+    permission = await _location.hasPermission();
+  }
 
-      permission = await _location.hasPermission();
-    });
-    if (permission == PermissionStatus.granted) {
-      //if location is granted then return true
-      return true;
-    } else {
-      //if location is denied then return false
-      return false;
-    }
-  } else if (permission == PermissionStatus.deniedForever) {
-    // if location permission is denied forever then return false
-    return false;
+  if (permission == PermissionStatus.granted) {
+    // Location permission granted after request, return true
+    return true;
   } else {
+    // Location permission not granted or denied forever, return false
     return false;
   }
 }
+
 
 String mergeAddress(String placeName, String address) {
   String result;
