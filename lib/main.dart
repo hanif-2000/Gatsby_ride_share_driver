@@ -1,6 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
@@ -9,10 +8,11 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/ch
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_password_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
+
 import 'core/presentation/pages/splash_page.dart';
 import 'core/presentation/providers/place_picker_provider.dart';
 import 'core/routes/route.dart';

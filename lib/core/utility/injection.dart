@@ -114,8 +114,7 @@ final locator = GetIt.instance;
 
 Future<void> init() async {
   //network info
-  locator.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImplementation(locator<Connectivity>()));
+  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImplementation(locator<Connectivity>()));
 
   //external
   locator.registerLazySingleton<Dio>(() => DioClient().dio);

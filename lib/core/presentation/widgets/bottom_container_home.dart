@@ -12,7 +12,7 @@ class BottomContainerHome extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var _deviceSize = MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
 
     return Consumer<HomeProvider>(builder: (context, provider, _) {
       return Column(
@@ -26,7 +26,7 @@ class BottomContainerHome extends StatelessWidget {
               ),
               color: Color.fromRGBO(0, 0, 0, 0.4),
             ),
-            height: _deviceSize.height * 0.16,
+            height: deviceSize.height * 0.16,
             width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0),
@@ -78,26 +78,31 @@ class BottomContainerHome extends StatelessWidget {
                     current: provider.isOnline,
                     first: false,
                     second: true,
-                    dif: 80.0,
-                    borderColor: Colors.transparent,
+                  //  dif: 80.0,
+                    spacing: 80.0,
                     borderWidth: 5.0,
                     height: 45,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(0, 1.5),
-                      ),
-                    ],
-                    innerColor: provider.isOnline ? primaryColor : Colors.black,
+                    style: ToggleStyle(
+                      borderColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: Offset(0, 1.5),
+                        ),
+                      ],
+                    ),
+                    styleBuilder: (i) => ToggleStyle(indicatorColor:  provider.isOnline ? primaryColor : greyA2A0A8),
+                 //   innerColor: provider.isOnline ? primaryColor : Colors.black,
                     onChanged: (b) {
                       // provider.updateStatus().listen((event) async {});
                       provider.changeStatus = b;
                       return Future.delayed(const Duration(seconds: 2));
                     },
                     indicatorSize: const Size.fromWidth(38),
-                    colorBuilder: (b) => b ? Colors.black : Colors.grey,
+                 //   colorBuilder: (b) => b ? Colors.black : Colors.grey,
                     iconBuilder: (value) => const Icon(
                       Icons.local_taxi,
                       color: whiteColor,

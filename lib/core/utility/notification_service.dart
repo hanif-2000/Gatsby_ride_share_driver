@@ -19,17 +19,17 @@ class NotificationHelper {
 
     const initializationSettingsAndroid =
         AndroidInitializationSettings(iconNotification);
-    const initializationSettingsIos = IOSInitializationSettings(
+    const darwinInitializationSettings = DarwinInitializationSettings(
         requestSoundPermission: false,
         requestAlertPermission: false,
         requestBadgePermission: false);
     const InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid,
-            iOS: initializationSettingsIos);
+            iOS: darwinInitializationSettings);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+        onDidReceiveNotificationResponse: selectNotification);
   }
 
   final AndroidNotificationDetails _androidNotificationDetails =
@@ -61,7 +61,7 @@ class NotificationHelper {
     }
   }
 
-  void selectNotification(String? payload) async {
+  void selectNotification(NotificationResponse response) async {
     //handle your logic here
   }
 }
