@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/static/assets.dart';
@@ -71,6 +72,8 @@ class OrderProvider with ChangeNotifier {
   var receiptProvider = locator<ReceiptProvider>();
 
   List driverCoordinatesList = [];
+
+  double totalDistanceCovered = 0.0;
 
   bool isOrderStatusComplete = false;
   geo.Position? _currentPosition;
@@ -365,23 +368,23 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  // trackDriverRouteDistance() {
-  //   log("track driver route distance called ");
+  trackDriverRouteDistance() {
+    log("track driver route distance called ");
 
-  //   // Timer.periodic(const Duration(seconds: 10), (timer) {
-  //   // setState(() {
+    // Timer.periodic(const Duration(seconds: 10), (timer) {
+    // setState(() {
 
-  //   locationService.changeSettings(
-  //       accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5);
+    locationService.changeSettings(
+        accuracy: LocationAccuracy.high, distanceFilter: 10);
 
-  //   locationService.onLocationChanged
-  //       .distinct()
-  //       .listen((LocationData currentLocation) {
-  //     log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
-  //     // });
-  //   });
-  //   // });
-  // }
+    locationService.onLocationChanged
+        .distinct()
+        .listen((LocationData currentLocation) {
+      log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
+      // });
+    });
+    // });
+  }
 
   setPolylineDirection(bool isFromOrigin) async {
     // showLoading();
@@ -612,6 +615,8 @@ class OrderProvider with ChangeNotifier {
       orderStatusBody = Order.arriveAtDestination.toString();
       log("orderStatusBody  is OrderStatus.departureToDestination------>>>>>>>  $orderStatusBody");
 
+      trackDriverRouteDistance();
+
       log("arriver at destination called");
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
       //6
@@ -749,20 +754,52 @@ class OrderProvider with ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     String url;
+    String appleUrl;
+    String googleUrl;
+
     if (_orderStatus == OrderStatus.driverAccept ||
         _orderStatus == OrderStatus.departureToCustomerplace) {
       url = 'google.navigation:q=$latOrigin,$lngOrigin&mode=d';
+      googleUrl =
+          'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
+      appleUrl =
+          'https://maps.apple.com/?saddr=&daddr=$latOrigin,$lngOrigin&directionsmode=driving';
     } else {
       url = 'google.navigation:q=$latDestination,$lngDestination&mode=d';
+      googleUrl =
+          'https://www.google.com/maps/search/?api=1&query=$latDestination,$lngDestination';
+      appleUrl =
+          'https://maps.apple.com/?saddr=&daddr=$latDestination,$lngDestination&directionsmode=driving';
+    }
+    Uri appleUri = Uri.parse(appleUrl);
+    Uri googleUri = Uri.parse(googleUrl);
+    Uri urlUri = Uri.parse(url);
+
+    if (Platform.isIOS) {
+      if (await canLaunchUrl(appleUri)) {
+        await launchUrl(appleUri, mode: LaunchMode.externalApplication);
+      } else {
+        if (await canLaunchUrl(googleUri)) {
+          await launchUrl(googleUri, mode: LaunchMode.externalApplication);
+        }
+      }
+    } else {
+      if (await canLaunchUrl(urlUri)) {
+        await launchUrl(urlUri, mode: LaunchMode.externalApplication);
+      }
     }
 
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
+    // if (await canLaunchUrl(Uri.parse(url))) {
+    //   await launchUrl(Uri.parse(url));
+    // } else {
+    //   throw 'Could not launch $url';
+    // }
     notifyListeners();
   }
+
+// String appleUrl = 'https://maps.apple.com/?saddr=&daddr=$lat,$lon&directionsmode=driving';
+// String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+//
 
   callCustomer() async {
     if (_customerDetail!.data.phoneNumber != '') {
