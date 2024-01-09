@@ -74,19 +74,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   current: provider.isOnline,
                   first: false,
                   second: true,
-                  dif: 5.0,
-                  borderColor: Colors.transparent,
+                //  dif: 5.0,
+
                   borderWidth: 5.0,
                   height: 100,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(0, 1.5),
-                    ),
-                  ],
-                  innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
+                  style: ToggleStyle(
+                    borderColor: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: Offset(0, 1.5),
+                      ),
+                    ],
+                  ),
+                  styleBuilder: (i) => ToggleStyle(indicatorColor:  provider.isOnline ? primaryColor : greyA2A0A8),
+                 // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
                   onChanged: (b) {
                     provider.changeStatus = b;
                     provider.updateStatus().listen((event) async {
@@ -99,7 +104,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     );
                   },
                   indicatorSize: const Size.fromWidth(38),
-                  colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
+               //   colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
                   iconBuilder: (value) => Icon(
                     Icons.local_taxi,
                     color: value ? primaryColor : Colors.grey,

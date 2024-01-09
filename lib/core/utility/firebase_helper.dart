@@ -23,35 +23,29 @@ class FirebaseHelper {
     await Firebase.initializeApp(
         name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
-
-    await permissionHandler().then((authorized) async {
+    await FirebaseMessaging.instance.requestPermission();
+    await NotificationHelper().init();
+    incomingNotificationHandling();
+   /* await permissionHandler().then((authorized) async {
       log("IS AUTHORIZED:  $authorized");
-      if (authorized) {
-        await NotificationHelper().init();
 
-        await setupMessaging();
-      } else {
-        await NotificationHelper().init();
-
-        await setupMessaging();
-      }
-    });
+    //  await setupMessaging();
+    });*/
   }
 
-  static Future<void> setupMessaging() async {
-    await messaging.getToken().then((token) async {
+/*  static Future<void> setupMessaging() async {
+ *//*   await messaging.getToken().then((token){
       final session = locator<Session>();
       logMe("firebase-token: $token");
       session.setFcmToken = token!;
-    });
-    await incomingNotificationHandling();
-  }
+    });*//*
+     incomingNotificationHandling();
+  }*/
 
-  static Future<void> incomingNotificationHandling() async {
+  static void incomingNotificationHandling()  {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("on message listen called");
-
       log("remote message is------->>>>>. $message");
       fetchRemoteMessage(message);
       NotificationHelper _notificationService = NotificationHelper();
