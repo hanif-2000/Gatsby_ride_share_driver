@@ -26,6 +26,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as lctn;
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../core/data/models/google_route_response_modal.dart';
 import '../../../../core/domain/usecases/do_update_location.dart';
 import '../../../../core/presentation/providers/update_location_state.dart';
 import '../../../../core/utility/direction_helper.dart';
@@ -71,7 +72,7 @@ class OrderProvider with ChangeNotifier {
   final session = locator<Session>();
   var receiptProvider = locator<ReceiptProvider>();
 
-  List driverCoordinatesList = [];
+  List<LatLng> driverCoordinatesList = [];
 
   double totalDistanceCovered = 0.0;
 
@@ -381,9 +382,87 @@ class OrderProvider with ChangeNotifier {
         .distinct()
         .listen((LocationData currentLocation) {
       log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
+
+      driverCoordinatesList
+          .add(LatLng(currentLocation.latitude!, currentLocation.longitude!));
       // });
     });
     // });
+  }
+
+  //calculate distance covered
+
+  calculateDistanceCovered() async {
+    List<int> differences = [];
+
+    log("_lat long list are:-->> $driverCoordinatesList");
+
+    for (int i = 1; i < driverCoordinatesList.length; i++) {
+      // int diff = myList[i] - myList[i - 1];
+
+      await setActualDistance(
+              originLat: driverCoordinatesList[i].latitude,
+              originLong: driverCoordinatesList[i].longitude,
+              destinationLat: driverCoordinatesList[i - 1].latitude,
+              destinationLong: driverCoordinatesList[i - 1].longitude)
+          .then((value) {
+        differences.add(value);
+        print("Differences between elements: $differences");
+      });
+    }
+
+    print("Differences between elements----: $differences");
+
+    int sum = differences.fold(
+        0, (previousValue, element) => previousValue + element);
+
+    print("Total sum of elements: $sum");
+
+    if (double.parse(session.estimatedDistance) < (sum / 1000)) {
+      session.setEstimatedDistance = (sum / 1000).toString();
+    } else {
+      log("estimated time is greater than actual time");
+    }
+  }
+
+  /// Get difference distance between coordinates
+
+  // Future<List>getDistanceDifference{
+  //  List<int> differences = [];
+
+  //   for (int i = 1; i < driverCoordinatesList.length; i++) {
+  //     // int diff = myList[i] - myList[i - 1];
+
+  //     setActualDistance(
+  //             originLat: driverCoordinatesList[i].latitude,
+  //             originLong: driverCoordinatesList[i].longitude,
+  //             destinationLat: driverCoordinatesList[i - 1].latitude,
+  //             destinationLong: driverCoordinatesList[i - 1].longitude)
+  //         .then((value) {
+  //       differences.add(value);
+  //       print("Differences between elements: $differences");
+  //     });
+  //   }
+
+  //   return Future(;
+
+  // }
+
+// ------------- Get distance between 2 lat long points
+  Future<int> setActualDistance(
+      {destinationLat, destinationLong, originLat, originLong}) async {
+    var response = await Dio().get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+    log(" response of real distance:--->>> ${response.data}");
+
+    var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
+
+    int calculatedDistance = (data.rows[0].elements[0].distance.value);
+
+    notifyListeners();
+    log("session distnace:--$calculatedDistance");
+
+    return calculatedDistance;
   }
 
   setPolylineDirection(bool isFromOrigin) async {
@@ -603,6 +682,7 @@ class OrderProvider with ChangeNotifier {
       log("Ride start time is :---- ${DateTime.now()}");
 
       session.setStartTime = DateTime.now().toString();
+      trackDriverRouteDistance();
     }
 //     else if (_orderStatus == OrderStatus.customerConfirmation) {
 //       log("status 4");
@@ -615,8 +695,6 @@ class OrderProvider with ChangeNotifier {
       orderStatusBody = Order.arriveAtDestination.toString();
       log("orderStatusBody  is OrderStatus.departureToDestination------>>>>>>>  $orderStatusBody");
 
-      trackDriverRouteDistance();
-
       log("arriver at destination called");
     } else if (_orderStatus == OrderStatus.arriveAtDestination) {
       //6
@@ -624,6 +702,7 @@ class OrderProvider with ChangeNotifier {
       log("orderStatusBody  is OrderStatus.arriveAtDestination------>>>>>>>  $orderStatusBody");
 
       log("order complete called");
+      calculateDistanceCovered();
 
       log("ride complete end time is:--->>>>${DateTime.now()}");
       session.setEndTime = DateTime.now().toString();
@@ -857,5 +936,5 @@ class OrderProvider with ChangeNotifier {
 
   /// Track Live Tracking Distance
 
-  trackLiveTrackingDistance() {}
+  // trackLiveTrackingDistance() {}
 }
