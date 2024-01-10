@@ -37,10 +37,10 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     // socketProvider.connectToSocket();
-    final requestPermission =  checkLocationAndPermission();
     Timer(const Duration(seconds: 3), () async {
+      final requestPermission = await checkLocationAndPermission();
       log("request permission value is:-->> $requestPermission");
-      if (await requestPermission == false) {
+      if ( requestPermission == false) {
         await checkLocationAndPermission().then((value) async {
           log("check location and permission value is:$value");
           if (value) {

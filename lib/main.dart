@@ -29,9 +29,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await init();
-
     locator.isReady<Session>().then((_) async {
-      FirebaseHelper.init();
+     await FirebaseHelper.init();
 
       // await FirebaseHelper.init().then((_) async {
       //   // await NotificationHelper().init();

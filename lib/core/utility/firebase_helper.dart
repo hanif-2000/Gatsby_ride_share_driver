@@ -20,10 +20,9 @@ class FirebaseHelper {
   static Future<void> init() async {
     await Firebase.initializeApp();
     logMe("Firebasee helperrrr");
-    await Firebase.initializeApp(
-        name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
-    await FirebaseMessaging.instance.requestPermission();
+    await messaging.requestPermission();
     await NotificationHelper().init();
     incomingNotificationHandling();
    /* await permissionHandler().then((authorized) async {
