@@ -20,12 +20,13 @@ class FirebaseHelper {
   static Future<void> init() async {
     await Firebase.initializeApp();
     logMe("Firebasee helperrrr");
-    await Firebase.initializeApp(name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+        name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
     await messaging.requestPermission();
     await NotificationHelper().init();
     incomingNotificationHandling();
-   /* await permissionHandler().then((authorized) async {
+    /* await permissionHandler().then((authorized) async {
       log("IS AUTHORIZED:  $authorized");
 
     //  await setupMessaging();
@@ -33,22 +34,22 @@ class FirebaseHelper {
   }
 
 /*  static Future<void> setupMessaging() async {
- *//*   await messaging.getToken().then((token){
+ */ /*   await messaging.getToken().then((token){
       final session = locator<Session>();
       logMe("firebase-token: $token");
       session.setFcmToken = token!;
-    });*//*
+    });*/ /*
      incomingNotificationHandling();
   }*/
 
-  static void incomingNotificationHandling()  {
+  static void incomingNotificationHandling() {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("on message listen called");
       log("remote message is------->>>>>. $message");
       fetchRemoteMessage(message);
-      NotificationHelper _notificationService = NotificationHelper();
-      _notificationService.showNotifications(message);
+      NotificationHelper notificationService = NotificationHelper();
+      notificationService.showNotifications(message);
     });
   }
 
@@ -118,12 +119,12 @@ class FirebaseHelper {
     }
 
     if (clickAction != null) {
-      final _incomingOrderDetail = IncomingOrderDetail(
+      final incomingOrderDetail = IncomingOrderDetail(
           title: title!,
           body: body!,
           orderId: orderId!,
           clickAction: clickAction);
-      NotificationHandler.handleNotificationAction(_incomingOrderDetail);
+      NotificationHandler.handleNotificationAction(incomingOrderDetail);
     }
   }
 
@@ -132,21 +133,21 @@ class FirebaseHelper {
     String categoryId = session.sessionCategoryId;
     if (statusOrder == '1') {
       logMe("subscribeToTopic :");
-      logMe(categoryId + "-new-order");
+      logMe("$categoryId-new-order");
       session.setSessionStatusOrder = '1';
-      await messaging.subscribeToTopic(categoryId + "-new-order");
+      // await messaging.subscribeToTopic(categoryId + "-new-order");
     } else {
       logMe("unsubscribeFromTopic :");
-      logMe(categoryId + "-new-order");
+      logMe("$categoryId-new-order");
       session.setSessionStatusOrder = '0';
-      await messaging.unsubscribeFromTopic(categoryId + "-new-order");
+      // await messaging.unsubscribeFromTopic(categoryId + "-new-order");
     }
   }
 
   static Future<void> unsubTopic() async {
     final session = locator<Session>();
     String categoryId = session.sessionCategoryId;
-    await messaging.unsubscribeFromTopic(categoryId + "-new-order");
+    await messaging.unsubscribeFromTopic("$categoryId-new-order");
   }
 
   static Future<bool> permissionHandler() async {
@@ -168,8 +169,8 @@ class FirebaseHelper {
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  NotificationHelper _notificationService = NotificationHelper();
-  _notificationService.showNotifications(message);
+  NotificationHelper notificationService = NotificationHelper();
+  notificationService.showNotifications(message);
 
   logMe("Handling a background message: ${message.messageId}");
 }

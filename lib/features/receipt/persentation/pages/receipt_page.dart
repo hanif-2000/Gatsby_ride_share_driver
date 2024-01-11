@@ -56,8 +56,8 @@ class ReceiptPage extends StatelessWidget {
                     showToast(message: failure);
                     return const SizedBox.shrink();
                   case ReceiptSuccess:
-                    final _data = (state.data as ReceiptSuccess).data;
-                    if (_data == null) {
+                    final data0 = (state.data as ReceiptSuccess).data;
+                    if (data0 == null) {
                       return Center(
                         child: Text(
                           appLoc.therearenopastorders,
@@ -68,7 +68,7 @@ class ReceiptPage extends StatelessWidget {
 
                     session.setCurrentOrderState = 100;
                     session.setIsOrderRunning = false;
-                    OrderReceipt order = _data.orderReceipt.first;
+                    OrderReceipt order = data0.orderReceipt.first;
 
                     int time = (order.endTime!
                                 .difference(order.startTime!)
@@ -265,7 +265,7 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        order.distance + ' Km',
+                                        '${order.distance} Km',
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(
@@ -378,16 +378,34 @@ class ReceiptPage extends StatelessWidget {
                                               builder: (context) {
                                                 return PaymentScreen(
                                                     newTotal: order.newTotal,
-                                                    pendingAmount:
-                                                        order.pendingAmount,
+                                                    pendingAmount: order
+                                                                .pendingAmount ==
+                                                            ''
+                                                        ? '0'
+                                                        : order.pendingAmount,
                                                     totalPrice: order.total,
                                                     extraDistance:
-                                                        order.extraDistance,
-                                                    extraTime: order.extraTime,
+                                                        order.extraDistance ==
+                                                                ''
+                                                            ? '0'
+                                                            : order
+                                                                .extraDistance,
+                                                    extraTime:
+                                                        order.extraTime == ''
+                                                            ? '0'
+                                                            : order.extraTime,
                                                     extraDistancePrice: order
-                                                        .extraDistancePrice,
+                                                                .extraDistancePrice ==
+                                                            ""
+                                                        ? "0"
+                                                        : order
+                                                            .extraDistancePrice,
                                                     extraTimePrice:
-                                                        order.extraTimePrice,
+                                                        order.extraTimePrice ==
+                                                                ''
+                                                            ? "0"
+                                                            : order
+                                                                .extraTimePrice,
                                                     grandTotal: order.total,
                                                     distance: order.distance);
                                               },

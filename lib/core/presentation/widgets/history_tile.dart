@@ -147,6 +147,8 @@ class HistoryTile extends StatelessWidget {
                     ),
                   ),
                   smallHorizontalSpacing(),
+
+                  /** New Total */
                   Column(
                     children: [
                       Text(

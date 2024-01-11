@@ -44,6 +44,10 @@ class HistoryOrder {
   String? total;
   DateTime orderTime;
   dynamic tip;
+  dynamic extraTime;
+  dynamic extraTimePrice;
+  dynamic extraDistance;
+  dynamic extraDistancePrice;
 
   int? status;
   String? timeSchool;
@@ -77,6 +81,10 @@ class HistoryOrder {
     required this.timestamp,
     required this.category,
     required this.ratingList,
+    required this.extraTime,
+    required this.extraTimePrice,
+    required this.extraDistance,
+    required this.extraDistancePrice,
   });
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
@@ -87,6 +95,10 @@ class HistoryOrder {
         plateNumber: json["plate_number"] ?? '',
         rating: json["rating"] ?? 0,
         tip: json["tip"] ?? 0,
+        extraTime: json["extra_time"] ?? "0",
+        extraTimePrice: json["extra_time_price"] ?? "0",
+        extraDistance: json["extra_distance"] ?? "0",
+        extraDistancePrice: json["extra_distance_price"] ?? "0",
         startCoordinate: json["start_coordinate"] ?? '',
         endCoordinate: json["end_coordinate"] ?? "",
         startAddress: json["start_address"] ?? "",
@@ -126,6 +138,10 @@ class HistoryOrder {
         "time_school": timeSchool,
         "time_after_school": timeAfterSchool,
         "payment_method": paymentMethod,
+        "extraTime": extraTime,
+        "extraTimePrice": extraTimePrice,
+        "extraDistance": extraDistance,
+        "extraDistancePrice": extraDistancePrice,
         "taxi_type": taxiType,
         "timestamp": timestamp,
         "category": category.toJson(),

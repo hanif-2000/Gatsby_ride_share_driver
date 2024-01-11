@@ -686,6 +686,30 @@ class OrderDetailPage extends StatelessWidget {
                               value: 'CA\$ ${order!.pendingAmount}',
                             ),
                             PriceTile(
+                              title: 'Extra Time Taken',
+                              value: ((order!.extraTimeTaken != '') ||
+                                      (order!.extraTimeTaken != null))
+                                  ? '${(int.parse(order!.extraTimeTaken)) / 60} Min'
+                                  : '0 Min',
+                            ),
+                            PriceTile(
+                              title: 'Extra Time Price',
+                              // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(order!.extraTimePrice)}',
+                            ),
+
+                            PriceTile(
+                              title: 'Extra Distance',
+                              // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                              value: '${(order!.extraDistance)} Km',
+                            ),
+                            PriceTile(
+                              title: 'Extra Distance Price',
+                              // value: 'CA\$ ${(order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(order!.extraDistancePrice)}',
+                            ),
+
+                            PriceTile(
                               title: 'Tip',
                               value: 'CA\$ ${order!.tip}',
                             ),

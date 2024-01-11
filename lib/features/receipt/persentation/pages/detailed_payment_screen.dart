@@ -35,9 +35,42 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  int extraMinutes = 0;
+  int extraHour = 0;
+  int extraSeconds = 0;
+
+  var extraTimeTaken = "0";
+
+  convertSecondsToMinutes() {
+    if (widget.extraTime != '') {
+      int seconds = int.parse(
+          widget.extraTime); // Replace this with your desired number of seconds
+
+      int minutes = seconds ~/ 60;
+      int remainingSeconds = seconds % 60;
+
+      int hours = minutes ~/ 60;
+      int remainingMinutes = minutes % 60;
+
+      print('$seconds seconds is equivalent to:');
+      print(
+          '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
+
+      setState(() {
+        extraTimeTaken = "$hours" ' hr ' '$minutes' ' min ' '$seconds' ' sec ';
+      });
+    } else {}
+  }
+
+  @override
+  void initState() {
+    convertSecondsToMinutes();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var _deviceSize = MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -104,8 +137,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   TextInRow(
                     firstText: 'Extra Time',
-                    // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: widget.extraTime + ' min',
+                    secondText: extraTimeTaken,
+                    // secondText:
                   ),
                   const Divider(
                     color: whiteAccentColor,
