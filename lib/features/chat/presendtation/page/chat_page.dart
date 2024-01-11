@@ -12,6 +12,7 @@ import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/receiver_tile.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/sender_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +47,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log(" app lifecycle state is ------>>>>>>>   $state");
     if (state == AppLifecycleState.paused) {
-      socketProvider.joinExitRoom(
-          receiverId: widget.chatDetail!.userId, type: 'unJoin');
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
     } else if (state == AppLifecycleState.resumed) {
       socketProvider.joinExitRoom(
           receiverId: widget.chatDetail!.userId, type: "unJoin");
@@ -146,26 +146,36 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               child: SizedBox(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: provider.chatMessageList.isEmpty
-                      ? const Center(
-                          child: Text('No messages'),
-                        )
-                      : ListView.builder(
-                          reverse: true,
-                          itemCount: provider.chatMessageList.length,
-                          itemBuilder: (context, index) {
-                            return provider.chatMessageList[index].senderType ==
-                                    'Customer'
-                                ? ReceiverTile(
-                                    title:
-                                        provider.chatMessageList[index].message,
-                                  )
-                                : SenderTile(
-                                    title:
-                                        provider.chatMessageList[index].message,
-                                  );
-                          },
-                        ),
+                  child: Visibility(
+                    visible: provider.isLoading==false,
+                    replacement: const Center(
+                      child: SizedBox(
+                        height: 50,
+                          width: 50,
+                        child: CupertinoActivityIndicator(color: black15141FColor,),
+                      ),
+                    ),
+                    child: provider.chatMessageList.isEmpty
+                        ? const Center(
+                            child: Text('No messages'),
+                          )
+                        : ListView.builder(
+                            reverse: true,
+                            itemCount: provider.chatMessageList.length,
+                            itemBuilder: (context, index) {
+                              return provider.chatMessageList[index].senderType ==
+                                      'Customer'
+                                  ? ReceiverTile(
+                                      title:
+                                          provider.chatMessageList[index].message,
+                                    )
+                                  : SenderTile(
+                                      title:
+                                          provider.chatMessageList[index].message,
+                                    );
+                            },
+                          ),
+                  ),
                   // child: Column(
                   //   children: [
                   //     mediumVerticalSpacing(),
