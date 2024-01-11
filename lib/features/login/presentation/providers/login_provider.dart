@@ -14,7 +14,6 @@ class LoginProvider extends FormProvider {
   Stream<LoginState> doLoginApi() async* {
     yield LoginLoading();
     lctn.LocationData locationData = await locationService.getLocation();
-
     final loginResult = await doLogin.call(
         emailController.text,
         passwordController.text,

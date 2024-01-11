@@ -22,35 +22,35 @@ class LoginDataSourceImplementation implements LoginDataSource {
       String email, String password, String position) async {
     String url = 'api/webservice/logindriver';
     // await FirebaseHelper.setupMessaging();
-    final session = locator<Session>();
 
-    if (session.sessionFcmToken == '') {
-      FirebaseMessaging _firebaseMessaging =
-          FirebaseMessaging.instance; // Change here
+
+  /*  if (session.sessionFcmToken == '') {
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
       _firebaseMessaging.getToken().then((token) {
         session.setFcmToken = token!;
 
         print("fcm token token is $token");
       });
-    }
-    String fcmToken = session.sessionFcmToken;
+    }*/
 
-    FormData data = FormData.fromMap({
-      'email': email,
-      'password': password,
-      'fcm_token': fcmToken,
-      'position': position,
-      'device_type': Platform.isIOS ? 'ios' : 'android',
-    });
-    print('Sign in data ----> ${data.fields.toString()}');
     try {
+      final session = locator<Session>();
+      final fcmToken = await FirebaseMessaging.instance.getToken()??"";
+      session.setFcmToken =fcmToken;
+      FormData data = FormData.fromMap({
+        'email': email,
+        'password': password,
+        'fcm_token': fcmToken,
+        'position': position,
+        'device_type': Platform.isIOS ? 'ios' : 'android',
+      });
+      print('Sign in data ----> ${data.fields.toString()}');
       final response = await dio.post(
         url,
         data: data,
       );
       print('Login response ---> ${response.data}');
       final model = LoginResponseModel.fromJson(response.data);
-      final session = locator<Session>();
       if (model.success == 1) {
         session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
