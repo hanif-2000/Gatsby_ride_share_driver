@@ -24,13 +24,14 @@ import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await init();
     locator.isReady<Session>().then((_) async {
-     await FirebaseHelper.init();
+      await FirebaseHelper.init();
 
       // await FirebaseHelper.init().then((_) async {
       //   // await NotificationHelper().init();
@@ -97,6 +98,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: primaryColor,
           ),
+          useMaterial3: false,
           unselectedWidgetColor: grey7c7c7c,
           fontFamily: 'Poppins',
         ),

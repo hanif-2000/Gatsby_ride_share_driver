@@ -48,6 +48,10 @@ class HistoryOrder {
   dynamic grandTotal;
   dynamic pendingAmount;
   dynamic newTotal;
+  dynamic extraTimeTaken;
+  dynamic extraTimePrice;
+  dynamic extraDistance;
+  dynamic extraDistancePrice;
 
   dynamic tip;
   dynamic orderTime;
@@ -98,6 +102,10 @@ class HistoryOrder {
     required this.timestamp,
     required this.vehicleCategory,
     required this.ratingList,
+    required this.extraDistance,
+    required this.extraDistancePrice,
+    required this.extraTimeTaken,
+    required this.extraTimePrice,
     required this.paymentStatus,
   });
 
@@ -126,6 +134,25 @@ class HistoryOrder {
             ? DateTime.parse(json["end_time"])
             : DateTime.now(),
         status: json["status"],
+        extraDistance:
+            ((json["extra_distance"] == null) || (json["extra_distance"] == ''))
+                ? '0'
+                : json["extra_distance"],
+        extraDistancePrice: ((json["extra_distance_price"] == null) ||
+                (json["extra_distance_price"] == ''))
+            ? '0'
+            : json["extra_distance_price"],
+        extraTimeTaken:
+            ((json["extra_time"] == null) || (json["extra_time"] == ''))
+                ? '0'
+                : json["extra_time"],
+        extraTimePrice: ((json["extra_time_price"] == null) ||
+                (json["extra_time_price"] == ''))
+            ? '0'
+            : json["extra_time_price"],
+        // extraDistancePrice: json["extra_distance_price"] ?? '0',
+        // extraTimeTaken: json["extra_time"] ?? "0",
+        // extraTimePrice: json["extra_time_price"] ?? '0',
         image: json["image"],
         userName: json["user_name"],
         userPhone: json["user_phone"],
@@ -169,6 +196,10 @@ class HistoryOrder {
         "new_total": newTotal,
         "payment_method": paymentMethod,
         "taxi_type": taxiType,
+        "extra_distance": extraDistance,
+        "extra_distance_price": extraDistancePrice,
+        "extra_time": extraTimeTaken,
+        "extra_time_price": extraTimePrice,
         "timestamp": timestamp,
         "vehicle_category": vehicleCategory.toJson(),
         "paymentStatus": paymentStatus,

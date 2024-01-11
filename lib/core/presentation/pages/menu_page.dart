@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
 import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_bank_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../features/terms_and_conditions/terms_and_conditions.dart';
 import '../../static/colors.dart';
@@ -89,31 +94,53 @@ class HomeDrawerPage extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
+                    log("log out called");
                     showDialog(
                       context: context,
                       builder: (_) => CustomLogoutDialog(
                         positiveAction: () async {
-                          var provider =
-                              Provider.of<HomeProvider>(context, listen: false);
-                          provider.updateStatus(isFromLogout: true).listen(
-                            (event) async {
-                              if (event is ChangeStatusLoaded) {
-                                await sessionLogOut().then(
-                                  (_) => Navigator.of(context)
-                                      .pushNamedAndRemoveUntil(
-                                          SplashPage.routeName,
-                                          (route) => false),
-                                );
-                              } else {
-                                await sessionLogOut().then(
-                                  (_) => Navigator.of(context)
-                                      .pushNamedAndRemoveUntil(
-                                          SplashPage.routeName,
-                                          (route) => false),
-                                );
-                              }
-                            },
+                          var dio = Dio();
+
+                          String logOutUrl =
+                              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
+
+                          final session = locator<Session>();
+
+                          // log("_data[index].id : ${data0[index].id}");
+                          var response = await dio.get(
+                            logOutUrl,
+                            options: Options(headers: {
+                              "Authorization": "Bearer ${session.sessionToken}"
+                            }),
                           );
+
+                          log("my response data is:  ${response.data}");
+
+                          if (response.data["status"] == 1) {
+                            var provider = Provider.of<HomeProvider>(context,
+                                listen: false);
+                            provider.updateStatus(isFromLogout: true).listen(
+                              (event) async {
+                                if (event is ChangeStatusLoaded) {
+                                  await sessionLogOut().then(
+                                    (_) => Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            SplashPage.routeName,
+                                            (route) => false),
+                                  );
+                                } else {
+                                  await sessionLogOut().then(
+                                    (_) => Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            SplashPage.routeName,
+                                            (route) => false),
+                                  );
+                                }
+                              },
+                            );
+                          } else {
+                            showToast(message: "Your Session token expired ");
+                          }
                         },
                       ),
                     );

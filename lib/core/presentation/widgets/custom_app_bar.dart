@@ -74,24 +74,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   current: provider.isOnline,
                   first: false,
                   second: true,
-                //  dif: 5.0,
+                  //  dif: 5.0,
 
-                  borderWidth: 5.0,
+                  borderWidth: 4.0,
                   height: 100,
                   style: ToggleStyle(
-                    borderColor: Colors.transparent,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.white,
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(0, 1.5),
-                      ),
-                    ],
+                    borderColor: primaryColor,
+                    borderRadius: BorderRadius.circular(50.0),
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //     color: Colors.white,
+                    //     spreadRadius: 1,
+                    //     blurRadius: 2,
+                    //     offset: Offset(0, 1.5),
+                    //   ),
+                    // ],
                   ),
-                  styleBuilder: (i) => ToggleStyle(indicatorColor:  provider.isOnline ? primaryColor : greyA2A0A8),
-                 // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
+                  styleBuilder: (i) => ToggleStyle(
+                      indicatorColor:
+                          provider.isOnline ? primaryColor : whiteAccentColor),
+                  // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
                   onChanged: (b) {
                     provider.changeStatus = b;
                     provider.updateStatus().listen((event) async {
@@ -103,11 +105,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     );
                   },
-                  indicatorSize: const Size.fromWidth(38),
-               //   colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
-                  iconBuilder: (value) => Icon(
-                    Icons.local_taxi,
-                    color: value ? primaryColor : Colors.grey,
+                  indicatorSize: const Size.fromWidth(80),
+                  //  colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
+                  iconBuilder: (value) => Padding(
+                    padding: EdgeInsets.zero,
+                    child: Icon(
+                      Icons.local_taxi,
+                      color: value ? black030303 : primaryColor,
+                    ),
                   ),
                   // textBuilder: (value) => value
                   //     ? Center(

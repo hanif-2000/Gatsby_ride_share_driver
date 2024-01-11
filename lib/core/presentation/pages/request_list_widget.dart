@@ -38,6 +38,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
   Session session = locator<Session>();
 
   String myText = '';
+
   var dio = Dio();
 
   // StreamController<List<RequestListState>> controller =
@@ -111,35 +112,34 @@ class _RequestListWidgetState extends State<RequestListWidget>
                       return const SizedBox.shrink();
                     case RequestListLoaded:
                       final data = (state.data as RequestListLoaded).data;
-                      final _data = data.isEmpty ? [] : data.reversed.toList();
+                      final data0 = data.isEmpty ? [] : data.reversed.toList();
                       var session = locator<Session>();
                       return !session.isOnline
                           ? Center(
                               child: NoProjects(
                                   isOffline: !session.isOnline, text: myText),
                             )
-                          : _data.isEmpty
+                          : data0.isEmpty
                               ? Center(
                                   child: NoProjects(
                                   text: myText,
                                 ))
                               : Column(
                                   children: List.generate(
-                                    _data.length,
+                                    data0.length,
                                     (index) => RequestTile(
-                                      request: _data[index],
+                                      request: data0[index],
                                       onAccept: () async {
-                                        log("_data[index].id : ${_data[index].id}");
+                                        log("_data[index].id : ${data0[index].id}");
                                         var response = await dio.get(
-                                          'https://php.parastechnologies.in/taxi/public/api/webservice/getOrder?id=${_data[index].id}',
+                                          'https://php.parastechnologies.in/taxi/public/api/webservice/getOrder?id=${data0[index].id}',
                                           options: Options(headers: {
                                             "Authorization":
                                                 "Bearer ${session.sessionToken}"
                                           }),
                                         );
 
-                                        log("my response data is:  " +
-                                            response.data.toString());
+                                        log("my response data is:  ${response.data}");
 
                                         if (response.data["order"]
                                                 ["driver_id"] ==
@@ -147,16 +147,16 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                           final session = locator<Session>();
                                           homeProvider
                                               .fetchOrderDetail(
-                                                  _data[index].id.toString())
+                                                  data0[index].id.toString())
                                               .listen(
                                             (event1) {
                                               log("fetch order details called on request list widget in home page");
                                               if (event1 is OrderDetailLoaded) {
                                                 // var _deviceSize = MediaQuery.of(context).size;
                                                 session.setRunningOrderId =
-                                                    _data[index].id;
+                                                    data0[index].id;
                                                 session.setOrderId =
-                                                    _data[index].id.toString();
+                                                    data0[index].id.toString();
                                                 homeProvider
                                                     .fetchCustomerDetail(event1
                                                         .data.userId
@@ -168,7 +168,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                                       session.setOrderUserId =
                                                           event1.data.userId;
                                                       print(
-                                                          'RUNNING order id --> ${_data[index].id}');
+                                                          'RUNNING order id --> ${data0[index].id}');
                                                       homeProvider
                                                           .submitStatusOrder(
                                                               Order
@@ -316,7 +316,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                               ///send reason to the server
                                               homeProvider
                                                   .rejectRequest(
-                                                      _data[index]
+                                                      data0[index]
                                                           .id
                                                           .toString(),
                                                       reason)

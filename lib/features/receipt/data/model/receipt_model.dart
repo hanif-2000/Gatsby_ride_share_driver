@@ -32,12 +32,12 @@ class OrderReceipt {
   String grandTotal;
   dynamic newTotal;
   dynamic pendingAmount;
-  String extraTime;
-  String extraTimePrice;
+  dynamic extraTime;
+  dynamic extraTimePrice;
 
-  String extraKmPrice;
-  String extraDistance;
-  String extraDistancePrice;
+  dynamic extraKmPrice;
+  dynamic extraDistance;
+  dynamic extraDistancePrice;
   dynamic tip;
 
   String status;
