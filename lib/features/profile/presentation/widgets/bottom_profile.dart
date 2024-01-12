@@ -44,8 +44,7 @@ class _BottomProfileState extends State<BottomProfile> {
                       buttonHeight: MediaQuery.of(context).size.height * 0.080,
                       isRounded: true,
                       event: () {
-                        Navigator.push(
-                            context,
+                        Navigator.push( context,
                             MaterialPageRoute(
                                 builder: (context) =>
                                     const EditProfilePage())).then((value) {

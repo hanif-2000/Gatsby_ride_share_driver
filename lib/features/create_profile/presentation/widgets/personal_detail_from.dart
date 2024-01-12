@@ -11,6 +11,7 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provi
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/widgets/image_picker_tile.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/upload_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
@@ -136,25 +137,22 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                                     showLoading();
                                     break;
                                   case UploadFailure:
-                                    final msg =
-                                        (state as UploadFailure).failure;
+                                    final msg = (state as UploadFailure).failure;
                                     dismissLoading();
                                     showToast(message: msg);
                                     break;
                                   case UploadSuccess:
-                                    final imageName =
-                                        (state as UploadSuccess).data;
+                                    final imageName = (state as UploadSuccess).data;
                                     // showToast(message: appLoc.success);
                                     provider.setProfileUploadName(imageName!);
-                                    logMe(
-                                        'Image Name ---> ${provider.profileUploadName}');
+                                    logMe('Image Name ---> ${provider.profileUploadName}');
                                     dismissLoading();
                                     break;
                                 }
                               });
                             },
                             failedCallBack: (error) {
-                              showToast(message: error);
+                            //  showToast(message: error);
                               provider.setProfileImage('');
                             },
                           );
@@ -180,6 +178,10 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       title: appLoc.firstName,
                       controller: provider.firstNameController,
                       inputType: TextInputType.name,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                        FilteringTextInputFormatter.deny(RegExp("[0-9]")),
+                      ],
                       isError: provider.firstNameError,
                       fieldValidator: ValidationHelper(
                         loc: appLoc,
@@ -196,6 +198,10 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     child: CustomTextField(
                       placeholder: appLoc.lastName,
                       title: appLoc.lastName,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                        FilteringTextInputFormatter.deny(RegExp("[0-9]")),
+                      ],
                       controller: provider.lastNameController,
                       inputType: TextInputType.name,
                       isError: provider.lastNameError,
@@ -437,7 +443,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       });
                     },
                     failedCallBack: (error) {
-                      showToast(message: error);
+                    //  showToast(message: error);
                       provider.setProfileImage('');
                     },
                   );
@@ -485,7 +491,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       });
                     },
                     failedCallBack: (error) {
-                      showToast(message: error);
+                    //  showToast(message: error);
                       provider.setProfileImage('');
                     },
                   );

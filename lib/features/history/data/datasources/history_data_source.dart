@@ -33,7 +33,7 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
 
         return response.data["message"];
       } else {
-        return response.data["message"];
+        return [];
       }
     } catch (e) {
       rethrow;

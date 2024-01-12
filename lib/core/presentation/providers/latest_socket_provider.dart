@@ -25,7 +25,7 @@ class LatestSocketProvider extends ChangeNotifier {
   List<ChatModel> _chatMessagesList = [];
 
   int unreadMessageCount = 0;
-  bool isLoading = false;
+  bool isLoading = true;
 
   List<ChatModel> get chatMessageList => _chatMessagesList;
 

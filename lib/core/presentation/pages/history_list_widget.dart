@@ -38,11 +38,15 @@ class HistoryListWidget extends StatelessWidget {
                 final _data = (state.data as HistoryLoaded).data;
                 logMe('History length --> ${_data.length}');
                 if (_data.isEmpty) {
-                  return Center(
-                    child: Text(
-                      appLoc.therearenopastorders,
-                      style: formLabelHeaderStyle,
-                    ),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: MediaQuery.sizeOf(context).height/3.5,),
+                      Text(
+                        appLoc.therearenopastorders,
+                        style: formLabelHeaderStyle,
+                      ),
+                    ],
                   );
                 }
                 return Column(

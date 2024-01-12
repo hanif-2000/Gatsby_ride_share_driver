@@ -37,6 +37,7 @@ class LoginDataSourceImplementation implements LoginDataSource {
       final session = locator<Session>();
       final fcmToken = await FirebaseMessaging.instance.getToken()??"";
       session.setFcmToken =fcmToken;
+      print("fcmToken==> $fcmToken");
       FormData data = FormData.fromMap({
         'email': email,
         'password': password,

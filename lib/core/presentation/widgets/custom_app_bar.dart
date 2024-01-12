@@ -66,8 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
               child: SizedBox(
                 width: 70,
                 child: AnimatedToggleSwitch<bool>.dual(
@@ -77,22 +76,37 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   //  dif: 5.0,
 
                   borderWidth: 4.0,
-                  height: 100,
+                /*  customStyleBuilder: (_,__,___){
+                    return ToggleStyle(
+                      backgroundColor: provider.isOnline ? primaryColor : whiteAccentColor
+                    );
+
+                  },*/
+                 // height: 100,
                   style: ToggleStyle(
-                    borderColor: primaryColor,
+                    borderColor: provider.isOnline ? primaryColor : greyA2A0A8 ,
+                    backgroundColor: provider.isOnline ? whiteAccentColor : whiteAccentColor ,
+                    indicatorColor: provider.isOnline ? whiteAccentColor : whiteAccentColor,
+
                     borderRadius: BorderRadius.circular(50.0),
-                    // boxShadow: const [
-                    //   BoxShadow(
-                    //     color: Colors.white,
-                    //     spreadRadius: 1,
-                    //     blurRadius: 2,
-                    //     offset: Offset(0, 1.5),
-                    //   ),
-                    // ],
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: Offset(0, 1.5),
+                      ),
+                    ],
                   ),
+
                   styleBuilder: (i) => ToggleStyle(
-                      indicatorColor:
-                          provider.isOnline ? primaryColor : whiteAccentColor),
+                      indicatorColor: provider.isOnline ? whiteColor : whiteColor,
+                  backgroundColor:provider.isOnline ? primaryColor : greyA2A0A8 ,
+
+
+
+
+                  ),
                   // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
                   onChanged: (b) {
                     provider.changeStatus = b;
@@ -105,13 +119,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     );
                   },
-                  indicatorSize: const Size.fromWidth(80),
+                  indicatorSize: const Size.fromWidth(120),
                   //  colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
                   iconBuilder: (value) => Padding(
                     padding: EdgeInsets.zero,
                     child: Icon(
                       Icons.local_taxi,
-                      color: value ? black030303 : primaryColor,
+                      color: value ? primaryColor : greyA2A0A8,
                     ),
                   ),
                   // textBuilder: (value) => value

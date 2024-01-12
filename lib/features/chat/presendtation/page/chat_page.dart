@@ -34,9 +34,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'Join');
 
-    socketProvider.joinExitRoom(
-        receiverId: widget.chatDetail!.userId, type: 'Join');
+    });
     // showLoading();
     WidgetsBinding.instance.addObserver(this);
     // socketProvider.markMessageAsRead(receiverId: widget.chatDetail!.userId);
@@ -60,8 +61,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     super.dispose();
     // Future.delayed(const Duration(seconds: 1), () {
     // socketProvider.clearChatList();
-    socketProvider.joinExitRoom(
-        receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
 
     WidgetsBinding.instance.removeObserver(this);
 

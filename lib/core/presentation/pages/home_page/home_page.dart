@@ -213,9 +213,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
             log('RUNNING order id --> ${session.runningOrderId}');
             if (session.isOrderRunning) {
-              provider
-                  .fetchOrderDetail(session.runningOrderId.toString())
-                  .listen(
+              provider.fetchOrderDetail(session.runningOrderId.toString()).listen(
                 (event1) {
                   if (event1 is OrderDetailLoaded) {
                     log("home page build called : order details loaded");
@@ -232,7 +230,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 log("home page build called : Customer details loaded");
 
                                 bool isCustomerLoaded = true;
-
                                 if (isCustomerLoaded && isOrderLoaded) {
                                   Navigator.pushAndRemoveUntil<dynamic>(
                                     context,

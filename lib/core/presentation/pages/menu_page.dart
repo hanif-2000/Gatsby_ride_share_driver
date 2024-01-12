@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
+import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
 import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_bank_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
@@ -99,33 +100,36 @@ class HomeDrawerPage extends StatelessWidget {
                       context: context,
                       builder: (_) => CustomLogoutDialog(
                         positiveAction: () async {
+                          Navigator.pop(context);
                           var dio = Dio();
-
-                          String logOutUrl =
-                              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
-
+                          String logOutUrl = 'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
                           final session = locator<Session>();
-
-                          // log("_data[index].id : ${data0[index].id}");
-                          var response = await dio.get(
-                            logOutUrl,
-                            options: Options(headers: {
-                              "Authorization": "Bearer ${session.sessionToken}"
-                            }),
-                          );
-
-                          log("my response data is:  ${response.data}");
-
-                          if (response.data["status"] == 1) {
-                            var provider = Provider.of<HomeProvider>(context,
-                                listen: false);
-                            provider.updateStatus(isFromLogout: true).listen(
-                              (event) async {
-                                if (event is ChangeStatusLoaded) {
+                          var provider = Provider.of<HomeProvider>(context, listen: false);
+                             showLoading();
+                            provider.updateStatus(isFromLogout: true).listen((event) async {
+                              if(event is ChangeStatusLoaded){
+                                var response = await dio.get(
+                                  logOutUrl,
+                                  options: Options(headers: {
+                                    "Authorization": "Bearer ${session.sessionToken}"
+                                  }),
+                                );
+                                log("my response data is:  ${response.data}");
+                                dismissLoading();
+                                if(response.statusCode==200 && response.data["message"]=="Logout successfully"){
                                   await sessionLogOut().then(
-                                    (_) => Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            SplashPage.routeName,
+                                        (_) => Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName,
+                                            (route) => false),
+                                  );
+                                }else{
+                                  showToast(message: "Something went Wrong");
+                                }
+                              }
+
+
+                            /*    if (event is ChangeStatusLoaded) {
+                                  await sessionLogOut().then(
+                                    (_) => Navigator.of(context).pushNamedAndRemoveUntil(SplashPage.routeName,
                                             (route) => false),
                                   );
                                 } else {
@@ -135,12 +139,10 @@ class HomeDrawerPage extends StatelessWidget {
                                             SplashPage.routeName,
                                             (route) => false),
                                   );
-                                }
+                                }*/
                               },
                             );
-                          } else {
-                            showToast(message: "Your Session token expired ");
-                          }
+
                         },
                       ),
                     );

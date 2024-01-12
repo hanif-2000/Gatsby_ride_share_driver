@@ -728,7 +728,7 @@ class OrderProvider with ChangeNotifier {
       log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
       if ((double.parse(session.estimatedTime)) < actualTime) {
-        session.setEstimatedTime = actualTime.toString();
+        session.setEstimatedTime = (actualTime*60).toString();
       }
 
       // receiptProvider.getReceiptAPI();

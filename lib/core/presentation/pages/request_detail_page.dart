@@ -791,6 +791,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                 );
                                               }
                                             },
+                                            isRounded: true,
+                                            buttonHeight: 48,
                                           ),
 
                                           // },
