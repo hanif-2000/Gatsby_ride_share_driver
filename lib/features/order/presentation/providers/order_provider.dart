@@ -28,11 +28,14 @@ import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/data/models/google_route_response_modal.dart';
 import '../../../../core/domain/usecases/do_update_location.dart';
+import '../../../../core/presentation/pages/home_page/home_page.dart';
 import '../../../../core/presentation/providers/update_location_state.dart';
 import '../../../../core/utility/direction_helper.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
+import '../../../receipt/persentation/pages/receipt_page.dart';
 import '../../data/models/driver_location_response_model.dart';
+import '../pages/order_page.dart';
 
 class OrderProvider with ChangeNotifier {
   //Constructor
@@ -355,7 +358,7 @@ class OrderProvider with ChangeNotifier {
   }
 
 // Trcking driver
-  trackingDriver() async {
+  Future<void> trackingDriver() async {
     log(_orderStatus.name);
     log("tracking driver function called in order provider");
     if (_orderStatus == OrderStatus.driverAccept ||
@@ -530,7 +533,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  createMarker() async {
+  Future<void> createMarker() async {
     var latLongOrigin = _orderDetail!.startCoordinate;
     var latLongDestination = _orderDetail!.endCoordinate;
     var splitOrigin = latLongOrigin.split(",");
@@ -889,11 +892,10 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  updateLocation() async {
+  Future<void> updateLocation() async {
     log("tracking update driver locatin iN updateLocation() function in order provider screen");
     locationService.getLocation().then((value) {
-      log("tracking " +
-          value.latitude.toString() +
+      log("tracking " + value.latitude.toString() +
           ' , ' +
           value.longitude.toString() +
           "and towards " +

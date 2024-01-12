@@ -180,21 +180,16 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             if (trackingTimer != null) {
               trackingTimer!.cancel();
             }
-
-            trackingTimer =
-                Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
-              provider.trackingDriver();
+            trackingTimer = Timer.periodic(const Duration(seconds: 4), (Timer timer) async {
+             await provider.trackingDriver();
             });
 
-            checkOrderStatusTimer = Timer.periodic(
-              const Duration(seconds: 3),
-              (Timer timer) async {
+            checkOrderStatusTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
                 log("------>>>>>  this will called every 3 seconds  <<<<<--------");
-                provider.fetchOrderStatus().listen(
+                 provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
-                      session.setCurrentOrderState =
-                          int.parse(state.data.status);
+                      session.setCurrentOrderState = int.parse(state.data.status);
 
                       // provider.updateOrderStatusAfterAppRestart(
                       //     orderStatus: int.parse(state.data.status));
@@ -284,7 +279,6 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         // Provider.of<ReceiptProvider>(context, listen: false)
                         //     .getReceiptAPI();
                         dismissLoading();
-
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           ReceiptPage.routeName,
@@ -329,6 +323,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                 );
               },
             );
+
             return Stack(
               children: <Widget>[
                 GoogleMap(
