@@ -8,6 +8,7 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provi
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/provider/create_profile_state.dart';
 import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
@@ -108,6 +109,9 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 controller: provider.bankAccountController,
                 inputType: TextInputType.number,
                 isError: provider.bankAccountError,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                ],
                 fieldValidator: ValidationHelper(
                   loc: appLoc,
                   isError: (bool value) => provider.setBankAccountError = value,
@@ -166,7 +170,24 @@ class _FormBankDetailState extends State<FormBankDetail> {
                 ),
                 event: () {
                   if (provider.formKey.currentState!.validate()) {
-                    submit();
+                    if(provider.bankNameController.text.trim().isEmpty){
+                      showToast(message: "Please enter bank name");
+                      return;
+                    }else if(provider.bankAccountController.text.trim().isEmpty){
+                      showToast(message: "Please enter account number");
+                      return;
+                    }else if(provider.bankHolderNameController.text.trim().isEmpty){
+                      showToast(message: "Please enter account holder name");
+                      return;
+                    }else if(provider.bankTransitController.text.trim().isEmpty){
+                      showToast(message: "Please enter bank transit");
+                      return;
+                    }else if(provider.bankInstitutionController.text.trim().isEmpty){
+                      showToast(message: "Please enter institution number");
+                      return;
+                    }else{
+                      submit();
+                    }
                   }
                 },
                 buttonHeight: 48,
