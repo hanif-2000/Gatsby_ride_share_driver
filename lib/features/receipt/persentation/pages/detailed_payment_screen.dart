@@ -35,9 +35,9 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  int extraMinutes = 0;
-  int extraHour = 0;
-  int extraSeconds = 0;
+  // int extraMinutes = 0;
+  // int extraHour = 0;
+  // int extraSeconds = 0;
 
   var extraTimeTaken = "0";
 
@@ -57,7 +57,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
 
       setState(() {
-        extraTimeTaken = "$hours" ' hr ' '$minutes' ' min ' '$seconds' ' sec ';
+        extraTimeTaken = "$hours" ' hr ' '$remainingMinutes' ' min ' '$remainingSeconds' ' sec ';
       });
     } else {}
   }
