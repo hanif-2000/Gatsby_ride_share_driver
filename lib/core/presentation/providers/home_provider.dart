@@ -578,7 +578,7 @@ class HomeProvider with ChangeNotifier {
       var bearing = value.heading;
       var lat = value.latitude;
       var lng = value.longitude;
-      var coordinate = lat.toString() + "," + lng.toString();
+      var coordinate = "$lat,$lng";
       submitLocation(coordinate, bearing.toString()).listen((event) {
         if (event is UpdateLocationLoaded) {
           logMe("Sukses Update Location");
