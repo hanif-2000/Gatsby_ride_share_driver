@@ -23,7 +23,7 @@ class ReceiptDataSourceImplementation implements ReceiptDataSource {
     logMe('Request data distance ---> $distance');
 
     final session = locator<Session>();
-
+    //================//
     try {
       final response = await dio.post(
         url,
