@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
@@ -43,12 +42,11 @@ class ButtonOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _deviceSize = MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
     final session = locator<Session>();
     return Consumer<OrderProvider>(
       builder: (context, provider, _) {
-        log("unread message count is --------->>>>>>:" +
-            socketProvider.unreadMessageCount.toString());
+        log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
 
         // if (currentOrderStatus == 1) {
@@ -200,7 +198,7 @@ class ButtonOrder extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: _deviceSize.width * .44,
+                          width: deviceSize.width * .44,
                           child: CustomButton(
                               image: 'assets/icons/order/ic_call.svg',
                               text: Text(
@@ -237,7 +235,7 @@ class ButtonOrder extends StatelessWidget {
                         Stack(
                           children: [
                             SizedBox(
-                              width: _deviceSize.width * .44,
+                              width: deviceSize.width * .44,
                               child: CustomButton(
                                   image: 'assets/icons/order/ic_message.svg',
                                   text: Text(
@@ -443,8 +441,7 @@ class ButtonOrder extends StatelessWidget {
                               // Response res =
                               //     await dio.post(updateStatusUrl, data: data);
 
-                              log("status code is" +
-                                  response.statusCode.toString());
+                              log("status code is${response.statusCode}");
 
                               if (response.statusCode == 200) {
                                 dismissLoading();
@@ -470,7 +467,7 @@ class ButtonOrder extends StatelessWidget {
                             } catch (e) {
                               dismissLoading();
 
-                              log("exception :-->> " + e.toString());
+                              log("exception :-->> $e");
                               log(e.toString());
                             }
 

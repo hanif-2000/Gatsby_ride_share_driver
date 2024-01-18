@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/destination_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/origin_widget.dart';
@@ -16,7 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
-import '../../../../core/presentation/providers/socket_provider.dart';
+import '../../../../core/presentation/pages/home_page/home_page.dart';
 import '../../../../core/static/order_status.dart';
 import '../../../receipt/persentation/pages/receipt_page.dart';
 import '../../domain/entities/order_detail.dart';

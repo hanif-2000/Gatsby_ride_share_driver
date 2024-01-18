@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/request_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
@@ -19,6 +17,7 @@ import '../../../../features/profile/presentation/providers/customer_detail_stat
 import '../../../utility/helper.dart';
 import '../../../utility/injection.dart';
 import '../../providers/home_provider.dart';
+import '../new_request_list_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -213,7 +212,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
             log('RUNNING order id --> ${session.runningOrderId}');
             if (session.isOrderRunning) {
-              provider.fetchOrderDetail(session.runningOrderId.toString()).listen(
+              provider
+                  .fetchOrderDetail(session.runningOrderId.toString())
+                  .listen(
                 (event1) {
                   if (event1 is OrderDetailLoaded) {
                     log("home page build called : order details loaded");
@@ -327,7 +328,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             return ListView(
               children: <Widget>[
                 Container(
-                  height: 50,
+                  // height: 50,
                   padding: const EdgeInsets.all(4),
                   margin: const EdgeInsets.all(sizeMedium),
                   decoration: BoxDecoration(

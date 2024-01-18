@@ -21,10 +21,8 @@ import 'package:appkey_taxiapp_driver/features/receipt/persentation/provider/rec
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart' as geo;
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' as lctn;
-import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/data/models/google_route_response_modal.dart';
 import '../../../../core/domain/usecases/do_update_location.dart';
@@ -36,6 +34,7 @@ import '../../../../core/utility/session_helper.dart';
 import '../../../receipt/persentation/pages/receipt_page.dart';
 import '../../data/models/driver_location_response_model.dart';
 import '../pages/order_page.dart';
+import 'package:permission_handler/permission_handler.dart' as permission;
 
 class OrderProvider with ChangeNotifier {
   //Constructor
@@ -47,7 +46,6 @@ class OrderProvider with ChangeNotifier {
   final DoUpdateLocation doUpdateLocation;
 
   //Initial
-  final lctn.Location locationService = lctn.Location();
   CameraPosition kJapanCoordinate = const CameraPosition(
     target: DEFAULT_LATLNG,
     zoom: 14.4746,
@@ -61,6 +59,8 @@ class OrderProvider with ChangeNotifier {
   final double _driverLng = 0.0;
 
   late GoogleMapController googleMapController;
+  late StreamSubscription<Position>? locationbackSubscription;
+
   OrderStatus _orderStatus = OrderStatus.driverAccept;
   late LatLng originLatLng, destinationLatLng;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -78,11 +78,11 @@ class OrderProvider with ChangeNotifier {
   var receiptProvider = locator<ReceiptProvider>();
 
   List<LatLng> driverCoordinatesList = [];
+  late Position _currentPosition;
 
   double totalDistanceCovered = 0.0;
 
   bool isOrderStatusComplete = false;
-  geo.Position? _currentPosition;
 
   String driverUpdatedLatLong = '';
   updateDriverLatLong({val}) {
@@ -108,33 +108,30 @@ class OrderProvider with ChangeNotifier {
 
   double? get driverLng => _driverLng;
 
-  late StreamSubscription<LocationData> locationSubscription;
+  // late StreamSubscription<LocationData> locationSubscription;
   double _distanceCovered = 0.0;
 
   _getCurrentLocation() async {
-    var position = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     // setState(() {
     _currentPosition = position;
     notifyListeners();
     // });
   }
 
-  _updateDistance(geo.Position newPosition) {
-    if (_currentPosition != null) {
-      double distance = geo.Geolocator.distanceBetween(
-        _currentPosition!.latitude,
-        _currentPosition!.longitude,
-        newPosition.latitude,
-        newPosition.longitude,
-      );
+  _updateDistance(Position newPosition) {
+    double distance = Geolocator.distanceBetween(
+      _currentPosition.latitude,
+      _currentPosition.longitude,
+      newPosition.latitude,
+      newPosition.longitude,
+    );
 
-      // setState(() {
-      _distanceCovered += distance;
-      _currentPosition = newPosition;
-      notifyListeners();
-      // });
-    }
+    // setState(() {
+    _distanceCovered += distance;
+    _currentPosition = newPosition;
+    notifyListeners();
   }
 
   //setter
@@ -208,6 +205,85 @@ class OrderProvider with ChangeNotifier {
     isFirstTracking = val;
   }
 
+  Future<bool?> getlocationPermissionStatus() async {
+    try {
+      var permissionStatus = await permission.Permission.location.request();
+      if (permissionStatus == permission.PermissionStatus.granted) {
+        return true;
+      } else if (permissionStatus == permission.PermissionStatus.denied) {
+        return false;
+      } else if (permissionStatus ==
+          permission.PermissionStatus.permanentlyDenied) {
+        //  errorredSnackBar("App location permission is denied forever, Please enable it first");
+        return false;
+      } else {
+        //  errorredSnackBar("Location permission is need to run this app");
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      var status = await getlocationPermissionStatus();
+      if (status != null && status) {
+        try {
+          var permissionStatus = await permission.Permission.location.request();
+          if (permissionStatus == permission.PermissionStatus.granted) {
+            LocationSettings locationSettings = const LocationSettings();
+
+            if (Platform.isAndroid) {
+              locationSettings = AndroidSettings(
+                  accuracy: LocationAccuracy.bestForNavigation,
+                  distanceFilter: 1,
+                  forceLocationManager: false,
+                  intervalDuration: const Duration(milliseconds: 500),
+                  foregroundNotificationConfig:
+                      const ForegroundNotificationConfig(
+                          notificationText: "Location is being used",
+                          notificationTitle: "MedeviOn Driver",
+                          enableWakeLock: true,
+                          notificationIcon:
+                              AndroidResource(name: "@mipmap/noti")));
+            } else if (Platform.isIOS) {
+              locationSettings = AppleSettings(
+                accuracy: LocationAccuracy.high,
+                activityType: ActivityType.fitness,
+                distanceFilter: 1,
+                pauseLocationUpdatesAutomatically: true,
+                showBackgroundLocationIndicator: false,
+              );
+            } else {
+              locationSettings = const LocationSettings(
+                accuracy: LocationAccuracy.high,
+                distanceFilter: 1,
+              );
+            }
+            locationbackSubscription =
+                Geolocator.getPositionStream(locationSettings: locationSettings)
+                    .listen((Position? position) {
+              if (position != null) {
+                _currentPosition = position;
+                notifyListeners();
+                updateLocation(_currentPosition);
+              }
+
+              // print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+              // SOURCE_LOCATION = LatLng(position?.latitude??0.0, position?.longitude??0.0);
+              // if (markers.isNotEmpty) {
+              //   updateMapData();
+              // }
+            });
+          }
+        } catch (e) {}
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   //constructor
   OrderProvider({
     required this.updateStatusOrder,
@@ -244,8 +320,9 @@ class OrderProvider with ChangeNotifier {
     try {
       _customerDetail = customerDataModel;
       _orderDetail = orderDetail;
-      bool serviceStatus = await locationService.serviceEnabled();
-      if (serviceStatus) {
+      var serviceStatus = await Geolocator.requestPermission();
+      if (serviceStatus != LocationPermission.always ||
+          serviceStatus != LocationPermission.whileInUse) {
         var latLongOrigin = orderDetail.startCoordinate;
         var latLongDestination = orderDetail.endCoordinate;
         var splitOrigin = latLongOrigin.split(",");
@@ -293,17 +370,15 @@ class OrderProvider with ChangeNotifier {
           onTap: () {},
         );
 
-        var location = lctn.Location();
-        lctn.LocationData locationData = await location.getLocation();
         var coordinate =
-            LatLng(locationData.latitude!, locationData.longitude!);
+            LatLng(_currentPosition.latitude, _currentPosition.longitude);
 
         final Marker markerDriver = Marker(
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdDriver,
           position: coordinate,
           icon: driverMarker,
-          rotation: locationData.heading!,
+          rotation: _currentPosition.heading,
         );
         markers[markerIdOrigin] = markerOrigin;
         markers[markerIdDestination] = markerDestination;
@@ -321,9 +396,10 @@ class OrderProvider with ChangeNotifier {
         dismissLoading();
       } else {
         try {
-          bool serviceStatusResult = await locationService.requestService();
+          var serviceStatusResult = await Geolocator.requestPermission();
           logMe("Service status activated after request: $serviceStatusResult");
-          if (serviceStatusResult) {
+          if (serviceStatusResult != LocationPermission.always ||
+              serviceStatusResult != LocationPermission.whileInUse) {
             setCurrentLocation(orderDetail, customerDetail!);
           }
         } catch (e) {
@@ -369,31 +445,30 @@ class OrderProvider with ChangeNotifier {
     } else {
       logMe("Listen Not Listen");
       await createMarker();
-      await updateLocation();
+      await getCurrentLocation();
       notifyListeners();
     }
   }
 
-  trackDriverRouteDistance() {
-    log("track driver route distance called ");
+  // trackDriverRouteDistance() {
+  //   log("track driver route distance called ");
 
-    // Timer.periodic(const Duration(seconds: 10), (timer) {
-    // setState(() {
+  //   // Timer.periodic(const Duration(seconds: 10), (timer) {
+  //   // setState(() {
 
-    locationService.changeSettings(
-        accuracy: LocationAccuracy.high, distanceFilter: 10);
+  //   locationService.changeSettings( accuracy: LocationAccuracy.high, distanceFilter: 10);
 
-    locationService.onLocationChanged
-        .distinct()
-        .listen((LocationData currentLocation) {
-      log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
+  //   locationService.onLocationChanged
+  //       .distinct()
+  //       .listen((LocationData currentLocation) {
+  //     log("my current location is : ${currentLocation.latitude},${currentLocation.longitude}");
 
-      driverCoordinatesList
-          .add(LatLng(currentLocation.latitude!, currentLocation.longitude!));
-      // });
-    });
-    // });
-  }
+  //     driverCoordinatesList
+  //         .add(LatLng(currentLocation.latitude!, currentLocation.longitude!));
+  //     // });
+  //   });
+  //   // });
+  // }
 
   //calculate distance covered
 
@@ -480,9 +555,9 @@ class OrderProvider with ChangeNotifier {
     var lngOrigin = double.parse(splitOrigin[1]);
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
-    var location = lctn.Location();
-    lctn.LocationData locationData = await location.getLocation();
-    var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
+
+    var coordinate =
+        LatLng(_currentPosition.latitude, _currentPosition.longitude);
     if (!isFromOrigin) {
       await DirectionHelper()
           .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
@@ -544,9 +619,8 @@ class OrderProvider with ChangeNotifier {
     var lngOrigin = double.parse(splitOrigin[1]);
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
-    var location = lctn.Location();
-    lctn.LocationData locationData = await location.getLocation();
-    var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
+    var coordinate =
+        LatLng(_currentPosition.latitude, _currentPosition.longitude);
     if (_orderStatus == OrderStatus.departureToCustomerplace
         // ||
         //         _orderStatus == OrderStatus.arriveAtCustomerPlace
@@ -572,7 +646,7 @@ class OrderProvider with ChangeNotifier {
               markerId: markerIdDriver,
               position: coordinate,
               icon: driverMarker,
-              rotation: locationData.heading!,
+              rotation: _currentPosition.heading,
               infoWindow: InfoWindow(
                   title:
                       "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -619,7 +693,7 @@ class OrderProvider with ChangeNotifier {
               markerId: markerIdDriver,
               position: coordinate,
               icon: driverMarker,
-              rotation: locationData.heading!,
+              rotation: _currentPosition.heading,
             );
 
             markers[markerIdDriver] = markerDriver;
@@ -687,7 +761,7 @@ class OrderProvider with ChangeNotifier {
       log("Ride start time is :---- ${DateTime.now()}");
 
       session.setStartTime = DateTime.now().toString();
-      trackDriverRouteDistance();
+      //   trackDriverRouteDistance();
     }
 //     else if (_orderStatus == OrderStatus.customerConfirmation) {
 //       log("status 4");
@@ -733,7 +807,7 @@ class OrderProvider with ChangeNotifier {
       log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
       if ((double.parse(session.estimatedTime)) < actualTime) {
-        session.setEstimatedTime = (actualTime*60).toString();
+        session.setEstimatedTime = (actualTime * 60).toString();
       }
 
       // receiptProvider.getReceiptAPI();
@@ -813,9 +887,9 @@ class OrderProvider with ChangeNotifier {
 
   moveCameraToDriver() async {
     showLoading();
-    var location = lctn.Location();
-    lctn.LocationData locationData = await location.getLocation();
-    var coordinate = LatLng(locationData.latitude!, locationData.longitude!);
+
+    var coordinate =
+        LatLng(_currentPosition.latitude, _currentPosition.longitude);
     dismissLoading();
     googleMapController.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -894,49 +968,50 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateLocation() async {
-    log("tracking update driver locatin iN updateLocation() function in order provider screen");
-    locationService.getLocation().then((value) {
-      log("tracking " + value.latitude.toString() +
-          ' , ' +
-          value.longitude.toString() +
-          "and towards " +
-          value.heading.toString());
+  Future<void> updateLocation(Position position) async {
+    log("Driver LatLong ${position.latitude}== ${position.longitude}");
+    // locationService.getLocation().then((value) {
+    //   log("tracking " +
+    //       value.latitude.toString() +
+    //       ' , ' +
+    //       value.longitude.toString() +
+    //       "and towards " +
+    //       value.heading.toString());
 
-      var bearing = value.heading;
-      var lat = value.latitude;
-      var lng = value.longitude;
-      var coordinate = lat.toString() + "," + lng.toString();
-      submitLocation(coordinate, bearing.toString()).listen((event) {
-        if (event is UpdateLocationLoaded) {
-          logMe("Sukses Update Location");
-        }
-      });
-    });
+    //   var bearing = value.heading;
+    //   var lat = value.latitude;
+    //   var lng = value.longitude;
+    //   var coordinate = "$lat,$lng";
+    //   submitLocation(coordinate, bearing.toString()).listen((event) {
+    //     if (event is UpdateLocationLoaded) {
+    //       logMe("Sukses Update Location");
+    //     }
+    //   });
+    // });
   }
 
-  Stream<UpdateLocationState> submitLocation(
-      String latLng, String bearing) async* {
-    log("submit location called------>>>>");
-    yield UpdateLocationLoading();
+  // Stream<UpdateLocationState> submitLocation(
+  //     String latLng, String bearing) async* {
+  //   log("submit location called------>>>>");
+  //   yield UpdateLocationLoading();
 
-    final formData = FormData.fromMap({
-      'api_token': session.sessionToken,
-      'coordinate': latLng,
-      'bearing': bearing,
-    });
+  //   final formData = FormData.fromMap({
+  //     'api_token': session.sessionToken,
+  //     'coordinate': latLng,
+  //     'bearing': bearing,
+  //   });
 
-    log("update location data is-->> ${formData.fields}");
-    final result = await doUpdateLocation.execute(formData);
-    yield* result.fold((failure) async* {
-      logMe(failure);
+  //   log("update location data is-->> ${formData.fields}");
+  //   final result = await doUpdateLocation.execute(formData);
+  //   yield* result.fold((failure) async* {
+  //     logMe(failure);
 
-      yield UpdateLocationFailure(failure: failure);
-    }, (data) async* {
-      updateDriverLatLong(val: latLng);
-      yield UpdateLocationLoaded(data: data);
-    });
-  }
+  //     yield UpdateLocationFailure(failure: failure);
+  //   }, (data) async* {
+  //     updateDriverLatLong(val: latLng);
+  //     yield UpdateLocationLoaded(data: data);
+  //   });
+  // }
 
   /// Track Live Tracking Distance
 

@@ -6,8 +6,10 @@ import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/data/model/chat_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:web_socket_client/web_socket_client.dart';
+
+import '../../data/models/booking_data_model.dart';
 
 class LatestSocketProvider extends ChangeNotifier {
   static final LatestSocketProvider _provider = LatestSocketProvider.internal();
@@ -26,8 +28,16 @@ class LatestSocketProvider extends ChangeNotifier {
 
   int unreadMessageCount = 0;
   bool isLoading = true;
+  BookingDataModel? bookingDataModel;
 
   List<ChatModel> get chatMessageList => _chatMessagesList;
+
+  List<Booking> bookingList = [];
+
+  clearBookingList() {
+    bookingList.clear();
+    notifyListeners();
+  }
 
   updateUnreadCount(val) {
     unreadCount = val;
@@ -43,15 +53,22 @@ class LatestSocketProvider extends ChangeNotifier {
   Future<dynamic> connectToSocket(BuildContext context) async {
     log("-------->CONNECTING TO SOCKET <--------");
     log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+    print(
+        '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+
     _socket = WebSocket(Uri.parse(
         "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
+
     _socket!.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
+        print("************ Connectd ***********");
+        updateLatLng();
 
         listenSocketRequests(context);
       } else {
         log("************ DisConnectd ***********");
+        print("************ DisConnectd ***********");
       }
     });
   }
@@ -91,8 +108,19 @@ class LatestSocketProvider extends ChangeNotifier {
   void listenSocketRequests(BuildContext context) {
     _socket!.messages.listen((event) {
       //  Decoding data
-      final response = jsonDecode(event);
+      var response = jsonDecode(event);
+
+      print("socket listen :-->> $response");
+
       log('-----Event  ${response.toString()}');
+
+      // <----------- Checking When request come ---------> //
+      if (response['type'] == 'CustomerBookRequest') {
+        bookingDataModel = BookingDataModel.fromJson(response);
+        bookingList.add(bookingDataModel!.data);
+        notifyListeners();
+      }
+
       // <----------- Checking When request come ---------> //
       if (response['type'] == 'MessageList') {
         log("messgae type is MESSAGE LIST");
@@ -202,7 +230,7 @@ class LatestSocketProvider extends ChangeNotifier {
           : '${session.userId}-$receiverId',
       "UserType": 'driver'
     };
-    log("get total count:" + map.toString());
+    log("get total count:$map");
     _socket!.send(jsonEncode(map));
 
     // listenRequests();
@@ -254,6 +282,50 @@ class LatestSocketProvider extends ChangeNotifier {
       'driverID': session.userId,
     };
     logMe('reject request socket -- > ${map.toString()}');
+    _socket!.send(jsonEncode(map));
+  }
+
+  /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
+
+  updateLatLng() async {
+    Position currentLatLng = await Geolocator.getCurrentPosition();
+
+    print(
+        "current latlong:${currentLatLng.latitude},${currentLatLng.longitude}");
+
+    final map = {
+      'serviceType': 'UpdatedLatLong',
+      'UserID': session.userId,
+      'type': 'driver',
+      'Latitude': currentLatLng.latitude,
+      'Longitude': currentLatLng.longitude,
+      'OrderID': ''
+    };
+    logMe('UPADTE LATLONG -- > ${map.toString()}');
+    print('UPADTE LATLONG -- > ${map.toString()}');
+
+    _socket!.send(jsonEncode(map));
+  }
+
+  /// ----------------- *********************      ACCEPT THE RIDE **************** --------------------
+  acceptRideRequest({required orderId}) {
+    final map = {
+      'serviceType': 'Accept',
+      'UserID': session.userId,
+      'orderID': orderId
+    };
+    logMe('accept ride request socket -- > ${map.toString()}');
+    _socket!.send(jsonEncode(map));
+  }
+
+  /// -------------******************      REJECT THE RIDE     ************------------------------
+  rejectRideRequest({required orderId}) {
+    final map = {
+      'serviceType': 'Reject',
+      'UserID': session.userId,
+      'orderID': orderId
+    };
+    logMe('reject ride request socket -- > ${map.toString()}');
     _socket!.send(jsonEncode(map));
   }
 }

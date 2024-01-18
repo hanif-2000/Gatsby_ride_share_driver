@@ -1,5 +1,3 @@
-import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/request_detail_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -9,28 +7,34 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class RequestTile extends StatelessWidget {
-  const RequestTile({
+import '../../data/models/booking_data_model.dart';
+import '../../static/assets.dart';
+
+class NewRequestTile extends StatelessWidget {
+  const NewRequestTile({
     Key? key,
-    this.request,
     required this.onAccept,
     required this.onReject,
+    required this.index,
+    required this.request,
   }) : super(key: key);
-  final RequestListModel? request;
+
   final Function() onAccept;
   final Function() onReject;
+  final int index;
+  final List<Booking> request;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RequestDetailPage(
-              requestListModel: request,
-            ),
-          ),
-        );
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => RequestDetailPage(
+        //       requestListModel: request!.da,
+        //     ),
+        //   ),
+        // );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -59,12 +63,17 @@ class RequestTile extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  CustomCacheNetworkImage(img: request!.image!, size: 50),
-                  // request!.image == ''
-                  // ? const CircleAvatar(
-                  //     radius: 25,
-                  //     backgroundImage: AssetImage(userAvatarImage),
-                  //   )
+                  request[index].image != null
+                      ? CustomCacheNetworkImage(
+                          img: request[index].image ??
+                              "https://picsum.photos/250?image=9",
+                          size: 50)
+                      :
+                      // request!.image == ''
+                      const CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage(userAvatarImage),
+                        ),
                   // : CircleAvatar(
                   //     radius: 25,
                   //     backgroundImage:
@@ -76,7 +85,10 @@ class RequestTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${request!.firstName} ${request!.lastName}',
+                          request[index].name ?? 'name',
+
+                          //  ${request.lastName}
+                          //  ',
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 16,
@@ -90,7 +102,7 @@ class RequestTile extends StatelessWidget {
                               width: 3,
                             ),
                             Text(
-                              request!.rating.toString(),
+                              request[index].customerRating.toString(),
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -108,8 +120,9 @@ class RequestTile extends StatelessWidget {
                       Text(
                         // 'CA\$ ${request!.total}',
 
-                        'CA\$ ${request!.newTotal.toStringAsFixed(2)}',
+                        // 'CA\$ ${request.newTotal.toStringAsFixed(2)}',
 
+                        'CA\$ ${request[index].total}' ?? "total",
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,
@@ -117,7 +130,7 @@ class RequestTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '${request!.distance} Km',
+                        '${request[index].distance} Km',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -139,7 +152,7 @@ class RequestTile extends StatelessWidget {
                       mediumHorizontalSpacing(),
                       Expanded(
                         child: Text(
-                          request!.startAddress ?? '',
+                          request[index].startAddress ?? '',
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,
@@ -157,7 +170,7 @@ class RequestTile extends StatelessWidget {
                       mediumHorizontalSpacing(),
                       Expanded(
                         child: Text(
-                          request!.endAddress ?? '',
+                          request[index].endAddress ?? '',
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,

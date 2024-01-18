@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:app_settings/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
@@ -15,7 +14,6 @@ import '../../utility/helper.dart';
 import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import '../providers/currency_state.dart';
-import '../providers/socket_provider.dart';
 import '../providers/splash_provider.dart';
 import 'home_page/home_page.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +37,16 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
     Timer(const Duration(seconds: 3), () async {
       final requestPermission = await checkLocationAndPermission();
       log("request permission value is:-->> $requestPermission");
-      if ( requestPermission == false) {
+      if (requestPermission == false) {
         await checkLocationAndPermission().then((value) async {
           log("check location and permission value is:$value");
           if (value) {
             await sessionClearOrder();
-            context.read<SplashProvider>().fetchCurrency().listen((state) async {
-              log("state runtime type:==" + state.runtimeType.toString());
+            context
+                .read<SplashProvider>()
+                .fetchCurrency()
+                .listen((state) async {
+              log("state runtime type:==${state.runtimeType}");
               switch (state.runtimeType) {
                 case CurrencyLoaded:
                   checkUserSession().then((value) async {
@@ -75,7 +76,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
       } else {
         await sessionClearOrder();
         context.read<SplashProvider>().fetchCurrency().listen((state) async {
-          log("state runtime type:==" + state.runtimeType.toString());
+          log("state runtime type:==${state.runtimeType}");
           switch (state.runtimeType) {
             case CurrencyLoaded:
               checkUserSession().then((value) async {

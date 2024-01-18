@@ -1,5 +1,4 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/home_page/home_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
@@ -27,6 +26,7 @@ import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_
 import 'package:appkey_taxiapp_driver/features/terms_and_conditions/terms_and_conditions.dart';
 import 'package:flutter/material.dart';
 import '../../features/history/data/models/history_response_model.dart';
+import '../presentation/pages/home_page/home_page.dart';
 import '../presentation/pages/splash_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
