@@ -603,6 +603,8 @@ class ReceiptPage extends StatelessWidget {
                                                                     32.0))),
                                                     text: "Yes",
                                                     event: () async {
+                                                      Navigator.pop(context);
+                                                      showLoading();
                                                       var dio = Dio();
 
                                                       FormData data =
@@ -638,6 +640,7 @@ class ReceiptPage extends StatelessWidget {
                                                         if (response
                                                                 .statusCode ==
                                                             200) {
+                                                          dismissLoading();
                                                           Navigator
                                                               .pushNamedAndRemoveUntil(
                                                             context,

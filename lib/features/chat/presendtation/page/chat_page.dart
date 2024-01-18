@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -35,8 +34,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'Join');
-
+      socketProvider.joinExitRoom(
+          receiverId: widget.chatDetail!.userId, type: 'Join');
     });
     // showLoading();
     WidgetsBinding.instance.addObserver(this);
@@ -47,11 +46,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log(" app lifecycle state is ------>>>>>>>   $state");
-    if (state == AppLifecycleState.paused) {
-      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      socketProvider.joinExitRoom(
+          receiverId: widget.chatDetail!.userId, type: 'unJoin');
     } else if (state == AppLifecycleState.resumed) {
       socketProvider.joinExitRoom(
-          receiverId: widget.chatDetail!.userId, type: "unJoin");
+          receiverId: widget.chatDetail!.userId, type: "Join");
     }
   }
 
@@ -61,7 +62,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     super.dispose();
     // Future.delayed(const Duration(seconds: 1), () {
     // socketProvider.clearChatList();
-    socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    socketProvider.joinExitRoom(
+        receiverId: widget.chatDetail!.userId, type: 'unJoin');
 
     WidgetsBinding.instance.removeObserver(this);
 
@@ -147,12 +149,14 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Visibility(
-                    visible: provider.isLoading==false,
+                    visible: provider.isLoading == false,
                     replacement: const Center(
                       child: SizedBox(
                         height: 50,
-                          width: 50,
-                        child: CupertinoActivityIndicator(color: black15141FColor,),
+                        width: 50,
+                        child: CupertinoActivityIndicator(
+                          color: black15141FColor,
+                        ),
                       ),
                     ),
                     child: provider.chatMessageList.isEmpty
@@ -163,15 +167,16 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                             reverse: true,
                             itemCount: provider.chatMessageList.length,
                             itemBuilder: (context, index) {
-                              return provider.chatMessageList[index].senderType ==
+                              return provider
+                                          .chatMessageList[index].senderType ==
                                       'Customer'
                                   ? ReceiverTile(
-                                      title:
-                                          provider.chatMessageList[index].message,
+                                      title: provider
+                                          .chatMessageList[index].message,
                                     )
                                   : SenderTile(
-                                      title:
-                                          provider.chatMessageList[index].message,
+                                      title: provider
+                                          .chatMessageList[index].message,
                                     );
                             },
                           ),

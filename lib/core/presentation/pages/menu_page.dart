@@ -19,7 +19,6 @@ import '../widgets/close_button.dart';
 import '../widgets/custom_dialog_logout.dart';
 import '../widgets/drawer_button.dart';
 import '../widgets/profile_drawer.dart';
-import 'splash_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -102,32 +101,41 @@ class HomeDrawerPage extends StatelessWidget {
                         positiveAction: () async {
                           Navigator.pop(context);
                           var dio = Dio();
-                          String logOutUrl = 'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
+                          String logOutUrl =
+                              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
                           final session = locator<Session>();
-                          var provider = Provider.of<HomeProvider>(context, listen: false);
-                             showLoading();
-                            provider.updateStatus(isFromLogout: true).listen((event) async {
-                              if(event is ChangeStatusLoaded){
+                          var provider =
+                              Provider.of<HomeProvider>(context, listen: false);
+                          showLoading();
+                          provider.updateStatus(isFromLogout: true).listen(
+                            (event) async {
+                              if (event is ChangeStatusLoaded) {
                                 var response = await dio.get(
                                   logOutUrl,
                                   options: Options(headers: {
-                                    "Authorization": "Bearer ${session.sessionToken}"
+                                    "Authorization":
+                                        "Bearer ${session.sessionToken}"
                                   }),
                                 );
                                 log("my response data is:  ${response.data}");
+
+                                print("status code is:${response.statusCode}");
                                 dismissLoading();
-                                if(response.statusCode==200 && response.data["message"]=="Logout successfully"){
+                                if (response.statusCode == 200 &&
+                                    response.data["message"] ==
+                                        "Logout successfully") {
                                   await sessionLogOut().then(
-                                        (_) => Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName,
+                                    (_) => Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            LoginPage.routeName,
                                             (route) => false),
                                   );
-                                }else{
+                                } else {
                                   showToast(message: "Something went Wrong");
                                 }
                               }
 
-
-                            /*    if (event is ChangeStatusLoaded) {
+                              /*    if (event is ChangeStatusLoaded) {
                                   await sessionLogOut().then(
                                     (_) => Navigator.of(context).pushNamedAndRemoveUntil(SplashPage.routeName,
                                             (route) => false),
@@ -140,9 +148,8 @@ class HomeDrawerPage extends StatelessWidget {
                                             (route) => false),
                                   );
                                 }*/
-                              },
-                            );
-
+                            },
+                          );
                         },
                       ),
                     );

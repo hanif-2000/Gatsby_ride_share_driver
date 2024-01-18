@@ -5,7 +5,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/request_list_state.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/no_projects.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/request_tile.dart';

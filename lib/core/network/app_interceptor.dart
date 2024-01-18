@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import '../../features/login/presentation/pages/login_page.dart';
+import '../utility/helper.dart';
 import '../utility/injection.dart';
 import '../utility/session_helper.dart';
 
@@ -29,24 +32,30 @@ class AppInterceptor extends Interceptor {
   }
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
     final statusCode = err.response?.statusCode;
 
-    // if (statusCode == HttpStatus.unprocessableEntity) {
-    //   dismissLoading();
-    //   await sessionLogOut().then(
-    //     (_) => Navigator.pushNamedAndRemoveUntil(
-    //       locator<GlobalKey<NavigatorState>>().currentContext!,
-    //       LoginPage.routeName,
-    //       (route) => false,
-    //     ),
-    //   );
-    //   // final session = locator<Session>();
-    //   // session.setLoggedIn = false;
-
-    // }
+    if (statusCode == HttpStatus.unprocessableEntity) {
+      dismissLoading();
+      await sessionLogOut().then(
+        (_) => Navigator.pushNamedAndRemoveUntil(
+          locator<GlobalKey<NavigatorState>>().currentContext!,
+          LoginPage.routeName,
+          (route) => false,
+        ),
+      );
+      // final session = locator<Session>();
+      // session.setLoggedIn = false;
+    }
 
     if (statusCode == HttpStatus.forbidden) {}
+
+    // if(statusCode==HttpStatus.unprocessableEntity){
+
+    //            (route) => false);
+
+    // }
 
     return super.onError(err, handler);
   }

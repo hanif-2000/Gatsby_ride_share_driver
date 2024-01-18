@@ -152,7 +152,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     var session = locator<Session>();
     var orderProvider = locator<OrderProvider>();
 
-    log("session order status " + session.currentOrderState.toString());
+    log("session order status ${session.currentOrderState}");
     // orderPProvider.updateOrderStatusAfterAppRestart(
     //     orderStatus: session.currentOrderState);
 
@@ -162,7 +162,7 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
     // orderProvider.updateOrderStatusAfterAppRestart(
     //     orderStatus: session.currentOrderState);
 
-    var _deviceSize = MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () {
         return Future.value(false); // if true allow back else block it
@@ -180,16 +180,20 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
             if (trackingTimer != null) {
               trackingTimer!.cancel();
             }
-            trackingTimer = Timer.periodic(const Duration(seconds: 4), (Timer timer) async {
-             await provider.trackingDriver();
+            trackingTimer =
+                Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
+              await provider.trackingDriver();
             });
 
-            checkOrderStatusTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
+            checkOrderStatusTimer = Timer.periodic(
+              const Duration(seconds: 5),
+              (Timer timer) async {
                 log("------>>>>>  this will called every 3 seconds  <<<<<--------");
-                 provider.fetchOrderStatus().listen(
+                provider.fetchOrderStatus().listen(
                   (state) async {
                     if (state is GetStatusOrderLoaded) {
-                      session.setCurrentOrderState = int.parse(state.data.status);
+                      session.setCurrentOrderState =
+                          int.parse(state.data.status);
 
                       // provider.updateOrderStatusAfterAppRestart(
                       //     orderStatus: int.parse(state.data.status));
@@ -350,10 +354,10 @@ class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
                         children: <Widget>[
                           getStatus(provider.orderStatus)
                               ? OriginWidget(
-                                  deviceWidth: _deviceSize.width,
+                                  deviceWidth: deviceSize.width,
                                 )
                               : DestinationWidget(
-                                  deviceWidth: _deviceSize.width,
+                                  deviceWidth: deviceSize.width,
                                 ),
                           // Column(
                           //   children: [

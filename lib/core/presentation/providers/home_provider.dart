@@ -558,14 +558,17 @@ class HomeProvider with ChangeNotifier {
 
     final result = await changeStatus.execute(formData);
     yield* result.fold((failure) async* {
+      print("failure is called-->>");
       logMe(failure);
       dismissLoading();
       yield ChangeStatusFailure(failure: failure);
     }, (data) async* {
+      print("success is called-->>");
+
       if (driverStatus == '1') {
         await updateLocation();
       }
-      await FirebaseHelper.setTopicDriver(driverStatus).then((_) {});
+      // await FirebaseHelper.setTopicDriver(driverStatus).then((_) {});
       dismissLoading();
       yield ChangeStatusLoaded(data: data);
     });

@@ -52,6 +52,8 @@ class OrderProvider with ChangeNotifier {
     target: DEFAULT_LATLNG,
     zoom: 14.4746,
   );
+
+  double zoom = 15;
   DriverLocationResponseModel? _driverLocation;
   OrderDetail? _orderDetail;
   CustomerDetailModel? _customerDetail;
@@ -590,7 +592,7 @@ class OrderProvider with ChangeNotifier {
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   target: coordinate,
-                  zoom: 18,
+                  zoom: zoom,
                 ),
               ),
             );
@@ -635,7 +637,7 @@ class OrderProvider with ChangeNotifier {
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   target: coordinate,
-                  zoom: 18,
+                  zoom: zoom,
                 ),
               ),
             );
@@ -819,7 +821,7 @@ class OrderProvider with ChangeNotifier {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: coordinate,
-          zoom: 18,
+          zoom: zoom,
         ),
       ),
     );
