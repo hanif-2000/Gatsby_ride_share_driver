@@ -12,7 +12,6 @@ import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rat
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../order/presentation/pages/order_page.dart';
 import '../../../order_detail/presentation/widget/custom_rating_bar.dart';
 
 class GiveRatingScreen extends StatelessWidget {
@@ -163,15 +162,15 @@ class GiveRatingScreen extends StatelessWidget {
                                         break;
                                       case RatingSuccess:
                                         dismissLoading();
-                                        Navigator.pushNamed(
-                                          context,
-                                          JobCompletedPage.routeName,
-                                          arguments: RatingPageArguments(
-                                            customerDataModel:
-                                                customerDataModel,
-                                            customerId: customerId,
-                                          ),
-                                        );
+                                        // Navigator.pushNamed(
+                                        //   context,
+                                        //   JobCompletedPage.routeName,
+                                        //   arguments: RatingPageArguments(
+                                        //     customerDataModel:
+                                        //         customerDataModel,
+                                        //     customerId: customerId,
+                                        //   ),
+                                        // );
 
                                         break;
                                       default:

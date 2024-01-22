@@ -1,10 +1,10 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/profile_field_tile.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
+import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 
 class OtherUserProfile extends StatelessWidget {
   const OtherUserProfile({Key? key}) : super(key: key);
@@ -12,8 +12,10 @@ class OtherUserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _deviceSize = MediaQuery.of(context).size;
-    OrderProvider provider = Provider.of<OrderProvider>(context, listen: false);
+    var deviceSize = MediaQuery.of(context).size;
+    // OrderProvider provider = Provider.of<OrderProvider>(context, listen: false);
+    var provider = locator<LatestSocketProvider>();
+
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -41,8 +43,8 @@ class OtherUserProfile extends StatelessWidget {
                       ),
                       Center(
                           child: CustomCacheNetworkImage(
-                              img: provider.customerDetail!.data.photo!,
-                              size: _deviceSize.width * .4)
+                              img: provider.customerDataModel!.photo!,
+                              size: deviceSize.width * .4)
 
                           //  Container(
                           //   height: 45,
@@ -87,18 +89,17 @@ class OtherUserProfile extends StatelessWidget {
                       ProfileFieldTile(
                         title: appLoc.firstName,
                         value:
-                            provider.customerDetail!.data.name.split(' ').first,
+                            provider.customerDataModel!.name.split(' ').first,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(
                         title: appLoc.lastName,
-                        value:
-                            provider.customerDetail!.data.name.split(' ').last,
+                        value: provider.customerDataModel!.name.split(' ').last,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(
                         title: appLoc.mobileNumber,
-                        value: provider.customerDetail!.data.phoneNumber,
+                        value: provider.customerDataModel!.phoneNumber,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(

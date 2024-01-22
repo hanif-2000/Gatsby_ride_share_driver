@@ -41,6 +41,9 @@ abstract class Session {
 
   set setCurrentOrderState(int state);
 
+  set setCurrentLat(double currentLat);
+  set setCurrentLang(double currentLang);
+
   set setChatToken(String chatToken);
   set setStartTime(String rideStartTime);
   set setEndTime(String rideEndTime);
@@ -80,6 +83,8 @@ abstract class Session {
   String get driverId;
 
   String get userId;
+  double get currentLat;
+  double get currentLang;
 
   String get sessionStatusOrder;
 
@@ -115,6 +120,16 @@ class SessionHelper implements Session {
   @override
   set setToken(String token) {
     pref.setString(SESSION_TOKEN, token);
+  }
+
+  @override
+  set setCurrentLat(double currentLat) {
+    pref.setDouble(CURRENT_LAT, currentLat);
+  }
+
+  @override
+  set setCurrentLang(double currentLang) {
+    pref.setDouble(CURRENT_LANG, currentLang);
   }
 
   @override
@@ -224,6 +239,12 @@ class SessionHelper implements Session {
 
   @override
   String get chatToken => pref.getString(CHAT_TOKEN) ?? '';
+
+  @override
+  double get currentLat => pref.getDouble(CURRENT_LAT) ?? 0.0;
+
+  @override
+  double get currentLang => pref.getDouble(CURRENT_LANG) ?? 0.0;
 
   @override
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;

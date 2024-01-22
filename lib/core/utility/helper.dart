@@ -92,9 +92,9 @@ Future<bool> showCancelConfirmationAlertDialog(
       content: const Text('Do you really want to cancel the Ride'),
       actions: <Widget>[
         ElevatedButton(
-          child: const Text('Cancel Ride'),
           onPressed: onTap,
           style: ElevatedButton.styleFrom(backgroundColor: black15141FColor),
+          child: const Text('Cancel Ride'),
         ),
         OutlinedButton(
           child: const Text(
@@ -161,6 +161,7 @@ Future<bool> showAlertDialog({
 }
 
 Future<bool> checkPermission() async {
+  print("check permission called");
   bool serviceEnabled;
 
   LocationPermission permission;
@@ -212,7 +213,6 @@ Future<bool> checkLocationAndPermission() async {
     return false;
   }
 }
-
 
 String mergeAddress(String placeName, String address) {
   String result;

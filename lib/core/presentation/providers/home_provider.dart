@@ -54,7 +54,7 @@ class HomeProvider with ChangeNotifier {
     target: DEFAULT_LATLNG,
     zoom: 14.4746,
   );
-  CustomerDetailModel? _customerDetailModel;
+  CustomerDataModel? _customerDetailModel;
   OrderDetail? _orderDetail;
   bool _isOnline = false;
   late ProjectType _projectType = ProjectType.requests;
@@ -84,7 +84,7 @@ class HomeProvider with ChangeNotifier {
   // getter
   bool get isOnline => _isOnline;
 
-  CustomerDetailModel? get customerDetailModel => _customerDetailModel;
+  CustomerDataModel? get customerDetailModel => _customerDetailModel;
 
   OrderDetail? get orderDetail => _orderDetail;
 
@@ -107,6 +107,18 @@ class HomeProvider with ChangeNotifier {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
     // });
+  }
+
+  /// UDPATE ORDER DETAILS
+  set setOrderDetails(OrderDetail value) {
+    _orderDetail = value;
+    notifyListeners();
+  }
+
+  ///UPDATE CUSTOMER DETAILS
+  set setCustomerDetails(CustomerDataModel value) {
+    _customerDetailModel = value;
+    notifyListeners();
   }
 
   set projectType(value) {
@@ -531,7 +543,7 @@ class HomeProvider with ChangeNotifier {
       logMe("failure customer");
       yield CustomerDetailFailure(failure: failure.message);
     }, (data) async* {
-      _customerDetailModel = data;
+      _customerDetailModel = data.data;
       notifyListeners();
       yield CustomerDetailLoaded(data: data);
     });

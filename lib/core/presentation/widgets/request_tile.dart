@@ -1,5 +1,4 @@
 import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/request_detail_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -24,13 +23,13 @@ class RequestTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RequestDetailPage(
-              requestListModel: request,
-            ),
-          ),
-        );
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => RequestDetailPage(
+        //       requestListModel: request[index],
+        //     ),
+        //   ),
+        // );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

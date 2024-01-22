@@ -22,3 +22,5 @@ const String ESTIMATED_DISTANCE = 'estimated_distance';
 const String ESTIMATED_TIME = 'estimated_time';
 const String RIDE_START_TIME = 'ride_start_time';
 const String RIDE_END_TIME = 'ride_end_time';
+const String CURRENT_LAT = 'current_lat';
+const String CURRENT_LANG = 'current_lang';

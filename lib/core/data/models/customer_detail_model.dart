@@ -29,7 +29,7 @@ class CustomerDataModel extends Equatable {
   final String phoneNumber;
   final String? photo;
   final int id;
-  final double rating;
+  final dynamic rating;
 
   const CustomerDataModel({
     required this.name,

@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
+
+import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/new_request_tile.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../features/order/presentation/pages/new_order_page.dart';
 import '../../utility/session_helper.dart';
+import '../widgets/no_projects.dart';
 
 class RequestListWidget extends StatefulWidget {
   const RequestListWidget({Key? key}) : super(key: key);
@@ -72,36 +79,135 @@ class _RequestListWidgetState extends State<RequestListWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LatestSocketProvider>(
-      builder: (context, value, child) {
-        return value.bookingList.isEmpty
-            ? const Center(
-                child: Text("Please wait for Ride"),
+    return Consumer2(
+      builder: (context, HomeProvider homeProvider,
+          LatestSocketProvider socketProvider, child) {
+        return !session.isOnline
+            ? Center(
+                child: NoProjects(isOffline: !session.isOnline, text: myText),
               )
-            : SizedBox(
-                height: MediaQuery.of(context).size.height * .82,
-                child: ListView.builder(
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: value.bookingList.length,
-                  itemBuilder: (context, index) {
-                    return NewRequestTile(
-                      onAccept: () {
-                        // Accept the Ride
-                        value.acceptRideRequest(
-                            orderId: value.bookingList[index].id);
+            : socketProvider.bookingList.isEmpty
+                ? Center(
+                    child: NoProjects(
+                    text: myText,
+                  ))
+                : SizedBox(
+                    height: MediaQuery.of(context).size.height * .82,
+                    child: ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: socketProvider.bookingList.length,
+                      itemBuilder: (context, index) {
+                        return NewRequestTile(
+                          onAccept: () {
+                            // Accept the Ride
+                            socketProvider
+                                .acceptRideRequest(
+                                    orderId:
+                                        socketProvider.bookingList[index].id)
+                                .then((value) {
+                              var session = locator<Session>();
+                              session.setIsOrderRunning = true;
+
+                              /*** ORDER DETAILS  */
+
+                              print(
+                                  "order id:-->>${socketProvider.bookingList[index].id}");
+                              print(
+                                  "total order id:-->>${socketProvider.bookingList[index].total}");
+                              print(
+                                  "customerId order id:-->>${socketProvider.bookingList[index].customerId}");
+                              print(
+                                  "order id:-->>${socketProvider.bookingList[index].id}");
+                              print(
+                                  "distance order id:-->>${socketProvider.bookingList[index].distance}");
+                              print(
+                                  "start coordinate order id:-->>${socketProvider.bookingList[index].startCoordinate}");
+                              print(
+                                  "endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
+                              print(
+                                  "startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
+                              print(
+                                  "end address order id:-->>${socketProvider.bookingList[index].id}");
+                              // print("order id:-->>${socketProvider.bookingList[index].id}");
+
+                              homeProvider.setOrderDetails = OrderDetail(
+                                orderId: int.parse(
+                                    socketProvider.bookingList[index].id),
+                                totalPrice:
+                                    socketProvider.bookingList[index].total,
+                                userId: int.parse(socketProvider
+                                    .bookingList[index].customerId),
+                                driverId: int.parse(session.userId),
+                                distance:
+                                    socketProvider.bookingList[index].distance,
+                                orderStatus: 0,
+                                startCoordinate: socketProvider
+                                    .bookingList[index].startCoordinate,
+                                endCoordinate: socketProvider
+                                    .bookingList[index].endCoordinate,
+                                startAddress: socketProvider
+                                    .bookingList[index].startAddress,
+                                endAddress: socketProvider
+                                    .bookingList[index].endAddress,
+                                pendingAmount:
+                                    socketProvider.bookingList[index].total,
+                                newTotal:
+                                    socketProvider.bookingList[index].total,
+                              );
+
+                              //*** CUSTOMER DETAILS */
+
+                              homeProvider.setCustomerDetails =
+                                  CustomerDataModel(
+                                name: socketProvider.bookingList[index].name,
+                                phoneNumber:
+                                    socketProvider.bookingList[index].phone,
+                                photo: socketProvider.bookingList[index].image,
+                                id: int.parse(socketProvider
+                                    .bookingList[index].customerId),
+                                rating: socketProvider
+                                    .bookingList[index].customerRating,
+                              );
+
+                              log("order details are:-->. ${homeProvider.orderDetail!}");
+                              print(
+                                  "order details are:-->. ${homeProvider.orderDetail!}");
+
+                              log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
+                              print(
+                                  "Customer details are:-->. ${homeProvider.customerDetailModel!}");
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                NewOrderPage.routeName,
+                                (route) => false,
+                                arguments: NewOrderPageArguments(
+                                  orderDetail: homeProvider.orderDetail!,
+                                  customerDetailModel:
+                                      homeProvider.customerDetailModel!,
+                                  orderStatus: 0,
+                                ),
+                              );
+                            });
+                          },
+                          onReject: () {
+                            // Reject the ride
+                            socketProvider
+                                .rejectRideRequest(
+                                    orderId:
+                                        socketProvider.bookingList[index].id)
+                                .then((value) {
+                              print("reject order successfully");
+                              log("reject order successfully");
+                            });
+                          },
+                          request: socketProvider.bookingList,
+                          index: index,
+                        );
                       },
-                      onReject: () {
-                        // Reject the ride
-                        value.rejectRideRequest(
-                            orderId: value.bookingList[index].id);
-                      },
-                      request: value.bookingList,
-                      index: index,
-                    );
-                  },
-                ),
-              );
+                    ),
+                  );
       },
     );
   }

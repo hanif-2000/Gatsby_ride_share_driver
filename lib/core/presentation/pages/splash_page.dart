@@ -6,6 +6,7 @@ import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart' as hand;
 import 'package:permission_handler/permission_handler.dart';
 import '../../../features/login/presentation/pages/login_page.dart';
@@ -39,8 +40,13 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
       log("request permission value is:-->> $requestPermission");
       if (requestPermission == false) {
         await checkLocationAndPermission().then((value) async {
-          log("check location and permission value is:$value");
+          print("check location and permission value is:$value");
           if (value) {
+            Position currentLatLng = await Geolocator.getCurrentPosition();
+
+            // print(
+            //     "**********------------ ${currentLatLng.latitude},${currentLatLng.longitude} ----------*********");
+
             await sessionClearOrder();
             context
                 .read<SplashProvider>()
@@ -50,6 +56,8 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
               switch (state.runtimeType) {
                 case CurrencyLoaded:
                   checkUserSession().then((value) async {
+                    //   sessionHelper.setCurrentLat = currentLatLng.latitude;
+                    //   sessionHelper.setCurrentLang = currentLatLng.longitude;
                     if (value) {
                       checkProfileSession().then((value1) {
                         if (value1) {

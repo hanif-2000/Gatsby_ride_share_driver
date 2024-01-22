@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../data/models/booking_data_model.dart';
 import '../../static/assets.dart';
+import '../pages/request_detail_page.dart';
 
 class NewRequestTile extends StatelessWidget {
   const NewRequestTile({
@@ -28,13 +29,13 @@ class NewRequestTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => RequestDetailPage(
-        //       requestListModel: request!.da,
-        //     ),
-        //   ),
-        // );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => RequestDetailPage(
+              requestListModel: request[index],
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

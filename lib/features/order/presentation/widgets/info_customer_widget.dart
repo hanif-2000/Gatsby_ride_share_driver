@@ -1,6 +1,5 @@
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,7 @@ import '../../../../core/presentation/widgets/rounded_upper_container.dart';
 import '../../../../core/static/colors.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
+import '../providers/new_order_provider.dart';
 
 class CustomerInfoWidget extends StatelessWidget {
   const CustomerInfoWidget({
@@ -22,11 +22,6 @@ class CustomerInfoWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
             child: FloatingActionButton(
-              child: const Icon(
-                Icons.person_pin,
-                color: Colors.grey,
-                size: 40,
-              ),
               backgroundColor: Colors.white,
               onPressed: () async {
                 showModalBottomSheet(
@@ -55,8 +50,7 @@ class CustomerInfoWidget extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       CustomCacheNetworkImage(
-                                          img: provider
-                                              .customerDetail!.data.photo!,
+                                          img: provider.customerDetail!.photo!,
                                           size: 60),
                                       // SizedBox(
                                       //   height: 60,
@@ -91,12 +85,12 @@ class CustomerInfoWidget extends StatelessWidget {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            provider.customerDetail!.data.name,
+                                            provider.customerDetail!.name,
                                             style: titlePlatStyle,
                                           ),
                                           Text(
-                                            provider.customerDetail!.data
-                                                .phoneNumber,
+                                            provider
+                                                .customerDetail!.phoneNumber,
                                             style: titleModelStyle,
                                           ),
                                         ],
@@ -181,6 +175,11 @@ class CustomerInfoWidget extends StatelessWidget {
                       );
                     });
               },
+              child: const Icon(
+                Icons.person_pin,
+                color: Colors.grey,
+                size: 40,
+              ),
             ),
           ),
         ],

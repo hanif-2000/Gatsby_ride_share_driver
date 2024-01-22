@@ -1,19 +1,17 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/core/static/enums.dart';
-import 'package:appkey_taxiapp_driver/core/utility/extension.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../features/order/presentation/providers/update_status_order_state.dart';
+import '../../../features/order/presentation/providers/new_order_provider.dart';
 import '../../static/styles.dart';
 import '../../utility/injection.dart';
 import '../pages/home_page/home_page.dart';
@@ -44,8 +42,9 @@ class ButtonOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     final session = locator<Session>();
-    return Consumer<OrderProvider>(
-      builder: (context, provider, _) {
+    return Consumer3(
+      builder: (context, OrderProvider provider, HomeProvider homeProvider,
+          LatestSocketProvider socketProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
 
@@ -185,7 +184,10 @@ class ButtonOrder extends StatelessWidget {
               //     : const SizedBox(),
 
               /**   SHOW CUSTOMER PROFILE TILE SECTION */
-              const UserProfileTile(),
+              UserProfileTile(
+                customerDataModel: homeProvider.customerDetailModel,
+                orderDetails: homeProvider.orderDetail,
+              ),
               mediumVerticalSpacing(),
 
               /** CALL NOW / MESSAGE BUTTON SECTION */
@@ -245,13 +247,21 @@ class ButtonOrder extends StatelessWidget {
                                   event: () {
                                     // session.currentOrderState == 1
                                     //     ?
+
+                                    print(
+                                        "Customer name____>>. ${socketProvider.customerDataModel!.name}");
+                                    print(
+                                        "Customer name____>>. ${socketProvider.customerDataModel!.photo}");
+                                    print(
+                                        "Customer name____>>. ${socketProvider.customerDataModel!.id}");
+
                                     Navigator.pushNamed(
                                       context,
                                       ChatPage.routeName,
                                       arguments: ChatDetail(
-                                        provider.customerDetail!.data.name,
-                                        provider.customerDetail!.data.photo,
-                                        provider.customerDetail!.data.id,
+                                        socketProvider.customerDataModel!.name,
+                                        socketProvider.customerDataModel!.photo,
+                                        socketProvider.customerDataModel!.id,
                                       ),
                                     );
                                     //     : session.currentOrderState == 2
@@ -321,51 +331,65 @@ class ButtonOrder extends StatelessWidget {
               /** ------- RIDE STATUS INTO STRING Section ------- */
               CustomButton(
                   text: Text(
-                    provider.orderStatus.getString(),
+                    socketProvider.rideText,
                     style: txtButtonStyle,
                   ),
                   event: () {
-                    provider.submitStatusOrder(false).listen(
-                      (event) async {
-                        if (event is UpdateStatusOrderLoaded) {
-                          log("UpdateStatusOrderLoaded called");
+                    if (socketProvider.currentOrderStatus == 0) {
+                      socketProvider.updateOrderStatus(
+                          status: "2", actualTime: "0");
+                    } else if (socketProvider.currentOrderStatus == 2) {
+                      socketProvider.updateOrderStatus(
+                          status: "3", actualTime: "0");
+                    } else if (socketProvider.currentOrderStatus == 3) {
+                      socketProvider.updateOrderStatus(
+                          status: "5", actualTime: "0");
+                    } else if (socketProvider.currentOrderStatus == 5) {
+                      socketProvider.updateOrderStatus(
+                          status: "7", actualTime: "0");
+                    } else {}
 
-                          if (provider.orderStatus ==
-                              OrderStatus.departureToCustomerplace) {
-                            session.setOrderStatus = 2;
-                          } else if (provider.orderStatus ==
-                              OrderStatus.arriveAtCustomerPlace) {
-                            session.setOrderStatus = 3;
-                            log("arrive at customer place called");
-                            // showDialog(
-                            //   barrierDismissible: false,
-                            //   context: context,
-                            //   builder: (context) {
-                            //     return WillPopScope(
-                            //       onWillPop: () async => false,
-                            //       child: DepartDialog(
-                            //         callback: (b, call) {
-                            //           if (call) {
-                            //             provider.callCustomer();
-                            //           }
-                            //         },
-                            //       ),
-                            //     );
-                            //   },
-                            // );
-                          } else if (provider.orderStatus ==
-                              OrderStatus.departureToDestination) {
-                            session.setOrderStatus = 5;
-                          } else if (provider.orderStatus ==
-                              OrderStatus.arriveAtDestination) {
-                            session.setOrderStatus = 6;
-                          } else if (provider.orderStatus ==
-                              OrderStatus.complete) {
-                            session.setOrderStatus = 7;
-                          }
-                        }
-                      },
-                    );
+                    // provider.submitStatusOrder(false).listen(
+                    //   (event) async {
+                    //     if (event is UpdateStatusOrderLoaded) {
+                    //       log("UpdateStatusOrderLoaded called");
+
+                    //       if (provider.orderStatus ==
+                    //           OrderStatus.departureToCustomerplace) {
+                    //         session.setOrderStatus = 2;
+                    //       } else if (provider.orderStatus ==
+                    //           OrderStatus.arriveAtCustomerPlace) {
+                    //         session.setOrderStatus = 3;
+                    //         log("arrive at customer place called");
+                    //         // showDialog(
+                    //         //   barrierDismissible: false,
+                    //         //   context: context,
+                    //         //   builder: (context) {
+                    //         //     return WillPopScope(
+                    //         //       onWillPop: () async => false,
+                    //         //       child: DepartDialog(
+                    //         //         callback: (b, call) {
+                    //         //           if (call) {
+                    //         //             provider.callCustomer();
+                    //         //           }
+                    //         //         },
+                    //         //       ),
+                    //         //     );
+                    //         //   },
+                    //         // );
+                    //       } else if (provider.orderStatus ==
+                    //           OrderStatus.departureToDestination) {
+                    //         session.setOrderStatus = 5;
+                    //       } else if (provider.orderStatus ==
+                    //           OrderStatus.arriveAtDestination) {
+                    //         session.setOrderStatus = 6;
+                    //       } else if (provider.orderStatus ==
+                    //           OrderStatus.complete) {
+                    //         session.setOrderStatus = 7;
+                    //       }
+                    //     }
+                    //   },
+                    // );
                   },
                   buttonHeight: 48,
                   isRounded: true,
@@ -373,13 +397,17 @@ class ButtonOrder extends StatelessWidget {
               mediumVerticalSpacing(),
               /** ------ CANCEL RIDE Button Section ------ */
               Visibility(
-                visible: (session.currentOrderState == 5)
+                visible: ((session.currentOrderState == 5) ||
+                        (socketProvider.currentOrderStatus == 5))
                     ? false
-                    : (session.currentOrderState == 6)
+                    : ((session.currentOrderState == 6) ||
+                            (socketProvider.currentOrderStatus == 6))
                         ? false
-                        : (session.currentOrderState == 7)
+                        : ((session.currentOrderState == 7) ||
+                                (socketProvider.currentOrderStatus == 7))
                             ? false
-                            : (session.currentOrderState == 8)
+                            : ((session.currentOrderState == 8) ||
+                                    (socketProvider.currentOrderStatus == 8))
                                 ? true
                                 : (!session.isOrderRunning)
                                     ? true
@@ -395,16 +423,32 @@ class ButtonOrder extends StatelessWidget {
                           onTap: () async {
                             Navigator.pop(context);
                             showLoading();
-                            String updateStatusUrl =
-                                'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status';
 
-                            var data = FormData.fromMap(
-                                {'id': session.runningOrderId, 'status': '8'});
+                            socketProvider
+                                .updateOrderStatus(status: "8", actualTime: "0")
+                                .then((value) {
+                              dismissLoading();
+                              if (value) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomePage(),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                log("**** Something went wrong");
+                              }
+                            });
+                            // String updateStatusUrl =
+                            //     'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status';
 
-                            log("form data is: ${data.fields}");
-                            log("Session token: ${session.sessionToken}");
-                            dio.options.headers["Authorization"] =
-                                "Bearer +${session.sessionToken}";
+                            // var data = FormData.fromMap(
+                            //     {'id': session.runningOrderId, 'status': '8'});
+
+                            // log("form data is: ${data.fields}");
+                            // log("Session token: ${session.sessionToken}");
+                            // dio.options.headers["Authorization"] =
+                            //     "Bearer +${session.sessionToken}";
 
                             // var res =
                             //     await dio.post(updateStatusUrl, data: data);
@@ -426,50 +470,50 @@ class ButtonOrder extends StatelessWidget {
                             //   }
                             // }
 
-                            try {
-                              var response = await dio.request(
-                                'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status',
-                                options: Options(
-                                  method: 'POST',
-                                  headers: {
-                                    "Authorization":
-                                        "Bearer ${provider.session.sessionToken}"
-                                  },
-                                ),
-                                data: data,
-                              );
-                              // Response res =
-                              //     await dio.post(updateStatusUrl, data: data);
+                            // try {
+                            //   var response = await dio.request(
+                            //     'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status',
+                            //     options: Options(
+                            //       method: 'POST',
+                            //       headers: {
+                            //         "Authorization":
+                            //             "Bearer ${provider.session.sessionToken}"
+                            //       },
+                            //     ),
+                            //     data: data,
+                            //   );
+                            //   // Response res =
+                            //   //     await dio.post(updateStatusUrl, data: data);
 
-                              log("status code is${response.statusCode}");
+                            //   log("status code is${response.statusCode}");
 
-                              if (response.statusCode == 200) {
-                                dismissLoading();
-                                if (response.data["success"] == 1) {
-                                  session.setCurrentOrderState = 100;
-                                  session.setIsOrderRunning = false;
-                                  provider.clearState();
-                                  dismissLoading();
+                            //   if (response.statusCode == 200) {
+                            //     dismissLoading();
+                            //     if (response.data["success"] == 1) {
+                            //       session.setCurrentOrderState = 100;
+                            //       session.setIsOrderRunning = false;
+                            //       provider.clearState();
+                            //       dismissLoading();
 
-                                  log("Ride is canceled");
+                            //       log("Ride is canceled");
 
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    HomePage.routeName,
-                                    (route) => false,
-                                  );
-                                } else {
-                                  showToast(
-                                      message:
-                                          "Something went wrong Please try again");
-                                }
-                              }
-                            } catch (e) {
-                              dismissLoading();
+                            //       Navigator.pushNamedAndRemoveUntil(
+                            //         context,
+                            //         HomePage.routeName,
+                            //         (route) => false,
+                            //       );
+                            //     } else {
+                            //       showToast(
+                            //           message:
+                            //               "Something went wrong Please try again");
+                            //     }
+                            // //   }
+                            // } catch (e) {
+                            //   dismissLoading();
 
-                              log("exception :-->> $e");
-                              log(e.toString());
-                            }
+                            //   log("exception :-->> $e");
+                            //   log(e.toString());
+                            // }
 
                             // provider
                             //     .submitStatusOrder(true)

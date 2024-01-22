@@ -9,11 +9,8 @@ import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../features/profile/presentation/providers/customer_detail_state.dart';
 import '../../../utility/helper.dart';
 import '../../../utility/injection.dart';
 import '../../providers/home_provider.dart';
@@ -205,126 +202,126 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         drawer: const HomeDrawerPage(),
         body: Consumer<HomeProvider>(
           builder: (context, provider, _) {
-            var session = locator<Session>();
+            // var session = locator<Session>();
 
-            log("is ORDER RUNNIG :--->>  ${session.isOrderRunning}");
-            log("Order status is :--->>  ${session.orderStatus}");
+            // log("is ORDER RUNNIG :--->>  ${session.isOrderRunning}");
+            // log("Order status is :--->>  ${session.orderStatus}");
 
-            log('RUNNING order id --> ${session.runningOrderId}');
-            if (session.isOrderRunning) {
-              provider
-                  .fetchOrderDetail(session.runningOrderId.toString())
-                  .listen(
-                (event1) {
-                  if (event1 is OrderDetailLoaded) {
-                    log("home page build called : order details loaded");
-                    // var _deviceSize = MediaQuery.of(context).size;
+            // log('RUNNING order id --> ${session.runningOrderId}');
+            // if (session.isOrderRunning) {
+            //   provider
+            //       .fetchOrderDetail(session.runningOrderId.toString())
+            //       .listen(
+            //     (event1) {
+            //       if (event1 is OrderDetailLoaded) {
+            //         log("home page build called : order details loaded");
+            //         // var _deviceSize = MediaQuery.of(context).size;
 
-                    bool isOrderLoaded = true;
+            //         bool isOrderLoaded = true;
 
-                    event1.data.userId != null
-                        ? provider
-                            .fetchCustomerDetail(event1.data.userId.toString())
-                            .listen(
-                            (event) async {
-                              if (event is CustomerDetailLoaded) {
-                                log("home page build called : Customer details loaded");
+            //         event1.data.userId != null
+            //             ? provider
+            //                 .fetchCustomerDetail(event1.data.userId.toString())
+            //                 .listen(
+            //                 (event) async {
+            //                   if (event is CustomerDetailLoaded) {
+            //                     log("home page build called : Customer details loaded");
 
-                                bool isCustomerLoaded = true;
-                                if (isCustomerLoaded && isOrderLoaded) {
-                                  Navigator.pushAndRemoveUntil<dynamic>(
-                                    context,
-                                    MaterialPageRoute<dynamic>(
-                                      builder: (BuildContext context) =>
-                                          OrderPage(
-                                              customerDetail:
-                                                  provider.customerDetailModel!,
-                                              orderDetail:
-                                                  provider.orderDetail!,
-                                              orderStatus:
-                                                  event1.data.orderStatus),
-                                    ),
-                                    (route) =>
-                                        false, //if you want to disable back feature set to false
-                                  );
+            //                     bool isCustomerLoaded = true;
+            //                     if (isCustomerLoaded && isOrderLoaded) {
+            //                       Navigator.pushAndRemoveUntil<dynamic>(
+            //                         context,
+            //                         MaterialPageRoute<dynamic>(
+            //                           builder: (BuildContext context) =>
+            //                               OrderPage(
+            //                                   customerDetail:
+            //                                       provider.customerDetailModel!,
+            //                                   orderDetail:
+            //                                       provider.orderDetail!,
+            //                                   orderStatus:
+            //                                       event1.data.orderStatus),
+            //                         ),
+            //                         (route) =>
+            //                             false, //if you want to disable back feature set to false
+            //                       );
 
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   OrderPage.routeName,
-                                  //   // (route) => false,
-                                  //   arguments: OrderPageArguments(
-                                  //     orderDetail: provider.orderDetail!,
-                                  //     customerDetailModel:
-                                  //         provider.customerDetailModel!,
-                                  //     orderStatus: event1.data.orderStatus,
-                                  //   ),
-                                  // );
-                                }
+            //                       // Navigator.pushNamed(
+            //                       //   context,
+            //                       //   OrderPage.routeName,
+            //                       //   // (route) => false,
+            //                       //   arguments: OrderPageArguments(
+            //                       //     orderDetail: provider.orderDetail!,
+            //                       //     customerDetailModel:
+            //                       //         provider.customerDetailModel!,
+            //                       //     orderStatus: event1.data.orderStatus,
+            //                       //   ),
+            //                       // );
+            //                     }
 
-                                // provider
-                                //     .submitStatusOrder(Order.driverAccept)
-                                //     .listen(
-                                //   (event) async {
-                                //     if (event is UpdateStatusOrderLoaded) {
-                                //       if (event.data.success == 1) {
-                                //         Navigator.pushNamed(
-                                //           context,
-                                //           OrderPage.routeName,
-                                //           // (route) => false,
-                                //           arguments: OrderPageArguments(
-                                //             orderDetail: provider.orderDetail!,
-                                //             customerDetailModel:
-                                //                 provider.customerDetailModel!,
-                                //           ),
-                                //         );
-                                //       } else if (event.data.message == 5) {
-                                //         // Navigator.of(context).pop();
-                                //         showDialog(
-                                //           context: context,
-                                //           builder: (context) => CommonDialog(
-                                //             title: appLoc.sorry,
-                                //             msg: appLoc.orderacceptedotherdriver,
-                                //             onTap: () {
-                                //               Navigator.of(context).pop();
-                                //             },
-                                //           ),
-                                //         );
-                                //       } else if (event.data.message == 6) {
-                                //         // Navigator.of(context).pop();
-                                //         showDialog(
-                                //           context: context,
-                                //           builder: (context) => CommonDialog(
-                                //             title: appLoc.sorry,
-                                //             msg: appLoc.ordernotfound,
-                                //             onTap: () {
-                                //               Navigator.of(context).pop();
-                                //             },
-                                //           ),
-                                //         );
-                                //       } else if (event.data.message == 7) {
-                                //         // Navigator.of(context).pop();
-                                //         showDialog(
-                                //           context: context,
-                                //           builder: (context) => CommonDialog(
-                                //             title: appLoc.sorry,
-                                //             msg: appLoc.orderhascancelled,
-                                //             onTap: () {
-                                //               Navigator.of(context).pop();
-                                //             },
-                                //           ),
-                                //         );
-                                //       }
-                                //     }
-                                //   },
-                                // );
-                              }
-                            },
-                          )
-                        : const SizedBox();
-                  }
-                },
-              );
-            }
+            //                     // provider
+            //                     //     .submitStatusOrder(Order.driverAccept)
+            //                     //     .listen(
+            //                     //   (event) async {
+            //                     //     if (event is UpdateStatusOrderLoaded) {
+            //                     //       if (event.data.success == 1) {
+            //                     //         Navigator.pushNamed(
+            //                     //           context,
+            //                     //           OrderPage.routeName,
+            //                     //           // (route) => false,
+            //                     //           arguments: OrderPageArguments(
+            //                     //             orderDetail: provider.orderDetail!,
+            //                     //             customerDetailModel:
+            //                     //                 provider.customerDetailModel!,
+            //                     //           ),
+            //                     //         );
+            //                     //       } else if (event.data.message == 5) {
+            //                     //         // Navigator.of(context).pop();
+            //                     //         showDialog(
+            //                     //           context: context,
+            //                     //           builder: (context) => CommonDialog(
+            //                     //             title: appLoc.sorry,
+            //                     //             msg: appLoc.orderacceptedotherdriver,
+            //                     //             onTap: () {
+            //                     //               Navigator.of(context).pop();
+            //                     //             },
+            //                     //           ),
+            //                     //         );
+            //                     //       } else if (event.data.message == 6) {
+            //                     //         // Navigator.of(context).pop();
+            //                     //         showDialog(
+            //                     //           context: context,
+            //                     //           builder: (context) => CommonDialog(
+            //                     //             title: appLoc.sorry,
+            //                     //             msg: appLoc.ordernotfound,
+            //                     //             onTap: () {
+            //                     //               Navigator.of(context).pop();
+            //                     //             },
+            //                     //           ),
+            //                     //         );
+            //                     //       } else if (event.data.message == 7) {
+            //                     //         // Navigator.of(context).pop();
+            //                     //         showDialog(
+            //                     //           context: context,
+            //                     //           builder: (context) => CommonDialog(
+            //                     //             title: appLoc.sorry,
+            //                     //             msg: appLoc.orderhascancelled,
+            //                     //             onTap: () {
+            //                     //               Navigator.of(context).pop();
+            //                     //             },
+            //                     //           ),
+            //                     //         );
+            //                     //       }
+            //                     //     }
+            //                     //   },
+            //                     // );
+            //                   }
+            //                 },
+            //               )
+            //             : const SizedBox();
+            //       }
+            //     },
+            //   );
+            // }
             return ListView(
               children: <Widget>[
                 Container(

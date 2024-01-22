@@ -17,7 +17,6 @@ import 'package:appkey_taxiapp_driver/core/domain/usecases/get_total_price.dart'
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/place_picker_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/data/datasources/aboutus_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/data/repositories/aboutus_repository_implementation.dart';
@@ -51,7 +50,6 @@ import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_order_d
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_request_list.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_status_order.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/usecases/update_status_order.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/data/datasources/profile_data_source.dart';
 import 'package:appkey_taxiapp_driver/features/profile/data/repositories/profile_repository_implementation.dart';
 import 'package:appkey_taxiapp_driver/features/profile/domain/usecases/get_profile.dart';
@@ -91,6 +89,7 @@ import '../../features/login/domain/repositories/login_repository.dart';
 import '../../features/login/presentation/providers/login_provider.dart';
 import '../../features/order/domain/repositories/order_repository.dart';
 import '../../features/order/domain/usecases/change_status.dart';
+import '../../features/order/presentation/providers/new_order_provider.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../data/datasources/currency_datasource.dart';
 import '../data/datasources/place_text_search_datasource.dart';
@@ -114,15 +113,20 @@ final locator = GetIt.instance;
 
 Future<void> init() async {
   //network info
-  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImplementation(locator<Connectivity>()));
+  locator.registerLazySingleton<NetworkInfo>(
+      () => NetworkInfoImplementation(locator<Connectivity>()));
 
   //external
   locator.registerLazySingleton<Dio>(() => DioClient().dio);
-  locator.registerLazySingletonAsync<Session>(() async => SessionHelper(pref: await locator.getAsync<SharedPreferences>()));
-  locator.registerLazySingletonAsync<SharedPreferences>(() async => await SharedPreferences.getInstance());
-  locator.registerLazySingleton<GlobalKey<NavigatorState>>(() => GlobalKey<NavigatorState>());
+  locator.registerLazySingletonAsync<Session>(() async =>
+      SessionHelper(pref: await locator.getAsync<SharedPreferences>()));
+  locator.registerLazySingletonAsync<SharedPreferences>(
+      () async => await SharedPreferences.getInstance());
+  locator.registerLazySingleton<GlobalKey<NavigatorState>>(
+      () => GlobalKey<NavigatorState>());
   locator.registerLazySingleton<Connectivity>(() => Connectivity());
-  locator.registerLazySingleton<GlobalKey<ScaffoldState>>(() => GlobalKey<ScaffoldState>());
+  locator.registerLazySingleton<GlobalKey<ScaffoldState>>(
+      () => GlobalKey<ScaffoldState>());
 
   //repository
   locator.registerLazySingleton<CurrencyRepository>(
@@ -319,12 +323,13 @@ Future<void> init() async {
   );
   locator.registerFactory(
     () => OrderProvider(
-        updateStatusOrder: locator<UpdateStatusOrder>(),
-        getDriverDetail: locator<GetDriverDetail>(),
-        getDriverLocation: locator<GetDriverLocation>(),
-        doUpdateLocation: locator<DoUpdateLocation>(),
-        getOrderDetail: locator<GetOrderDetail>(),
-        getStatusOrder: locator<GetStatusOrder>()),
+        // updateStatusOrder: locator<UpdateStatusOrder>(),
+        // getDriverDetail: locator<GetDriverDetail>(),
+        // getDriverLocation: locator<GetDriverLocation>(),
+        // doUpdateLocation: locator<DoUpdateLocation>(),
+        // getOrderDetail: locator<GetOrderDetail>(),
+        // getStatusOrder: locator<GetStatusOrder>()
+        ),
   );
   locator.registerFactory<PlacePickerProvider>(
       () => PlacePickerProvider(getGooglePlace: locator<GetGooglePlace>()));

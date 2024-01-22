@@ -1,15 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+import 'package:appkey_taxiapp_driver/core/data/models/socket_response_model/cancel_by_user_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/chat/data/model/chat_model.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
+import '../../../features/order/presentation/providers/new_order_provider.dart';
 import '../../data/models/booking_data_model.dart';
+import '../../data/models/socket_response_model/accept_by_other_driver_model.dart';
 
 class LatestSocketProvider extends ChangeNotifier {
   static final LatestSocketProvider _provider = LatestSocketProvider.internal();
@@ -25,10 +30,27 @@ class LatestSocketProvider extends ChangeNotifier {
   final chatController = TextEditingController();
 
   List<ChatModel> _chatMessagesList = [];
+  int currentOrderStatus = 0;
+  String rideText = "Start Ride to Pickup Location";
+
+  CustomerDataModel? customerDataModel;
+  OrderDetail? orderDetail;
+
+  updateCurrentStatus({required int status}) {
+    currentOrderStatus = status;
+    notifyListeners();
+  }
+
+  updateRideText({required String txt}) {
+    rideText = txt;
+    notifyListeners();
+  }
 
   int unreadMessageCount = 0;
   bool isLoading = true;
   BookingDataModel? bookingDataModel;
+  CancelByUserModel? cancelByUserModel;
+  AcceptByOtherDriverModel? acceptByOtherDriverModel;
 
   List<ChatModel> get chatMessageList => _chatMessagesList;
 
@@ -44,6 +66,30 @@ class LatestSocketProvider extends ChangeNotifier {
     notifyListeners();
 
     log("unrad count :-->> $unreadCount");
+  }
+
+  //UPDATE CUSTOMER DATA MODEL
+
+  updateCustomerData({required CustomerDataModel data}) {
+    customerDataModel = data;
+    notifyListeners();
+  }
+
+  //UPDATE ORDER DATA MODEL
+
+  updateOrderData({required OrderDetail data}) {
+    orderDetail = data;
+    notifyListeners();
+  }
+
+// REMOVE ORDER FROM BOOKING LIST
+  removeOrderFromList({required orderId}) {
+    print(
+        "********** ------>>>>>>> REMOVE ORDER FROM LIST CALLED <<<<<<<<<<------ ***********");
+    bookingList.removeWhere((element) {
+      return element.id == orderId;
+    });
+    notifyListeners();
   }
 
   //
@@ -99,6 +145,8 @@ class LatestSocketProvider extends ChangeNotifier {
           : '${session.userId}-$receiverId',
     };
     logMe('Join Exit room socket -- > ${map.toString()}');
+    print('Join Exit room socket -- > ${map.toString()}');
+
     _socket!.send(
       jsonEncode(map),
     );
@@ -119,6 +167,30 @@ class LatestSocketProvider extends ChangeNotifier {
         bookingDataModel = BookingDataModel.fromJson(response);
         bookingList.add(bookingDataModel!.data);
         notifyListeners();
+      }
+
+      // <------------------ Cancel BY Customer --------->>>>>
+      if (response['type'] == 'CancelByUser') {
+        cancelByUserModel = CancelByUserModel.fromJson(response);
+
+        bookingList.removeWhere((element) {
+          return element.id == cancelByUserModel!.orderId;
+        });
+        notifyListeners();
+      }
+
+      // <------------------ Accept BY OTHER DRIVER --------->>>>>
+      if (response['type'] == 'AcceptByOther') {
+        acceptByOtherDriverModel = AcceptByOtherDriverModel.fromJson(response);
+        if (acceptByOtherDriverModel!.driverId != session.userId) {
+          bookingList.removeWhere((element) {
+            return element.id == cancelByUserModel!.orderId;
+          });
+          notifyListeners();
+        } else if (acceptByOtherDriverModel!.driverId == session.userId) {
+          log("driver is mine ");
+          print("driver is mine ");
+        }
       }
 
       // <----------- Checking When request come ---------> //
@@ -265,25 +337,25 @@ class LatestSocketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  rejectRequestSocket() {
-    final map = {
-      'serviceType': 'RejectRequest',
-      'driverID': session.userId,
-    };
-    logMe('reject request socket -- > ${map.toString()}');
-    _socket!.send(
-      jsonEncode(map),
-    );
-  }
+  // rejectRequestSocket() {
+  //   final map = {
+  //     'serviceType': 'RejectRequest',
+  //     'driverID': session.userId,
+  //   };
+  //   logMe('reject request socket -- > ${map.toString()}');
+  //   _socket!.send(
+  //     jsonEncode(map),
+  //   );
+  // }
 
-  acceptRequestSocket() {
-    final map = {
-      'serviceType': 'AcceptRequest',
-      'driverID': session.userId,
-    };
-    logMe('reject request socket -- > ${map.toString()}');
-    _socket!.send(jsonEncode(map));
-  }
+  // acceptRequestSocket() {
+  //   final map = {
+  //     'serviceType': 'AcceptRequest',
+  //     'driverID': session.userId,
+  //   };
+  //   logMe('reject request socket -- > ${map.toString()}');
+  //   _socket!.send(jsonEncode(map));
+  // }
 
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
@@ -292,6 +364,8 @@ class LatestSocketProvider extends ChangeNotifier {
 
     print(
         "current latlong:${currentLatLng.latitude},${currentLatLng.longitude}");
+    session.setCurrentLat = currentLatLng.latitude;
+    session.setCurrentLang = currentLatLng.longitude;
 
     final map = {
       'serviceType': 'UpdatedLatLong',
@@ -308,24 +382,87 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   /// ----------------- *********************      ACCEPT THE RIDE **************** --------------------
-  acceptRideRequest({required orderId}) {
-    final map = {
-      'serviceType': 'Accept',
-      'UserID': session.userId,
-      'orderID': orderId
-    };
-    logMe('accept ride request socket -- > ${map.toString()}');
-    _socket!.send(jsonEncode(map));
+  Future<bool> acceptRideRequest({required orderId}) async {
+    var orderProvider = locator<OrderProvider>();
+    try {
+      final map = {
+        'serviceType': 'Accept',
+        'UserID': session.userId,
+        'orderID': orderId
+      };
+      logMe('accept ride request socket -- > ${map.toString()}');
+      _socket!.send(jsonEncode(map));
+      orderProvider.setNewChangeOrderStatus = "1";
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// -------------******************      REJECT THE RIDE     ************------------------------
-  rejectRideRequest({required orderId}) {
-    final map = {
-      'serviceType': 'Reject',
-      'UserID': session.userId,
-      'orderID': orderId
-    };
-    logMe('reject ride request socket -- > ${map.toString()}');
-    _socket!.send(jsonEncode(map));
+  Future<bool> rejectRideRequest({required orderId}) async {
+    try {
+      final map = {
+        'serviceType': 'Reject',
+        'UserID': session.userId,
+        'orderID': orderId
+      };
+      logMe('reject ride request socket -- > ${map.toString()}');
+      _socket!.send(jsonEncode(map));
+
+      bookingList.removeWhere((element) {
+        return element.id == orderId;
+      });
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// ----------- ****************  UPDATE ORDER RIDE STATUS ********* -------------
+  Future<bool> updateOrderStatus(
+      {required String status, required String actualTime}) async {
+    var orderProvider = locator<OrderProvider>();
+    try {
+      final map = {
+        'serviceType': 'ChangeStatus',
+        'orderID': session.orderId,
+        'Status': status,
+        'actualTime': actualTime
+      };
+      logMe('Update Status -- > ${map.toString()}');
+      _socket!.send(jsonEncode(map));
+
+      if (status == "2") {
+        currentOrderStatus = 2;
+        rideText = "Reached Pick up Location";
+        orderProvider.setNewChangeOrderStatus = "2";
+      } else if (status == '3') {
+        currentOrderStatus = 3;
+        orderProvider.setNewChangeOrderStatus = "3";
+
+        rideText = "Start Trip";
+      } else if (status == '5') {
+        currentOrderStatus = 5;
+        orderProvider.setNewChangeOrderStatus = "5";
+
+        rideText = "End Trip";
+      } else if (status == "7") {
+        currentOrderStatus = 7;
+        orderProvider.setNewChangeOrderStatus = "7";
+
+        rideText = "Start Ride to Pick up Location";
+      } else {
+        log("Ride canceled by the driver");
+      }
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

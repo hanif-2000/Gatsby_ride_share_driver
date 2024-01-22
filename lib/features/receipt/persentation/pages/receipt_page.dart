@@ -19,8 +19,6 @@ import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
 import 'package:provider/provider.dart';
 
-import '../../../order/presentation/pages/order_page.dart';
-import '../../../rating/presentation/page/give_rating_screen.dart';
 import 'detailed_payment_screen.dart';
 
 class ReceiptPage extends StatelessWidget {
@@ -641,21 +639,21 @@ class ReceiptPage extends StatelessWidget {
                                                                 .statusCode ==
                                                             200) {
                                                           dismissLoading();
-                                                          Navigator
-                                                              .pushNamedAndRemoveUntil(
-                                                            context,
-                                                            GiveRatingScreen
-                                                                .routeName,
-                                                            (route) => false,
-                                                            arguments:
-                                                                RatingPageArguments(
-                                                              customerDataModel:
-                                                                  customerDataModel,
-                                                              customerId:
-                                                                  customerId,
-                                                            ),
-                                                          );
                                                           // Navigator
+                                                          //     .pushNamedAndRemoveUntil(
+                                                          //   context,
+                                                          //   GiveRatingScreen
+                                                          //       .routeName,
+                                                          //   (route) => false,
+                                                          //   arguments:
+                                                          //       RatingPageArguments(
+                                                          //     customerDataModel:
+                                                          //         customerDataModel,
+                                                          //     customerId:
+                                                          //         customerId,
+                                                          //   ),
+                                                          // );
+                                                          // // Navigator
                                                           //     .pushNamedAndRemoveUntil(
                                                           //         context,
                                                           //         HomePage
@@ -745,20 +743,20 @@ class ReceiptPage extends StatelessWidget {
                                                         if (response
                                                                 .statusCode ==
                                                             200) {
-                                                          Navigator
-                                                              .pushNamedAndRemoveUntil(
-                                                            context,
-                                                            GiveRatingScreen
-                                                                .routeName,
-                                                            (route) => false,
-                                                            arguments:
-                                                                RatingPageArguments(
-                                                              customerDataModel:
-                                                                  customerDataModel,
-                                                              customerId:
-                                                                  customerId,
-                                                            ),
-                                                          );
+                                                          // Navigator
+                                                          //     .pushNamedAndRemoveUntil(
+                                                          //   context,
+                                                          //   GiveRatingScreen
+                                                          //       .routeName,
+                                                          //   (route) => false,
+                                                          //   arguments:
+                                                          //       RatingPageArguments(
+                                                          //     customerDataModel:
+                                                          //         customerDataModel,
+                                                          //     customerId:
+                                                          //         customerId,
+                                                          //   ),
+                                                          // );
                                                           // Navigator
                                                           //     .pushNamedAndRemoveUntil(
                                                           //         context,
@@ -783,20 +781,20 @@ class ReceiptPage extends StatelessWidget {
                                                         log(e.toString());
                                                       }
 
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        GiveRatingScreen
-                                                            .routeName,
-                                                        (route) => false,
-                                                        arguments:
-                                                            RatingPageArguments(
-                                                          customerDataModel:
-                                                              customerDataModel,
-                                                          customerId:
-                                                              customerId,
-                                                        ),
-                                                      );
+                                                      // Navigator
+                                                      //     .pushNamedAndRemoveUntil(
+                                                      //   context,
+                                                      //   GiveRatingScreen
+                                                      //       .routeName,
+                                                      //   (route) => false,
+                                                      //   arguments:
+                                                      //       RatingPageArguments(
+                                                      //     customerDataModel:
+                                                      //         customerDataModel,
+                                                      //     customerId:
+                                                      //         customerId,
+                                                      //   ),
+                                                      // );
 
                                                       // provider
                                                       //     .paymentConfirmation(

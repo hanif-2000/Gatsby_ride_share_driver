@@ -3,7 +3,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_
 import 'package:appkey_taxiapp_driver/core/presentation/providers/splash_provider.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/providers/aboutus_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/order_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_email_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_password_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
@@ -21,6 +20,7 @@ import 'core/utility/firebase_helper.dart';
 import 'core/utility/helper.dart';
 import 'core/utility/injection.dart';
 import 'core/utility/session_helper.dart';
+import 'features/order/presentation/providers/new_order_provider.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

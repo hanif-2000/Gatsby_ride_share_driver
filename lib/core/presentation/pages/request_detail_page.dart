@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:appkey_taxiapp_driver/core/data/models/request_list_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
@@ -17,7 +16,6 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
@@ -28,9 +26,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/models/booking_data_model.dart';
+
 class RequestDetailPage extends StatefulWidget {
   const RequestDetailPage({Key? key, this.requestListModel}) : super(key: key);
-  final RequestListModel? requestListModel;
+  final Booking? requestListModel;
 
   @override
   State<RequestDetailPage> createState() => _RequestDetailPageState();
@@ -296,7 +296,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                           },
                                           child: CustomCacheNetworkImage(
                                               img: widget
-                                                  .requestListModel!.image!,
+                                                  .requestListModel!.image,
                                               size: 50),
 
                                           //  Container(
@@ -319,7 +319,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${widget.requestListModel!.firstName} ${widget.requestListModel!.lastName}',
+                                              // '${widget.requestListModel!.firstName} ${widget.requestListModel!.lastName}',
+                                              widget.requestListModel!.name,
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -343,7 +344,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                       'assets/icons/home/ic_start.svg'),
                                                   smallHorizontalSpacing(),
                                                   Text(
-                                                    '${widget.requestListModel!.rating}',
+                                                    '${widget.requestListModel!.customerRating}',
                                                     textAlign: TextAlign.center,
                                                     style: titleStyle
                                                         .copyWith(
@@ -374,7 +375,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                         Column(
                                           children: [
                                             Text(
-                                              '\$${widget.requestListModel!.newTotal.toStringAsFixed(2)}',
+                                              '\$${widget.requestListModel!.newTotal}',
 
                                               // '\$${widget.requestListModel!.total.toStringAsFixed(2)}',
                                               textAlign: TextAlign.center,
@@ -432,8 +433,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                           var socketProvider =
                                                               locator<
                                                                   LatestSocketProvider>();
-                                                          socketProvider
-                                                              .rejectRequestSocket();
+                                                          // socketProvider
+                                                          //     .rejectRequestSocket();
                                                           Navigator.pop(
                                                               context);
                                                           Navigator.pop(
@@ -465,6 +466,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                               style: txtButtonStyle,
                                             ),
                                             event: () async {
+                                              log("on click on accept ride request from request list details page-------->>>>>");
+                                              print(
+                                                  "on click on accept ride request-------->>>>>");
+
                                               final session =
                                                   locator<Session>();
 
@@ -544,24 +549,23 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                                     var socketProvider =
                                                                         locator<
                                                                             LatestSocketProvider>();
-                                                                    socketProvider
-                                                                        .acceptRequestSocket();
-                                                                    Navigator
-                                                                        .pushNamedAndRemoveUntil(
-                                                                      context,
-                                                                      OrderPage
-                                                                          .routeName,
-                                                                      (route) =>
-                                                                          false,
-                                                                      arguments: OrderPageArguments(
-                                                                          orderDetail: homeProvider
-                                                                              .orderDetail!,
-                                                                          customerDetailModel: homeProvider
-                                                                              .customerDetailModel!,
-                                                                          orderStatus: event1
-                                                                              .data
-                                                                              .orderStatus),
-                                                                    );
+                                                                    // socketProvider
+                                                                    //     .acceptRequestSocket();
+                                                                    // Navigator
+                                                                    //     .pushNamedAndRemoveUntil(
+                                                                    //   context,
+                                                                    //   NewOrderPage
+                                                                    //       .routeName,
+                                                                    //   (route) =>
+                                                                    //       false,
+                                                                    //   arguments: NewOrderPageArguments(
+                                                                    //       orderDetail: homeProvider
+                                                                    //           .orderDetail!,
+                                                                    //       customerDetailModel: ,
+                                                                    //       orderStatus: event1
+                                                                    //           .data
+                                                                    //           .orderStatus),
+                                                                    // );
                                                                   } else if (event
                                                                           .data
                                                                           .message ==

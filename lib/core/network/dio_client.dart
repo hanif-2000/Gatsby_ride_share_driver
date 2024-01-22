@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-
 import '../utility/app_settings.dart';
 import 'app_interceptor.dart';
 
@@ -10,7 +9,7 @@ class DioClient {
   static late Dio _dio;
   final AppInterceptor appInterceptor = AppInterceptor();
   addInterception() {
-    _dio.interceptors.addAll([appInterceptor,  LoggingInterceptors()]);
+    _dio.interceptors.addAll([appInterceptor, LoggingInterceptors()]);
   }
 
   DioClient({String base = BASE_URL}) {
@@ -23,6 +22,7 @@ class DioClient {
 
   Dio get dio => _dio;
 }
+
 class LoggingInterceptors extends Interceptor {
   String printObject(Object object) {
     // Encode your object and then decode your object to Map variable
@@ -35,11 +35,12 @@ class LoggingInterceptors extends Interceptor {
     String prettyPrint = encoder.convert(jsonMapped);
     return prettyPrint;
   }
+
   String hitUrl = "";
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    hitUrl = "${options.path}";
+    hitUrl = options.path;
     // "${options.method.toUpperCase()} ${"" + (options.baseUrl) + (options.path)}";
     print(" API URL ✈️✈️✈️✈ ️--> $hitUrl");
     options.headers.forEach((k, v) => print('$k: $v'));
@@ -65,10 +66,10 @@ class LoggingInterceptors extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     print(
-        "<-- ${err.message} ${(err.response?.requestOptions != null ?
-        (err.response!.requestOptions.baseUrl + err.response!.requestOptions.path) : 'URL')}" 'DioException');
-    print(
-      "${err.response != null ? err.response!.data : 'Unknown Error'}" 'DioException');
+        "<-- ${err.message} ${(err.response?.requestOptions != null ? (err.response!.requestOptions.baseUrl + err.response!.requestOptions.path) : 'URL')}"
+        'DioException');
+    print("${err.response != null ? err.response!.data : 'Unknown Error'}"
+        'DioException');
 
     return super.onError(err, handler);
   }

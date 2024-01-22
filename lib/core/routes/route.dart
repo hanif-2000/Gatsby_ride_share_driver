@@ -1,6 +1,7 @@
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
+import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
@@ -11,7 +12,6 @@ import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/page
 import 'package:appkey_taxiapp_driver/features/history/presentation/pages/detail_history_page.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/pages/history_page.dart';
 import 'package:appkey_taxiapp_driver/features/login/presentation/pages/login_page.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/pages/order_page.dart';
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/page/order_detail_page.dart';
 import 'package:appkey_taxiapp_driver/features/privacy_policy/page/privacy_policy_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_email_page.dart';
@@ -115,10 +115,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           item: args,
         ),
       );
-    case OrderPage.routeName:
-      final args = settings.arguments as OrderPageArguments;
+    case NewOrderPage.routeName:
+      final args = settings.arguments as NewOrderPageArguments;
       return MaterialPageRoute(
-        builder: (_) => OrderPage(
+        builder: (_) => NewOrderPage(
           orderDetail: args.orderDetail,
           customerDetail: args.customerDetailModel,
           orderStatus: args.orderStatus,
