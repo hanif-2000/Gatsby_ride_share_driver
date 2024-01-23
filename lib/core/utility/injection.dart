@@ -89,7 +89,6 @@ import '../../features/login/domain/repositories/login_repository.dart';
 import '../../features/login/presentation/providers/login_provider.dart';
 import '../../features/order/domain/repositories/order_repository.dart';
 import '../../features/order/domain/usecases/change_status.dart';
-import '../../features/order/presentation/providers/new_order_provider.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../data/datasources/currency_datasource.dart';
 import '../data/datasources/place_text_search_datasource.dart';
@@ -321,16 +320,16 @@ Future<void> init() async {
       getProfile: locator<GetProfile>(),
     ),
   );
-  locator.registerFactory(
-    () => OrderProvider(
-        // updateStatusOrder: locator<UpdateStatusOrder>(),
-        // getDriverDetail: locator<GetDriverDetail>(),
-        // getDriverLocation: locator<GetDriverLocation>(),
-        // doUpdateLocation: locator<DoUpdateLocation>(),
-        // getOrderDetail: locator<GetOrderDetail>(),
-        // getStatusOrder: locator<GetStatusOrder>()
-        ),
-  );
+  // locator.registerFactory(
+  //   () => OrderProvider(
+  //       // updateStatusOrder: locator<UpdateStatusOrder>(),
+  //       // getDriverDetail: locator<GetDriverDetail>(),
+  //       // getDriverLocation: locator<GetDriverLocation>(),
+  //       // doUpdateLocation: locator<DoUpdateLocation>(),
+  //       // getOrderDetail: locator<GetOrderDetail>(),
+  //       // getStatusOrder: locator<GetStatusOrder>()
+  //       ),
+  // );
   locator.registerFactory<PlacePickerProvider>(
       () => PlacePickerProvider(getGooglePlace: locator<GetGooglePlace>()));
   locator

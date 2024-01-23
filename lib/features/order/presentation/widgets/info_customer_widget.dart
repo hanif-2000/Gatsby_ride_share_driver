@@ -1,3 +1,4 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import '../../../../core/presentation/widgets/rounded_upper_container.dart';
 import '../../../../core/static/colors.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/helper.dart';
-import '../providers/new_order_provider.dart';
 
 class CustomerInfoWidget extends StatelessWidget {
   const CustomerInfoWidget({
@@ -15,7 +15,7 @@ class CustomerInfoWidget extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(builder: (context, provider, _) {
+    return Consumer<LatestSocketProvider>(builder: (context, provider, _) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

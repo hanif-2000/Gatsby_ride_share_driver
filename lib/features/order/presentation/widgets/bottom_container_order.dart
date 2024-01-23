@@ -1,8 +1,8 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/presentation/widgets/button_order.dart';
-import '../providers/new_order_provider.dart';
 
 class BottomContainerOrder extends StatelessWidget {
   int newMessgeCount;
@@ -16,7 +16,7 @@ class BottomContainerOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(
+    return Consumer<LatestSocketProvider>(
       builder: (context, provider, _) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.end,

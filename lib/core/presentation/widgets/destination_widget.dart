@@ -1,9 +1,8 @@
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
-import '../../../features/order/presentation/providers/new_order_provider.dart';
 
 class DestinationWidget extends StatelessWidget {
   final double deviceWidth;
@@ -17,7 +16,7 @@ class DestinationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(builder: (context, map, _) {
+    return Consumer<LatestSocketProvider>(builder: (context, map, _) {
       // if (map.originAddress == '') {
       //   return const SizedBox();
       // } else {

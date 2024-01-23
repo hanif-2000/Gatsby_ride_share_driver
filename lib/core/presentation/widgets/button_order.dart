@@ -11,7 +11,6 @@ import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../features/order/presentation/providers/new_order_provider.dart';
 import '../../static/styles.dart';
 import '../../utility/injection.dart';
 import '../pages/home_page/home_page.dart';
@@ -42,8 +41,8 @@ class ButtonOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     final session = locator<Session>();
-    return Consumer3(
-      builder: (context, OrderProvider provider, HomeProvider homeProvider,
+    return Consumer2(
+      builder: (context, HomeProvider homeProvider,
           LatestSocketProvider socketProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
@@ -215,7 +214,7 @@ class ButtonOrder extends StatelessWidget {
                                 //         : session.currentOrderState == 3
                                 //             ?
 
-                                provider.callCustomer();
+                                socketProvider.callCustomer();
                                 // : () {};
 
                                 // provider.callCustomer();
@@ -337,16 +336,16 @@ class ButtonOrder extends StatelessWidget {
                   event: () {
                     if (socketProvider.currentOrderStatus == 0) {
                       socketProvider.updateOrderStatus(
-                          status: "2", actualTime: "0");
+                          status: "2", actualTime: "0", context: context);
                     } else if (socketProvider.currentOrderStatus == 2) {
                       socketProvider.updateOrderStatus(
-                          status: "3", actualTime: "0");
+                          status: "3", actualTime: "0", context: context);
                     } else if (socketProvider.currentOrderStatus == 3) {
                       socketProvider.updateOrderStatus(
-                          status: "5", actualTime: "0");
+                          status: "5", actualTime: "0", context: context);
                     } else if (socketProvider.currentOrderStatus == 5) {
                       socketProvider.updateOrderStatus(
-                          status: "7", actualTime: "0");
+                          status: "7", actualTime: "0", context: context);
                     } else {}
 
                     // provider.submitStatusOrder(false).listen(
@@ -425,7 +424,10 @@ class ButtonOrder extends StatelessWidget {
                             showLoading();
 
                             socketProvider
-                                .updateOrderStatus(status: "8", actualTime: "0")
+                                .updateOrderStatus(
+                                    status: "8",
+                                    actualTime: "0",
+                                    context: context)
                                 .then((value) {
                               dismissLoading();
                               if (value) {

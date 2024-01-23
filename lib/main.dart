@@ -20,7 +20,6 @@ import 'core/utility/firebase_helper.dart';
 import 'core/utility/helper.dart';
 import 'core/utility/injection.dart';
 import 'core/utility/session_helper.dart';
-import 'features/order/presentation/providers/new_order_provider.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -49,9 +48,9 @@ Future<void> main() async {
             ChangeNotifierProvider<HomeProvider>(
               create: (context) => locator<HomeProvider>(),
             ),
-            ChangeNotifierProvider<OrderProvider>(
-              create: (context) => locator<OrderProvider>(),
-            ),
+            // ChangeNotifierProvider<OrderProvider>(
+            //   create: (context) => locator<OrderProvider>(),
+            // ),
             ChangeNotifierProvider<PlacePickerProvider>(
               create: (context) => locator<PlacePickerProvider>(),
             ),
