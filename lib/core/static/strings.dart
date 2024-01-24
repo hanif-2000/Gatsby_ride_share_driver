@@ -17,6 +17,9 @@ const String FCM_OLD_TOKEN = 'fcm_old_token';
 const String ORDER_STATUS = 'order_status';
 const String DRIVER_ID = 'driver_id';
 const String SESSION_STATUS_ORDER = 'sessionStatusOrder';
+const String SESSION_ORDER_DETAILS = 'sessionOrderDetails';
+const String SESSION_CUSTOMER_DETAILS = 'sessionCustomerDetails';
+
 const String SESSION_CATEGORY_ID = 'sessionCategoryId';
 const String ESTIMATED_DISTANCE = 'estimated_distance';
 const String ESTIMATED_TIME = 'estimated_time';

@@ -11,6 +11,8 @@ import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../features/order/presentation/pages/new_order_page.dart';
+import '../../../features/receipt/persentation/pages/new_receipt_page.dart';
 import '../../static/styles.dart';
 import '../../utility/injection.dart';
 import '../pages/home_page/home_page.dart';
@@ -26,13 +28,15 @@ class ChatDetail {
 class ButtonOrder extends StatelessWidget {
   int newMessgeCount;
   int currentOrderStatus;
+  // dynamic orderTotal;
   ButtonOrder(
       {Key? key,
       required this.newMessgeCount,
+      // required this.orderTotal,
       required this.currentOrderStatus})
       : super(key: key);
 
-  LatestSocketProvider socketProvider = locator<LatestSocketProvider>();
+  // LatestSocketProvider socketProvider = locator<LatestSocketProvider>();
   Session session = locator<Session>();
 
   var dio = Dio();
@@ -42,20 +46,14 @@ class ButtonOrder extends StatelessWidget {
     var deviceSize = MediaQuery.of(context).size;
     final session = locator<Session>();
     return Consumer2(
-      builder: (context, HomeProvider homeProvider,
-          LatestSocketProvider socketProvider, _) {
+      builder: (context, LatestSocketProvider socketProvider,
+          HomeProvider homeProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
-
-        // if (currentOrderStatus == 1) {
-        //   provider.changeOrderStatus = OrderStatus.departureToCustomerplace;
-        // } else if (currentOrderStatus == 2) {
-        //   provider.changeOrderStatus = OrderStatus.arriveAtCustomerPlace;
-        // } else if (currentOrderStatus == 3) {
-        //   provider.changeOrderStatus = OrderStatus.departureToDestination;
-        // } else if (currentOrderStatus == 5) {
-        //   provider.changeOrderStatus = OrderStatus.complete;
-        // }
+        print(
+            "Order total is:***********-------->>>>>> ${socketProvider.orderDetail!.newTotal}");
+        print(
+            "Order total is:***********-------->>>>>> ${homeProvider.orderDetail!.newTotal}");
 
         log("session order status is:-->>${session.currentOrderState}");
         log("is order runnig : ${session.isOrderRunning}");
@@ -184,8 +182,8 @@ class ButtonOrder extends StatelessWidget {
 
               /**   SHOW CUSTOMER PROFILE TILE SECTION */
               UserProfileTile(
-                customerDataModel: homeProvider.customerDetailModel,
-                orderDetails: homeProvider.orderDetail,
+                customerDataModel: socketProvider.customerDataModel,
+                orderDetails: socketProvider.orderDetail,
               ),
               mediumVerticalSpacing(),
 
@@ -334,18 +332,85 @@ class ButtonOrder extends StatelessWidget {
                     style: txtButtonStyle,
                   ),
                   event: () {
+                    showLoading();
+                    print(
+                        "**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
                     if (socketProvider.currentOrderStatus == 0) {
+                      /** start ride to customer place */
                       socketProvider.updateOrderStatus(
-                          status: "2", actualTime: "0", context: context);
+                        status: "2",
+                        actualTime: "0",
+                        context: context,
+                        startTime: '',
+                        endTime: '',
+                      );
                     } else if (socketProvider.currentOrderStatus == 2) {
+                      /** reached customer place */
+
                       socketProvider.updateOrderStatus(
-                          status: "3", actualTime: "0", context: context);
+                        status: "3",
+                        actualTime: "0",
+                        context: context,
+                        startTime: '',
+                        endTime: '',
+                      );
                     } else if (socketProvider.currentOrderStatus == 3) {
+                      /** START TRIP */
+
+                      session.setStartTime = DateTime.now().toString();
                       socketProvider.updateOrderStatus(
-                          status: "5", actualTime: "0", context: context);
+                        status: "5",
+                        actualTime: "0",
+                        context: context,
+                        startTime: DateTime.now().toString(),
+                        endTime: '',
+                      );
                     } else if (socketProvider.currentOrderStatus == 5) {
-                      socketProvider.updateOrderStatus(
-                          status: "7", actualTime: "0", context: context);
+                      showLoading();
+                      /** END TRIP */
+
+                      log("ride complete end time is:--->>>>${DateTime.now()}");
+                      socketProvider
+                          .calculateTimeAndDistanceWhenRideCompeleted()
+                          .then((value) => socketProvider
+                                  .calculateDistanceCovered(context: context)
+                                  .then((value) {
+                                socketProvider
+                                    .updateOrderStatus(
+                                  status: "7",
+                                  actualTime: session.estimatedTime,
+                                  context: context,
+                                  startTime: session.rideStartTime,
+                                  endTime: DateTime.now().toString(),
+                                )
+                                    .then((value) {
+                                  dismissLoading();
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    ReceiptPage.routeName,
+                                    (route) => false,
+                                    arguments: RatingPageArguments(
+                                      customerDataModel:
+                                          socketProvider.customerDetail!,
+                                      customerId:
+                                          socketProvider.orderDetail!.userId,
+                                    ),
+                                  );
+                                });
+                              }));
+
+                      // socketProvider.calculateDistanceCovered(context: context);
+
+                      // dismissLoading();
+                      // Navigator.pushNamedAndRemoveUntil(
+                      //   context,
+                      //   ReceiptPage.routeName,
+                      //   (route) => false,
+                      //   arguments: RatingPageArguments(
+                      //     customerDataModel: socketProvider.customerDetail!,
+                      //     customerId: socketProvider.orderDetail!.userId,
+                      //   ),
+                      // );
                     } else {}
 
                     // provider.submitStatusOrder(false).listen(
@@ -427,6 +492,8 @@ class ButtonOrder extends StatelessWidget {
                                 .updateOrderStatus(
                                     status: "8",
                                     actualTime: "0",
+                                    endTime: '',
+                                    startTime: '',
                                     context: context)
                                 .then((value) {
                               dismissLoading();

@@ -5,14 +5,10 @@ import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
-import '../presentation/pages/home_page/home_page.dart';
-import '../presentation/providers/home_provider.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
-import 'package:provider/provider.dart';
 
 class FirebaseHelper {
   static late FirebaseMessaging messaging;
@@ -46,6 +42,8 @@ class FirebaseHelper {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("on message listen called");
+      print("on message listen called");
+
       log("remote message is------->>>>>. $message");
       fetchRemoteMessage(message);
       NotificationHelper notificationService = NotificationHelper();
@@ -57,7 +55,7 @@ class FirebaseHelper {
     // Booking Cancelled//
     //New Order
 
-    log("notification titilew is---->> ${message.notification!.title}");
+    print("notification titilew is---->> $message");
     log("notification category :${message.category}");
     log("notification collapseKey :${message.collapseKey}");
     log("notification contentAvailable :${message.contentAvailable}");
@@ -76,28 +74,28 @@ class FirebaseHelper {
 
     log("remote message called");
 
-    if (message.notification!.title == 'New Booking' ||
-        message.notification!.title == 'Booking Cancelled') {
-      var homeProvider = Provider.of<HomeProvider>(
-          locator<GlobalKey<NavigatorState>>().currentContext!,
-          listen: false);
-      // final GlobalKey<ScaffoldState> key = GlobalKey();
+    // if (message.notification!.title == 'New Booking' ||
+    //     message.notification!.title == 'Booking Cancelled') {
+    // var homeProvider = Provider.of<HomeProvider>(
+    //     locator<GlobalKey<NavigatorState>>().currentContext!,
+    //     listen: false);
+    // final GlobalKey<ScaffoldState> key = GlobalKey();
 
-      Session session = locator<Session>();
-      if (!session.isOrderRunning) {
-        // homeProvider.getRequestListData().listen((event) {
-        //   log("event is -->> $event");
-        // if (event is RequestListLoaded) {
-        //   logMe(
-        //       'Request list data loaded success----------> ${event.data.length}');
-        Navigator.pushNamedAndRemoveUntil(
-            locator<GlobalKey<NavigatorState>>().currentContext!,
-            HomePage.routeName,
-            (route) => false);
-        // }
-        // });
-      }
-    }
+    // Session session = locator<Session>();
+    // if (!session.isOrderRunning) {
+    // homeProvider.getRequestListData().listen((event) {
+    //   log("event is -->> $event");
+    // if (event is RequestListLoaded) {
+    //   logMe(
+    //       'Request list data loaded success----------> ${event.data.length}');
+    // Navigator.pushNamedAndRemoveUntil(
+    //     locator<GlobalKey<NavigatorState>>().currentContext!,
+    //     HomePage.routeName,
+    //     (route) => false);
+    // }
+    // });
+    // }
+    // }
 
     logMe('data: ${message.data}');
     late String? title;

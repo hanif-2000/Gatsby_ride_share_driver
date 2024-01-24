@@ -75,11 +75,11 @@ class HomeProvider with ChangeNotifier {
   Timer? refreshRequestList;
 
   //check if location Changed
-  locationChanged() {
-    location.onLocationChanged;
-    location.changeSettings(
-        accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 10);
-  }
+  // locationChanged() {
+  //   location.onLocationChanged;
+  //   location.changeSettings(
+  //       accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 10);
+  // }
 
   // getter
   bool get isOnline => _isOnline;

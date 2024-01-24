@@ -129,13 +129,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                                   )
                                   .usePoppinsW5Font(),
                             ),
-                            // Text(
-                            //   'Active now',
-                            //   textAlign: TextAlign.center,
-                            //   style: titleStyle
-                            //       .copyWith(fontSize: 12, color: greyB6B6B6)
-                            //       .usePoppinsW4Font(),
-                            // ),
+                            Text(
+                              'Active now',
+                              textAlign: TextAlign.center,
+                              style: titleStyle
+                                  .copyWith(fontSize: 12, color: greyB6B6B6)
+                                  .usePoppinsW4Font(),
+                            ),
                           ],
                         ),
                       ],

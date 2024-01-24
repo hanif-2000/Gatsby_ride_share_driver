@@ -43,19 +43,23 @@ class NotificationHelper {
           );
 
   Future<void> showNotifications(RemoteMessage message) async {
+    print("show notification called :-->> ${message.data}");
+    print("show notification title :-->> ${message.data["title"]}");
+    print("show notification message :-->> ${message.data["message"]}");
+
     if (message.notification != null) {
       await flutterLocalNotificationsPlugin.show(
         0,
-        message.notification?.title,
-        message.notification?.body ?? message.data["message"],
+        message.data["title"],
+        message.data["message"],
         NotificationDetails(android: _androidNotificationDetails),
       );
     } else {
       // return;
       await flutterLocalNotificationsPlugin.show(
         0,
-        message.data['action'],
-        '',
+        message.data["title"],
+        message.data["message"],
         NotificationDetails(android: _androidNotificationDetails),
       );
     }

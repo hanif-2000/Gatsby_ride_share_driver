@@ -7,10 +7,12 @@ import '../../../../core/presentation/widgets/button_order.dart';
 class BottomContainerOrder extends StatelessWidget {
   int newMessgeCount;
   int currentOrderStatus;
+  // dynamic orderTotal;
 
   BottomContainerOrder(
       {Key? key,
       required this.newMessgeCount,
+      // required this.orderTotal,
       required this.currentOrderStatus})
       : super(key: key);
 
@@ -23,6 +25,7 @@ class BottomContainerOrder extends StatelessWidget {
           children: [
             // CustomerInfoWidget(),
             ButtonOrder(
+                // orderTotal: orderTotal,
                 newMessgeCount: newMessgeCount,
                 currentOrderStatus: currentOrderStatus),
           ],

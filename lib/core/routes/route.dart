@@ -2,7 +2,6 @@ import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/button_order.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
-import 'package:appkey_taxiapp_driver/features/receipt/persentation/pages/receipt_page.dart';
 import 'package:appkey_taxiapp_driver/features/about_us/presentation/pages/aboutus_page.dart';
 import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
@@ -26,6 +25,7 @@ import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_
 import 'package:appkey_taxiapp_driver/features/terms_and_conditions/terms_and_conditions.dart';
 import 'package:flutter/material.dart';
 import '../../features/history/data/models/history_response_model.dart';
+import '../../features/receipt/persentation/pages/new_receipt_page.dart';
 import '../presentation/pages/home_page/home_page.dart';
 import '../presentation/pages/splash_page.dart';
 
@@ -101,7 +101,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as RatingPageArguments;
       return MaterialPageRoute(
           builder: (_) => ReceiptPage(
-                customerDataModel: args.customerDataModel,
+                // customerDataModel: args.customerDataModel,
                 customerId: args.customerId!,
               ));
     case OtherUserProfile.routeName:
@@ -119,6 +119,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as NewOrderPageArguments;
       return MaterialPageRoute(
         builder: (_) => NewOrderPage(
+          orderTotal: 0,
           orderDetail: args.orderDetail,
           customerDetail: args.customerDetailModel,
           orderStatus: args.orderStatus,

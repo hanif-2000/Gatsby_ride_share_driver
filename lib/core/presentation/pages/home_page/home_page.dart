@@ -29,12 +29,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
+  var session = locator<Session>();
 
   @override
   void initState() {
     super.initState();
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    var session = locator<Session>();
+
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+
+    if (session.isOrderRunning) {
+      print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+      print(
+          "home provider customer are:==>> ${homeProvider.customerDetailModel}");
+
+      // Navigator.pushNamedAndRemoveUntil(
+      //   context,
+      //   NewOrderPage.routeName,
+      //   (route) => false,
+      //   arguments: NewOrderPageArguments(
+      //     orderDetail: homeProvider.orderDetail!,
+      //     customerDetailModel: homeProvider.customerDetailModel!,
+      //     orderStatus: session.orderStatus,
+      //   ),
+      // );
+    } else {}
 
     // homeProvider.getDriverStatus();
 

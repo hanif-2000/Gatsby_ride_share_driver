@@ -123,7 +123,7 @@ class NewRequestTile extends StatelessWidget {
 
                         // 'CA\$ ${request.newTotal.toStringAsFixed(2)}',
 
-                        'CA\$ ${request[index].total}' ?? "total",
+                        'CA\$ ${request[index].newTotal}' ?? "total",
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,

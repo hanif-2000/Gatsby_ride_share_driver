@@ -106,15 +106,23 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     orderId:
                                         socketProvider.bookingList[index].id)
                                 .then((value) {
+                              print(
+                                  "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
+                              print(
+                                  "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
                               var session = locator<Session>();
                               session.setIsOrderRunning = true;
+                              session.setEstimatedTime = socketProvider
+                                  .bookingList[index].estimatedTime;
+                              session.setEstimatedDistance =
+                                  socketProvider.bookingList[index].distance;
 
                               /*** ORDER DETAILS  */
 
                               print(
                                   "order id:-->>${socketProvider.bookingList[index].id}");
                               print(
-                                  "total order id:-->>${socketProvider.bookingList[index].total}");
+                                  "total order id:-->>${socketProvider.bookingList[index].newTotal}");
                               print(
                                   "customerId order id:-->>${socketProvider.bookingList[index].customerId}");
                               print(
@@ -150,11 +158,13 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     .bookingList[index].startAddress,
                                 endAddress: socketProvider
                                     .bookingList[index].endAddress,
-                                pendingAmount:
-                                    socketProvider.bookingList[index].total,
+                                pendingAmount: socketProvider
+                                    .bookingList[index].pendingAmount,
                                 newTotal:
-                                    socketProvider.bookingList[index].total,
+                                    socketProvider.bookingList[index].newTotal,
                               );
+
+                              //Socket
 
                               //*** CUSTOMER DETAILS */
 
@@ -172,7 +182,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
 
                               log("order details are:-->. ${homeProvider.orderDetail!}");
                               print(
-                                  "order details are:-->. ${homeProvider.orderDetail!}");
+                                  "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
 
                               log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
                               print(
@@ -183,6 +193,8 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                 NewOrderPage.routeName,
                                 (route) => false,
                                 arguments: NewOrderPageArguments(
+                                  // orderTotal: socketProvider
+                                  //     .bookingList[index].newTotal,
                                   orderDetail: homeProvider.orderDetail!,
                                   customerDetailModel:
                                       homeProvider.customerDetailModel!,

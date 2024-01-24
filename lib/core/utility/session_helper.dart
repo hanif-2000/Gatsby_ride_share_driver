@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -82,6 +84,12 @@ abstract class Session {
 
   String get driverId;
 
+  /// * GET ORDER DETAILS
+  Map get orderDetails;
+
+  /// * GET CUSTOMER DETAILS
+  Map get customerDetails;
+
   String get userId;
   double get currentLat;
   double get currentLang;
@@ -150,6 +158,22 @@ class SessionHelper implements Session {
   @override
   set setSessionCategoryId(String sessionCategoryId) {
     pref.setString(SESSION_CATEGORY_ID, sessionCategoryId);
+  }
+
+  /// * save order details--------*/
+
+  @override
+  set setOrderDetails(Map<String, dynamic> sessionOrderDetails) {
+    pref.setString(SESSION_ORDER_DETAILS, jsonEncode(sessionOrderDetails));
+  }
+
+  ///******** Save CUSTOMER DETAILS-------  */
+  ///
+
+  @override
+  set setCustomerDetails(Map<String, dynamic> sessionCustomerDetails) {
+    pref.setString(
+        SESSION_CUSTOMER_DETAILS, jsonEncode(sessionCustomerDetails));
   }
 
   @override
@@ -240,6 +264,16 @@ class SessionHelper implements Session {
   @override
   String get chatToken => pref.getString(CHAT_TOKEN) ?? '';
 
+  /// **** order dewtails
+
+  @override
+  Map get orderDetails => jsonDecode(pref.getString(SESSION_ORDER_DETAILS)!);
+
+  /// * customer details
+
+  @override
+  Map get customerDetails =>
+      jsonDecode(pref.getString(SESSION_CUSTOMER_DETAILS)!);
   @override
   double get currentLat => pref.getDouble(CURRENT_LAT) ?? 0.0;
 
