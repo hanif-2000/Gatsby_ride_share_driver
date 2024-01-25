@@ -9,6 +9,7 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_state.dart';
@@ -26,6 +27,7 @@ class GiveRatingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Session session = locator<Session>();
     return ChangeNotifierProvider(
       create: (context) => locator<RatingProvider>(),
       child: GestureDetector(
@@ -164,6 +166,10 @@ class GiveRatingScreen extends StatelessWidget {
                                         break;
                                       case RatingSuccess:
                                         dismissLoading();
+
+                                        session.setRunningOrderStatus = 0;
+                                        session.setIsOrderRunning = false;
+
                                         Navigator.pushNamed(
                                           context,
                                           JobCompletedPage.routeName,
@@ -196,6 +202,8 @@ class GiveRatingScreen extends StatelessWidget {
                                     txtButtonStyle.copyWith(color: blackColor),
                               ),
                               event: () {
+                                session.setRunningOrderStatus = 0;
+                                session.setIsOrderRunning = false;
                                 Navigator.pushNamed(
                                     context, JobCompletedPage.routeName);
                                 // Navigator.pop(context);

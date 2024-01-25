@@ -117,7 +117,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.startAddress,
+                                          child: Text(
+                                              widget.item.startAddress ?? "",
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
@@ -169,7 +170,8 @@ class _DetailHistoryPageState extends State<DetailHistoryPage> {
                                         ),
                                         const SizedBox(height: 2.0),
                                         Flexible(
-                                          child: Text(widget.item.endAddress,
+                                          child: Text(
+                                              widget.item.endAddress ?? "",
                                               maxLines: 5,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(

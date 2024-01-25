@@ -3,22 +3,12 @@ import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/other_user_profile.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/reject_request_state.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/common_dialog.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/reject_reason_bottom_sheet.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/widgets/show_bottom_sheet.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
-import 'package:appkey_taxiapp_driver/core/static/order_status.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
-import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
-import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/presentation/providers/update_status_order_state.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
-import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +16,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../features/order/domain/entities/order_detail.dart';
+import '../../../features/order/presentation/pages/new_order_page.dart';
 import '../../data/models/booking_data_model.dart';
+import '../../data/models/customer_detail_model.dart';
+import '../../utility/injection.dart';
+import '../../utility/session_helper.dart';
+import 'home_page/home_page.dart';
 
 class RequestDetailPage extends StatefulWidget {
-  const RequestDetailPage({Key? key, this.requestListModel}) : super(key: key);
+  const RequestDetailPage(
+      {Key? key, this.requestListModel, required this.index})
+      : super(key: key);
   final Booking? requestListModel;
+  final int index;
 
   @override
   State<RequestDetailPage> createState() => _RequestDetailPageState();
@@ -67,8 +66,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, _) {
+    return Consumer2<HomeProvider, LatestSocketProvider>(
+      builder: (context, homeProvider, socketProvider, _) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           // appBar: const CustomAppBar(
@@ -409,48 +408,77 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                               style: txtButtonStyle,
                                             ),
                                             event: () {
-                                              ///Reject the request
-                                              CustomBottomSheet.showBottomSheet(
-                                                context,
-                                                RejectReasonBottomSheet(
-                                                  reject: (reason) {
-                                                    ///send reason to the server
-                                                    homeProvider
-                                                        .rejectRequest(
-                                                            widget
-                                                                .requestListModel!
-                                                                .id
-                                                                .toString(),
-                                                            reason)
-                                                        .listen(
-                                                      (event) {
-                                                        if (event
-                                                            is RejectRequestLoaded) {
-                                                          homeProvider
-                                                              .getRequestListData();
-                                                          final data =
-                                                              event.data;
-                                                          var socketProvider =
-                                                              locator<
-                                                                  LatestSocketProvider>();
-                                                          // socketProvider
-                                                          //     .rejectRequestSocket();
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                          showToast(
-                                                            message:
-                                                                data.message,
-                                                          );
-                                                        }
-                                                      },
-                                                    );
+                                              socketProvider
+                                                  .rejectRideRequest(
+                                                      orderId: socketProvider
+                                                          .bookingList[
+                                                              widget.index]
+                                                          .id)
+                                                  .then((value) {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  HomePage.routeName,
+                                                  (route) => false,
+                                                );
 
-                                                    ///
-                                                  },
-                                                ),
-                                              );
+                                                print(
+                                                    "reject order successfully");
+                                                log("reject order successfully");
+                                              });
+
+                                              ///Reject the request
+                                              //                   CustomBottomSheet.showBottomSheet(
+                                              //                     context,
+                                              //                     RejectReasonBottomSheet(
+                                              //                       reject: (reason) {
+
+                                              //                        socketProvider
+                                              //     .rejectRideRequest(
+                                              //         orderId:
+                                              //             socketProvider.bookingList[].id)
+                                              //     .then((value) {
+                                              //   print("reject order successfully");
+                                              //   log("reject order successfully");
+                                              // });
+
+                                              //                         ///send reason to the server
+                                              //                         // homeProvider
+                                              //                         //     .rejectRequest(
+                                              //                         //         widget
+                                              //                         //             .requestListModel!
+                                              //                         //             .id
+                                              //                         //             .toString(),
+                                              //                         //         reason)
+                                              //                         //     .listen(
+                                              //                         //   (event) {
+                                              //                         //     if (event
+                                              //                         //         is RejectRequestLoaded) {
+                                              //                         //       homeProvider
+                                              //                         //           .getRequestListData();
+                                              //                         //       final data =
+                                              //                         //           event.data;
+                                              //                         //       var socketProvider =
+                                              //                         //           locator<
+                                              //                         //               LatestSocketProvider>();
+                                              //                         //       // socketProvider
+                                              //                         //       //     .rejectRequestSocket();
+                                              //                         //       Navigator.pop(
+                                              //                         //           context);
+                                              //                         //       Navigator.pop(
+                                              //                         //           context);
+                                              //                         //       showToast(
+                                              //                         //         message:
+                                              //                         //             data.message,
+                                              //                         //       );
+                                              //                         //     }
+                                              //                           // },
+                                              //                         )
+
+                                              //                         ///
+                                              //                       },
+                                              //                     ),
+                                              //                   );
                                             },
                                             buttonHeight: 48,
                                             isRounded: true,
@@ -466,334 +494,484 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                               style: txtButtonStyle,
                                             ),
                                             event: () async {
-                                              log("on click on accept ride request from request list details page-------->>>>>");
-                                              print(
-                                                  "on click on accept ride request-------->>>>>");
+                                              // Accept the Ride
+                                              socketProvider
+                                                  .acceptRideRequest(
+                                                      orderId: socketProvider
+                                                          .bookingList[
+                                                              widget.index]
+                                                          .id)
+                                                  .then((value) {
+                                                print(
+                                                    "estimated time is :-->> ${socketProvider.bookingList[widget.index].estimatedTime}");
+                                                print(
+                                                    "estimated distance is :-->> ${socketProvider.bookingList[widget.index].distance}");
+                                                var session =
+                                                    locator<Session>();
+                                                session.setIsOrderRunning =
+                                                    true;
+                                                session.setEstimatedTime =
+                                                    socketProvider
+                                                        .bookingList[
+                                                            widget.index]
+                                                        .estimatedTime;
+                                                session.setEstimatedDistance =
+                                                    socketProvider
+                                                        .bookingList[
+                                                            widget.index]
+                                                        .distance;
 
-                                              final session =
-                                                  locator<Session>();
+                                                /*** ORDER DETAILS  */
 
-                                              // log("_data[index].id : ${data0[index].id}");
-                                              var response = await dio.get(
-                                                'https://php.parastechnologies.in/taxi/public/api/webservice/getOrder?id=${widget.requestListModel!.id}',
-                                                options: Options(headers: {
-                                                  "Authorization":
-                                                      "Bearer ${session.sessionToken}"
-                                                }),
-                                              );
+                                                print(
+                                                    "order id:-->>${socketProvider.bookingList[widget.index].id}");
+                                                print(
+                                                    "total order id:-->>${socketProvider.bookingList[widget.index].newTotal}");
+                                                print(
+                                                    "customerId order id:-->>${socketProvider.bookingList[widget.index].customerId}");
+                                                print(
+                                                    "order id:-->>${socketProvider.bookingList[widget.index].id}");
+                                                print(
+                                                    "distance order id:-->>${socketProvider.bookingList[widget.index].distance}");
+                                                print(
+                                                    "start coordinate order id:-->>${socketProvider.bookingList[widget.index].startCoordinate}");
+                                                print(
+                                                    "endCoordinate order id:-->>${socketProvider.bookingList[widget.index].endCoordinate}");
+                                                print(
+                                                    "startAddress order id:-->>${socketProvider.bookingList[widget.index].startAddress}");
+                                                print(
+                                                    "end address order id:-->>${socketProvider.bookingList[widget.index].id}");
+                                                // print("order id:-->>${socketProvider.bookingList[widget.index].id}");
 
-                                              log("my response data is:  ${response.data}");
-
-                                              if (response.data["order"]
-                                                      ["driver_id"] !=
-                                                  null) {
-                                                showToast(
-                                                    message:
-                                                        "Order is Already Accepted by Other Driver");
-                                                Navigator.pop(context);
-                                                // showDialog(
-                                                //   context: context,
-                                                //   builder: (context) {
-                                                //     return const Text(
-                                                //         "Order is Already Accepted by Other Driver");
-                                                //   },
-                                                // );
-                                              } else {
-                                                homeProvider
-                                                    .fetchOrderDetail(widget
-                                                        .requestListModel!.id
-                                                        .toString())
-                                                    .listen(
-                                                  (event1) {
-                                                    if (event1
-                                                        is OrderDetailLoaded) {
-                                                      log("on click on accept order");
-
-                                                      session.setRunningOrderId =
-                                                          widget
-                                                              .requestListModel!
-                                                              .id;
-                                                      session.setOrderId =
-                                                          widget
-                                                              .requestListModel!
-                                                              .id
-                                                              .toString();
-                                                      homeProvider
-                                                          .fetchCustomerDetail(
-                                                              event1.data.userId
-                                                                  .toString())
-                                                          .listen(
-                                                        (event) async {
-                                                          if (event
-                                                              is CustomerDetailLoaded) {
-                                                            session.setOrderUserId =
-                                                                event1.data
-                                                                    .userId;
-                                                            print(
-                                                                'RUNNING order id --> ${widget.requestListModel!.id}');
-                                                            homeProvider
-                                                                .submitStatusOrder(
-                                                                    Order
-                                                                        .driverAccept)
-                                                                .listen(
-                                                              (event) async {
-                                                                if (event
-                                                                    is UpdateStatusOrderLoaded) {
-                                                                  if (event.data
-                                                                          .success ==
-                                                                      1) {
-                                                                    // var session =
-                                                                    //     locator<Session>();
-                                                                    session.setIsOrderRunning =
-                                                                        true;
-                                                                    var socketProvider =
-                                                                        locator<
-                                                                            LatestSocketProvider>();
-                                                                    // socketProvider
-                                                                    //     .acceptRequestSocket();
-                                                                    // Navigator
-                                                                    //     .pushNamedAndRemoveUntil(
-                                                                    //   context,
-                                                                    //   NewOrderPage
-                                                                    //       .routeName,
-                                                                    //   (route) =>
-                                                                    //       false,
-                                                                    //   arguments: NewOrderPageArguments(
-                                                                    //       orderDetail: homeProvider
-                                                                    //           .orderDetail!,
-                                                                    //       customerDetailModel: ,
-                                                                    //       orderStatus: event1
-                                                                    //           .data
-                                                                    //           .orderStatus),
-                                                                    // );
-                                                                  } else if (event
-                                                                          .data
-                                                                          .message ==
-                                                                      5) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) =>
-                                                                              CommonDialog(
-                                                                        title: appLoc
-                                                                            .sorry,
-                                                                        msg: appLoc
-                                                                            .orderacceptedotherdriver,
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  } else if (event
-                                                                          .data
-                                                                          .message ==
-                                                                      6) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) =>
-                                                                              CommonDialog(
-                                                                        title: appLoc
-                                                                            .sorry,
-                                                                        msg: appLoc
-                                                                            .ordernotfound,
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  } else if (event
-                                                                          .data
-                                                                          .message ==
-                                                                      7) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) =>
-                                                                              CommonDialog(
-                                                                        title: appLoc
-                                                                            .sorry,
-                                                                        msg: appLoc
-                                                                            .orderhascancelled,
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                }
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                      );
-                                                    }
-
-                                                    // final session =
-                                                    //     locator<Session>();
-                                                    // homeProvider
-                                                    //     .fetchOrderDetail(widget
-                                                    //         .requestListModel!.id
-                                                    //         .toString())
-                                                    //     .listen(
-                                                    //   (event1) {
-                                                    //     if (event1
-                                                    //         is OrderDetailLoaded) {
-                                                    //       log("on click on accept order");
-
-                                                    // // var _deviceSize = MediaQuery.of(context).size;
-                                                    // session.setRunningOrderId =
-                                                    //     widget.requestListModel!
-                                                    //         .id;
-                                                    // session.setOrderId = widget
-                                                    //     .requestListModel!.id
-                                                    //     .toString();
-                                                    // homeProvider
-                                                    //     .fetchCustomerDetail(
-                                                    //         event1.data.userId
-                                                    //             .toString())
-                                                    //     .listen(
-                                                    //   (event) async {
-                                                    //     if (event
-                                                    //         is CustomerDetailLoaded) {
-                                                    //       session.setOrderUserId =
-                                                    //           event1
-                                                    //               .data.userId;
-                                                    //       print(
-                                                    //           'RUNNING order id --> ${widget.requestListModel!.id}');
-                                                    //       homeProvider
-                                                    //           .submitStatusOrder(
-                                                    //               Order
-                                                    //                   .driverAccept)
-                                                    //           .listen(
-                                                    //         (event) async {
-                                                    //           if (event
-                                                    //               is UpdateStatusOrderLoaded) {
-                                                    //             if (event.data
-                                                    //                     .success ==
-                                                    //                 1) {
-                                                    //               // var session =
-                                                    //               //     locator<Session>();
-                                                    //               session.setIsOrderRunning =
-                                                    //                   true;
-                                                    //               var socketProvider =
-                                                    //                   locator<
-                                                    //                       SocketProvider>();
-                                                    //               socketProvider
-                                                    //                   .acceptRequestSocket();
-                                                    //               Navigator
-                                                    //                   .pushNamedAndRemoveUntil(
-                                                    //                 context,
-                                                    //                 OrderPage
-                                                    //                     .routeName,
-                                                    //                 (route) =>
-                                                    //                     false,
-                                                    //                 arguments: OrderPageArguments(
-                                                    //                     orderDetail:
-                                                    //                         homeProvider
-                                                    //                             .orderDetail!,
-                                                    //                     customerDetailModel:
-                                                    //                         homeProvider
-                                                    //                             .customerDetailModel!,
-                                                    //                     orderStatus: event1
-                                                    //                         .data
-                                                    //                         .orderStatus),
-                                                    //               );
-                                                    //             } else if (event
-                                                    //                     .data
-                                                    //                     .message ==
-                                                    //                 5) {
-                                                    //               Navigator.of(
-                                                    //                       context)
-                                                    //                   .pop();
-                                                    //               showDialog(
-                                                    //                 context:
-                                                    //                     context,
-                                                    //                 builder:
-                                                    //                     (context) =>
-                                                    //                         CommonDialog(
-                                                    //                   title: appLoc
-                                                    //                       .sorry,
-                                                    //                   msg: appLoc
-                                                    //                       .orderacceptedotherdriver,
-                                                    //                   onTap:
-                                                    //                       () {
-                                                    //                     Navigator.of(context)
-                                                    //                         .pop();
-                                                    //                   },
-                                                    //                 ),
-                                                    //               );
-                                                    //             } else if (event
-                                                    //                     .data
-                                                    //                     .message ==
-                                                    //                 6) {
-                                                    //               Navigator.of(
-                                                    //                       context)
-                                                    //                   .pop();
-                                                    //               showDialog(
-                                                    //                 context:
-                                                    //                     context,
-                                                    //                 builder:
-                                                    //                     (context) =>
-                                                    //                         CommonDialog(
-                                                    //                   title: appLoc
-                                                    //                       .sorry,
-                                                    //                   msg: appLoc
-                                                    //                       .ordernotfound,
-                                                    //                   onTap:
-                                                    //                       () {
-                                                    //                     Navigator.of(context)
-                                                    //                         .pop();
-                                                    //                   },
-                                                    //                 ),
-                                                    //               );
-                                                    //             } else if (event
-                                                    //                     .data
-                                                    //                     .message ==
-                                                    //                 7) {
-                                                    //               Navigator.of(
-                                                    //                       context)
-                                                    //                   .pop();
-                                                    //               showDialog(
-                                                    //                 context:
-                                                    //                     context,
-                                                    //                 builder:
-                                                    //                     (context) =>
-                                                    //                         CommonDialog(
-                                                    //                   title: appLoc
-                                                    //                       .sorry,
-                                                    //                   msg: appLoc
-                                                    //                       .orderhascancelled,
-                                                    //                   onTap:
-                                                    //                       () {
-                                                    //                     Navigator.of(context)
-                                                    //                         .pop();
-                                                    //                   },
-                                                    //                 ),
-                                                    //               );
-                                                    //             }
-                                                    //           }
-                                                  },
+                                                homeProvider.setOrderDetails =
+                                                    OrderDetail(
+                                                  orderId: int.parse(
+                                                      socketProvider
+                                                          .bookingList[
+                                                              widget.index]
+                                                          .id),
+                                                  totalPrice: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .total,
+                                                  userId: int.parse(
+                                                      socketProvider
+                                                          .bookingList[
+                                                              widget.index]
+                                                          .customerId),
+                                                  driverId:
+                                                      int.parse(session.userId),
+                                                  distance: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .distance,
+                                                  orderStatus: 0,
+                                                  startCoordinate:
+                                                      socketProvider
+                                                          .bookingList[
+                                                              widget.index]
+                                                          .startCoordinate,
+                                                  endCoordinate: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .endCoordinate,
+                                                  startAddress: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .startAddress,
+                                                  endAddress: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .endAddress,
+                                                  pendingAmount: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .pendingAmount,
+                                                  newTotal: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .newTotal,
                                                 );
-                                              }
+
+                                                // session.setOrderDetails =
+                                                //     homeProvider.orderDetail!;
+
+                                                //Socket
+
+                                                //*** CUSTOMER DETAILS */
+
+                                                homeProvider
+                                                        .setCustomerDetails =
+                                                    CustomerDataModel(
+                                                  name: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .name,
+                                                  phoneNumber: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .phone,
+                                                  photo: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .image,
+                                                  id: int.parse(socketProvider
+                                                      .bookingList[widget.index]
+                                                      .customerId),
+                                                  rating: socketProvider
+                                                      .bookingList[widget.index]
+                                                      .customerRating,
+                                                );
+
+                                                // session.setCustomerDetails =
+                                                //     homeProvider.customerDetailModel!;
+
+                                                log("order details are:-->. ${homeProvider.orderDetail!}");
+                                                print(
+                                                    "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
+
+                                                log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
+                                                print(
+                                                    "Customer details are:-->. ${homeProvider.customerDetailModel!}");
+
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  NewOrderPage.routeName,
+                                                  (route) => false,
+                                                  arguments:
+                                                      NewOrderPageArguments(
+                                                    // orderTotal: socketProvider
+                                                    //     .bookingList[index].newTotal,
+                                                    orderDetail: homeProvider
+                                                        .orderDetail!,
+                                                    customerDetailModel:
+                                                        homeProvider
+                                                            .customerDetailModel!,
+                                                    orderStatus: 0,
+                                                  ),
+                                                );
+                                              });
+
+                                              // log("on click on accept ride request from request list details page-------->>>>>");
+                                              // print(
+                                              //     "on click on accept ride request-------->>>>>");
+
+                                              // final session =
+                                              //     locator<Session>();
+
+                                              // // log("_data[index].id : ${data0[index].id}");
+                                              // var response = await dio.get(
+                                              //   'https://php.parastechnologies.in/taxi/public/api/webservice/getOrder?id=${widget.requestListModel!.id}',
+                                              //   options: Options(headers: {
+                                              //     "Authorization":
+                                              //         "Bearer ${session.sessionToken}"
+                                              //   }),
+                                              // );
+
+                                              // log("my response data is:  ${response.data}");
+
+                                              // if (response.data["order"]
+                                              //         ["driver_id"] !=
+                                              //     null) {
+                                              //   showToast(
+                                              //       message:
+                                              //           "Order is Already Accepted by Other Driver");
+                                              //   Navigator.pop(context);
+                                              //   // showDialog(
+                                              //   //   context: context,
+                                              //   //   builder: (context) {
+                                              //   //     return const Text(
+                                              //   //         "Order is Already Accepted by Other Driver");
+                                              //   //   },
+                                              //   // );
+                                              // } else {
+                                              //   homeProvider
+                                              //       .fetchOrderDetail(widget
+                                              //           .requestListModel!.id
+                                              //           .toString())
+                                              //       .listen(
+                                              //     (event1) {
+                                              //       if (event1
+                                              //           is OrderDetailLoaded) {
+                                              //         log("on click on accept order");
+
+                                              //         session.setRunningOrderId =
+                                              //             widget
+                                              //                 .requestListModel!
+                                              //                 .id;
+                                              //         session.setOrderId =
+                                              //             widget
+                                              //                 .requestListModel!
+                                              //                 .id
+                                              //                 .toString();
+                                              //         homeProvider
+                                              //             .fetchCustomerDetail(
+                                              //                 event1.data.userId
+                                              //                     .toString())
+                                              //             .listen(
+                                              //           (event) async {
+                                              //             if (event
+                                              //                 is CustomerDetailLoaded) {
+                                              //               session.setOrderUserId =
+                                              //                   event1.data
+                                              //                       .userId;
+                                              //               print(
+                                              //                   'RUNNING order id --> ${widget.requestListModel!.id}');
+                                              //               homeProvider
+                                              //                   .submitStatusOrder(
+                                              //                       Order
+                                              //                           .driverAccept)
+                                              //                   .listen(
+                                              //                 (event) async {
+                                              //                   if (event
+                                              //                       is UpdateStatusOrderLoaded) {
+                                              //                     if (event.data
+                                              //                             .success ==
+                                              //                         1) {
+                                              //                       // var session =
+                                              //                       //     locator<Session>();
+                                              //                       session.setIsOrderRunning =
+                                              //                           true;
+                                              //                       var socketProvider =
+                                              //                           locator<
+                                              //                               LatestSocketProvider>();
+                                              //                       // socketProvider
+                                              //                       //     .acceptRequestSocket();
+                                              //                       // Navigator
+                                              //                       //     .pushNamedAndRemoveUntil(
+                                              //                       //   context,
+                                              //                       //   NewOrderPage
+                                              //                       //       .routeName,
+                                              //                       //   (route) =>
+                                              //                       //       false,
+                                              //                       //   arguments: NewOrderPageArguments(
+                                              //                       //       orderDetail: homeProvider
+                                              //                       //           .orderDetail!,
+                                              //                       //       customerDetailModel: ,
+                                              //                       //       orderStatus: event1
+                                              //                       //           .data
+                                              //                       //           .orderStatus),
+                                              //                       // );
+                                              //                     } else if (event
+                                              //                             .data
+                                              //                             .message ==
+                                              //                         5) {
+                                              //                       Navigator.of(
+                                              //                               context)
+                                              //                           .pop();
+                                              //                       showDialog(
+                                              //                         context:
+                                              //                             context,
+                                              //                         builder:
+                                              //                             (context) =>
+                                              //                                 CommonDialog(
+                                              //                           title: appLoc
+                                              //                               .sorry,
+                                              //                           msg: appLoc
+                                              //                               .orderacceptedotherdriver,
+                                              //                           onTap:
+                                              //                               () {
+                                              //                             Navigator.of(context)
+                                              //                                 .pop();
+                                              //                           },
+                                              //                         ),
+                                              //                       );
+                                              //                     } else if (event
+                                              //                             .data
+                                              //                             .message ==
+                                              //                         6) {
+                                              //                       Navigator.of(
+                                              //                               context)
+                                              //                           .pop();
+                                              //                       showDialog(
+                                              //                         context:
+                                              //                             context,
+                                              //                         builder:
+                                              //                             (context) =>
+                                              //                                 CommonDialog(
+                                              //                           title: appLoc
+                                              //                               .sorry,
+                                              //                           msg: appLoc
+                                              //                               .ordernotfound,
+                                              //                           onTap:
+                                              //                               () {
+                                              //                             Navigator.of(context)
+                                              //                                 .pop();
+                                              //                           },
+                                              //                         ),
+                                              //                       );
+                                              //                     } else if (event
+                                              //                             .data
+                                              //                             .message ==
+                                              //                         7) {
+                                              //                       Navigator.of(
+                                              //                               context)
+                                              //                           .pop();
+                                              //                       showDialog(
+                                              //                         context:
+                                              //                             context,
+                                              //                         builder:
+                                              //                             (context) =>
+                                              //                                 CommonDialog(
+                                              //                           title: appLoc
+                                              //                               .sorry,
+                                              //                           msg: appLoc
+                                              //                               .orderhascancelled,
+                                              //                           onTap:
+                                              //                               () {
+                                              //                             Navigator.of(context)
+                                              //                                 .pop();
+                                              //                           },
+                                              //                         ),
+                                              //                       );
+                                              //                     }
+                                              //                   }
+                                              //                 },
+                                              //               );
+
+                                              //             }
+                                              //           },
+                                              //         );
+                                              //       }
+
+                                              //       // final session =
+                                              //       //     locator<Session>();
+                                              //       // homeProvider
+                                              //       //     .fetchOrderDetail(widget
+                                              //       //         .requestListModel!.id
+                                              //       //         .toString())
+                                              //       //     .listen(
+                                              //       //   (event1) {
+                                              //       //     if (event1
+                                              //       //         is OrderDetailLoaded) {
+                                              //       //       log("on click on accept order");
+
+                                              //       // // var _deviceSize = MediaQuery.of(context).size;
+                                              //       // session.setRunningOrderId =
+                                              //       //     widget.requestListModel!
+                                              //       //         .id;
+                                              //       // session.setOrderId = widget
+                                              //       //     .requestListModel!.id
+                                              //       //     .toString();
+                                              //       // homeProvider
+                                              //       //     .fetchCustomerDetail(
+                                              //       //         event1.data.userId
+                                              //       //             .toString())
+                                              //       //     .listen(
+                                              //       //   (event) async {
+                                              //       //     if (event
+                                              //       //         is CustomerDetailLoaded) {
+                                              //       //       session.setOrderUserId =
+                                              //       //           event1
+                                              //       //               .data.userId;
+                                              //       //       print(
+                                              //       //           'RUNNING order id --> ${widget.requestListModel!.id}');
+                                              //       //       homeProvider
+                                              //       //           .submitStatusOrder(
+                                              //       //               Order
+                                              //       //                   .driverAccept)
+                                              //       //           .listen(
+                                              //       //         (event) async {
+                                              //       //           if (event
+                                              //       //               is UpdateStatusOrderLoaded) {
+                                              //       //             if (event.data
+                                              //       //                     .success ==
+                                              //       //                 1) {
+                                              //       //               // var session =
+                                              //       //               //     locator<Session>();
+                                              //       //               session.setIsOrderRunning =
+                                              //       //                   true;
+                                              //       //               var socketProvider =
+                                              //       //                   locator<
+                                              //       //                       SocketProvider>();
+                                              //       //               socketProvider
+                                              //       //                   .acceptRequestSocket();
+                                              //       //               Navigator
+                                              //       //                   .pushNamedAndRemoveUntil(
+                                              //       //                 context,
+                                              //       //                 OrderPage
+                                              //       //                     .routeName,
+                                              //       //                 (route) =>
+                                              //       //                     false,
+                                              //       //                 arguments: OrderPageArguments(
+                                              //       //                     orderDetail:
+                                              //       //                         homeProvider
+                                              //       //                             .orderDetail!,
+                                              //       //                     customerDetailModel:
+                                              //       //                         homeProvider
+                                              //       //                             .customerDetailModel!,
+                                              //       //                     orderStatus: event1
+                                              //       //                         .data
+                                              //       //                         .orderStatus),
+                                              //       //               );
+                                              //       //             } else if (event
+                                              //       //                     .data
+                                              //       //                     .message ==
+                                              //       //                 5) {
+                                              //       //               Navigator.of(
+                                              //       //                       context)
+                                              //       //                   .pop();
+                                              //       //               showDialog(
+                                              //       //                 context:
+                                              //       //                     context,
+                                              //       //                 builder:
+                                              //       //                     (context) =>
+                                              //       //                         CommonDialog(
+                                              //       //                   title: appLoc
+                                              //       //                       .sorry,
+                                              //       //                   msg: appLoc
+                                              //       //                       .orderacceptedotherdriver,
+                                              //       //                   onTap:
+                                              //       //                       () {
+                                              //       //                     Navigator.of(context)
+                                              //       //                         .pop();
+                                              //       //                   },
+                                              //       //                 ),
+                                              //       //               );
+                                              //       //             } else if (event
+                                              //       //                     .data
+                                              //       //                     .message ==
+                                              //       //                 6) {
+                                              //       //               Navigator.of(
+                                              //       //                       context)
+                                              //       //                   .pop();
+                                              //       //               showDialog(
+                                              //       //                 context:
+                                              //       //                     context,
+                                              //       //                 builder:
+                                              //       //                     (context) =>
+                                              //       //                         CommonDialog(
+                                              //       //                   title: appLoc
+                                              //       //                       .sorry,
+                                              //       //                   msg: appLoc
+                                              //       //                       .ordernotfound,
+                                              //       //                   onTap:
+                                              //       //                       () {
+                                              //       //                     Navigator.of(context)
+                                              //       //                         .pop();
+                                              //       //                   },
+                                              //       //                 ),
+                                              //       //               );
+                                              //       //             } else if (event
+                                              //       //                     .data
+                                              //       //                     .message ==
+                                              //       //                 7) {
+                                              //       //               Navigator.of(
+                                              //       //                       context)
+                                              //       //                   .pop();
+                                              //       //               showDialog(
+                                              //       //                 context:
+                                              //       //                     context,
+                                              //       //                 builder:
+                                              //       //                     (context) =>
+                                              //       //                         CommonDialog(
+                                              //       //                   title: appLoc
+                                              //       //                       .sorry,
+                                              //       //                   msg: appLoc
+                                              //       //                       .orderhascancelled,
+                                              //       //                   onTap:
+                                              //       //                       () {
+                                              //       //                     Navigator.of(context)
+                                              //       //                         .pop();
+                                              //       //                   },
+                                              //       //                 ),
+                                              //       //               );
+                                              //       //             }
+                                              //       //           }
+                                              //     },
+                                              //   );
+                                              // }
                                             },
                                             isRounded: true,
                                             buttonHeight: 48,

@@ -110,7 +110,7 @@ class HistoryTile extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 // 'PJCX+6R3, Sector 115',
-                                order!.startAddress,
+                                order!.startAddress ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
@@ -131,7 +131,7 @@ class HistoryTile extends StatelessWidget {
                             mediumHorizontalSpacing(),
                             Expanded(
                               child: Text(
-                                order!.endAddress,
+                                order!.endAddress ?? "",
                                 // 'PJCX+6R3, Sector 115',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(

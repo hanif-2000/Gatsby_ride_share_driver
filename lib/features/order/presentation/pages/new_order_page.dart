@@ -95,8 +95,18 @@ class _NewOrderPageState extends State<NewOrderPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       socketProvider.updateCurrentStatus(status: session.runningOrderStatus);
       socketProvider.updateOrderData(data: widget.orderDetail);
-      session.setOrderDetails = json.encode(widget.orderDetail);
-      session.setCustomerDetails = json.encode(widget.customerDetail);
+      // session.setOrderDetails = json.encode(widget.orderDetail);
+
+      session.setCustomerName = widget.customerDetail.name;
+      session.setCustomerImg = widget.customerDetail.photo ?? '';
+      session.setCustomerRating = widget.customerDetail.rating;
+      session.setCustomerPhn = widget.customerDetail.phoneNumber;
+      session.setStartAdd = widget.orderDetail.startAddress;
+      session.setEndAdd = widget.orderDetail.endAddress;
+      session.setStartCo = widget.orderDetail.startCoordinate;
+      session.setEndCo = widget.orderDetail.endCoordinate;
+
+      // session.setCustomerDetails = json.encode(widget.customerDetail);
 
       socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
       socketProvider
@@ -119,7 +129,8 @@ class _NewOrderPageState extends State<NewOrderPage>
 
           /** update ride text */
 
-          if (session.runningOrderStatus == 1) {
+          if ((session.runningOrderStatus == 1) ||
+              session.runningOrderStatus == 0) {
             socketProvider.updateRideText(txt: "Start Ride to Customer Place");
           } else if (session.runningOrderStatus == 2) {
             socketProvider.updateRideText(txt: "Reached to Customer Place");
@@ -128,6 +139,7 @@ class _NewOrderPageState extends State<NewOrderPage>
           } else if (session.runningOrderStatus == 5) {
             socketProvider.updateRideText(txt: "End Trip");
           } else {
+            log("*---************--------*********** RUNNING ORDER STATUS IS :-->> ${session.runningOrderStatus} *******------------->>>>>");
             socketProvider.updateRideText(txt: "Go to Receipt Screen");
           }
         }

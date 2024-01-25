@@ -36,13 +36,13 @@ class HistoryResponseModel {
 }
 
 class HistoryOrder {
-  String id;
-  String driverId;
-  String customerId;
-  String startCoordinate;
-  String endCoordinate;
-  String startAddress;
-  String endAddress;
+  String? id;
+  String? driverId;
+  String? customerId;
+  String? startCoordinate;
+  String? endCoordinate;
+  String? startAddress;
+  String? endAddress;
   dynamic distance;
   dynamic total;
   dynamic grandTotal;
@@ -57,7 +57,7 @@ class HistoryOrder {
   dynamic orderTime;
   dynamic startTime;
   dynamic endTime;
-  String status;
+  dynamic status;
   String image;
   String userName;
   String userPhone;
@@ -124,15 +124,18 @@ class HistoryOrder {
         pendingAmount: json["pending_amount"] ?? 0.0,
         newTotal: json["new_total"] ?? 0.0,
         tip: json["tip"] ?? '0',
-        orderTime: json["order_time"] != null
+        orderTime: json["order_time"] != null &&
+                json["order_time"].toString().isNotEmpty
             ? DateTime.parse(json["order_time"])
             : DateTime.now(),
-        startTime: json["start_time"] != null
+        startTime: json["start_time"] != null &&
+                json["start_time"].toString().isNotEmpty
             ? DateTime.parse(json["start_time"])
             : DateTime.now(),
-        endTime: json["end_time"] != null
-            ? DateTime.parse(json["end_time"])
-            : DateTime.now(),
+        endTime:
+            json["end_time"] != null && json["end_time"].toString().isNotEmpty
+                ? DateTime.parse(json["end_time"])
+                : DateTime.now(),
         status: json["status"],
         extraDistance:
             ((json["extra_distance"] == null) || (json["extra_distance"] == ''))

@@ -27,3 +27,13 @@ const String RIDE_START_TIME = 'ride_start_time';
 const String RIDE_END_TIME = 'ride_end_time';
 const String CURRENT_LAT = 'current_lat';
 const String CURRENT_LANG = 'current_lang';
+const String CUSTOMER_ID = 'customer_id';
+
+const String CUSTOMER_IMG = 'customer_img';
+const String CUSTOMER_NAME = 'customer_name';
+const String CUSTOMER_RATING = 'customer_rating';
+const String CUSTOMER_PHN = 'customer_phn';
+const String START_ADD = 'start_add';
+const String END_ADD = 'end_add';
+const String START_CO = 'start_co';
+const String END_CO = 'end_co';

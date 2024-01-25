@@ -377,12 +377,12 @@ class ButtonOrder extends StatelessWidget {
                                   .then((value) {
                                 socketProvider
                                     .updateOrderStatus(
-                                  status: "7",
-                                  actualTime: session.estimatedTime,
-                                  context: context,
-                                  startTime: session.rideStartTime,
-                                  endTime: DateTime.now().toString(),
-                                )
+                                        status: "7",
+                                        actualTime: session.estimatedTime,
+                                        context: context,
+                                        startTime: session.rideStartTime,
+                                        endTime: DateTime.now().toString(),
+                                        distance: session.estimatedDistance)
                                     .then((value) {
                                   dismissLoading();
                                   Navigator.pushNamedAndRemoveUntil(
@@ -485,6 +485,8 @@ class ButtonOrder extends StatelessWidget {
                       showCancelConfirmationAlertDialog(
                           context: context,
                           onTap: () async {
+                            socketProvider.removeOrderFromList(
+                                orderId: session.orderId);
                             Navigator.pop(context);
                             showLoading();
 
@@ -496,6 +498,10 @@ class ButtonOrder extends StatelessWidget {
                                     startTime: '',
                                     context: context)
                                 .then((value) {
+                              session.setRunningOrderStatus = 0;
+                              session.setIsOrderRunning = false;
+                              session.clearOrderSession();
+
                               dismissLoading();
                               if (value) {
                                 Navigator.pushAndRemoveUntil(

@@ -24,9 +24,11 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
       final response = await dio.get(
         url,
       );
+      print("========>>>response$response");
       final model = HistoryResponseModel.fromJson(response.data);
-
+      print("========>>>success${model.success}");
       if (model.success == 1) {
+        print("========>>>historyOrder${model.historyOrder}");
         return model.historyOrder;
       } else if (response.data["message"] == "Account Suspended") {
         showToast(message: "Account Suspended");
@@ -35,7 +37,8 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
       } else {
         return [];
       }
-    } catch (e) {
+    } catch (e, s) {
+      print("========>>>error$e, $s");
       rethrow;
     }
   }

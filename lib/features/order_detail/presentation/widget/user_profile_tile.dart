@@ -75,7 +75,10 @@ class UserProfileTile extends StatelessWidget {
                         SvgPicture.asset('assets/icons/home/ic_start.svg'),
                         smallHorizontalSpacing(),
                         Text(
-                          '${customerDataModel!.rating}',
+                          double.tryParse(customerDataModel!.rating.toString())
+                                  ?.toStringAsFixed(2) ??
+                              "",
+                          // '${customerDataModel!.rating}',
                           textAlign: TextAlign.center,
                           style: titleStyle
                               .copyWith(

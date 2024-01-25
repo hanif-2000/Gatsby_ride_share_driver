@@ -170,14 +170,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     //     widget.orderDetail, widget.customerDetail);
                     final pickup = LatLng(
                         double.tryParse(
-                            widget.order!.startCoordinate.split(',').first)!,
+                            widget.order!.startCoordinate!.split(',').first)!,
                         double.tryParse(
-                            widget.order!.startCoordinate.split(',').last)!);
+                            widget.order!.startCoordinate!.split(',').last)!);
                     final drop = LatLng(
                         double.tryParse(
-                            widget.order!.endCoordinate.split(',').first)!,
+                            widget.order!.endCoordinate!.split(',').first)!,
                         double.tryParse(
-                            widget.order!.endCoordinate.split(',').last)!);
+                            widget.order!.endCoordinate!.split(',').last)!);
                     await provider.createPickupAndDropMarker(pickup, drop);
                     await provider.setPolylineDirection(pickup, drop);
                   },
@@ -230,11 +230,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             ),
                             InkWell(
                               onTap: () {
-                                log(widget.order!.customerId);
+                                log(widget.order!.customerId!);
                                 Navigator.pushNamed(
                                     context, RatingListPage.routeName,
                                     arguments:
-                                        int.parse(widget.order!.customerId));
+                                        int.parse(widget.order!.customerId!));
                                 // context,
                                 GiveRatingScreen.routeName;
                               },

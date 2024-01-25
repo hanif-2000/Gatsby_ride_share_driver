@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class OrderDetail extends Equatable {
   final dynamic totalPrice, pendingAmount, newTotal;
-  final int orderId, userId, driverId, orderStatus;
+  final dynamic orderId, userId, driverId, orderStatus;
   final String startCoordinate,
       endCoordinate,
       distance,

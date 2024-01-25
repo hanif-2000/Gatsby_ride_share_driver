@@ -37,12 +37,14 @@ class _HistoryPageState extends State<HistoryPage> {
                 return const Center(child: CircularProgressIndicator());
               case HistoryFailure:
                 final failure = (state.data as HistoryFailure).failure;
+                print("========>>failure ${failure.toString()}");
                 showToast(message: failure);
                 return const SizedBox.shrink();
               case HistoryLoaded:
-                final _data = (state.data as HistoryLoaded).data;
-                logMe('Data loaded ---> ${_data.length}');
-                if (_data.isEmpty) {
+                final data = (state.data as HistoryLoaded).data;
+                print("========>> ${data.first.toString()}");
+                logMe('Data loaded ---> ${data.length}');
+                if (data.isEmpty) {
                   return Center(
                     child: Text(
                       appLoc.therearenopastorders,
@@ -52,10 +54,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 }
                 return Column(
                   children: List.generate(
-                    _data.length,
+                    data.length,
                     (index) => Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: HistoryItem(data: _data[index]),
+                      child: HistoryItem(data: data[index]),
                     ),
                   ),
                 );

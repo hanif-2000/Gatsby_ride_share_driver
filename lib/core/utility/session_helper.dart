@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
-import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -18,6 +14,15 @@ abstract class Session {
   set setToken(String token);
   set setOrderDetails(orderDetails);
   set setCustomerDetails(customerDetails);
+
+  set setCustomerName(String val);
+  set setCustomerImg(String val);
+  set setCustomerRating(String val);
+  set setCustomerPhn(String val);
+  set setStartAdd(String val);
+  set setStartCo(String val);
+  set setEndAdd(String val);
+  set setEndCo(String val);
 
   set setFcmToken(String fcmToken);
   set setOldFcmToken(String fcmOldToken);
@@ -94,6 +99,15 @@ abstract class Session {
   /// * GET CUSTOMER DETAILS
   String get customerDetails;
 
+  String get customerImg;
+  String get customerName;
+  String get startCo;
+  String get endCo;
+  String get startAdd;
+  String get endAdd;
+  String get customerRating;
+  String get customerPhoneNumber;
+
   String get userId;
   double get currentLat;
   double get currentLang;
@@ -132,6 +146,51 @@ class SessionHelper implements Session {
   @override
   set setToken(String token) {
     pref.setString(SESSION_TOKEN, token);
+  }
+
+  @override
+  set setCustomerName(String val) {
+    pref.setString(CUSTOMER_NAME, val);
+  }
+
+  @override
+  set setC(String customerImg) {
+    pref.setString(CUSTOMER_IMG, customerImg);
+  }
+
+  @override
+  set setCustomerRating(String customerRating) {
+    pref.setString(CUSTOMER_RATING, customerRating);
+  }
+
+  @override
+  set setCustomerPhn(String customerphn) {
+    pref.setString(CUSTOMER_PHN, customerphn);
+  }
+
+  @override
+  set setStartAdd(String startAdd) {
+    pref.setString(START_ADD, startAdd);
+  }
+
+  @override
+  set setEndAdd(String endAdd) {
+    pref.setString(END_ADD, endAdd);
+  }
+
+  @override
+  set setStartCo(String startCo) {
+    pref.setString(START_CO, startCo);
+  }
+
+  @override
+  set setEndCo(String endCo) {
+    pref.setString(END_CO, endCo);
+  }
+
+  @override
+  set setDriverPhn(String customerPhn) {
+    pref.setString(CUSTOMER_PHN, customerPhn);
   }
 
   @override
@@ -212,6 +271,11 @@ class SessionHelper implements Session {
   @override
   set setOldFcmToken(String fcmOldToken) {
     pref.setString(FCM_OLD_TOKEN, fcmOldToken);
+  }
+
+  @override
+  set setCustomerImg(String val) {
+    pref.setString(CUSTOMER_IMG, val);
   }
 
   @override
@@ -321,6 +385,23 @@ class SessionHelper implements Session {
   String get sessionFcmToken => pref.getString(FCM_TOKEN) ?? '';
 
   @override
+  String get customerName => pref.getString(CUSTOMER_NAME) ?? '';
+  @override
+  String get customerImg => pref.getString(CUSTOMER_IMG) ?? '';
+  @override
+  String get customerRating => pref.getString(CUSTOMER_RATING) ?? '';
+  @override
+  String get customerPhn => pref.getString(CUSTOMER_PHN) ?? '';
+  @override
+  String get startAddress => pref.getString(START_ADD) ?? '';
+  @override
+  String get endAddress => pref.getString(END_ADD) ?? '';
+  @override
+  String get startCo => pref.getString(START_CO) ?? '';
+  @override
+  String get endCo => pref.getString(END_CO) ?? '';
+
+  @override
   String get sessionOldFcmToken => pref.getString(FCM_OLD_TOKEN) ?? '';
 
   @override
@@ -351,6 +432,14 @@ class SessionHelper implements Session {
   String get rideStartTime => pref.getString(RIDE_START_TIME) ?? '';
   @override
   String get rideEndTime => pref.getString(RIDE_END_TIME) ?? '';
+  @override
+  String get endAdd => pref.getString(END_ADD) ?? '';
+
+  @override
+  String get customerPhoneNumber => pref.getString(CUSTOMER_PHN) ?? '';
+
+  @override
+  String get startAdd => pref.getString(START_ADD) ?? '';
 
   @override
   Future<void> clearSession() async {
@@ -366,5 +455,16 @@ class SessionHelper implements Session {
     await pref.remove(ORDER_ID);
     await pref.remove(ORDER_STATUS);
     await pref.remove(DRIVER_ID);
+    await pref.remove(SESSION_ORDER_DETAILS);
+    await pref.remove(SESSION_CUSTOMER_DETAILS);
+    await pref.remove(SESSION_STATUS_ORDER);
+    await pref.remove(CUSTOMER_IMG);
+    await pref.remove(CUSTOMER_NAME);
+    await pref.remove(CUSTOMER_PHN);
+    await pref.remove(CUSTOMER_RATING);
+    await pref.remove(START_ADD);
+    await pref.remove(END_CO);
+    await pref.remove(END_ADD);
+    await pref.remove(START_CO);
   }
 }

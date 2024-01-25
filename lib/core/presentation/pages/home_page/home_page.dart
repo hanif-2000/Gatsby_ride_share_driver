@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
@@ -34,19 +33,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
   var session = locator<Session>();
-  late OrderDetail previousOrderDetails;
-  late CustomerDataModel previousCustomerDetails;
+  // late OrderDetail previousOrderDetails;
+  // late CustomerDataModel previousCustomerDetails;
 
-  Future<void> convertOrderAndCustomerDetailsIntoObject() async {
-    // Decode JSON into a Map
-    Map<String, dynamic> jsonOrderMap = json.decode(session.orderDetails);
-    Map<String, dynamic> jsonCustomerMap = json.decode(session.customerDetails);
+  // Future<void> convertOrderAndCustomerDetailsIntoObject() async {
+  //   // // Decode JSON into a Map
+  //   // Map<String, dynamic> jsonOrderMap = json.decode(session.orderDetails);
+  //   // Map<String, dynamic> jsonCustomerMap = json.decode(session.customerDetails);
 
-    setState(() {
-      previousOrderDetails = OrderDetail.fromJson(jsonOrderMap);
-      previousCustomerDetails = CustomerDataModel.fromJson(jsonCustomerMap);
-    });
-  }
+  //   // setState(() {
+  //   //   previousOrderDetails = OrderDetail.fromJson(jsonOrderMap);
+  //   //   previousCustomerDetails = CustomerDataModel.fromJson(jsonCustomerMap);
+  //   // });
+
+  // }
 
   @override
   void initState() {
@@ -67,21 +67,38 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       log("session order STATUS IS :==>> ${session.orderStatus}");
       log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
 
-      convertOrderAndCustomerDetailsIntoObject().then((value) {
-        socketProvider.updateOrderData(data: previousOrderDetails);
-        socketProvider.updateCustomerData(data: previousCustomerDetails);
+      // convertOrderAndCustomerDetailsIntoObject().then((value) {
+      // socketProvider.updateOrderData(data: OrderDetail(orderId: session.orderId, totalPrice: totalPrice, userId: userId, driverId: driverId, distance: distance, orderStatus: orderStatus, startCoordinate: startCoordinate, endCoordinate: endCoordinate, startAddress: startAddress, endAddress: endAddress, pendingAmount: pendingAmount, newTotal: newTotal));
+      // socketProvider.updateCustomerData(data: previousCustomerDetails);
 
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          NewOrderPage.routeName,
-          (route) => false,
-          arguments: NewOrderPageArguments(
-            orderDetail: previousOrderDetails,
-            customerDetailModel: previousCustomerDetails,
-            orderStatus: session.runningOrderStatus,
-          ),
-        );
-      });
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        NewOrderPage.routeName,
+        (route) => false,
+        arguments: NewOrderPageArguments(
+          orderDetail: OrderDetail(
+              distance: '',
+              driverId: session.driverId,
+              endAddress: session.endAdd,
+              endCoordinate: session.endCo,
+              newTotal: '',
+              orderId: session.orderId,
+              orderStatus: session.orderStatus,
+              pendingAmount: '',
+              startAddress: session.startAdd,
+              startCoordinate: session.startCo,
+              totalPrice: '',
+              userId: session.userId),
+          customerDetailModel: CustomerDataModel(
+              name: session.customerName,
+              phoneNumber: session.customerPhoneNumber,
+              photo: session.customerPhoneNumber,
+              id: int.parse(session.userId),
+              rating: session.customerRating),
+          orderStatus: session.runningOrderStatus,
+        ),
+      );
+      // })
     } else {}
 
     // homeProvider.getDriverStatus();

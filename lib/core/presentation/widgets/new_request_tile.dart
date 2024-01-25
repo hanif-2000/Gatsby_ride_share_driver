@@ -33,6 +33,7 @@ class NewRequestTile extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => RequestDetailPage(
               requestListModel: request[index],
+              index: index,
             ),
           ),
         );
@@ -103,7 +104,11 @@ class NewRequestTile extends StatelessWidget {
                               width: 3,
                             ),
                             Text(
-                              request[index].customerRating.toString(),
+                              double.tryParse(request[index]
+                                          .customerRating
+                                          .toString())
+                                      ?.toStringAsFixed(2) ??
+                                  "",
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,

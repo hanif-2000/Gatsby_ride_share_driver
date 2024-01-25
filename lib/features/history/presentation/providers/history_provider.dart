@@ -21,7 +21,7 @@ class HistoryProvider extends FormProvider {
       logMe(failure);
       yield HistoryFailure(failure: failure.message);
     }, (data) async* {
-      logMe("loadedd");
+      logMe("loadedd $data");
       yield HistoryLoaded(data: data);
     });
   }

@@ -116,6 +116,7 @@ class LatestSocketProvider extends ChangeNotifier {
     bookingList.removeWhere((element) {
       return element.id == orderId;
     });
+
     notifyListeners();
   }
 
@@ -491,6 +492,7 @@ class LatestSocketProvider extends ChangeNotifier {
             notifyListeners();
           }
         });
+        session.setIsOrderRunning = true;
       } catch (e) {
         print(e.toString());
       }
@@ -530,6 +532,7 @@ class LatestSocketProvider extends ChangeNotifier {
       required String actualTime,
       required String startTime,
       required String endTime,
+      String? distance,
       required context}) async {
     // var orderProvider = Provider.of<OrderProvider>(context, listen: false);
     try {
@@ -540,6 +543,7 @@ class LatestSocketProvider extends ChangeNotifier {
         'actualTime': actualTime,
         'StartTime': startTime,
         'EndTime': endTime,
+        'distance': distance ?? "0"
       };
       logMe('Update Status -- > ${map.toString()}');
 
