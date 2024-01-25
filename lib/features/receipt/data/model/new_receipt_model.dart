@@ -47,15 +47,15 @@ class ReceiptData {
   dynamic id;
   String startAddress;
   String endAddress;
-  double distance;
+  dynamic distance;
   dynamic paymentMethod;
-  double estimatedTime;
+  dynamic estimatedTime;
   dynamic actualTime;
   dynamic total;
   dynamic pendingAmount;
   dynamic customerId;
-  String name;
-  String image;
+  String? name;
+  String? image;
   dynamic longitude;
   dynamic latitude;
   dynamic phone;
@@ -109,9 +109,9 @@ class ReceiptData {
         startAddress: json["start_address"] ?? '',
         endAddress: json["end_address"] ?? "",
         distance: json["distance"] ?? '',
-        paymentMethod: json["payment_method"] ?? "1",
+        paymentMethod: json["payment_method"] ?? 1,
         estimatedTime: json["estimated_time"] ?? '',
-        actualTime: json["actual_time"] ?? '',
+        actualTime: json["actual_time"],
         total: json["total"] ?? "",
         pendingAmount: json["pending_amount"] ?? "",
         customerId: json["customerID"] ?? "",
@@ -127,11 +127,11 @@ class ReceiptData {
         minPrice: json["min_price"] ?? "",
         customerRating: json["CustomerRating"] ?? "0",
         orderTime: json["orderTime"] ?? DateTime.now(),
-        extraDistance: json["extraDistance"] ?? "",
-        extraDistancePrice: json["extraDistancePrice"] ?? "",
-        extraTime: json["extraTime"] ?? "",
-        extraTimePrice: json["extraTimePrice"] ?? "",
-        newTotal: json["newTotal"] ?? "",
+        extraDistance: json["extra_distance"] ?? "",
+        extraDistancePrice: json["extra_distance_price"] ?? "",
+        extraTime: json["extra_time"] ?? "",
+        extraTimePrice: json["extra_time_price"] ?? "",
+        newTotal: json["newTotal"] ?? json['total'],
         tip: json["tip"] ?? '',
       );
 

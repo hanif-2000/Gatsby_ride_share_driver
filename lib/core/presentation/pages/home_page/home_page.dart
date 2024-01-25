@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
@@ -9,6 +11,8 @@ import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
+import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/helper.dart';
@@ -30,6 +34,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
   var session = locator<Session>();
+  late OrderDetail previousOrderDetails;
+  late CustomerDataModel previousCustomerDetails;
+
+  Future<void> convertOrderAndCustomerDetailsIntoObject() async {
+    // Decode JSON into a Map
+    Map<String, dynamic> jsonOrderMap = json.decode(session.orderDetails);
+    Map<String, dynamic> jsonCustomerMap = json.decode(session.customerDetails);
+
+    setState(() {
+      previousOrderDetails = OrderDetail.fromJson(jsonOrderMap);
+      previousCustomerDetails = CustomerDataModel.fromJson(jsonCustomerMap);
+    });
+  }
 
   @override
   void initState() {
@@ -41,19 +58,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (session.isOrderRunning) {
       print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-      print(
-          "home provider customer are:==>> ${homeProvider.customerDetailModel}");
+      print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
 
-      // Navigator.pushNamedAndRemoveUntil(
-      //   context,
-      //   NewOrderPage.routeName,
-      //   (route) => false,
-      //   arguments: NewOrderPageArguments(
-      //     orderDetail: homeProvider.orderDetail!,
-      //     customerDetailModel: homeProvider.customerDetailModel!,
-      //     orderStatus: session.orderStatus,
-      //   ),
-      // );
+      print(" session customer are:==>>${session.orderDetails}}");
+
+      log("session customer home page are:==>> ${session.customerDetails}");
+      log("session order home page are:==>> ${session.orderDetails}");
+      log("session order STATUS IS :==>> ${session.orderStatus}");
+      log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+
+      convertOrderAndCustomerDetailsIntoObject().then((value) {
+        socketProvider.updateOrderData(data: previousOrderDetails);
+        socketProvider.updateCustomerData(data: previousCustomerDetails);
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          NewOrderPage.routeName,
+          (route) => false,
+          arguments: NewOrderPageArguments(
+            orderDetail: previousOrderDetails,
+            customerDetailModel: previousCustomerDetails,
+            orderStatus: session.runningOrderStatus,
+          ),
+        );
+      });
     } else {}
 
     // homeProvider.getDriverStatus();

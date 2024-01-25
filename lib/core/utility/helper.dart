@@ -35,6 +35,31 @@ logMe(Object? obj) {
   }
 }
 
+Future<String> convertSecondsToMinutes({required int time}) async {
+  int seconds = time; // Replace this with your desired number of seconds
+
+  int minutes = seconds ~/ 60;
+  int remainingSeconds = seconds % 60;
+
+  int hours = minutes ~/ 60;
+  int remainingMinutes = minutes % 60;
+
+  print('$seconds seconds is equivalent to:');
+  print(
+      '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
+
+  // setState(() {
+  // extraTimeTaken = "$hours"
+  //     ' hr '
+  //     '$remainingMinutes'
+  //     ' min '
+  //     '$remainingSeconds'
+  //     ' sec ';
+  // });
+
+  return '$hours hr $remainingMinutes min $remainingSeconds sec';
+}
+
 // spacing
 Widget smallVerticalSpacing() => const SizedBox(height: sizeSmall);
 

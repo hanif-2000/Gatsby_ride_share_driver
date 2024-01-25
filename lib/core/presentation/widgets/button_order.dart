@@ -52,8 +52,8 @@ class ButtonOrder extends StatelessWidget {
         log("current status from previous screen  is $currentOrderStatus}");
         print(
             "Order total is:***********-------->>>>>> ${socketProvider.orderDetail!.newTotal}");
-        print(
-            "Order total is:***********-------->>>>>> ${homeProvider.orderDetail!.newTotal}");
+        // print(
+        //     "Order total is:***********-------->>>>>> ${homeProvider.orderDetail!.newTotal}");
 
         log("session order status is:-->>${session.currentOrderState}");
         log("is order runnig : ${session.isOrderRunning}");

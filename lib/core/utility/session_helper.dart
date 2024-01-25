@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -14,6 +16,8 @@ abstract class Session {
   set setOrderId(String orderId);
 
   set setToken(String token);
+  set setOrderDetails(orderDetails);
+  set setCustomerDetails(customerDetails);
 
   set setFcmToken(String fcmToken);
   set setOldFcmToken(String fcmOldToken);
@@ -85,10 +89,10 @@ abstract class Session {
   String get driverId;
 
   /// * GET ORDER DETAILS
-  Map get orderDetails;
+  String get orderDetails;
 
   /// * GET CUSTOMER DETAILS
-  Map get customerDetails;
+  String get customerDetails;
 
   String get userId;
   double get currentLat;
@@ -163,17 +167,16 @@ class SessionHelper implements Session {
   /// * save order details--------*/
 
   @override
-  set setOrderDetails(Map<String, dynamic> sessionOrderDetails) {
-    pref.setString(SESSION_ORDER_DETAILS, jsonEncode(sessionOrderDetails));
+  set setOrderDetails(sessionOrder) {
+    pref.setString(SESSION_ORDER_DETAILS, sessionOrder);
   }
 
   ///******** Save CUSTOMER DETAILS-------  */
   ///
 
   @override
-  set setCustomerDetails(Map<String, dynamic> sessionCustomerDetails) {
-    pref.setString(
-        SESSION_CUSTOMER_DETAILS, jsonEncode(sessionCustomerDetails));
+  set setCustomerDetails(sessionCustomerDetails) {
+    pref.setString(SESSION_CUSTOMER_DETAILS, sessionCustomerDetails);
   }
 
   @override
@@ -267,13 +270,17 @@ class SessionHelper implements Session {
   /// **** order dewtails
 
   @override
-  Map get orderDetails => jsonDecode(pref.getString(SESSION_ORDER_DETAILS)!);
+  String get orderDetails =>
+      pref.getString(SESSION_ORDER_DETAILS) ??
+      'session order details are null ';
 
   /// * customer details
 
   @override
-  Map get customerDetails =>
-      jsonDecode(pref.getString(SESSION_CUSTOMER_DETAILS)!);
+  String get customerDetails =>
+      pref.getString(SESSION_CUSTOMER_DETAILS) ??
+      'session customer details are null';
+
   @override
   double get currentLat => pref.getDouble(CURRENT_LAT) ?? 0.0;
 

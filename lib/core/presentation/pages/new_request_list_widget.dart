@@ -164,6 +164,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     socketProvider.bookingList[index].newTotal,
                               );
 
+                              // session.setOrderDetails =
+                              //     homeProvider.orderDetail!;
+
                               //Socket
 
                               //*** CUSTOMER DETAILS */
@@ -179,6 +182,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                 rating: socketProvider
                                     .bookingList[index].customerRating,
                               );
+
+                              // session.setCustomerDetails =
+                              //     homeProvider.customerDetailModel!;
 
                               log("order details are:-->. ${homeProvider.orderDetail!}");
                               print(

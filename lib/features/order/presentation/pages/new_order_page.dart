@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
@@ -76,28 +77,62 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     // showLoading();
     session.setOrderId = widget.orderDetail.orderId.toString();
-    socketProvider
-        .updateCustomerData(
-            data: CustomerDataModel(
-                name: widget.customerDetail.name,
-                phoneNumber: widget.customerDetail.phoneNumber,
-                photo: widget.customerDetail.photo,
-                id: widget.customerDetail.id,
-                rating: widget.customerDetail.rating))
-        .then((value) {
-      if (value) {
-        socketProvider.setNewPolylineDirection(false);
-      }
-    });
+
+    log("new order page order details:->> ${widget.orderDetail}");
+    log("new order page customer details:->> ${widget.customerDetail}");
+
     // orderProvider.setOrderDetails = widget.orderDetail;
 
-    socketProvider.updateOrderData(data: widget.orderDetail);
-    socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
     socketProvider.getCurrentLocation();
     log("current order status is :-->> ${widget.orderStatus}");
     log("current order status is on order page init :-->> ${widget.orderStatus}");
-    log("order details :-->> ${widget.orderDetail}");
+    log("order details :-->> ${(widget.orderDetail)}");
+    log("order details encode:-->> ${json.encode(widget.orderDetail)}");
+
     log("customer detals :-->> ${widget.customerDetail}");
+    log("customer detals encode :-->> ${json.encode(widget.customerDetail)}");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      socketProvider.updateCurrentStatus(status: session.runningOrderStatus);
+      socketProvider.updateOrderData(data: widget.orderDetail);
+      session.setOrderDetails = json.encode(widget.orderDetail);
+      session.setCustomerDetails = json.encode(widget.customerDetail);
+
+      socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
+      socketProvider
+          .updateCustomerData(
+              data: CustomerDataModel(
+                  name: widget.customerDetail.name,
+                  phoneNumber: widget.customerDetail.phoneNumber,
+                  photo: widget.customerDetail.photo,
+                  id: widget.customerDetail.id,
+                  rating: widget.customerDetail.rating))
+          .then((value) {
+        if (value) {
+          if ((session.runningOrderStatus == 0) ||
+              (session.runningOrderStatus == 1) ||
+              (session.runningOrderStatus == 2)) {
+            socketProvider.setNewPolylineDirection(false);
+          } else {
+            socketProvider.setNewPolylineDirection(true);
+          }
+
+          /** update ride text */
+
+          if (session.runningOrderStatus == 1) {
+            socketProvider.updateRideText(txt: "Start Ride to Customer Place");
+          } else if (session.runningOrderStatus == 2) {
+            socketProvider.updateRideText(txt: "Reached to Customer Place");
+          } else if (session.runningOrderStatus == 3) {
+            socketProvider.updateRideText(txt: "Start Trip");
+          } else if (session.runningOrderStatus == 5) {
+            socketProvider.updateRideText(txt: "End Trip");
+          } else {
+            socketProvider.updateRideText(txt: "Go to Receipt Screen");
+          }
+        }
+      });
+    });
   }
 
   @override

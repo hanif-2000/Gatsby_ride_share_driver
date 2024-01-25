@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../../../../core/static/colors.dart';
 import '../../widgets/common_text.dart';
@@ -68,6 +70,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     convertSecondsToMinutes();
     super.initState();
+
+    log("extra time is :${widget.extraTime}");
   }
 
   @override
@@ -148,7 +152,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     firstText: 'Extra Time Price',
                     // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: "CA\$ " + widget.extraTimePrice,
+                    secondText: "CA\$ ${widget.extraTimePrice}",
                   ),
                   const Divider(
                     color: whiteAccentColor,

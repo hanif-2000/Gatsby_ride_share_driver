@@ -56,6 +56,11 @@ class LatestSocketProvider extends ChangeNotifier {
 
   ReceiptData? receiptData;
 
+  updateReceiptData({data}) {
+    receiptData = data;
+    notifyListeners();
+  }
+
   updateCurrentStatus({required int status}) {
     currentOrderStatus = status;
     notifyListeners();
@@ -92,6 +97,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   Future<bool> updateCustomerData({required CustomerDataModel data}) async {
     customerDataModel = data;
+
     notifyListeners();
     return true;
   }
@@ -137,6 +143,8 @@ class LatestSocketProvider extends ChangeNotifier {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
       }
+    }).onDone(() {
+      connectToSocket(context);
     });
   }
 
@@ -212,6 +220,15 @@ class LatestSocketProvider extends ChangeNotifier {
           log("driver is mine ");
           print("driver is mine ");
         }
+      }
+
+      // <------------------ RIDE END OR COMPLETED --------->>>>>
+      if (response['type'] == 'endTrip') {
+        updateReceiptData(data: ReceiptData.fromJson(response["data"]));
+        // receiptData = ReceiptData.fromJson(response);
+        notifyListeners();
+
+        log("my receipt data is:-->> $receiptData");
       }
 
       // <----------- Checking When request come ---------> //
@@ -536,25 +553,38 @@ class LatestSocketProvider extends ChangeNotifier {
               currentOrderStatus = 2;
               rideText = "Reached Pick up Location";
               setNewChangeOrderStatus = "2";
-              dismissLoading();
+              session.setOrderStatus = 2;
+              session.setRunningOrderStatus = 2;
+
+              setNewPolylineDirection(false);
             } else if (status == '3') {
               currentOrderStatus = 3;
               setNewChangeOrderStatus = "3";
+              session.setOrderStatus = 3;
+              session.setRunningOrderStatus = 3;
+              setNewPolylineDirection(true);
 
               rideText = "Start Trip";
-              dismissLoading();
             } else if (status == '5') {
               currentOrderStatus = 5;
               setNewChangeOrderStatus = "5";
 
+              session.setRunningOrderStatus = 5;
+
+              setNewPolylineDirection(true);
+
+              session.setOrderStatus = 5;
+
               rideText = "End Trip";
-              dismissLoading();
             } else if (status == "7") {
               currentOrderStatus = 7;
               setNewChangeOrderStatus = "7";
+              session.setOrderStatus = 7;
+              session.setRunningOrderStatus = 5;
+
+              setNewPolylineDirection(true);
 
               rideText = "Start Ride to Pick up Location";
-              dismissLoading();
             } else {
               log("Ride canceled by the driver");
             }

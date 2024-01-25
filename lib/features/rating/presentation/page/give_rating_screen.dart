@@ -1,5 +1,6 @@
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/job_completed_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
@@ -8,6 +9,7 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
+import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_provider.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/providers/rating_state.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +34,8 @@ class GiveRatingScreen extends StatelessWidget {
         },
         child: Scaffold(
           body: SingleChildScrollView(
-            child: Consumer<RatingProvider>(
-              builder: (context, provider, _) {
+            child: Consumer2<RatingProvider, LatestSocketProvider>(
+              builder: (context, provider, socketProvider, _) {
                 return Form(
                   key: provider.formKey,
                   child: Column(
@@ -162,15 +164,16 @@ class GiveRatingScreen extends StatelessWidget {
                                         break;
                                       case RatingSuccess:
                                         dismissLoading();
-                                        // Navigator.pushNamed(
-                                        //   context,
-                                        //   JobCompletedPage.routeName,
-                                        //   arguments: RatingPageArguments(
-                                        //     customerDataModel:
-                                        //         customerDataModel,
-                                        //     customerId: customerId,
-                                        //   ),
-                                        // );
+                                        Navigator.pushNamed(
+                                          context,
+                                          JobCompletedPage.routeName,
+                                          arguments: RatingPageArguments(
+                                            customerDataModel: socketProvider
+                                                .customerDataModel!,
+                                            customerId: socketProvider
+                                                .customerDataModel!.id,
+                                          ),
+                                        );
 
                                         break;
                                       default:
