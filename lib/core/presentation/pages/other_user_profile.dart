@@ -43,7 +43,7 @@ class OtherUserProfile extends StatelessWidget {
                       ),
                       Center(
                           child: CustomCacheNetworkImage(
-                              img: provider.customerDataModel!.photo!,
+                              img: provider.customerDetail!.photo!,
                               size: deviceSize.width * .4)
 
                           //  Container(
@@ -88,18 +88,17 @@ class OtherUserProfile extends StatelessWidget {
                       largeVerticalSpacing(),
                       ProfileFieldTile(
                         title: appLoc.firstName,
-                        value:
-                            provider.customerDataModel!.name.split(' ').first,
+                        value: provider.customerDetail!.name.split(' ').first,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(
                         title: appLoc.lastName,
-                        value: provider.customerDataModel!.name.split(' ').last,
+                        value: provider.customerDetail!.name.split(' ').last,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(
                         title: appLoc.mobileNumber,
-                        value: provider.customerDataModel!.phoneNumber,
+                        value: provider.customerDetail!.phoneNumber,
                       ),
                       mediumVerticalSpacing(),
                       ProfileFieldTile(

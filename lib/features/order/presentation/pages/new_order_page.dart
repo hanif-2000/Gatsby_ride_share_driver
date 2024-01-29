@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
+import '../../../../core/presentation/widgets/button_order.dart';
 import '../../../../core/presentation/widgets/destination_widget.dart';
 import '../../../../core/presentation/widgets/origin_widget.dart';
 import '../../domain/entities/order_detail.dart';
-import '../widgets/bottom_container_order.dart';
 
 class NewOrderPageArguments {
   final OrderDetail orderDetail;
@@ -57,14 +57,9 @@ class NewOrderPage extends StatefulWidget {
 
 class _NewOrderPageState extends State<NewOrderPage>
     with WidgetsBindingObserver {
-  // Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
-  // var orderPProvider = locator<OrderProvider>();
   var socketProvider = locator<LatestSocketProvider>();
-  // var orderProvider = locator<OrderProvider>();
 
   var session = locator<Session>();
-
-  // late StreamSubscription<LocationData> locationSubscription;
 
   @override
   void initState() {
@@ -91,6 +86,7 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     log("customer detals :-->> ${widget.customerDetail}");
     log("customer detals encode :-->> ${json.encode(widget.customerDetail)}");
+    socketProvider.updateOrderData(data: widget.orderDetail);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       socketProvider.updateCurrentStatus(status: session.runningOrderStatus);
@@ -108,7 +104,14 @@ class _NewOrderPageState extends State<NewOrderPage>
 
       // session.setCustomerDetails = json.encode(widget.customerDetail);
 
-      socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
+      socketProvider.updateCustomerAndRideDetails(
+        name: widget.customerDetail.name,
+        rating: widget.customerDetail.rating,
+        newTotal: widget.orderDetail.newTotal,
+        profilePic: widget.customerDetail.photo!,
+        distance: widget.orderDetail.distance,
+      );
+
       socketProvider
           .updateCustomerData(
               data: CustomerDataModel(
@@ -152,6 +155,7 @@ class _NewOrderPageState extends State<NewOrderPage>
     super.dispose();
     // checkOrderStatusTimer?.cancel();
     // trackingTimer?.cancel();
+    socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
     WidgetsBinding.instance.removeObserver(this);
   }
 
@@ -206,11 +210,16 @@ class _NewOrderPageState extends State<NewOrderPage>
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                BottomContainerOrder(
-                                  newMessgeCount:
-                                      socketProvider.unreadMessageCount,
-                                  currentOrderStatus: session.currentOrderState,
-                                ),
+                                ButtonOrder(
+                                    currentOrderStatus:
+                                        socketProvider.currentOrderStatus,
+                                    newMessgeCount:
+                                        socketProvider.unreadMessageCount),
+                                // BottomContainerOrder(
+                                //   newMessgeCount:
+                                //       socketProvider.unreadMessageCount,
+                                //   currentOrderStatus: session.currentOrderState,
+                                // ),
                               ],
                             ),
                           ),

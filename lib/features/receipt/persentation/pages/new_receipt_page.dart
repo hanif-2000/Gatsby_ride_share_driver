@@ -661,9 +661,9 @@ class ReceiptPage extends StatelessWidget {
                                                             RatingPageArguments(
                                                           customerDataModel:
                                                               provider
-                                                                  .customerDataModel!,
+                                                                  .customerDetail!,
                                                           customerId: provider
-                                                              .customerDataModel!
+                                                              .customerDetail!
                                                               .id,
                                                         ),
                                                       );

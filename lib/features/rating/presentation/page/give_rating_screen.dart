@@ -174,10 +174,10 @@ class GiveRatingScreen extends StatelessWidget {
                                           context,
                                           JobCompletedPage.routeName,
                                           arguments: RatingPageArguments(
-                                            customerDataModel: socketProvider
-                                                .customerDataModel!,
+                                            customerDataModel:
+                                                socketProvider.customerDetail!,
                                             customerId: socketProvider
-                                                .customerDataModel!.id,
+                                                .customerDetail!.id,
                                           ),
                                         );
 

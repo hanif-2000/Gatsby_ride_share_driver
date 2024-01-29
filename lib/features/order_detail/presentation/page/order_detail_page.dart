@@ -253,6 +253,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                         .usePoppinsW6Font(),
                                   ),
                                   smallHorizontalSpacing(),
+
+                                  /*** REVIEWS */
                                   Text(
                                     'Reviews',
                                     textAlign: TextAlign.center,
@@ -301,6 +303,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ),
                   ),
                   largeVerticalSpacing(),
+
+                  /*** ORIGIN ADDRESS */
                   AddressTile(
                     icon: 'assets/icons/home/ic_pickup.svg',
                     title: 'Pickup Location',
@@ -312,6 +316,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       color: grey9c9c9c,
                     ),
                   ),
+
+                  /*** DESTINATION ADDRESS */
+
                   AddressTile(
                     icon: 'assets/icons/home/ic_drop_pin.svg',
                     title: 'Drop location',

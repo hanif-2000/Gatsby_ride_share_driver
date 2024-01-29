@@ -107,7 +107,7 @@ class NewRequestTile extends StatelessWidget {
                               double.tryParse(request[index]
                                           .customerRating
                                           .toString())
-                                      ?.toStringAsFixed(2) ??
+                                      ?.toStringAsFixed(1) ??
                                   "",
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

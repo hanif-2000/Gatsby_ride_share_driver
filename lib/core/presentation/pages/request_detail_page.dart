@@ -343,7 +343,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                       'assets/icons/home/ic_start.svg'),
                                                   smallHorizontalSpacing(),
                                                   Text(
-                                                    '${widget.requestListModel!.customerRating}',
+                                                    (widget.requestListModel!
+                                                            .customerRating)
+                                                        .toStringAsFixed(1)
+                                                        .toString(),
                                                     textAlign: TextAlign.center,
                                                     style: titleStyle
                                                         .copyWith(

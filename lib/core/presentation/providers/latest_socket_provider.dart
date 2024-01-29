@@ -51,7 +51,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
   late GoogleMapController googleMapController;
 
-  CustomerDataModel? customerDataModel;
+  var dio = Dio();
+
+  // CustomerDataModel? customerDataModel;
   OrderDetail? orderDetail;
 
   ReceiptData? receiptData;
@@ -68,6 +70,47 @@ class LatestSocketProvider extends ChangeNotifier {
 
   updateRideText({required String txt}) {
     rideText = txt;
+    notifyListeners();
+  }
+
+  /// UPDATE CUSTOMER AND ORDER DETAILS TO LOCAL
+
+  updateCustomerLocal({
+    required String img,
+    required String rating,
+    required String phn,
+    required String name,
+  }) {
+    session.setCustomerImg = img;
+    session.setCustomerRating = rating;
+    session.setCustomerPhn = phn;
+    session.setCustomerName = name;
+    notifyListeners();
+  }
+
+  /// CUSTOMER DETAILS
+
+  String customerName = '';
+  String customerRating = '';
+  String rideNewTotal = '';
+  String customerProfilePic = '';
+  String rideDistance = '';
+
+  /// UPDATE CUSTOMER --->> and <<<--- RIDE DETAILS
+
+  updateCustomerAndRideDetails({
+    required String name,
+    required String rating,
+    required String newTotal,
+    required String profilePic,
+    required String distance,
+  }) {
+    print("******* UPDATE CUSTOMER AND RIDE DETALS CALLED");
+    customerName = name;
+    customerRating = rating;
+    rideNewTotal = newTotal;
+    customerProfilePic = profilePic;
+    rideDistance = distance;
     notifyListeners();
   }
 
@@ -96,7 +139,9 @@ class LatestSocketProvider extends ChangeNotifier {
   //UPDATE CUSTOMER DATA MODEL
 
   Future<bool> updateCustomerData({required CustomerDataModel data}) async {
-    customerDataModel = data;
+    print(
+        "************* customer data model is and UPDATE CUSTOMER DATA CALLED ---->>>>  $data <<<<<<<<<--------------");
+    _customerDetail = data;
 
     notifyListeners();
     return true;
@@ -211,11 +256,18 @@ class LatestSocketProvider extends ChangeNotifier {
 
       // <------------------ Accept BY OTHER DRIVER --------->>>>>
       if (response['type'] == 'AcceptByOther') {
+        print("*****----->>> RIDE ACCEPTED BY OTHER -----<<<<<");
         acceptByOtherDriverModel = AcceptByOtherDriverModel.fromJson(response);
+        print("Ride details are:-->> $acceptByOtherDriverModel");
+        print("Ride details are:-->> $acceptByOtherDriverModel");
+        print("Ride details are data:-->> $response");
+
         if (acceptByOtherDriverModel!.driverId != session.userId) {
           bookingList.removeWhere((element) {
             return element.id == cancelByUserModel!.orderId;
           });
+
+          // CustomerDetailModel(data: CustomerDataModel(name: acceptByOtherDriverModel.data., phoneNumber: phoneNumber, photo: photo, id: id, rating: rating) )
           notifyListeners();
         } else if (acceptByOtherDriverModel!.driverId == session.userId) {
           log("driver is mine ");
@@ -405,6 +457,7 @@ class LatestSocketProvider extends ChangeNotifier {
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
   updateLatLng({LatLng? latLng}) async {
+    print("=====******* UPDATE LAT LONG CALLED =======*******");
     print("current latlong:${latLng!.latitude},${latLng.longitude}");
     session.setCurrentLat = latLng.latitude;
     session.setCurrentLang = latLng.longitude;
@@ -551,6 +604,9 @@ class LatestSocketProvider extends ChangeNotifier {
         _socket!.connection.listen((event) {
           if ((event is Connected) || (event is Reconnected)) {
             _socket!.send(json.encode(map));
+
+            updateLatLng(
+                latLng: LatLng(session.currentLat, session.currentLang));
             print(map.toString());
 
             if (status == "2") {
@@ -1279,6 +1335,11 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
+  clearState() {
+    polylineCoordinates.clear();
+    newPolylines.clear();
+  }
+
   // trackDriverRouteDistance() {
   //   log("track driver route distance called ");
 
@@ -1298,5 +1359,23 @@ class LatestSocketProvider extends ChangeNotifier {
   //   // });
   //   // });
   //   // });
+  // }
+
+  /// Get CUSTOMER DETAILS
+
+  // Future<NewCustomerResponseDataModel> getCustomerDetails(
+  //     {required int id}) async {
+  //   var response = await dio.post(
+  //       'https://php.parastechnologies.in/taxi/public/api/webservice/driver/customer',
+  //       data: {'user_id': id, 'type': '2'});
+
+  //   if (response.statusCode == 200) {
+  //     print(response.data.toString());
+  //     log("new customer data is :-->>${response.data}");
+
+  //     NewCustomerResponseDataModel data=NewCustomerResponseDataModel.fromJson(response.data);
+
+  //     // updateCustomerLocal(img: data.data.customerDetail.image, rating: data.data.customerDetail., phn: phn, name: name)
+  //   }
   // }
 }

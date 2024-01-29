@@ -182,7 +182,7 @@ class ButtonOrder extends StatelessWidget {
 
               /**   SHOW CUSTOMER PROFILE TILE SECTION */
               UserProfileTile(
-                customerDataModel: socketProvider.customerDataModel,
+                customerDataModel: socketProvider.customerDetail,
                 orderDetails: socketProvider.orderDetail,
               ),
               mediumVerticalSpacing(),
@@ -246,19 +246,19 @@ class ButtonOrder extends StatelessWidget {
                                     //     ?
 
                                     print(
-                                        "Customer name____>>. ${socketProvider.customerDataModel!.name}");
+                                        "Customer name____>>. ${socketProvider.customerDetail!.name}");
                                     print(
-                                        "Customer name____>>. ${socketProvider.customerDataModel!.photo}");
+                                        "Customer name____>>. ${socketProvider.customerDetail!.photo}");
                                     print(
-                                        "Customer name____>>. ${socketProvider.customerDataModel!.id}");
+                                        "Customer name____>>. ${socketProvider.customerDetail!.id}");
 
                                     Navigator.pushNamed(
                                       context,
                                       ChatPage.routeName,
                                       arguments: ChatDetail(
-                                        socketProvider.customerDataModel!.name,
-                                        socketProvider.customerDataModel!.photo,
-                                        socketProvider.customerDataModel!.id,
+                                        socketProvider.customerDetail!.name,
+                                        socketProvider.customerDetail!.photo,
+                                        socketProvider.customerDetail!.id,
                                       ),
                                     );
                                     //     : session.currentOrderState == 2
@@ -487,6 +487,7 @@ class ButtonOrder extends StatelessWidget {
                           onTap: () async {
                             socketProvider.removeOrderFromList(
                                 orderId: session.orderId);
+
                             Navigator.pop(context);
                             showLoading();
 
@@ -504,6 +505,9 @@ class ButtonOrder extends StatelessWidget {
 
                               dismissLoading();
                               if (value) {
+                                homeProvider.clearState();
+                                socketProvider.clearState();
+
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
