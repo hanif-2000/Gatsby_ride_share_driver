@@ -71,7 +71,7 @@ class _NewOrderPageState extends State<NewOrderPage>
     // socketProvider.getTotalUnreadCount(widget.customerDetail.id);
 
     // showLoading();
-    session.setOrderId = widget.orderDetail.orderId.toString();
+    // session.setOrderId = widget.orderDetail.orderId.toString();
 
     log("new order page order details:->> ${widget.orderDetail}");
     log("new order page customer details:->> ${widget.customerDetail}");
@@ -86,16 +86,17 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     log("customer detals :-->> ${widget.customerDetail}");
     log("customer detals encode :-->> ${json.encode(widget.customerDetail)}");
-    socketProvider.updateOrderData(data: widget.orderDetail);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      socketProvider.updateOrderData(data: widget.orderDetail);
+
       socketProvider.updateCurrentStatus(status: session.runningOrderStatus);
       socketProvider.updateOrderData(data: widget.orderDetail);
       // session.setOrderDetails = json.encode(widget.orderDetail);
 
       session.setCustomerName = widget.customerDetail.name;
       session.setCustomerImg = widget.customerDetail.photo ?? '';
-      session.setCustomerRating = widget.customerDetail.rating;
+      session.setCustomerRating = widget.customerDetail.rating.toString();
       session.setCustomerPhn = widget.customerDetail.phoneNumber;
       session.setStartAdd = widget.orderDetail.startAddress;
       session.setEndAdd = widget.orderDetail.endAddress;
@@ -106,10 +107,10 @@ class _NewOrderPageState extends State<NewOrderPage>
 
       socketProvider.updateCustomerAndRideDetails(
         name: widget.customerDetail.name,
-        rating: widget.customerDetail.rating,
-        newTotal: widget.orderDetail.newTotal,
+        rating: widget.customerDetail.rating.toString(),
+        newTotal: widget.orderDetail.newTotal.toString(),
         profilePic: widget.customerDetail.photo!,
-        distance: widget.orderDetail.distance,
+        distance: widget.orderDetail.distance.toString(),
       );
 
       socketProvider
@@ -194,7 +195,8 @@ class _NewOrderPageState extends State<NewOrderPage>
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          ((session.orderStatus == 1) ||
+                          ((session.orderStatus == 0) ||
+                                  (session.orderStatus == 1) ||
                                   (session.orderStatus == 2))
                               ? OriginWidget(
                                   deviceWidth: deviceSize.width,

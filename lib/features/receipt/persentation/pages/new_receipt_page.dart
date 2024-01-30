@@ -4,6 +4,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_wi
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/duration_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:dio/dio.dart';
@@ -30,11 +31,14 @@ class ReceiptPage extends StatelessWidget {
   // final CustomerDataModel customerDataModel;
   final int customerId;
   String actualTimeTaken = "0 Min";
+  var socketProvider = locator<LatestSocketProvider>();
 
   @override
   Widget build(BuildContext context) {
     var session = locator<Session>();
 
+    // String actualTime =
+    // formatDuration(int.parse(socketProvider.receiptData!.actualTime));
     // var _deviceSize = MediaQuery.of(context).size;
     // return
     //  ChangeNotifierProvider(
@@ -300,7 +304,11 @@ class ReceiptPage extends StatelessWidget {
                                         .usePoppinsW6Font(),
                                   ),
                                   Text(
-                                    "${provider.receiptData!.actualTime} Min",
+                                    // actualTime,
+                                    formatDuration(double.parse(
+                                            provider.receiptData!.actualTime)
+                                        .toInt()),
+                                    // "${provider.receiptData!.actualTime} Min",
                                     textAlign: TextAlign.center,
                                     style: titleStyle
                                         .copyWith(
@@ -618,7 +626,7 @@ class ReceiptPage extends StatelessWidget {
                                                       FormData.fromMap({
                                                     'payment_status': 'yes',
                                                     'order_id': provider
-                                                        .session.orderId,
+                                                        .session.runningOrderId,
                                                   });
                                                   // var body = {
                                                   //   'payment_status': paymentStatus,

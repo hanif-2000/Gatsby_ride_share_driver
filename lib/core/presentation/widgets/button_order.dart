@@ -50,8 +50,8 @@ class ButtonOrder extends StatelessWidget {
           HomeProvider homeProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
-        print(
-            "Order total is:***********-------->>>>>> ${socketProvider.orderDetail!.newTotal}");
+        // print(
+        //     "Order total is:***********-------->>>>>> ${socketProvider.orderDetail!.newTotal}");
         // print(
         //     "Order total is:***********-------->>>>>> ${homeProvider.orderDetail!.newTotal}");
 
@@ -192,7 +192,7 @@ class ButtonOrder extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 8.0),
+                        vertical: 8.0, horizontal: 0.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -378,7 +378,9 @@ class ButtonOrder extends StatelessWidget {
                                 socketProvider
                                     .updateOrderStatus(
                                         status: "7",
-                                        actualTime: session.estimatedTime,
+                                        actualTime: (double.tryParse(
+                                                session.estimatedTime))
+                                            .toString(),
                                         context: context,
                                         startTime: session.rideStartTime,
                                         endTime: DateTime.now().toString(),
@@ -486,7 +488,7 @@ class ButtonOrder extends StatelessWidget {
                           context: context,
                           onTap: () async {
                             socketProvider.removeOrderFromList(
-                                orderId: session.orderId);
+                                orderId: session.runningOrderId);
 
                             Navigator.pop(context);
                             showLoading();

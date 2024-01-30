@@ -212,7 +212,7 @@ class HomeProvider with ChangeNotifier {
     showLoading();
     yield UpdateStatusOrderLoading();
     final formData = FormData.fromMap({
-      'id': session.orderId,
+      'id': session.runningOrderId,
       'status': orderStatus,
     });
     final result = await updateStatusOrder.execute(formData);

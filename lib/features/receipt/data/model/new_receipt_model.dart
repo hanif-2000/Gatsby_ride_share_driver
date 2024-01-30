@@ -142,7 +142,7 @@ class ReceiptData {
         "distance": distance,
         "payment_method": paymentMethod,
         "estimated_time": estimatedTime,
-        "actual_time": actualTime,
+        "actual_time": actualTime.split(',')[0],
         "total": total,
         "pending_amount": pendingAmount,
         "customerID": customerId,

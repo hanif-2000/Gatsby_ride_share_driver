@@ -152,7 +152,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     firstText: 'Extra Time Price',
                     // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: "CA\$ ${widget.extraTimePrice}",
+                    secondText:
+                        "CA\$ ${double.parse(widget.extraTimePrice.toString()).toStringAsFixed(2)}",
                   ),
                   const Divider(
                     color: whiteAccentColor,

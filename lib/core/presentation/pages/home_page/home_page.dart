@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/fcm_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_app_bar.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -12,6 +13,8 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
+import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/helper.dart';
@@ -28,7 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  // final FcmProvider _fcmProvider = locator<FcmProvider>();
+  final FcmProvider _fcmProvider = locator<FcmProvider>();
 
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
@@ -57,13 +60,77 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
 
     if (session.isOrderRunning) {
+      showLoading();
+      // var id = _fcmProvider.incomingOrderDetail!.orderId;
+      log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
+      log("session customer id is:-------->>>>>>.. ${session.customerId}");
+
+      homeProvider
+          .fetchOrderDetail(session.runningOrderId.toString())
+          .listen((event) {
+        if (event is OrderDetailLoaded) {
+          log("order details in home page checking is :--> ${event.data}");
+          socketProvider.updateOrderData(data: event.data);
+
+          homeProvider
+              .fetchCustomerDetail(session.customerId.toString())
+              .listen((event2) async {
+            if (event2 is CustomerDetailLoaded) {
+              log("customer details in home page checking is :--> ${event2.data}");
+              socketProvider
+                  .updateCustomerData(data: event2.data.data)
+                  .then((value) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  homeProvider.changeStatus = session.isOnline;
+
+                  dismissLoading();
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    NewOrderPage.routeName,
+                    (route) => false,
+                    arguments: NewOrderPageArguments(
+                      orderDetail: socketProvider.orderDetail!,
+
+                      //  OrderDetail(
+                      //     distance: '',
+                      //     driverId: session.driverId,
+                      //     endAddress: session.endAdd,
+                      //     endCoordinate: session.endCo,
+                      //     newTotal: '',
+                      //     orderId: session.runningOrderId.toString(),
+                      //     orderStatus: session.orderStatus,
+                      //     pendingAmount: '',
+                      //     startAddress: session.startAdd,
+                      //     startCoordinate: session.startCo,
+                      //     totalPrice: '',
+                      //     userId: session.userId),
+
+                      customerDetailModel: socketProvider.customerDetail!,
+
+                      //  CustomerDataModel(
+                      //     name: session.customerName,
+                      //     phoneNumber: session.customerPhoneNumber,
+                      //     photo: session.customerPhoneNumber,
+                      //     id: int.parse(session.userId),
+                      //     rating: session.customerRating),
+                      orderStatus: session.runningOrderStatus,
+                    ),
+                  );
+                });
+              });
+            }
+          });
+        }
+      });
+
       print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
       print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
 
-      print(" session customer are:==>>${session.orderDetails}}");
+      // print(" session customer are:==>>${session.orderDetails}}");
 
-      log("session customer home page are:==>> ${session.customerDetails}");
-      log("session order home page are:==>> ${session.orderDetails}");
+      // log("session customer home page are:==>> ${session.customerDetails}");
+      // log("session order home page are:==>> ${session.orderDetails}");
       log("session order STATUS IS :==>> ${session.orderStatus}");
       log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
 
@@ -71,44 +138,80 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       // socketProvider.updateOrderData(data: OrderDetail(orderId: session.orderId, totalPrice: totalPrice, userId: userId, driverId: driverId, distance: distance, orderStatus: orderStatus, startCoordinate: startCoordinate, endCoordinate: endCoordinate, startAddress: startAddress, endAddress: endAddress, pendingAmount: pendingAmount, newTotal: newTotal));
       // socketProvider.updateCustomerData(data: previousCustomerDetails);
 
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        NewOrderPage.routeName,
-        (route) => false,
-        arguments: NewOrderPageArguments(
-          orderDetail: OrderDetail(
-              distance: '',
-              driverId: session.driverId,
-              endAddress: session.endAdd,
-              endCoordinate: session.endCo,
-              newTotal: '',
-              orderId: session.orderId,
-              orderStatus: session.orderStatus,
-              pendingAmount: '',
-              startAddress: session.startAdd,
-              startCoordinate: session.startCo,
-              totalPrice: '',
-              userId: session.userId),
-          customerDetailModel: CustomerDataModel(
-              name: session.customerName,
-              phoneNumber: session.customerPhoneNumber,
-              photo: session.customerPhoneNumber,
-              id: int.parse(session.userId),
-              rating: session.customerRating),
-          orderStatus: session.runningOrderStatus,
-        ),
-      );
+      // if (mounted) {
+      //   Navigator.pushNamedAndRemoveUntil(
+      //     context,
+      //     NewOrderPage.routeName,
+      //     (route) => false,
+      //     arguments: NewOrderPageArguments(
+      //       orderDetail: OrderDetail(
+      //           distance: '',
+      //           driverId: session.driverId,
+      //           endAddress: session.endAdd,
+      //           endCoordinate: session.endCo,
+      //           newTotal: '',
+      //           orderId: session.runningOrderId.toString(),
+      //           orderStatus: session.orderStatus,
+      //           pendingAmount: '',
+      //           startAddress: session.startAdd,
+      //           startCoordinate: session.startCo,
+      //           totalPrice: '',
+      //           userId: session.userId),
+      //       customerDetailModel: CustomerDataModel(
+      //           name: session.customerName,
+      //           phoneNumber: session.customerPhoneNumber,
+      //           photo: session.customerPhoneNumber,
+      //           id: int.parse(session.userId),
+      //           rating: session.customerRating),
+      //       orderStatus: session.runningOrderStatus,
+      //     ),
+      //   );
+      // }
       // })
     } else {}
 
     // homeProvider.getDriverStatus();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      homeProvider.changeStatus = session.isOnline;
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   homeProvider.changeStatus = session.isOnline;
+
+    //   Navigator.pushNamedAndRemoveUntil(
+    //     context,
+    //     NewOrderPage.routeName,
+    //     (route) => false,
+    //     arguments: NewOrderPageArguments(
+    //       orderDetail: socketProvider.orderDetail!,
+
+    //       //  OrderDetail(
+    //       //     distance: '',
+    //       //     driverId: session.driverId,
+    //       //     endAddress: session.endAdd,
+    //       //     endCoordinate: session.endCo,
+    //       //     newTotal: '',
+    //       //     orderId: session.runningOrderId.toString(),
+    //       //     orderStatus: session.orderStatus,
+    //       //     pendingAmount: '',
+    //       //     startAddress: session.startAdd,
+    //       //     startCoordinate: session.startCo,
+    //       //     totalPrice: '',
+    //       //     userId: session.userId),
+
+    //       customerDetailModel: socketProvider.customerDetail!,
+
+    //       //  CustomerDataModel(
+    //       //     name: session.customerName,
+    //       //     phoneNumber: session.customerPhoneNumber,
+    //       //     photo: session.customerPhoneNumber,
+    //       //     id: int.parse(session.userId),
+    //       //     rating: session.customerRating),
+    //       orderStatus: session.runningOrderStatus,
+    //     ),
+    //   );
+    // });
 
     // _fcmProvider.addListener(() async => await fcmListener());
     WidgetsBinding.instance.addObserver(this);
+
     // connectToSocket();
 
     // !session.isOrderRunning

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -9,7 +11,7 @@ abstract class Session {
 
   set setIsProfileCompleted(bool isCompleted);
 
-  set setOrderId(String orderId);
+  // set setOrderId(String orderId);
 
   set setToken(String token);
   set setOrderDetails(orderDetails);
@@ -45,6 +47,7 @@ abstract class Session {
   set setIsOrderRunning(bool isOrderRunning);
 
   set setRunningOrderId(int orderId);
+  set setCustomerId(int customerId);
 
   set setRunningOrderStatus(int orderStatus);
 
@@ -74,6 +77,8 @@ abstract class Session {
 
   int get runningOrderId;
 
+  int get customerId;
+
   int get currentOrderState;
 
   int get runningOrderStatus;
@@ -82,7 +87,7 @@ abstract class Session {
 
   bool get isProfileCompleted;
 
-  String get orderId;
+  // String get orderId;
 
   String get sessionToken;
 
@@ -154,7 +159,12 @@ class SessionHelper implements Session {
   }
 
   @override
-  set setC(String customerImg) {
+  set setCustomerId(int val) {
+    pref.setInt(CUSTOMER_ID, val);
+  }
+
+  @override
+  set setCustomerImg(String customerImg) {
     pref.setString(CUSTOMER_IMG, customerImg);
   }
 
@@ -273,20 +283,20 @@ class SessionHelper implements Session {
     pref.setString(FCM_OLD_TOKEN, fcmOldToken);
   }
 
-  @override
-  set setCustomerImg(String val) {
-    pref.setString(CUSTOMER_IMG, val);
-  }
+  // @override
+  // set setCustomerImg(String val) {
+  //   pref.setString(CUSTOMER_IMG, val);
+  // }
 
   @override
   set setCurrency(String currency) {
     pref.setString(CURRENCY, currency);
   }
 
-  @override
-  set setOrderId(String orderId) {
-    pref.setString(ORDER_ID, orderId);
-  }
+  // @override
+  // set setOrderId(String orderId) {
+  //   pref.setString(ORDER_ID, orderId);
+  // }
 
   @override
   set setRunningOrderId(int orderId) {
@@ -363,6 +373,9 @@ class SessionHelper implements Session {
   @override
   int get runningOrderId => pref.getInt(RUNNING_ORDER_ID) ?? 0;
 
+  //  @override
+  // int get orderId => pref.getInt(ORDER_ID) ?? 0;
+
   @override
   int get currentOrderState => pref.getInt(CURRENT_ORDER_STATE) ?? 0;
 
@@ -380,6 +393,9 @@ class SessionHelper implements Session {
 
   @override
   String get userId => pref.getString(USER_ID) ?? '';
+
+  @override
+  int get customerId => pref.getInt(CUSTOMER_ID) ?? 0;
 
   @override
   String get sessionFcmToken => pref.getString(FCM_TOKEN) ?? '';
@@ -413,8 +429,8 @@ class SessionHelper implements Session {
   @override
   String get currency => pref.getString(CURRENCY) ?? '';
 
-  @override
-  String get orderId => pref.getString(ORDER_ID) ?? '';
+  // @override
+  // String get orderId => pref.getString(ORDER_ID) ?? '';
 
   @override
   String get sessionStatusOrder => pref.getString(SESSION_STATUS_ORDER) ?? '';
@@ -452,12 +468,12 @@ class SessionHelper implements Session {
 
   @override
   Future<void> clearOrderSession() async {
-    await pref.remove(ORDER_ID);
+    // await pref.remove(ORDER_ID);
     await pref.remove(ORDER_STATUS);
-    await pref.remove(DRIVER_ID);
-    await pref.remove(SESSION_ORDER_DETAILS);
-    await pref.remove(SESSION_CUSTOMER_DETAILS);
-    await pref.remove(SESSION_STATUS_ORDER);
+    // await pref.remove(DRIVER_ID);
+    // await pref.remove(SESSION_ORDER_DETAILS);
+    // await pref.remove(SESSION_CUSTOMER_DETAILS);
+    // await pref.remove(SESSION_STATUS_ORDER);
     await pref.remove(CUSTOMER_IMG);
     await pref.remove(CUSTOMER_NAME);
     await pref.remove(CUSTOMER_PHN);
@@ -466,5 +482,6 @@ class SessionHelper implements Session {
     await pref.remove(END_CO);
     await pref.remove(END_ADD);
     await pref.remove(START_CO);
+    // await pref.remove(CUSTOMER_ID);
   }
 }

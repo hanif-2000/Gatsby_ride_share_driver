@@ -20,9 +20,10 @@ class UserProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logMe("Customer data model is :->> $customerDataModel");
     // return Consumer<OrderProvider>(
     //   builder: (context, provider, _) {
-    return customerDataModel == null
+    return ((customerDataModel == null) || (customerDataModel == ''))
         ? const Text("Fetching data Please Wait ... ")
 
         //  const CircularProgressIndicator(
@@ -76,7 +77,7 @@ class UserProfileTile extends StatelessWidget {
                         smallHorizontalSpacing(),
                         Text(
                           double.tryParse(customerDataModel!.rating.toString())
-                                  ?.toStringAsFixed(2) ??
+                                  ?.toStringAsFixed(1) ??
                               "",
                           // '${customerDataModel!.rating}',
                           textAlign: TextAlign.center,
@@ -105,11 +106,12 @@ class UserProfileTile extends StatelessWidget {
               ),
               const Spacer(),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   //Bottom sheet customer ride price
                   Text(
                     // '\$${provider.orderDetail!.totalPrice.toStringAsFixed(2)}',
-                    '\$${orderDetails!.newTotal}',
+                    'CA\$ ${(double.parse(orderDetails!.newTotal.toString())).toStringAsFixed(1)}',
 
                     textAlign: TextAlign.center,
                     style: titleStyle

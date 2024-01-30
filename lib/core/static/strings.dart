@@ -31,6 +31,7 @@ const String CUSTOMER_ID = 'customer_id';
 
 const String CUSTOMER_IMG = 'customer_img';
 const String CUSTOMER_NAME = 'customer_name';
+
 const String CUSTOMER_RATING = 'customer_rating';
 const String CUSTOMER_PHN = 'customer_phn';
 const String START_ADD = 'start_add';

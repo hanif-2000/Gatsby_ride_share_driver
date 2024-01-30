@@ -24,7 +24,7 @@ class RatingProvider extends FormProvider {
     final session = locator<Session>();
     final ratingResult = await doRating.call(FormData.fromMap({
       'id': customerId,
-      'order_id': session.orderId,
+      'order_id': session.runningOrderId,
       'rating': rating,
       'review': firstNameController.text.trim(),
       'type': '2',

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
+import 'package:appkey_taxiapp_driver/core/data/models/new_customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/socket_response_model/cancel_by_user_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
@@ -366,7 +367,7 @@ class LatestSocketProvider extends ChangeNotifier {
     _socket!.send(jsonEncode(map));
     addSingleChat(
       ChatModel(
-        id: session.orderId,
+        id: session.runningOrderId.toString(),
         messageType: 'Text',
         roomId: (int.parse(session.userId) > receiverId)
             ? '$receiverId-${session.userId}'
@@ -468,7 +469,7 @@ class LatestSocketProvider extends ChangeNotifier {
       'type': 'driver',
       'Latitude': latLng.latitude,
       'Longitude': latLng.longitude,
-      'OrderID': session.orderId
+      'OrderID': session.runningOrderId
     };
     logMe('UPADTE LATLONG -- > ${map.toString()}');
     print('UPADTE LATLONG -- > ${map.toString()}');
@@ -591,7 +592,7 @@ class LatestSocketProvider extends ChangeNotifier {
     try {
       final map = {
         'serviceType': 'ChangeStatus',
-        'orderID': session.orderId,
+        'orderID': session.runningOrderId,
         'Status': status,
         'actualTime': actualTime,
         'StartTime': startTime,
@@ -685,7 +686,7 @@ class LatestSocketProvider extends ChangeNotifier {
     int seconds = difference.inSeconds % 60;
 
     print(
-        " trip end:-->> total actual distnce in seconds after trip end :-->> ${difference.inMinutes}");
+        " trip end:-->> total actual distnce in seconds after trip end :-->> $seconds");
 
     double actualTime = double.parse(difference.inMinutes.toString());
 
@@ -696,7 +697,12 @@ class LatestSocketProvider extends ChangeNotifier {
         "trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
     if ((double.parse(session.estimatedTime)) < actualTime) {
+      logMe("Actual time is grater ");
       session.setEstimatedTime = (actualTime * 60).toString();
+    } else {
+      logMe("ESTIMATED time is grater ");
+
+      session.setEstimatedTime = session.estimatedTime * 60;
     }
   }
 
@@ -921,8 +927,7 @@ class LatestSocketProvider extends ChangeNotifier {
   ) async {
     print(
         "***************************************** IS FROM LOGIN IS--------***********************$isFromOrigin *************--------");
-    // print(
-    //     "set polylines order details  are:-->> ${socketProvider.orderDetail!}");
+    print("set polylines order details  are:-->> $orderDetail");
 
     showLoading();
     var latLongOrigin = orderDetail!.startCoordinate;

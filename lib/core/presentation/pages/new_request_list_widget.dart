@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dar
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/new_request_tile.dart';
+import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:dio/dio.dart';
@@ -110,12 +111,19 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                   "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
                               print(
                                   "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
+
+                              print(
+                                  "customer id is:-> ${socketProvider.bookingList[index].customerId}");
                               var session = locator<Session>();
                               session.setIsOrderRunning = true;
                               session.setEstimatedTime = socketProvider
                                   .bookingList[index].estimatedTime;
                               session.setEstimatedDistance =
                                   socketProvider.bookingList[index].distance;
+                              session.setRunningOrderId = int.parse(
+                                  socketProvider.bookingList[index].id);
+                              session.setCustomerId = int.parse(
+                                  socketProvider.bookingList[index].customerId);
 
                               /*** ORDER DETAILS  */
 
@@ -138,6 +146,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
                               print(
                                   "end address order id:-->>${socketProvider.bookingList[index].id}");
                               // print("order id:-->>${socketProvider.bookingList[index].id}");
+
+                              logMe(
+                                  "customer id from session id:-->> ${session.customerId}");
 
                               homeProvider.setOrderDetails = OrderDetail(
                                 orderId: int.parse(

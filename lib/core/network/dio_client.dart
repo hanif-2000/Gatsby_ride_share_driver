@@ -50,7 +50,7 @@ class LoggingInterceptors extends Interceptor {
       try {
         // print("Body: ${printObject(options.data)}");
         FormData formData = options.data as FormData;
-        print("Body:");
+        print("Body: ${formData.fields}");
         var buffer = [];
         for (MapEntry<String, String> pair in formData.fields) {
           buffer.add('${pair.key}:${pair.value}');
