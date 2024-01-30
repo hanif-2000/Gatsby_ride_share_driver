@@ -131,7 +131,7 @@ class ReceiptData {
         extraDistancePrice: json["extra_distance_price"] ?? "",
         extraTime: json["extra_time"] ?? "",
         extraTimePrice: json["extra_time_price"] ?? "",
-        newTotal: json["newTotal"] ?? json['total'],
+        newTotal: json["new_total"] ?? "",
         tip: json["tip"] ?? '',
       );
 

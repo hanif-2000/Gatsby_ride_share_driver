@@ -177,7 +177,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     secondTextweight: FontWeight.w700,
                     firstText: 'Grand Total',
-                    secondText: r'CA$ ' + widget.newTotal,
+                    secondText: r'CA$ ' +
+                        (double.parse(widget.newTotal.toString()))
+                            .toStringAsFixed(2),
                   ),
                 ],
               ),

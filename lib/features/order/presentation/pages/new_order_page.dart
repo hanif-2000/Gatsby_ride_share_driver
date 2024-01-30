@@ -11,6 +11,7 @@ import '../../../../core/presentation/widgets/button_order.dart';
 import '../../../../core/presentation/widgets/destination_widget.dart';
 import '../../../../core/presentation/widgets/origin_widget.dart';
 import '../../domain/entities/order_detail.dart';
+import '../widgets/current_location_order.dart';
 
 class NewOrderPageArguments {
   final OrderDetail orderDetail;
@@ -212,6 +213,7 @@ class _NewOrderPageState extends State<NewOrderPage>
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                const CurrentLocationOrderWidget(),
                                 ButtonOrder(
                                     currentOrderStatus:
                                         socketProvider.currentOrderStatus,

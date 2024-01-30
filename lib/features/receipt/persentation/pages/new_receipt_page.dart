@@ -523,7 +523,7 @@ class ReceiptPage extends StatelessWidget {
                                       ),
                                       Text(
                                         // 'CA\$ ${order.total}',
-                                        'CA\$ ${provider.receiptData!.newTotal}',
+                                        'CA\$ ${provider.receiptData!.newTotal.toString()}',
 
                                         // '\$${order.total - ((order.total * 5) / 100)}',
                                         textAlign: TextAlign.center,
