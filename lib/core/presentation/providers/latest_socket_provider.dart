@@ -32,6 +32,13 @@ import '../../utility/direction_helper.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 
 class LatestSocketProvider extends ChangeNotifier {
+  static final LatestSocketProvider _provider = LatestSocketProvider.internal();
+
+  factory LatestSocketProvider() {
+    return _provider;
+  }
+
+  LatestSocketProvider.internal();
 
   final session = locator<Session>();
   // final orderProvider = locator<OrderProvider>();
@@ -160,7 +167,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   //
-  WebSocket? _socket;
+ late  WebSocket _socket;
 
   // -----> function to connect the socket <--------- //
   Future<dynamic> connectToSocket(BuildContext context) async {
@@ -168,21 +175,23 @@ class LatestSocketProvider extends ChangeNotifier {
     log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     print('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     _socket = WebSocket(Uri.parse("ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
-    _socket!.connection.listen((event) {
+    _socket.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
         print("************ Connectd ***********");
         listenSocketRequests(context);
         updateLatLngAtStarting();
-      } else {
+      } else if(event is Disconnected) {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
+      }else{
+        print("************ Socket State: $event***********");
       }
     });
   }
 
   Future<void> disconnectSocket() async {
-    _socket!.close(1000, "Logout successful");
+    _socket.close(1000, "Logout successful");
   }
 
   joinExitRoom({int? receiverId, required String type}) {
@@ -209,32 +218,31 @@ class LatestSocketProvider extends ChangeNotifier {
     logMe('Join Exit room socket -- > ${map.toString()}');
     print('Join Exit room socket -- > ${map.toString()}');
 
-    _socket!.send(
+    _socket.send(
       jsonEncode(map),
     );
     // listenRequests();
   }
 
   void listenSocketRequests(BuildContext context) {
-    _socket!.messages.listen((event) {
-      //  Decoding data
+    _socket.messages.listen((event) {
       var response = jsonDecode(event);
-
       print("socket listen :-->> $response");
 
       log('-----Event  ${response.toString()}');
 
       // <----------- Checking When request come ---------> //
-      if (response['type'] == 'CustomerBookRequest') {
+      if (response['type'] == "CustomerBookRequest") {
+        print("socket listen CustomerBookRequest:-->> $response");
         bookingDataModel = BookingDataModel.fromJson(response);
-        bookingList.add(bookingDataModel!.data);
+        bookingList.insert(0,bookingDataModel!.data);
         notifyListeners();
+        print("socket listen bookingList:-->> ${bookingList.length}");
       }
 
       // <------------------ Cancel BY Customer --------->>>>>
       if (response['type'] == 'CancelByUser') {
         cancelByUserModel = CancelByUserModel.fromJson(response);
-
         bookingList.removeWhere((element) {
           return element.id == cancelByUserModel!.orderId;
         });
@@ -306,7 +314,6 @@ class LatestSocketProvider extends ChangeNotifier {
 
         updateUnReadMessages(count: response['data']);
       }
-
       log('-----Event  ${response.toString()}');
     });
   }
