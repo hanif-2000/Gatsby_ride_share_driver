@@ -36,45 +36,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
   var session = locator<Session>();
-  // late OrderDetail previousOrderDetails;
-  // late CustomerDataModel previousCustomerDetails;
 
-  // Future<void> convertOrderAndCustomerDetailsIntoObject() async {
-  //   // // Decode JSON into a Map
-  //   // Map<String, dynamic> jsonOrderMap = json.decode(session.orderDetails);
-  //   // Map<String, dynamic> jsonCustomerMap = json.decode(session.customerDetails);
-
-  //   // setState(() {
-  //   //   previousOrderDetails = OrderDetail.fromJson(jsonOrderMap);
-  //   //   previousCustomerDetails = CustomerDataModel.fromJson(jsonCustomerMap);
-  //   // });
-
-  // }
 
   @override
   void initState() {
     super.initState();
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-
-    print(
-        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
-
+    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    socketProvider.connectToSocket(context);
     if (session.isOrderRunning) {
       showLoading();
       // var id = _fcmProvider.incomingOrderDetail!.orderId;
       log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
       log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-      homeProvider
-          .fetchOrderDetail(session.runningOrderId.toString())
-          .listen((event) {
+      homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
         if (event is OrderDetailLoaded) {
           log("order details in home page checking is :--> ${event.data}");
           socketProvider.updateOrderData(data: event.data);
-
-          homeProvider
-              .fetchCustomerDetail(session.customerId.toString())
-              .listen((event2) async {
+          homeProvider.fetchCustomerDetail(session.customerId.toString()).listen((event2) async {
             if (event2 is CustomerDetailLoaded) {
               log("customer details in home page checking is :--> ${event2.data}");
               socketProvider
@@ -82,38 +62,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   .then((value) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   homeProvider.changeStatus = session.isOnline;
-
                   dismissLoading();
-
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     NewOrderPage.routeName,
                     (route) => false,
                     arguments: NewOrderPageArguments(
                       orderDetail: socketProvider.orderDetail!,
-
-                      //  OrderDetail(
-                      //     distance: '',
-                      //     driverId: session.driverId,
-                      //     endAddress: session.endAdd,
-                      //     endCoordinate: session.endCo,
-                      //     newTotal: '',
-                      //     orderId: session.runningOrderId.toString(),
-                      //     orderStatus: session.orderStatus,
-                      //     pendingAmount: '',
-                      //     startAddress: session.startAdd,
-                      //     startCoordinate: session.startCo,
-                      //     totalPrice: '',
-                      //     userId: session.userId),
-
                       customerDetailModel: socketProvider.customerDetail!,
-
-                      //  CustomerDataModel(
-                      //     name: session.customerName,
-                      //     phoneNumber: session.customerPhoneNumber,
-                      //     photo: session.customerPhoneNumber,
-                      //     id: int.parse(session.userId),
-                      //     rating: session.customerRating),
                       orderStatus: session.runningOrderStatus,
                     ),
                   );
@@ -126,107 +82,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
       print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
       print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-
-      // print(" session customer are:==>>${session.orderDetails}}");
-
-      // log("session customer home page are:==>> ${session.customerDetails}");
-      // log("session order home page are:==>> ${session.orderDetails}");
       log("session order STATUS IS :==>> ${session.orderStatus}");
       log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
 
-      // convertOrderAndCustomerDetailsIntoObject().then((value) {
-      // socketProvider.updateOrderData(data: OrderDetail(orderId: session.orderId, totalPrice: totalPrice, userId: userId, driverId: driverId, distance: distance, orderStatus: orderStatus, startCoordinate: startCoordinate, endCoordinate: endCoordinate, startAddress: startAddress, endAddress: endAddress, pendingAmount: pendingAmount, newTotal: newTotal));
-      // socketProvider.updateCustomerData(data: previousCustomerDetails);
 
-      // if (mounted) {
-      //   Navigator.pushNamedAndRemoveUntil(
-      //     context,
-      //     NewOrderPage.routeName,
-      //     (route) => false,
-      //     arguments: NewOrderPageArguments(
-      //       orderDetail: OrderDetail(
-      //           distance: '',
-      //           driverId: session.driverId,
-      //           endAddress: session.endAdd,
-      //           endCoordinate: session.endCo,
-      //           newTotal: '',
-      //           orderId: session.runningOrderId.toString(),
-      //           orderStatus: session.orderStatus,
-      //           pendingAmount: '',
-      //           startAddress: session.startAdd,
-      //           startCoordinate: session.startCo,
-      //           totalPrice: '',
-      //           userId: session.userId),
-      //       customerDetailModel: CustomerDataModel(
-      //           name: session.customerName,
-      //           phoneNumber: session.customerPhoneNumber,
-      //           photo: session.customerPhoneNumber,
-      //           id: int.parse(session.userId),
-      //           rating: session.customerRating),
-      //       orderStatus: session.runningOrderStatus,
-      //     ),
-      //   );
-      // }
-      // })
-    } else {}
-
-    // homeProvider.getDriverStatus();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   homeProvider.changeStatus = session.isOnline;
-
-    //   Navigator.pushNamedAndRemoveUntil(
-    //     context,
-    //     NewOrderPage.routeName,
-    //     (route) => false,
-    //     arguments: NewOrderPageArguments(
-    //       orderDetail: socketProvider.orderDetail!,
-
-    //       //  OrderDetail(
-    //       //     distance: '',
-    //       //     driverId: session.driverId,
-    //       //     endAddress: session.endAdd,
-    //       //     endCoordinate: session.endCo,
-    //       //     newTotal: '',
-    //       //     orderId: session.runningOrderId.toString(),
-    //       //     orderStatus: session.orderStatus,
-    //       //     pendingAmount: '',
-    //       //     startAddress: session.startAdd,
-    //       //     startCoordinate: session.startCo,
-    //       //     totalPrice: '',
-    //       //     userId: session.userId),
-
-    //       customerDetailModel: socketProvider.customerDetail!,
-
-    //       //  CustomerDataModel(
-    //       //     name: session.customerName,
-    //       //     phoneNumber: session.customerPhoneNumber,
-    //       //     photo: session.customerPhoneNumber,
-    //       //     id: int.parse(session.userId),
-    //       //     rating: session.customerRating),
-    //       orderStatus: session.runningOrderStatus,
-    //     ),
-    //   );
-    // });
-
-    // _fcmProvider.addListener(() async => await fcmListener());
+    }else{
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        homeProvider.changeStatus = session.isOnline;
+      });
+    }
     WidgetsBinding.instance.addObserver(this);
 
-    // connectToSocket();
-
-    // !session.isOrderRunning
-    //     ? homeProvider.getRequestListData().listen((event) {
-    //         if (event is RequestListLoaded) {
-    //           logMe(
-    //               'Request list data loaded success----------> ${event.data.length}');
-    //         }
-    //       })
-    //     : null;
   }
 
-  // connectToSocket() {
-  //   socketProvider.connectToSocket();
-  // }
 
   @override
   void dispose() {

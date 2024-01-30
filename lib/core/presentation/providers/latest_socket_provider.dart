@@ -32,13 +32,6 @@ import '../../utility/direction_helper.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 
 class LatestSocketProvider extends ChangeNotifier {
-  static final LatestSocketProvider _provider = LatestSocketProvider.internal();
-
-  factory LatestSocketProvider() {
-    return _provider;
-  }
-
-  LatestSocketProvider.internal();
 
   final session = locator<Session>();
   // final orderProvider = locator<OrderProvider>();
@@ -52,7 +45,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   late GoogleMapController googleMapController;
 
-  var dio = Dio();
+  final dio = Dio();
 
   // CustomerDataModel? customerDataModel;
   OrderDetail? orderDetail;
@@ -173,30 +166,23 @@ class LatestSocketProvider extends ChangeNotifier {
   Future<dynamic> connectToSocket(BuildContext context) async {
     log("-------->CONNECTING TO SOCKET <--------");
     log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-    print(
-        '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-
-    _socket = WebSocket(Uri.parse(
-        "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
-
+    print('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+    _socket = WebSocket(Uri.parse("ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
     _socket!.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
         print("************ Connectd ***********");
-
         listenSocketRequests(context);
         updateLatLngAtStarting();
       } else {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
       }
-    }).onDone(() {
-      connectToSocket(context);
     });
   }
 
   Future<void> disconnectSocket() async {
-    _socket!.close();
+    _socket!.close(1000, "Logout successful");
   }
 
   joinExitRoom({int? receiverId, required String type}) {

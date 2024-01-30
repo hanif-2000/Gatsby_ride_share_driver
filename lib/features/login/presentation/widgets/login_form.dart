@@ -46,10 +46,9 @@ class _LoginFormState extends State<LoginForm> {
           session.setLoggedIn = true;
           session.setIsProfileCompleted = true;
 
-          socketProvider.connectToSocket(context);
+        //  socketProvider.connectToSocket(context);
           // showToast(message: appLoc.success);
-          Navigator.pushNamedAndRemoveUntil(
-              context, HomePage.routeName, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
           logMe("Authorization Token: ${session.sessionToken}");
           break;
       }

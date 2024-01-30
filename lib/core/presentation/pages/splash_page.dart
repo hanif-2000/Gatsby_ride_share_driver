@@ -48,8 +48,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
             //     "**********------------ ${currentLatLng.latitude},${currentLatLng.longitude} ----------*********");
 
             await sessionClearOrder();
-            context
-                .read<SplashProvider>()
+            context.read<SplashProvider>()
                 .fetchCurrency()
                 .listen((state) async {
               log("state runtime type:==${state.runtimeType}");
@@ -61,7 +60,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                     if (value) {
                       checkProfileSession().then((value1) {
                         if (value1) {
-                          socketProvider.connectToSocket(context);
+                       //   socketProvider.connectToSocket(context);
                           Navigator.pushNamedAndRemoveUntil(
                               context, HomePage.routeName, (route) => false);
                         } else {
@@ -91,7 +90,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                 if (value) {
                   checkProfileSession().then((value1) {
                     if (value1) {
-                      socketProvider.connectToSocket(context);
+                    //  socketProvider.connectToSocket(context);
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
