@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -10,12 +8,15 @@ abstract class Session {
   set setIsOnline(bool isOnline);
 
   set setIsProfileCompleted(bool isCompleted);
+  set setIsPaymentDone(bool paymentDone);
+  set setIsRatingGiven(bool ratingGiven);
 
   // set setOrderId(String orderId);
 
   set setToken(String token);
   set setOrderDetails(orderDetails);
   set setCustomerDetails(customerDetails);
+  set setOrderReceipt(String receipt);
 
   set setCustomerName(String val);
   set setCustomerImg(String val);
@@ -65,10 +66,13 @@ abstract class Session {
   String get chatToken;
   String get rideStartTime;
   String get rideEndTime;
+  String get orderReceipt;
 
   bool get isLoggedIn;
 
   bool get isOnline;
+  bool get isRatingGiven;
+  bool get isPaymentDone;
 
   bool get isOrderRunning;
 
@@ -136,6 +140,21 @@ class SessionHelper implements Session {
   @override
   set setLoggedIn(bool login) {
     pref.setBool(IS_LOGGED_IN, login);
+  }
+
+  @override
+  set setIsPaymentDone(bool paymentDone) {
+    pref.setBool(PAYMENT_DONE, paymentDone);
+  }
+
+  @override
+  set setIsRatingGiven(bool ratingGiven) {
+    pref.setBool(RATING_GIVEN, ratingGiven);
+  }
+
+  @override
+  set setOrderReceipt(String receipt) {
+    pref.setString(ORDER_RECEIPT, receipt);
   }
 
   @override
@@ -365,6 +384,11 @@ class SessionHelper implements Session {
   bool get isLoggedIn => pref.getBool(IS_LOGGED_IN) ?? false;
 
   @override
+  bool get isRatingGiven => pref.getBool(RATING_GIVEN) ?? true;
+  @override
+  bool get isPaymentDone => pref.getBool(PAYMENT_DONE) ?? true;
+
+  @override
   bool get isOnline => pref.getBool(IS_ONLINE) ?? false;
 
   @override
@@ -372,6 +396,10 @@ class SessionHelper implements Session {
 
   @override
   int get runningOrderId => pref.getInt(RUNNING_ORDER_ID) ?? 0;
+
+  @override
+  String get orderReceipt =>
+      pref.getString(ORDER_RECEIPT) ?? "No order receipt";
 
   //  @override
   // int get orderId => pref.getInt(ORDER_ID) ?? 0;
@@ -482,6 +510,8 @@ class SessionHelper implements Session {
     await pref.remove(END_CO);
     await pref.remove(END_ADD);
     await pref.remove(START_CO);
+    await pref.remove(RATING_GIVEN);
+    await pref.remove(PAYMENT_DONE);
     // await pref.remove(CUSTOMER_ID);
   }
 }

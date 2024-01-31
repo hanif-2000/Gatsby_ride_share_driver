@@ -13,6 +13,9 @@ const String ORDER_ID = 'orderId';
 const String USER_ID = 'user_id';
 const String FCM_TOKEN = 'fcm_token';
 const String FCM_OLD_TOKEN = 'fcm_old_token';
+const String PAYMENT_DONE = 'payment_don';
+const String RATING_GIVEN = 'rating_given';
+const String ORDER_RECEIPT = 'order_receipt';
 
 const String ORDER_STATUS = 'order_status';
 const String DRIVER_ID = 'driver_id';

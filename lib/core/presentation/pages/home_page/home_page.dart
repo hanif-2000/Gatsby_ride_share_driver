@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
-import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/pages/menu_page.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/fcm_provider.dart';
@@ -11,12 +11,14 @@ import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/enums.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
-import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_order_page.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
+import 'package:appkey_taxiapp_driver/features/receipt/data/model/new_receipt_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../features/rating/presentation/page/give_rating_screen.dart';
+import '../../../../features/receipt/persentation/pages/new_receipt_page.dart';
 import '../../../utility/helper.dart';
 import '../../../utility/injection.dart';
 import '../../providers/home_provider.dart';
@@ -37,64 +39,159 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   var socketProvider = locator<LatestSocketProvider>();
   var session = locator<Session>();
 
+  Future<void> retrieveOrderReceiptFromLocal() async {
+    // Retrieve the JSON string from local storage
+    String? jsonData = session.orderReceipt;
+    Map<String, dynamic> dataMap = jsonDecode(jsonData);
+
+    // Map the data to your ReceiptResponseModel
+    ReceiptData receipt = ReceiptData.fromJson(dataMap);
+
+    socketProvider.updateReceiptData(data: receipt).then((value) {
+      logMe("RECEIPT DATA UPDATED SUCCESS");
+
+      // socketProvider
+      //     .fetchOrderDetails(int.parse(session.orderId))
+      //     .then((value) {
+      //   logMe(" order details are:::::::::::::: ${value}");
+
+      //   socketProvider.updateOrderDetailsModel(data: value);
+
+      //   socketProvider
+      //       .fetchDriverDetails(int.parse(session.driverId))
+      //       .then((value) {
+      //     socketProvider.updateDriverDetailsModel(data: value);
+      //     logMe(" driver details are:::::::::::::: ${value}");
+      //   });
+      // });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
     socketProvider.connectToSocket(context);
     if (session.isOrderRunning) {
       showLoading();
-      // var id = _fcmProvider.incomingOrderDetail!.orderId;
-      log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
-      log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-      homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
-        if (event is OrderDetailLoaded) {
-          log("order details in home page checking is :--> ${event.data}");
-          socketProvider.updateOrderData(data: event.data);
-          homeProvider.fetchCustomerDetail(session.customerId.toString()).listen((event2) async {
-            if (event2 is CustomerDetailLoaded) {
-              log("customer details in home page checking is :--> ${event2.data}");
-              socketProvider
-                  .updateCustomerData(data: event2.data.data)
-                  .then((value) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  homeProvider.changeStatus = session.isOnline;
-                  dismissLoading();
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    NewOrderPage.routeName,
-                    (route) => false,
-                    arguments: NewOrderPageArguments(
-                      orderDetail: socketProvider.orderDetail!,
-                      customerDetailModel: socketProvider.customerDetail!,
-                      orderStatus: session.runningOrderStatus,
-                    ),
-                  );
+      if (session.runningOrderStatus == 7) {
+        if (!session.isPaymentDone) {
+          /*** Payment confirmation pending */
+
+          retrieveOrderReceiptFromLocal().then((value) {
+            homeProvider
+                .fetchOrderDetail(session.runningOrderId.toString())
+                .listen((event) {
+              if (event is OrderDetailLoaded) {
+                log("order details in home page checking is :--> ${event.data}");
+                print(
+                    "order details in home page checking is :--> ${event.data}");
+
+                socketProvider.updateOrderData(data: event.data);
+                homeProvider
+                    .fetchCustomerDetail(session.customerId.toString())
+                    .listen((event2) async {
+                  if (event2 is CustomerDetailLoaded) {
+                    log("customer details in home page checking is :--> ${event2.data}");
+                    print(
+                        "customer details in home page checking is :--> ${event2.data}");
+
+                    socketProvider
+                        .updateCustomerData(data: event2.data.data)
+                        .then((value) {
+                      dismissLoading();
+                      /**   Navigate to receipt screen */
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        ReceiptPage.routeName,
+                        (route) => false,
+                        arguments: RatingPageArguments(
+                          customerDataModel: socketProvider.customerDetail!,
+                          customerId: socketProvider.orderDetail!.userId,
+                        ),
+                      );
+                    });
+                  }
                 });
-              });
-            }
+              }
+            });
+
+            print(
+                "home provider ordetails are:==>> ${homeProvider.orderDetail}");
+            print(
+                "home provider ordetails are:==>> ${homeProvider.orderDetail}");
+            log("session order STATUS IS :==>> ${session.orderStatus}");
+            log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
           });
+        } else if (!session.isRatingGiven) {
+/** Naviagte to rating screen  */
+
+          Navigator.pushNamedAndRemoveUntil(
+            locator<GlobalKey<NavigatorState>>().currentContext!,
+            GiveRatingScreen.routeName,
+            (route) => false,
+            arguments: RatingPageArguments(
+              customerDataModel: socketProvider.customerDetail!,
+              customerId: socketProvider.customerDetail!.id,
+            ),
+          );
         }
-      });
+      } else {
+        // var id = _fcmProvider.incomingOrderDetail!.orderId;
+        log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
+        log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-      print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-      print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-      log("session order STATUS IS :==>> ${session.orderStatus}");
-      log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+        homeProvider
+            .fetchOrderDetail(session.runningOrderId.toString())
+            .listen((event) {
+          if (event is OrderDetailLoaded) {
+            log("order details in home page checking is :--> ${event.data}");
+            socketProvider.updateOrderData(data: event.data);
+            homeProvider
+                .fetchCustomerDetail(session.customerId.toString())
+                .listen((event2) async {
+              if (event2 is CustomerDetailLoaded) {
+                log("customer details in home page checking is :--> ${event2.data}");
+                socketProvider
+                    .updateCustomerData(data: event2.data.data)
+                    .then((value) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    homeProvider.changeStatus = session.isOnline;
+                    dismissLoading();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      NewOrderPage.routeName,
+                      (route) => false,
+                      arguments: NewOrderPageArguments(
+                        orderDetail: socketProvider.orderDetail!,
+                        customerDetailModel: socketProvider.customerDetail!,
+                        orderStatus: session.runningOrderStatus,
+                      ),
+                    );
+                  });
+                });
+              }
+            });
+          }
+        });
 
-
-    }else{
+        print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+        print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+        log("session order STATUS IS :==>> ${session.orderStatus}");
+        log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+      }
+    } else {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         homeProvider.changeStatus = session.isOnline;
       });
     }
     WidgetsBinding.instance.addObserver(this);
-
   }
-
 
   @override
   void dispose() {

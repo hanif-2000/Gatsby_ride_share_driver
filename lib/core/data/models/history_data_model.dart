@@ -54,7 +54,7 @@ class HistoryOrder {
   dynamic endTime;
   dynamic status;
   dynamic image;
-  UserName userName;
+  dynamic userName;
   dynamic userPhone;
   int rating;
   DriverName driverName;
@@ -127,7 +127,7 @@ class HistoryOrder {
         endTime: json["end_time"],
         status: json["status"],
         image: json["image"],
-        userName: userNameValues.map[json["user_name"]]!,
+        userName: json["user_name"]!,
         userPhone: json["user_phone"],
         rating: json["rating"],
         driverName: driverNameValues.map[json["driver_name"]]!,
@@ -165,7 +165,7 @@ class HistoryOrder {
         "end_time": endTime,
         "status": status,
         "image": image,
-        "user_name": userNameValues.reverse[userName],
+        "user_name": userName,
         "user_phone": userPhone,
         "rating": rating,
         "driver_name": driverNameValues.reverse[driverName],
@@ -251,13 +251,13 @@ class RatingList {
       };
 }
 
-enum UserName { ANKIT_BISHT, CUSTOMER_ONE, HHGG_UFFU }
+// enum UserName { ANKIT_BISHT, CUSTOMER_ONE, HHGG_UFFU }
 
-final userNameValues = EnumValues({
-  "Ankit bisht": UserName.ANKIT_BISHT,
-  "Customer One": UserName.CUSTOMER_ONE,
-  "hhgg uffu": UserName.HHGG_UFFU
-});
+// final userNameValues = EnumValues({
+//   "Ankit bisht": UserName.ANKIT_BISHT,
+//   "Customer One": UserName.CUSTOMER_ONE,
+//   "hhgg uffu": UserName.HHGG_UFFU
+// });
 
 class VehicleCategory {
   int id;

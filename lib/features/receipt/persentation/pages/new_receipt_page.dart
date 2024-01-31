@@ -655,6 +655,9 @@ class ReceiptPage extends StatelessWidget {
                                                         200) {
                                                       dismissLoading();
 
+                                                      session.setIsPaymentDone =
+                                                          true;
+
                                                       // if (!context.mounted) {
                                                       Navigator
                                                           .pushNamedAndRemoveUntil(
@@ -763,6 +766,28 @@ class ReceiptPage extends StatelessWidget {
 
                                                     if (response.statusCode ==
                                                         200) {
+                                                      session.setIsPaymentDone =
+                                                          true;
+
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                        locator<
+                                                                GlobalKey<
+                                                                    NavigatorState>>()
+                                                            .currentContext!,
+                                                        GiveRatingScreen
+                                                            .routeName,
+                                                        (route) => false,
+                                                        arguments:
+                                                            RatingPageArguments(
+                                                          customerDataModel:
+                                                              provider
+                                                                  .customerDetail!,
+                                                          customerId: provider
+                                                              .customerDetail!
+                                                              .id,
+                                                        ),
+                                                      );
                                                       // Navigator
                                                       //     .pushNamedAndRemoveUntil(
                                                       //   context,

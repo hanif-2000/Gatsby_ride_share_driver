@@ -169,6 +169,8 @@ class GiveRatingScreen extends StatelessWidget {
 
                                         session.setRunningOrderStatus = 0;
                                         session.setIsOrderRunning = false;
+                                        session.setIsRatingGiven = true;
+                                        session.setIsPaymentDone = true;
 
                                         Navigator.pushNamed(
                                           context,
@@ -202,6 +204,9 @@ class GiveRatingScreen extends StatelessWidget {
                                     txtButtonStyle.copyWith(color: blackColor),
                               ),
                               event: () {
+                                session.setIsRatingGiven = true;
+                                session.setIsPaymentDone = true;
+
                                 session.setRunningOrderStatus = 0;
                                 session.setIsOrderRunning = false;
                                 Navigator.pushNamed(

@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/data/models/customer_detail_model.dart';
-import 'package:appkey_taxiapp_driver/core/data/models/new_customer_detail_model.dart';
 import 'package:appkey_taxiapp_driver/core/data/models/socket_response_model/cancel_by_user_model.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
@@ -167,32 +166,47 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   //
- late  WebSocket _socket;
+  late WebSocket _socket;
 
   // -----> function to connect the socket <--------- //
   Future<dynamic> connectToSocket(BuildContext context) async {
     log("-------->CONNECTING TO SOCKET <--------");
     log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-    print('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-    _socket = WebSocket(Uri.parse("ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
+    print(
+        '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+    _socket = WebSocket(Uri.parse(
+        "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
     _socket.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
         print("************ Connectd ***********");
         listenSocketRequests(context);
         updateLatLngAtStarting();
-      } else if(event is Disconnected) {
+      } else if (event is Disconnected) {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
-      }else{
+      } else {
         print("************ Socket State: $event***********");
       }
     });
   }
 
-  Future<void> disconnectSocket() async {
-    _socket.close(1000, "Logout successful");
+  receonnetSocket(BuildContext context) {
+    print("Disconnected=============>>${_socket.connection.state})");
+    if (_socket.connection.state is Disconnected) {
+      print("Disconnected=============>>");
+      connectToSocket(context);
+    } else {
+      print("Disconnected=============>> else");
+    }
   }
+
+  Future<void> disconnectSocket() async {
+    _socket.close(1000);
+  }
+  // Future<void> disconnectSocket() async {
+  //   _socket.close(1000, "Logout successful");
+  // }
 
   joinExitRoom({int? receiverId, required String type}) {
     markMessageAsRead(receiverId: receiverId);
@@ -235,7 +249,7 @@ class LatestSocketProvider extends ChangeNotifier {
       if (response['type'] == "CustomerBookRequest") {
         print("socket listen CustomerBookRequest:-->> $response");
         bookingDataModel = BookingDataModel.fromJson(response);
-        bookingList.insert(0,bookingDataModel!.data);
+        bookingList.insert(0, bookingDataModel!.data);
         notifyListeners();
         print("socket listen bookingList:-->> ${bookingList.length}");
       }
@@ -269,12 +283,27 @@ class LatestSocketProvider extends ChangeNotifier {
           print("driver is mine ");
         }
       }
+      // Save UserData to SharedPreferences
+      void saveOrderReceipt() {
+        session.setIsPaymentDone = false;
+        session.setIsRatingGiven = false;
+        logMe("save order receipt called");
+
+        if (receiptData != null) {
+          logMe("save order receipt called receiptResponseModel ==== NOT NULL");
+
+          session.setOrderReceipt = json.encode(receiptData!);
+          // _prefs.setString(_userDataKey, jsonEncode(_userData!.toMap()));
+        }
+      }
 
       // <------------------ RIDE END OR COMPLETED --------->>>>>
       if (response['type'] == 'endTrip') {
         updateReceiptData(data: ReceiptData.fromJson(response["data"]));
+
         // receiptData = ReceiptData.fromJson(response);
         notifyListeners();
+        saveOrderReceipt();
 
         log("my receipt data is:-->> $receiptData");
       }
@@ -357,7 +386,7 @@ class LatestSocketProvider extends ChangeNotifier {
     };
     print('Message send ---> ${map.toString()}');
 
-    _socket!.send(jsonEncode(map));
+    _socket.send(jsonEncode(map));
     addSingleChat(
       ChatModel(
         id: session.runningOrderId.toString(),
@@ -388,7 +417,7 @@ class LatestSocketProvider extends ChangeNotifier {
       "UserType": 'driver'
     };
     log("get total count:$map");
-    _socket!.send(jsonEncode(map));
+    _socket.send(jsonEncode(map));
 
     // listenRequests();
     // disconnectSocket();
@@ -413,7 +442,7 @@ class LatestSocketProvider extends ChangeNotifier {
     };
 
     log("mark as read $map");
-    _socket!.send(jsonEncode(map));
+    _socket.send(jsonEncode(map));
   }
 
   //   //Initial
@@ -470,9 +499,9 @@ class LatestSocketProvider extends ChangeNotifier {
     // _socket!.send(jsonEncode(map));
 
     try {
-      _socket!.connection.listen((event) {
+      _socket.connection.listen((event) {
         if (event is Connected) {
-          _socket!.send(json.encode(map));
+          _socket.send(json.encode(map));
 
           notifyListeners();
         }
@@ -503,9 +532,9 @@ class LatestSocketProvider extends ChangeNotifier {
     print('UPADTE LATLONG -- > ${map.toString()}');
 
     try {
-      _socket!.connection.listen((event) {
+      _socket.connection.listen((event) {
         if ((event is Connected) || event is Reconnected) {
-          _socket!.send(json.encode(map));
+          _socket.send(json.encode(map));
           print(map.toString());
 
           notifyListeners();
@@ -530,9 +559,9 @@ class LatestSocketProvider extends ChangeNotifier {
       logMe('accept ride request socket -- > ${map.toString()}');
 
       try {
-        _socket!.connection.listen((event) {
+        _socket.connection.listen((event) {
           if (event is Connected) {
-            _socket!.send(json.encode(map));
+            _socket.send(json.encode(map));
             print(map.toString());
             updateLatLngAtStarting();
 
@@ -560,7 +589,7 @@ class LatestSocketProvider extends ChangeNotifier {
         'orderID': orderId
       };
       logMe('reject ride request socket -- > ${map.toString()}');
-      _socket!.send(jsonEncode(map));
+      _socket.send(jsonEncode(map));
 
       bookingList.removeWhere((element) {
         return element.id == orderId;
@@ -595,9 +624,9 @@ class LatestSocketProvider extends ChangeNotifier {
       logMe('Update Status -- > ${map.toString()}');
 
       try {
-        _socket!.connection.listen((event) {
+        _socket.connection.listen((event) {
           if ((event is Connected) || (event is Reconnected)) {
-            _socket!.send(json.encode(map));
+            _socket.send(json.encode(map));
 
             updateLatLng(
                 latLng: LatLng(session.currentLat, session.currentLang));
@@ -634,7 +663,7 @@ class LatestSocketProvider extends ChangeNotifier {
               currentOrderStatus = 7;
               setNewChangeOrderStatus = "7";
               session.setOrderStatus = 7;
-              session.setRunningOrderStatus = 5;
+              session.setRunningOrderStatus = 7;
 
               setNewPolylineDirection(true);
 
