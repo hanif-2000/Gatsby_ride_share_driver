@@ -111,7 +111,7 @@ class UserProfileTile extends StatelessWidget {
                   //Bottom sheet customer ride price
                   Text(
                     // '\$${provider.orderDetail!.totalPrice.toStringAsFixed(2)}',
-                    'CA\$ ${(double.parse(orderDetails!.newTotal.toString())).toStringAsFixed(1)}',
+                    'CA\$ ${(double.parse(orderDetails!.newTotal.toString())).toStringAsFixed(2)}',
 
                     textAlign: TextAlign.center,
                     style: titleStyle

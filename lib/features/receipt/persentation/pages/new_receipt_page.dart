@@ -4,6 +4,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_wi
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/convert_decimal_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/duration_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
@@ -392,7 +393,8 @@ class ReceiptPage extends StatelessWidget {
                                           builder: (context) {
                                             return PaymentScreen(
                                                 newTotal: provider
-                                                    .receiptData!.newTotal,
+                                                    .receiptData!.newTotal
+                                                    .toString(),
                                                 pendingAmount:
                                                     provider.receiptData!.pendingAmount == ''
                                                         ? '0'
@@ -405,22 +407,20 @@ class ReceiptPage extends StatelessWidget {
                                                         ? '0'
                                                         : provider.receiptData!
                                                             .extraDistance,
-                                                extraTime:
-                                                    provider.receiptData!.extraTime == ''
-                                                        ? '0'
-                                                        : provider.receiptData!
-                                                            .extraTime,
+                                                extraTime: provider.receiptData!.extraTime == ''
+                                                    ? '0'
+                                                    : provider
+                                                        .receiptData!.extraTime,
                                                 extraDistancePrice:
                                                     provider.receiptData!.extraDistancePrice == ""
                                                         ? "0"
                                                         : provider.receiptData!
                                                             .extraDistancePrice,
-                                                extraTimePrice: provider
-                                                            .receiptData!
-                                                            .extraTimePrice ==
-                                                        ''
-                                                    ? "0"
-                                                    : provider.receiptData!.extraTimePrice,
+                                                extraTimePrice:
+                                                    provider.receiptData!.extraTimePrice == ''
+                                                        ? "0"
+                                                        : provider.receiptData!
+                                                            .extraTimePrice,
                                                 grandTotal: provider.receiptData!.total,
                                                 distance: provider.receiptData!.distance.toString());
                                           },
@@ -522,10 +522,19 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
+                                        provider.receiptData!.newTotal != ''
+                                            ? convertToTwoDecimal(provider
+                                                .receiptData!.newTotal
+                                                .toString())
+                                            : convertToTwoDecimal(provider
+                                                .receiptData!.newTotal
+                                                .toString())
                                         // 'CA\$ ${order.total}',
-                                        'CA\$ ${provider.receiptData!.newTotal.toString()}',
+                                        // 'CA\$ ${provider.receiptData!.newTotal.toString()}'
+                                        // : 'CA\$ ${provider.receiptData!.total.toString()}',
 
                                         // '\$${order.total - ((order.total * 5) / 100)}',
+                                        ,
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(

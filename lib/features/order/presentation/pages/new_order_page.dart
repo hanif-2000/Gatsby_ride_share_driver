@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -62,14 +63,53 @@ class _NewOrderPageState extends State<NewOrderPage>
 
   var session = locator<Session>();
 
+  checkConnectivity() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      log("==============$connectivityResult");
+      // I am connected to a mobile network.
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      log("==============$connectivityResult");
+
+      // I am connected to a wifi network.
+    } else if (connectivityResult == ConnectivityResult.ethernet) {
+      log("==============$connectivityResult");
+
+      // I am connected to a ethernet network.
+    } else if (connectivityResult == ConnectivityResult.vpn) {
+      log("==============$connectivityResult");
+
+      // I am connected to a vpn network.
+      // Note for iOS and macOS:
+      // There is no separate network interface type for [vpn].
+      // It returns [other] on any device (also simulator)
+    } else if (connectivityResult == ConnectivityResult.bluetooth) {
+      log("==============$connectivityResult");
+
+      // I am connected to a bluetooth.
+    } else if (connectivityResult == ConnectivityResult.other) {
+      log("==============$connectivityResult");
+
+      // I am connected to a network which is not in the above mentioned networks.
+    } else if (connectivityResult == ConnectivityResult.none) {
+      log("==============$connectivityResult");
+
+      // I am not connected to any network.
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // socketProvider.listenRequests();
     socketProvider.updateGetBytes();
-
-    // socketProvider.getTotalUnreadCount(widget.customerDetail.id);
+    var subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      log("-----------------------RESULT IS :----$result");
+      // Got a new connectivity status!
+    }); // socketProvider.getTotalUnreadCount(widget.customerDetail.id);
 
     // showLoading();
     // session.setOrderId = widget.orderDetail.orderId.toString();
@@ -157,8 +197,8 @@ class _NewOrderPageState extends State<NewOrderPage>
     super.dispose();
     // checkOrderStatusTimer?.cancel();
     // trackingTimer?.cancel();
+    // WidgetsBinding.instance.removeObserver(this);
     socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
-    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override

@@ -165,10 +165,20 @@ class FirebaseHelper {
 }
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  log("background message called");
 
   NotificationHelper notificationService = NotificationHelper();
+
   notificationService.showNotifications(message);
 
-  logMe("Handling a background message: ${message.messageId}");
+  //No need for showing Notification manually.
+  //For BackgroundMessages: Firebase automatically sends a Notification.
+  //If you call the flutterLocalNotificationsPlugin.show()-Methode for
+  //example the Notification will be displayed twice.
+  return;
+  // await Firebase.initializeApp();
+
+  // NotificationHelper notificationService = NotificationHelper();
+
+  // logMe("Handling a background message: ${message.messageId}");
 }

@@ -58,7 +58,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   ReceiptData? receiptData;
 
-  updateReceiptData({data}) {
+  Future<void> updateReceiptData({data}) async {
     receiptData = data;
     notifyListeners();
   }
@@ -159,7 +159,7 @@ class LatestSocketProvider extends ChangeNotifier {
     print(
         "********** ------>>>>>>> REMOVE ORDER FROM LIST CALLED <<<<<<<<<<------ ***********");
     bookingList.removeWhere((element) {
-      return element.id == orderId;
+      return element.id.toString() == orderId.toString();
     });
 
     notifyListeners();
@@ -712,6 +712,8 @@ class LatestSocketProvider extends ChangeNotifier {
 
     double actualTime = double.parse(difference.inMinutes.toString());
 
+    print("actual time in minute is :-->> $actualTime");
+
     print("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
 
     print("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
@@ -724,7 +726,8 @@ class LatestSocketProvider extends ChangeNotifier {
     } else {
       logMe("ESTIMATED time is grater ");
 
-      session.setEstimatedTime = session.estimatedTime * 60;
+      session.setEstimatedTime =
+          (double.parse(session.estimatedTime.toString()) * 60).toString();
     }
   }
 

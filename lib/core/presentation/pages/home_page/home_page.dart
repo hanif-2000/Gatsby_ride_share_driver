@@ -42,28 +42,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> retrieveOrderReceiptFromLocal() async {
     // Retrieve the JSON string from local storage
     String? jsonData = session.orderReceipt;
-    Map<String, dynamic> dataMap = jsonDecode(jsonData);
-
+    // ReceiptData dataMap = json.decode(jsonData);
+    Map<String, dynamic> jsonMap = json.decode(jsonData);
     // Map the data to your ReceiptResponseModel
-    ReceiptData receipt = ReceiptData.fromJson(dataMap);
+    ReceiptData receiptData = ReceiptData.fromJson(jsonMap);
+    log("new ----${receiptData.newTotal}");
 
-    socketProvider.updateReceiptData(data: receipt).then((value) {
+    socketProvider.updateReceiptData(data: receiptData).then((value) {
       logMe("RECEIPT DATA UPDATED SUCCESS");
-
-      // socketProvider
-      //     .fetchOrderDetails(int.parse(session.orderId))
-      //     .then((value) {
-      //   logMe(" order details are:::::::::::::: ${value}");
-
-      //   socketProvider.updateOrderDetailsModel(data: value);
-
-      //   socketProvider
-      //       .fetchDriverDetails(int.parse(session.driverId))
-      //       .then((value) {
-      //     socketProvider.updateDriverDetailsModel(data: value);
-      //     logMe(" driver details are:::::::::::::: ${value}");
-      //   });
-      // });
+      log("order receipt data from session :-->> ${socketProvider.receiptData}");
     });
   }
 
@@ -77,13 +64,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
     socketProvider.connectToSocket(context);
     if (session.isOrderRunning) {
+      log("----order running called---");
       showLoading();
 
       if (session.runningOrderStatus == 7) {
+        log("----order running called runningOrderStatus 7---");
+        log("----order running called isPaymentDone ${session.isPaymentDone}");
+        log("----order running called israting done ${session.isRatingGiven}");
+
         if (!session.isPaymentDone) {
+          log("----order running called isPaymentDone ${session.isPaymentDone}");
           /*** Payment confirmation pending */
 
           retrieveOrderReceiptFromLocal().then((value) {
+            log("----order running called retreve order receipt from local storage ---");
+
             homeProvider
                 .fetchOrderDetail(session.runningOrderId.toString())
                 .listen((event) {
@@ -129,17 +124,33 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
           });
         } else if (!session.isRatingGiven) {
+          homeProvider
+              .fetchCustomerDetail(session.customerId.toString())
+              .listen((event2) async {
+            if (event2 is CustomerDetailLoaded) {
+              log("customer details in home page checking is :--> ${event2.data}");
+              print(
+                  "customer details in home page checking is :--> ${event2.data}");
+
+              socketProvider
+                  .updateCustomerData(data: event2.data.data)
+                  .then((value) {
+                dismissLoading();
+
 /** Naviagte to rating screen  */
 
-          Navigator.pushNamedAndRemoveUntil(
-            locator<GlobalKey<NavigatorState>>().currentContext!,
-            GiveRatingScreen.routeName,
-            (route) => false,
-            arguments: RatingPageArguments(
-              customerDataModel: socketProvider.customerDetail!,
-              customerId: socketProvider.customerDetail!.id,
-            ),
-          );
+                Navigator.pushNamedAndRemoveUntil(
+                  locator<GlobalKey<NavigatorState>>().currentContext!,
+                  GiveRatingScreen.routeName,
+                  (route) => false,
+                  arguments: RatingPageArguments(
+                    customerDataModel: socketProvider.customerDetail!,
+                    customerId: socketProvider.customerDetail!.id,
+                  ),
+                );
+              });
+            }
+          });
         }
       } else {
         // var id = _fcmProvider.incomingOrderDetail!.orderId;
@@ -180,7 +191,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           }
         });
 
-        print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+        // print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
         print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
         log("session order STATUS IS :==>> ${session.orderStatus}");
         log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");

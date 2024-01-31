@@ -524,10 +524,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                             widget.index]
                                                         .distance;
                                                 session.setRunningOrderId =
-                                                    socketProvider
+                                                    int.parse(socketProvider
                                                         .bookingList[
                                                             widget.index]
-                                                        .id;
+                                                        .id);
 
                                                 /*** ORDER DETAILS  */
 

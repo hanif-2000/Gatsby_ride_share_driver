@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-NewReceiptModel newReceiptModelFromJson(String str) =>
-    NewReceiptModel.fromJson(json.decode(str));
+// NewReceiptModel newReceiptModelFromJson(String str) =>
+//     NewReceiptModel.fromJson(json.decode(str));
 
-String newReceiptModelToJson(NewReceiptModel data) =>
-    json.encode(data.toJson());
+// String newReceiptModelToJson(NewReceiptModel data) =>
+//     json.encode(data.toJson());
 
 class NewReceiptModel {
   dynamic response;

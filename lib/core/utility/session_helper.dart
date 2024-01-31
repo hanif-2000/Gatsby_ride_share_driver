@@ -510,8 +510,8 @@ class SessionHelper implements Session {
     await pref.remove(END_CO);
     await pref.remove(END_ADD);
     await pref.remove(START_CO);
-    await pref.remove(RATING_GIVEN);
-    await pref.remove(PAYMENT_DONE);
+    // await pref.remove(RATING_GIVEN);
+    // await pref.remove(PAYMENT_DONE);
     // await pref.remove(CUSTOMER_ID);
   }
 }

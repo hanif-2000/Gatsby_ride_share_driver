@@ -10,6 +10,7 @@ import 'package:appkey_taxiapp_driver/features/chat/presendtation/page/chat_page
 import 'package:appkey_taxiapp_driver/features/order_detail/presentation/widget/user_profile_tile.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../features/order/presentation/pages/new_order_page.dart';
 import '../../../features/receipt/persentation/pages/new_receipt_page.dart';
@@ -366,14 +367,20 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
-                      showLoading();
+                      SmartDialog.showLoading(
+                        animationType: SmartAnimationType.fade,
+                        backDismiss: false,
+                        msg: 'Calculating the Ride Price...',
+                        alignment: Alignment.center,
+                      );
                       /** END TRIP */
 
                       log("ride complete end time is:--->>>>${DateTime.now()}");
                       socketProvider
-                          .calculateTimeAndDistanceWhenRideCompeleted()
+                          .calculateTimeAndDistanceWhenRideCompeleted() // time calculate
                           .then((value) => socketProvider
-                                  .calculateDistanceCovered(context: context)
+                                  .calculateDistanceCovered(
+                                      context: context) //distance calculate
                                   .then((value) {
                                 socketProvider
                                     .updateOrderStatus(
@@ -387,6 +394,7 @@ class ButtonOrder extends StatelessWidget {
                                         distance: session.estimatedDistance)
                                     .then((value) {
                                   dismissLoading();
+                                  SmartDialog.dismiss();
                                   Navigator.pushNamedAndRemoveUntil(
                                     context,
                                     ReceiptPage.routeName,
