@@ -18,8 +18,9 @@ class CustomerDetailDataSourceImplementation
   Future<CustomerDetailModel> getCustomerDetail(String userId) async {
     final session = locator<Session>();
     String token = session.sessionToken;
-    String path =
-        'api/webservice/driver/customer-by-id?id=$userId';
+
+    print("customer id is :${session.customerId}");
+    String path = 'api/webservice/driver/customer-by-id?id=$userId';
 
     try {
       final response = await dio.get(path);

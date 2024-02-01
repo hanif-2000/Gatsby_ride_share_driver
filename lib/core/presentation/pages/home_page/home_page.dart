@@ -64,9 +64,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print(
         "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if(result==ConnectivityResult.none){
+      if (result == ConnectivityResult.none) {
         socketProvider.disconnectSocket();
-      }else{
+      } else {
         socketProvider.connectToSocket(context);
       }
       // Got a new connectivity status!
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
                 socketProvider.updateOrderData(data: event.data);
                 homeProvider
-                    .fetchCustomerDetail(session.customerId.toString())
+                    .fetchCustomerDetail(event.data.userId)
                     .listen((event2) async {
                   if (event2 is CustomerDetailLoaded) {
                     log("customer details in home page checking is :--> ${event2.data}");

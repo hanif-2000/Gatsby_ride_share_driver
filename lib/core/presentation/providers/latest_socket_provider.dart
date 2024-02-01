@@ -174,8 +174,11 @@ class LatestSocketProvider extends ChangeNotifier {
     log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     print(
         '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
-    _socket = WebSocket(Uri.parse(
-        "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"));
+    _socket = WebSocket(
+        Uri.parse(
+            "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
+        pingInterval: const Duration(seconds: 5));
+
     _socket.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
@@ -417,6 +420,8 @@ class LatestSocketProvider extends ChangeNotifier {
       "UserType": 'driver'
     };
     log("get total count:$map");
+    print("get total count:$map");
+
     _socket.send(jsonEncode(map));
 
     // listenRequests();
@@ -563,7 +568,9 @@ class LatestSocketProvider extends ChangeNotifier {
           if (event is Connected) {
             _socket.send(json.encode(map));
             print(map.toString());
-            updateLatLngAtStarting();
+            // updateLatLngAtStarting();
+            updateLatLng(
+                latLng: LatLng(session.currentLat, session.currentLang));
 
             notifyListeners();
           }

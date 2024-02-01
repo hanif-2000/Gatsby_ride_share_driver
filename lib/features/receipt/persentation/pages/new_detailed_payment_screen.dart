@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/utility/convert_decimal_helper.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/static/colors.dart';
 import '../../widgets/common_text.dart';
@@ -120,7 +121,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   TextInRow(
                     firstText: 'Estimated Amount',
-                    secondText: r'CA$ ' + widget.totalPrice.toString(),
+                    secondText: r'CA$ ' +
+                        convertToTwoDecimal(widget.totalPrice.toString()),
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -136,7 +138,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     firstText: 'Extra Distance Price',
                     // secondText: widget.extraDistance + " Km",
-                    secondText: "CA\$ " + widget.extraDistancePrice,
+                    secondText:
+                        "CA\$ ${convertToTwoDecimal(widget.extraDistancePrice.toString())}",
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -153,7 +156,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     firstText: 'Extra Time Price',
                     // secondText: widget.extraTime.toString() + ' Min',
                     secondText:
-                        "CA\$ ${double.parse(widget.extraTimePrice.toString()).toStringAsFixed(2)}",
+                        "CA\$ ${convertToTwoDecimal(widget.extraTimePrice.toString())}",
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -161,7 +164,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     firstText: 'Actual Payment',
                     // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: "CA\$ " + widget.grandTotal,
+                    secondText:
+                        "CA\$ ${convertToTwoDecimal(widget.totalPrice.toString())}",
                   ),
                   const Divider(
                     color: whiteAccentColor,
@@ -169,19 +173,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   TextInRow(
                     firstText: 'Customer Pending Payment',
                     // secondText: widget.extraTime.toString() + ' Min',
-                    secondText: "CA\$ " + widget.pendingAmount,
+                    secondText:
+                        "CA\$ ${convertToTwoDecimal(widget.pendingAmount.toString())}",
                   ),
                   const Divider(
                     color: whiteAccentColor,
                   ),
                   TextInRow(
-                    secondTextweight: FontWeight.w700,
-                    firstText: 'Grand Total',
-                    secondText: r'CA$ ' + widget.grandTotal != ""
-                        ? (double.parse(widget.grandTotal.toString()))
-                            .toStringAsFixed(2)
-                        : "0",
-                  ),
+                      secondTextweight: FontWeight.w700,
+                      firstText: 'Grand Total',
+                      secondText: r'CA$ ' +
+                          convertToTwoDecimal(widget.newTotal.toString())
+                      // widget.newTotal != ""
+                      //     ? (double.parse(widget.grandTotal.toString()))
+                      //         .toStringAsFixed(2)
+                      //     : "0",
+                      ),
                 ],
               ),
             ),

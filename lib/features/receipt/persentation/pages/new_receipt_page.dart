@@ -421,7 +421,7 @@ class ReceiptPage extends StatelessWidget {
                                                         ? "0"
                                                         : provider.receiptData!
                                                             .extraTimePrice,
-                                                grandTotal: provider.receiptData!.total,
+                                                grandTotal: provider.receiptData!.newTotal.toString(),
                                                 distance: provider.receiptData!.distance.toString());
                                           },
                                         );

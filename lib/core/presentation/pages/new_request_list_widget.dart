@@ -87,7 +87,8 @@ class _RequestListWidgetState extends State<RequestListWidget>
   @override
   Widget build(BuildContext context) {
     return Consumer2(
-      builder: (context, HomeProvider homeProvider, LatestSocketProvider socketProvider, child) {
+      builder: (context, HomeProvider homeProvider,
+          LatestSocketProvider socketProvider, child) {
         return !session.isOnline
             ? Center(
                 child: NoProjects(isOffline: !session.isOnline, text: myText),

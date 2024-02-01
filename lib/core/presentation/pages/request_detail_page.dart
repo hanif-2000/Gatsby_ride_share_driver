@@ -8,6 +8,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/cu
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/convert_decimal_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/rating/presentation/page/rating_list_page.dart';
 import 'package:dio/dio.dart';
@@ -20,6 +21,7 @@ import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/presentation/pages/new_order_page.dart';
 import '../../data/models/booking_data_model.dart';
 import '../../data/models/customer_detail_model.dart';
+import '../../utility/convert_one_decimal_helper.dart';
 import '../../utility/injection.dart';
 import '../../utility/session_helper.dart';
 import 'home_page/home_page.dart';
@@ -329,11 +331,14 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                             ),
                                             InkWell(
                                               onTap: () {
+                                                print(
+                                                    "on click on rating list");
                                                 Navigator.pushNamed(context,
                                                     RatingListPage.routeName,
-                                                    arguments: widget
+                                                    arguments: int.parse(widget
                                                         .requestListModel!
-                                                        .customerId);
+                                                        .customerId
+                                                        .toString()));
                                                 // context,
                                                 // GiveRatingScreen.routeName);
                                               },
@@ -343,10 +348,12 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                       'assets/icons/home/ic_start.svg'),
                                                   smallHorizontalSpacing(),
                                                   Text(
-                                                    (widget.requestListModel!
-                                                            .customerRating)
-                                                        .toStringAsFixed(1)
-                                                        .toString(),
+                                                    convertToOneDecimal((widget
+                                                        .requestListModel!
+                                                        .customerRating
+                                                        .toString())),
+                                                    // .toStringAsFixed(1)
+                                                    // .toString(),
                                                     textAlign: TextAlign.center,
                                                     style: titleStyle
                                                         .copyWith(
@@ -377,7 +384,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                         Column(
                                           children: [
                                             Text(
-                                              '\$${widget.requestListModel!.newTotal}',
+                                              'CA\$ ${convertToTwoDecimal(widget.requestListModel!.newTotal)}',
 
                                               // '\$${widget.requestListModel!.total.toStringAsFixed(2)}',
                                               textAlign: TextAlign.center,
@@ -388,7 +395,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                   .usePoppinsW6Font(),
                                             ),
                                             Text(
-                                              '${widget.requestListModel!.distance} Km',
+                                              '${convertToTwoDecimal(widget.requestListModel!.distance)} Km',
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -528,6 +535,12 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                         .bookingList[
                                                             widget.index]
                                                         .id);
+
+                                                session.setCustomerId =
+                                                    int.parse(socketProvider
+                                                        .bookingList[
+                                                            widget.index]
+                                                        .customerId);
 
                                                 /*** ORDER DETAILS  */
 

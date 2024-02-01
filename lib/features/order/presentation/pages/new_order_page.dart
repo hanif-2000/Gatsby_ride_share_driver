@@ -104,6 +104,7 @@ class _NewOrderPageState extends State<NewOrderPage>
     WidgetsBinding.instance.addObserver(this);
     // socketProvider.listenRequests();
     socketProvider.updateGetBytes();
+    socketProvider.getTotalUnreadCount(session.customerId);
     var subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {

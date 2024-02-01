@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/static/assets.dart';
 import '../../../../core/static/styles.dart';
+import '../../../../core/utility/convert_one_decimal_helper.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../order_detail/presentation/widget/custom_rating_bar.dart';
 
@@ -18,7 +19,7 @@ class RatingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _deviceSize = MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) => locator<RatingProvider>(),
       child: Scaffold(
@@ -55,8 +56,8 @@ class RatingListPage extends StatelessWidget {
                       showToast(message: failure);
                       return const SizedBox.shrink();
                     case RatingListSuccess:
-                      final _data = (snapshot.data as RatingListSuccess).data;
-                      return _data!.list.isEmpty
+                      final data = (snapshot.data as RatingListSuccess).data;
+                      return data!.list.isEmpty
                           ? Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -66,8 +67,8 @@ class RatingListPage extends StatelessWidget {
                                   children: [
                                     Image.asset(
                                       noRating,
-                                      width: _deviceSize.width / 2,
-                                      height: _deviceSize.width / 2,
+                                      width: deviceSize.width / 2,
+                                      height: deviceSize.width / 2,
                                     ),
                                     const Text(
                                       "No Rating Yet, Please Give rating once ride completed",
@@ -137,7 +138,9 @@ class RatingListPage extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           Text(
-                                            '${_data.rating}',
+                                            convertToOneDecimal(
+                                                data.rating.toString()),
+                                            // '${_data.rating}',v
                                             textAlign: TextAlign.center,
                                             style: titleStyle
                                                 .copyWith(
@@ -151,13 +154,13 @@ class RatingListPage extends StatelessWidget {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               CustomRatingBar(
-                                                initialRating: _data.rating,
+                                                initialRating: data.rating,
                                                 isEditable: true,
                                                 itemSize: 25,
                                               ),
                                               smallVerticalSpacing(),
                                               Text(
-                                                'Based On ${_data.ratingCount} Reviews',
+                                                'Based On ${data.ratingCount} Reviews',
                                                 style: titleStyle
                                                     .copyWith(
                                                       fontSize: 12,
@@ -174,9 +177,9 @@ class RatingListPage extends StatelessWidget {
                                 // const FormContactUs(),
                                 largeVerticalSpacing(),
                                 ...List.generate(
-                                  _data.list.length,
+                                  data.list.length,
                                   (index) => RatingListTile(
-                                    ratingItem: _data.list[index],
+                                    ratingItem: data.list[index],
                                   ),
                                 ),
                                 mediumVerticalSpacing(),

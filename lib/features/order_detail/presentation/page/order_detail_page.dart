@@ -39,8 +39,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   convertSecondsToMinutes() {
     if (widget.order!.extraTimeTaken != '') {
-      int seconds = int.parse(widget.order!
-          .extraTimeTaken!); // Replace this with your desired number of seconds
+      int seconds = int.parse(widget.order!.extraTimeTaken
+          .toString()); // Replace this with your desired number of seconds
 
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;
@@ -440,7 +440,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             PriceTile(
                               title: 'Current Ride Payment',
                               // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value: 'CA\$ ${(widget.order!.grandTotal)}',
+                              value: 'CA\$ ${(widget.order!.total)}',
                             ),
                             PriceTile(
                               title: 'Pending Ride Payment',
