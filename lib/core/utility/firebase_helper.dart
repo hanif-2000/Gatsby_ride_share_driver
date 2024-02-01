@@ -44,6 +44,7 @@ class FirebaseHelper {
       print("on message listen called");
       print("remote message is------->>>>>. ${message.toMap().toString()}");
       fetchRemoteMessage(message);
+
       NotificationHelper notificationService = NotificationHelper();
       notificationService.showNotifications(message);
       /*  if(notificationEntity.message == SharedPreferenceHelper().getActiveChatId().toString()){
