@@ -15,6 +15,7 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_orde
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/data/model/new_receipt_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../features/rating/presentation/page/give_rating_screen.dart';
@@ -62,7 +63,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
     print(
         "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
-    socketProvider.connectToSocket(context);
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result==ConnectivityResult.none){
+        socketProvider.disconnectSocket();
+      }else{
+        socketProvider.connectToSocket(context);
+      }
+      // Got a new connectivity status!
+    });
     if (session.isOrderRunning) {
       log("----order running called---");
       showLoading();

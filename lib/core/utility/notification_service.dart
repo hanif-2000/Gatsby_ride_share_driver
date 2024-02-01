@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -17,52 +19,65 @@ class NotificationHelper {
   Future<void> init() async {
     const String iconNotification = '@mipmap/launcher_icon';
 
-    const initializationSettingsAndroid =
-        AndroidInitializationSettings(iconNotification);
+    const initializationSettingsAndroid = AndroidInitializationSettings(iconNotification);
+
     const darwinInitializationSettings = DarwinInitializationSettings(
         requestSoundPermission: false,
         requestAlertPermission: false,
         requestBadgePermission: false);
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
+    const InitializationSettings initializationSettings = InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: darwinInitializationSettings);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: selectNotification);
   }
+  /// Create a [AndroidNotificationChannel] for heads up notifications
+  AndroidNotificationChannel channel = const AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    // description
+    importance: Importance.max,
 
-  final AndroidNotificationDetails _androidNotificationDetails =
-      const AndroidNotificationDetails('GatesByDriver', 'GatesBy Driver',
+  );
+
+/*  final AndroidNotificationDetails _androidNotificationDetails = const AndroidNotificationDetails(
+          'GatesByDriver',
+          'GatesBy Driver',
           playSound: true,
           priority: Priority.high,
-          importance: Importance.high,
+          importance: Importance.max,
           onlyAlertOnce: true
 
           // color: Color(0xff000000),
-          );
+          );*/
 
   Future<void> showNotifications(RemoteMessage message) async {
     print("show notification called :-->> ${message.data}");
     print("show notification title :-->> ${message.data["title"]}");
     print("show notification message :-->> ${message.data["message"]}");
-
-    if (message.notification != null) {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.data["title"],
-        message.data["message"],
-        NotificationDetails(android: _androidNotificationDetails),
-      );
-    } else {
-      // return;
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.data["title"],
-        message.data["message"],
-        NotificationDetails(android: _androidNotificationDetails),
-      );
-    }
+    Random random = Random();
+    int id = random.nextInt(900) + 10;
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      message.data["title"],
+      message.data["message"],
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          icon: "@mipmap/ic_launcher",
+          channelShowBadge: true,
+          playSound: true,
+          priority: Priority.max,
+          importance: Importance.max,
+          styleInformation: BigTextStyleInformation(message.data["message"]??""),
+        ),
+      ),
+      //  NotificationDetails(android: _androidNotificationDetails),
+    );
   }
 
   void selectNotification(NotificationResponse response) async {

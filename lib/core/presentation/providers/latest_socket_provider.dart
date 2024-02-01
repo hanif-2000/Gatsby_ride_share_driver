@@ -191,7 +191,7 @@ class LatestSocketProvider extends ChangeNotifier {
     });
   }
 
-  receonnetSocket(BuildContext context) {
+  reconnectSocket(BuildContext context) {
     print("Disconnected=============>>${_socket.connection.state})");
     if (_socket.connection.state is Disconnected) {
       print("Disconnected=============>>");
