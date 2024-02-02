@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
@@ -6,6 +8,7 @@ import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/forgot_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +18,7 @@ import '../../../../core/static/enums.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 import '../../../../core/utility/validation_helper.dart';
+import '../../../order/data/models/create_order_response_model.dart';
 import '../providers/login_provider.dart';
 import '../providers/login_state.dart';
 
@@ -28,6 +32,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   var socketProvider = locator<LatestSocketProvider>();
   void submit() {
+    var dio = Dio();
     FocusManager.instance.primaryFocus?.unfocus();
     final provider = context.read<LoginProvider>();
     provider.doLoginApi().listen((state) async {
@@ -46,11 +51,40 @@ class _LoginFormState extends State<LoginForm> {
           session.setLoggedIn = true;
           session.setIsProfileCompleted = true;
 
+          //** UPDATE  */
+
+          log("session token:--->> ${session.sessionToken}");
+          print("session token:--->> ${session.sessionToken}");
+
+          final formData = FormData.fromMap({
+            'api_token': session.sessionToken,
+            'status': "0",
+          });
+
+          String url =
+              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/set-status';
+          dio.options.headers["authorization"] =
+              "Bearer ${session.sessionToken}";
+          try {
+            final response = await dio.post(
+              url,
+              data: formData,
+            );
+
+            print("set status form data is :--> ${formData.fields}");
+            final model = ChangeStatusesponseModel.fromJson(response.data);
+
+            print("change status model is :--> ${model.message}");
+            Navigator.pushNamedAndRemoveUntil(
+                context, HomePage.routeName, (route) => false);
+            logMe("Authorization Token: ${session.sessionToken}");
+            break;
+          } catch (e) {
+            rethrow;
+          }
+
         //  socketProvider.connectToSocket(context);
-          // showToast(message: appLoc.success);
-          Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
-          logMe("Authorization Token: ${session.sessionToken}");
-          break;
+        // showToast(message: appLoc.success);
       }
     });
   }

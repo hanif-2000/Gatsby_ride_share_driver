@@ -188,17 +188,23 @@ class LatestSocketProvider extends ChangeNotifier {
       } else if (event is Disconnected) {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
+        reconnectSocket(context);
       } else {
         print("************ Socket State: $event***********");
       }
     });
   }
 
-  reconnectSocket(BuildContext context) {
+  reconnectSocket(
+    BuildContext context,
+  ) {
     print("Disconnected=============>>${_socket.connection.state})");
-    if (_socket.connection.state is Disconnected) {
+    if (_socket.connection.state is Disconnected &&
+        session.sessionToken.isNotEmpty) {
       print("Disconnected=============>>");
-      connectToSocket(context);
+      Future.delayed(const Duration(seconds: 2), () {
+        connectToSocket(context);
+      });
     } else {
       print("Disconnected=============>> else");
     }

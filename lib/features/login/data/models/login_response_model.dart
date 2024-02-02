@@ -41,8 +41,9 @@ class LoginDataModel extends Equatable {
   final String fcmToken;
   final int status;
   final String image;
-  final String categoryId;
+  final dynamic categoryId;
   final String chatToken;
+  // dynamic orderStatus;
 
   const LoginDataModel(
       {required this.driverId,
@@ -53,6 +54,7 @@ class LoginDataModel extends Equatable {
       required this.status,
       required this.categoryId,
       required this.chatToken,
+      // required this.orderStatus,
       required this.image});
 
   @override
@@ -69,6 +71,7 @@ class LoginDataModel extends Equatable {
       chatToken:
           json['chat_token'] != null ? json['chat_token'].toString() : '',
       categoryId: json['vehicle_category_id'] ?? '',
+      // orderStatus: json["order_status"] ?? '0',
       status: json['status'] ?? '');
 
   Map<String, dynamic> toJson() => {

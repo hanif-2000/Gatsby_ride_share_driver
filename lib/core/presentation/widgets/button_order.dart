@@ -367,6 +367,7 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
+                      showLoading();
                       SmartDialog.showLoading(
                         animationType: SmartAnimationType.fade,
                         backDismiss: false,

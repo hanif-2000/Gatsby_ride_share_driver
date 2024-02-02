@@ -2,8 +2,6 @@
 //
 //     final newReceiptModel = newReceiptModelFromJson(jsonString);
 
-import 'dart:convert';
-
 // NewReceiptModel newReceiptModelFromJson(String str) =>
 //     NewReceiptModel.fromJson(json.decode(str));
 
@@ -51,6 +49,7 @@ class ReceiptData {
   dynamic paymentMethod;
   dynamic estimatedTime;
   dynamic actualTime;
+  DateTime createdAt;
   dynamic total;
   dynamic pendingAmount;
   dynamic customerId;
@@ -89,6 +88,7 @@ class ReceiptData {
     required this.longitude,
     required this.latitude,
     required this.phone,
+    required this.createdAt,
     required this.priceKm,
     required this.priceMin,
     required this.baseFare,
@@ -118,6 +118,7 @@ class ReceiptData {
         name: json["name"] ?? "",
         image: json["image"] ?? "",
         longitude: json["Longitude"] ?? "",
+        createdAt: DateTime.parse(json["created_at"]),
         latitude: json["Latitude"] ?? "",
         phone: json["phone"] ?? "",
         priceKm: json["price_km"] ?? "",
@@ -150,6 +151,7 @@ class ReceiptData {
         "image": image,
         "Longitude": longitude,
         "Latitude": latitude,
+        "created_at": createdAt.toIso8601String(),
         "phone": phone,
         "price_km": priceKm,
         "price_min": priceMin,

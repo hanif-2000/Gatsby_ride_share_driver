@@ -156,14 +156,17 @@ class ReceiptPage extends StatelessWidget {
                                   ],
                                 ),
                                 const Spacer(),
+
+                                /**rating */
                                 Row(
                                   children: [
                                     SvgPicture.asset(
                                         'assets/icons/home/ic_start.svg'),
                                     smallHorizontalSpacing(),
                                     Text(
-                                      provider.receiptData!.customerRating
-                                          .toString(),
+                                      convertToTwoDecimal(provider
+                                          .receiptData!.customerRating
+                                          .toString()),
                                       textAlign: TextAlign.center,
                                       style: titleStyle
                                           .copyWith(
@@ -203,12 +206,14 @@ class ReceiptPage extends StatelessWidget {
                                         )
                                         .usePoppinsW6Font(),
                                   ),
+
+                                  /**date  */
                                   Text(
                                     DateFormat.yMMMd().format(
                                         (DateFormat("yyyy-MM-dd HH:mm:ss")
                                                 .parse(
                                                     provider
-                                                        .receiptData!.orderTime
+                                                        .receiptData!.createdAt
                                                         .toString(),
                                                     true))
                                             .toLocal()),
@@ -241,14 +246,23 @@ class ReceiptPage extends StatelessWidget {
                                         .usePoppinsW6Font(),
                                   ),
                                   Text(
-                                    DateFormat.jm().format(
-                                        (DateFormat("yyyy-MM-dd HH:mm:ss")
-                                                .parse(
-                                                    provider
-                                                        .receiptData!.orderTime
-                                                        .toString(),
-                                                    true))
-                                            .toLocal()),
+                                    DateFormat.jm().format((DateFormat(
+                                                "yyyy-MM-dd HH:mm:ss")
+                                            .parse(
+                                                provider.receiptData!.createdAt
+                                                        .toString() ??
+                                                    DateTime.now().toString(),
+                                                true))
+                                        .toLocal()),
+
+                                    // DateFormat.jm().format(
+                                    //     (DateFormat("yyyy-MM-dd HH:mm:ss")
+                                    //             .parse(
+                                    //                 provider
+                                    //                     .receiptData!.orderTime
+                                    //                     .toString(),
+                                    //                 true))
+                                    //         .toLocal()),
                                     // DateFormat.jm().format(order.orderTime),
                                     textAlign: TextAlign.center,
                                     style: titleStyle
@@ -522,7 +536,8 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        provider.receiptData!.newTotal != ''
+                                        "CA\$${provider.receiptData!.newTotal}" !=
+                                                ''
                                             ? convertToTwoDecimal(provider
                                                 .receiptData!.newTotal
                                                 .toString())
