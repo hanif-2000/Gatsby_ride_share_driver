@@ -23,7 +23,7 @@ class BottomProfile extends StatefulWidget {
 }
 
 class _BottomProfileState extends State<BottomProfile> {
-  var socketProvider = locator<LatestSocketProvider>();
+  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(builder: (context, provider, _) {

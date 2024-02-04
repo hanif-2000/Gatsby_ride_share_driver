@@ -110,6 +110,7 @@ late bool isLoggedIn;
 
 final locator = GetIt.instance;
 
+
 Future<void> init() async {
   //network info
   locator.registerLazySingleton<NetworkInfo>(
@@ -358,6 +359,6 @@ Future<void> init() async {
       () => RatingProvider(doRating: locator()));
   locator.registerFactory<ReceiptProvider>(
       () => ReceiptProvider(doReceipt: locator()));
-  locator.registerFactory<LatestSocketProvider>(() => LatestSocketProvider());
-  // locator.registerFactory<ChatProvider>(() => ChatProvider());
+  // locator.registerFactory<LatestSocketProvider>(() => Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!));
+
 }

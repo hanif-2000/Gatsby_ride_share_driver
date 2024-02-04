@@ -63,7 +63,7 @@
 // class _OrderPageState extends State<OrderPage> with WidgetsBindingObserver {
 //   Timer? checkOrderStatusTimer, trackingTimer, updateLocationTimer;
 //   var orderPProvider = locator<OrderProvider>();
-//   var socketProvider = locator<LatestSocketProvider>();
+//   var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
 
 //   late StreamSubscription<LocationData> locationSubscription;
 

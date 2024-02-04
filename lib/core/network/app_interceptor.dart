@@ -48,6 +48,7 @@ class AppInterceptor extends Interceptor {
       // final session = locator<Session>();
       // session.setLoggedIn = false;
     }
+    
     if (statusCode == 404) {
       dismissLoading();
       await sessionLogOut().then(

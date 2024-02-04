@@ -31,7 +31,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
   String myText = '';
 
   var dio = Dio();
-  var socketProvider = locator<LatestSocketProvider>();
+  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
 
   // StreamController<List<RequestListState>> controller =
   // StreamController << CurrencyModel > [];

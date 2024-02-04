@@ -44,7 +44,7 @@
 
 //   OrderProvider.internal();
 
-//   //  socketProvider = locator<LatestSocketProvider>();
+//   //  socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
 
 //   DriverLocationResponseModel? get driverLocation => _driverLocation;
 //   final double _driverLat = 0.0;

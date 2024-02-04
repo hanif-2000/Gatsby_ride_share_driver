@@ -50,7 +50,7 @@
 //   OrderDetail? _orderDetail;
 //   CustomerDataModel? _customerDetail;
 
-//   var socketProvider = locator<LatestSocketProvider>();
+//   var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
 //   final double _driverLat = 0.0;
 //   final double _driverLng = 0.0;
 

@@ -37,7 +37,7 @@ class ButtonOrder extends StatelessWidget {
       required this.currentOrderStatus})
       : super(key: key);
 
-  // LatestSocketProvider socketProvider = locator<LatestSocketProvider>();
+  // LatestSocketProvider socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
   Session session = locator<Session>();
 
   var dio = Dio();

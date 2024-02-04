@@ -28,7 +28,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
-  final socketProvider = locator<LatestSocketProvider>();
+  final socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
 
   @override
   void initState() {

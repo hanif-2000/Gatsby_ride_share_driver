@@ -31,13 +31,13 @@ import '../../utility/direction_helper.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 
 class LatestSocketProvider extends ChangeNotifier {
-  static final LatestSocketProvider _provider = LatestSocketProvider.internal();
+  // static final LatestSocketProvider _provider = LatestSocketProvider.internal();
 
-  factory LatestSocketProvider() {
-    return _provider;
-  }
+  // factory Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!) {
+  //   return _provider;
+  // }
 
-  LatestSocketProvider.internal();
+  // LatestSocketProvider.internal();
 
   final session = locator<Session>();
   // final orderProvider = locator<OrderProvider>();
