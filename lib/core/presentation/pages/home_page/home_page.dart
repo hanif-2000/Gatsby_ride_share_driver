@@ -59,19 +59,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    socketProvider.connectToSocket(context);
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    print(
-        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
-    print(
-        "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
+/*    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         socketProvider.disconnectSocket();
       } else {
+        //socketProvider.disconnectSocket();
         socketProvider.connectToSocket(context);
       }
       // Got a new connectivity status!
-    });
+    });*/
     if (session.isOrderRunning) {
       log("----order running called---");
       showLoading();
@@ -232,8 +232,33 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        socketProvider.connectToSocket(context);
+        break;
+      case AppLifecycleState.paused:
+        socketProvider.disconnectSocket();
+      // The app is now in the background
+        print('App paused');
+        break;
+      case AppLifecycleState.inactive:
+        socketProvider.disconnectSocket();
+      // The app is in an inactive state (e.g., during a phone call)
+        print('App inactive');
+        break;
+      case AppLifecycleState.detached:
+        socketProvider.disconnectSocket();
+      // The app is detached (e.g., terminated)
+        print('App detached');
+        break;
+      case AppLifecycleState.hidden:
+        socketProvider.disconnectSocket();
+
+        break;
+    }
   }
 
   // fcmListener() async {
