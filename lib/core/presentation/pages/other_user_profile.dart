@@ -15,7 +15,9 @@ class OtherUserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     // OrderProvider provider = Provider.of<OrderProvider>(context, listen: false);
-    var provider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+    var provider = Provider.of<LatestSocketProvider>(
+      locator<GlobalKey<NavigatorState>>().currentContext!,
+    );
 
     return Scaffold(
       body: SafeArea(

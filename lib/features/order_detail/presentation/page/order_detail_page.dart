@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/convert_one_decimal_helper.dart';
 import 'package:appkey_taxiapp_driver/features/history/data/models/history_response_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -244,7 +245,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                       'assets/icons/home/ic_start.svg'),
                                   smallHorizontalSpacing(),
                                   Text(
-                                    '${widget.order!.rating}',
+                                    convertToOneDecimal(
+                                        widget.order!.rating.toString()),
                                     textAlign: TextAlign.center,
                                     style: titleStyle
                                         .copyWith(

@@ -1,5 +1,4 @@
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
-import 'package:appkey_taxiapp_driver/core/presentation/providers/socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/change_password_page.dart';
@@ -23,7 +22,8 @@ class BottomProfile extends StatefulWidget {
 }
 
 class _BottomProfileState extends State<BottomProfile> {
-  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+  var socketProvider = Provider.of<LatestSocketProvider>(
+      locator<GlobalKey<NavigatorState>>().currentContext!);
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(builder: (context, provider, _) {
@@ -44,7 +44,8 @@ class _BottomProfileState extends State<BottomProfile> {
                       buttonHeight: MediaQuery.of(context).size.height * 0.080,
                       isRounded: true,
                       event: () {
-                        Navigator.push( context,
+                        Navigator.push(
+                            context,
                             MaterialPageRoute(
                                 builder: (context) =>
                                     const EditProfilePage())).then((value) {

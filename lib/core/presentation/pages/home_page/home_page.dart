@@ -37,7 +37,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FcmProvider _fcmProvider = locator<FcmProvider>();
 
   // var provider = locator<HomeProvider>();
-  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+  var socketProvider = Provider.of<LatestSocketProvider>(
+      locator<GlobalKey<NavigatorState>>().currentContext!);
   var session = locator<Session>();
 
   Future<void> retrieveOrderReceiptFromLocal() async {
@@ -96,6 +97,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     "order details in home page checking is :--> ${event.data}");
 
                 socketProvider.updateOrderData(data: event.data);
+                socketProvider.setNewChangeOrderStatus =
+                    event.data.orderStatus.toString();
+                session.setRunningOrderStatus =
+                    int.parse(event.data.orderStatus.toString());
+                socketProvider.updateCurrentStatus(
+                    status: int.parse(event.data.orderStatus.toString()));
                 homeProvider
                     .fetchCustomerDetail(event.data.userId)
                     .listen((event2) async {
@@ -171,6 +178,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           if (event is OrderDetailLoaded) {
             log("order details in home page checking is :--> ${event.data}");
             socketProvider.updateOrderData(data: event.data);
+            socketProvider.setNewChangeOrderStatus =
+                event.data.orderStatus.toString();
+            session.setRunningOrderStatus =
+                int.parse(event.data.orderStatus.toString());
+            socketProvider.updateCurrentStatus(
+                status: int.parse(event.data.orderStatus.toString()));
             homeProvider
                 .fetchCustomerDetail(session.customerId.toString())
                 .listen((event2) async {

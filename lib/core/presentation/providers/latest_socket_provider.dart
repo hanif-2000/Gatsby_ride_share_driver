@@ -623,6 +623,9 @@ class LatestSocketProvider extends ChangeNotifier {
       required String endTime,
       String? distance,
       required context}) async {
+    print("update order status called");
+    print("update order status called $status");
+
     // var orderProvider = Provider.of<OrderProvider>(context, listen: false);
     try {
       final map = {
@@ -636,10 +639,13 @@ class LatestSocketProvider extends ChangeNotifier {
       };
       logMe('Update Status -- > ${map.toString()}');
 
+      print('Update Status -- > ${map.toString()}');
+
       try {
         _socket.connection.listen((event) {
-          if ((event is Connected) || (event is Reconnected)) {
+          if (event is Connected) {
             _socket.send(json.encode(map));
+            dismissLoading();
 
             updateLatLng(
                 latLng: LatLng(session.currentLat, session.currentLang));
@@ -651,6 +657,7 @@ class LatestSocketProvider extends ChangeNotifier {
               setNewChangeOrderStatus = "2";
               session.setOrderStatus = 2;
               session.setRunningOrderStatus = 2;
+              dismissLoading();
 
               setNewPolylineDirection(false);
             } else if (status == '3') {
@@ -658,6 +665,7 @@ class LatestSocketProvider extends ChangeNotifier {
               setNewChangeOrderStatus = "3";
               session.setOrderStatus = 3;
               session.setRunningOrderStatus = 3;
+              dismissLoading();
               setNewPolylineDirection(true);
 
               rideText = "Start Trip";
@@ -666,6 +674,7 @@ class LatestSocketProvider extends ChangeNotifier {
               setNewChangeOrderStatus = "5";
 
               session.setRunningOrderStatus = 5;
+              dismissLoading();
 
               setNewPolylineDirection(true);
 
@@ -677,6 +686,7 @@ class LatestSocketProvider extends ChangeNotifier {
               setNewChangeOrderStatus = "7";
               session.setOrderStatus = 7;
               session.setRunningOrderStatus = 7;
+              dismissLoading();
 
               setNewPolylineDirection(true);
 
@@ -686,6 +696,8 @@ class LatestSocketProvider extends ChangeNotifier {
             }
 
             notifyListeners();
+          } else {
+            connectToSocket(context);
           }
         });
       } catch (e) {
@@ -752,6 +764,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
   setCurrentLocation(
       OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+    polylineCoordinates.clear();
+    newPolylines.clear();
+
     print("order details are: $orderDetail");
     print("customerDataModel details are: $customerDataModel");
 
@@ -963,6 +978,8 @@ class LatestSocketProvider extends ChangeNotifier {
   setNewPolylineDirection(
     bool isFromOrigin,
   ) async {
+    newPolylines.clear();
+
     print(
         "***************************************** IS FROM LOGIN IS--------***********************$isFromOrigin *************--------");
     print("set polylines order details  are:-->> $orderDetail");
@@ -970,6 +987,9 @@ class LatestSocketProvider extends ChangeNotifier {
     showLoading();
     var latLongOrigin = orderDetail!.startCoordinate;
     var latLongDestination = orderDetail!.endCoordinate;
+
+    print(
+        "origin and destiantion coordinates are: $latLongOrigin and $latLongDestination");
     // var latLongOrigin = "30.703112393336106, 76.68201047927141";
     // var latLongDestination = "30.706780957567652, 76.68569013476372";
 
@@ -983,6 +1003,10 @@ class LatestSocketProvider extends ChangeNotifier {
     var coordinate =
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
     if (isFromOrigin) {
+      print("------------------ GO TO DESTINATION FROM ORIGIN---------- ");
+      print(
+          "------------------ GO TO DESTINATION FROM ORIGIN---------- $latDestination,$lngDestination ");
+
       /*** GO TO DESTINATION FROM ORIGIN */
       await DirectionHelper()
           .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
@@ -1007,8 +1031,8 @@ class LatestSocketProvider extends ChangeNotifier {
 
           // polylines.add(polyline);
           notifyListeners();
-          print("Polyline created not from origin $polylineCoordinates");
-          print("Polyline created not from newPolylines origin $newPolylines");
+          print("Polyline created  from origin $polylineCoordinates");
+          print("Polyline created  from newPolylines origin $newPolylines");
 
           dismissLoading();
         }
@@ -1016,7 +1040,10 @@ class LatestSocketProvider extends ChangeNotifier {
       dismissLoading();
     } else {
       /*** GO TO ORIGIN  */
-      logMe("Polylinessss destinationnnn created");
+      logMe("Polylinessss ORIGIN created");
+      print(
+          "------------------ GO TO ORIGIN FROM DRIVER---------- $latOrigin, $lngOrigin");
+
       await DirectionHelper()
           .getRouteBetweenCoordinates(
               coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
@@ -1039,8 +1066,8 @@ class LatestSocketProvider extends ChangeNotifier {
           newPolylines.add(polyline);
 
           notifyListeners();
-          print("Polyline created from origin $polylineCoordinates");
-          print("Polyline created from origin newPolylines $newPolylines");
+          print("Polyline created not from origin $polylineCoordinates");
+          print("Polyline created from not origin newPolylines $newPolylines");
 
           dismissLoading();
         }
@@ -1232,98 +1259,194 @@ class LatestSocketProvider extends ChangeNotifier {
 
     //     ) {
     //   logMe("Polylinessss origin");
-    await DirectionHelper()
-        .getRouteBetweenCoordinates(
-            coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
-        .then((result) async {
-      if (result.isNotEmpty) {
-        polylineCoordinates = [];
-        for (var point in result) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        }
-        MarkerId markerIdDriver = const MarkerId("driver");
 
-        final Marker markerDriver = Marker(
-          anchor: const Offset(0.5, 0.5),
-          markerId: markerIdDriver,
-          position: coordinate,
-          icon: driverMarker,
-          rotation: _currentPosition!.heading,
-          infoWindow: InfoWindow(
-              title:
-                  "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
-        );
+    if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(
+              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+          .then((result) async {
+        if (result.isNotEmpty) {
+          polylineCoordinates = [];
+          for (var point in result) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          }
+          MarkerId markerIdDriver = const MarkerId("driver");
 
-        markers[markerIdDriver] = markerDriver;
+          final Marker markerDriver = Marker(
+            anchor: const Offset(0.5, 0.5),
+            markerId: markerIdDriver,
+            position: coordinate,
+            icon: driverMarker,
+            rotation: _currentPosition!.heading,
+            infoWindow: InfoWindow(
+                title:
+                    "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
+          );
 
-        Polyline polyline = Polyline(
-            polylineId: const PolylineId("jalur"),
-            color: Colors.black,
-            points: polylineCoordinates,
-            width: 5,
-            startCap: Cap.roundCap,
-            endCap: Cap.roundCap);
-        newPolylines.add(polyline);
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       target: coordinate,
-        //       zoom: zoom,
-        //     ),
-        //   ),
-        // );
-        notifyListeners();
-        // }
-        // },
-        // );
-      } else {
-        logMe("Polylinessss destinationnnn");
-        await DirectionHelper()
-            .getRouteBetweenCoordinates(coordinate.latitude,
-                coordinate.longitude, latDestination, lngDestination)
-            .then(
-          (result) {
-            if (result.isNotEmpty) {
-              polylineCoordinates = [];
-              for (var point in result) {
-                polylineCoordinates
-                    .add(LatLng(point.latitude, point.longitude));
-              }
-              MarkerId markerIdDriver = const MarkerId("driver");
+          markers[markerIdDriver] = markerDriver;
 
-              final Marker markerDriver = Marker(
-                anchor: const Offset(0.5, 0.5),
-                markerId: markerIdDriver,
-                position: coordinate,
-                icon: driverMarker,
-                rotation: _currentPosition!.heading,
-              );
+          Polyline polyline = Polyline(
+              polylineId: const PolylineId("jalur"),
+              color: Colors.black,
+              points: polylineCoordinates,
+              width: 5,
+              startCap: Cap.roundCap,
+              endCap: Cap.roundCap);
+          newPolylines.add(polyline);
+          // googleMapController.animateCamera(
+          //   CameraUpdate.newCameraPosition(
+          //     CameraPosition(
+          //       target: coordinate,
+          //       zoom: zoom,
+          //     ),
+          //   ),
+          // );
+          notifyListeners();
+          // }
+          // },
+          // );
+        } else {
+          logMe("Polylinessss destinationnnn");
+          await DirectionHelper()
+              .getRouteBetweenCoordinates(coordinate.latitude,
+                  coordinate.longitude, latDestination, lngDestination)
+              .then(
+            (result) {
+              if (result.isNotEmpty) {
+                polylineCoordinates = [];
+                for (var point in result) {
+                  polylineCoordinates
+                      .add(LatLng(point.latitude, point.longitude));
+                }
+                MarkerId markerIdDriver = const MarkerId("driver");
 
-              markers[markerIdDriver] = markerDriver;
+                final Marker markerDriver = Marker(
+                  anchor: const Offset(0.5, 0.5),
+                  markerId: markerIdDriver,
+                  position: coordinate,
+                  icon: driverMarker,
+                  rotation: _currentPosition!.heading,
+                );
 
-              Polyline polyline = Polyline(
-                polylineId: const PolylineId("jalur"),
-                color: Colors.lightBlue,
-                points: polylineCoordinates,
-                width: 5,
-                startCap: Cap.roundCap,
-                endCap: Cap.roundCap,
-              );
-              newPolylines.add(polyline);
-              googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: coordinate,
-                    zoom: zoom,
+                markers[markerIdDriver] = markerDriver;
+
+                Polyline polyline = Polyline(
+                  polylineId: const PolylineId("jalur"),
+                  color: Colors.lightBlue,
+                  points: polylineCoordinates,
+                  width: 5,
+                  startCap: Cap.roundCap,
+                  endCap: Cap.roundCap,
+                );
+                newPolylines.add(polyline);
+                googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: coordinate,
+                      zoom: zoom,
+                    ),
                   ),
-                ),
-              );
-              notifyListeners();
-            }
-          },
-        );
-      }
-    });
+                );
+                notifyListeners();
+              }
+            },
+          );
+        }
+      });
+    } else {
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
+              latDestination, lngDestination)
+          .then((result) async {
+        if (result.isNotEmpty) {
+          polylineCoordinates = [];
+          for (var point in result) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          }
+          MarkerId markerIdDriver = const MarkerId("driver");
+
+          final Marker markerDriver = Marker(
+            anchor: const Offset(0.5, 0.5),
+            markerId: markerIdDriver,
+            position: coordinate,
+            icon: driverMarker,
+            rotation: _currentPosition!.heading,
+            infoWindow: InfoWindow(
+                title:
+                    "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
+          );
+
+          markers[markerIdDriver] = markerDriver;
+
+          Polyline polyline = Polyline(
+              polylineId: const PolylineId("jalur"),
+              color: Colors.black,
+              points: polylineCoordinates,
+              width: 5,
+              startCap: Cap.roundCap,
+              endCap: Cap.roundCap);
+          newPolylines.add(polyline);
+          // googleMapController.animateCamera(
+          //   CameraUpdate.newCameraPosition(
+          //     CameraPosition(
+          //       target: coordinate,
+          //       zoom: zoom,
+          //     ),
+          //   ),
+          // );
+          notifyListeners();
+          // }
+          // },
+          // );
+        } else {
+          logMe("Polylinessss destinationnnn");
+          await DirectionHelper()
+              .getRouteBetweenCoordinates(coordinate.latitude,
+                  coordinate.longitude, latDestination, lngDestination)
+              .then(
+            (result) {
+              if (result.isNotEmpty) {
+                polylineCoordinates = [];
+                for (var point in result) {
+                  polylineCoordinates
+                      .add(LatLng(point.latitude, point.longitude));
+                }
+                MarkerId markerIdDriver = const MarkerId("driver");
+
+                final Marker markerDriver = Marker(
+                  anchor: const Offset(0.5, 0.5),
+                  markerId: markerIdDriver,
+                  position: coordinate,
+                  icon: driverMarker,
+                  rotation: _currentPosition!.heading,
+                );
+
+                markers[markerIdDriver] = markerDriver;
+
+                Polyline polyline = Polyline(
+                  polylineId: const PolylineId("jalur"),
+                  color: Colors.lightBlue,
+                  points: polylineCoordinates,
+                  width: 5,
+                  startCap: Cap.roundCap,
+                  endCap: Cap.roundCap,
+                );
+                newPolylines.add(polyline);
+                googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: coordinate,
+                      zoom: zoom,
+                    ),
+                  ),
+                );
+                notifyListeners();
+              }
+            },
+          );
+        }
+      });
+    }
   }
 
 // // ------------- Get distance between 2 lat long points

@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/data/models/customer_detail_model.dart';
 import '../../../../core/static/colors.dart';
 import '../../../../core/static/styles.dart';
+import '../../../../core/utility/convert_one_decimal_helper.dart';
 import '../../../../core/utility/helper.dart';
 
 class UserProfileTile extends StatelessWidget {
@@ -76,9 +77,11 @@ class UserProfileTile extends StatelessWidget {
                         SvgPicture.asset('assets/icons/home/ic_start.svg'),
                         smallHorizontalSpacing(),
                         Text(
-                          double.tryParse(customerDataModel!.rating.toString())
-                                  ?.toStringAsFixed(1) ??
-                              "",
+                          convertToOneDecimal(
+                              customerDataModel!.rating.toString()),
+                          // double.tryParse(customerDataModel!.rating.toString())
+                          //         ?.toStringAsFixed(1) ??
+                          //     "",
                           // '${customerDataModel!.rating}',
                           textAlign: TextAlign.center,
                           style: titleStyle

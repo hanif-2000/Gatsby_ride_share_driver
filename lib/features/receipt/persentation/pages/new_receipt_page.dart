@@ -32,7 +32,8 @@ class ReceiptPage extends StatelessWidget {
   // final CustomerDataModel customerDataModel;
   final int customerId;
   String actualTimeTaken = "0 Min";
-  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+  var socketProvider = Provider.of<LatestSocketProvider>(
+      locator<GlobalKey<NavigatorState>>().currentContext!);
 
   @override
   Widget build(BuildContext context) {

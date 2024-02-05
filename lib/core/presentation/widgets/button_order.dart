@@ -336,7 +336,8 @@ class ButtonOrder extends StatelessWidget {
                     showLoading();
                     print(
                         "**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
-                    if (socketProvider.currentOrderStatus == 0) {
+                    if ((socketProvider.currentOrderStatus == 0) ||
+                        socketProvider.currentOrderStatus == 1) {
                       /** start ride to customer place */
                       socketProvider.updateOrderStatus(
                         status: "2",

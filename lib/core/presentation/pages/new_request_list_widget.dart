@@ -31,7 +31,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
   String myText = '';
 
   var dio = Dio();
-  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+  // var latestSocketProvider = Provider.of<LatestSocketProvider>(
+  //     locator<GlobalKey<NavigatorState>>().currentContext!,
+  //     listen: false);
 
   // StreamController<List<RequestListState>> controller =
   // StreamController << CurrencyModel > [];
@@ -86,163 +88,166 @@ class _RequestListWidgetState extends State<RequestListWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2(
-      builder: (context, HomeProvider homeProvider,
-          LatestSocketProvider socketProvider, child) {
-        return !session.isOnline
-            ? Center(
-                child: NoProjects(isOffline: !session.isOnline, text: myText),
-              )
-            : socketProvider.bookingList.isEmpty
-                ? Center(
-                    child: NoProjects(
-                    text: myText,
-                  ))
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height * .82,
-                    child: ListView.builder(
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: socketProvider.bookingList.length,
-                      itemBuilder: (context, index) {
-                        return NewRequestTile(
-                          onAccept: () {
-                            // Accept the Ride
-                            socketProvider
-                                .acceptRideRequest(
-                                    orderId:
-                                        socketProvider.bookingList[index].id)
-                                .then((value) {
-                              print(
-                                  "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
-                              print(
-                                  "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
+    return Consumer<LatestSocketProvider>(
+      builder: (context, LatestSocketProvider socketProvider, _) {
+        return Consumer<HomeProvider>(
+            builder: (context, HomeProvider homeProvider, _) {
+          return !session.isOnline
+              ? Center(
+                  child: NoProjects(isOffline: !session.isOnline, text: myText),
+                )
+              : socketProvider.bookingList.isEmpty
+                  ? Center(
+                      child: NoProjects(
+                      text: myText,
+                    ))
+                  : SizedBox(
+                      height: MediaQuery.of(context).size.height * .82,
+                      child: ListView.builder(
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: socketProvider.bookingList.length,
+                        itemBuilder: (context, index) {
+                          return NewRequestTile(
+                            onAccept: () {
+                              // Accept the Ride
+                              socketProvider
+                                  .acceptRideRequest(
+                                      orderId:
+                                          socketProvider.bookingList[index].id)
+                                  .then((value) {
+                                print(
+                                    "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
+                                print(
+                                    "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
 
-                              print(
-                                  "customer id is:-> ${socketProvider.bookingList[index].customerId}");
-                              var session = locator<Session>();
-                              session.setIsOrderRunning = true;
-                              session.setEstimatedTime = socketProvider
-                                  .bookingList[index].estimatedTime;
-                              session.setEstimatedDistance =
-                                  socketProvider.bookingList[index].distance;
-                              session.setRunningOrderId = int.parse(
-                                  socketProvider.bookingList[index].id);
-                              session.setCustomerId = int.parse(
-                                  socketProvider.bookingList[index].customerId);
+                                print(
+                                    "customer id is:-> ${socketProvider.bookingList[index].customerId}");
+                                var session = locator<Session>();
+                                session.setIsOrderRunning = true;
+                                session.setEstimatedTime = socketProvider
+                                    .bookingList[index].estimatedTime;
+                                session.setEstimatedDistance =
+                                    socketProvider.bookingList[index].distance;
+                                session.setRunningOrderId = int.parse(
+                                    socketProvider.bookingList[index].id);
+                                session.setCustomerId = int.parse(socketProvider
+                                    .bookingList[index].customerId);
 
-                              /*** ORDER DETAILS  */
+                                /*** ORDER DETAILS  */
 
-                              print(
-                                  "order id:-->>${socketProvider.bookingList[index].id}");
-                              print(
-                                  "total order id:-->>${socketProvider.bookingList[index].newTotal}");
-                              print(
-                                  "customerId order id:-->>${socketProvider.bookingList[index].customerId}");
-                              print(
-                                  "order id:-->>${socketProvider.bookingList[index].id}");
-                              print(
-                                  "distance order id:-->>${socketProvider.bookingList[index].distance}");
-                              print(
-                                  "start coordinate order id:-->>${socketProvider.bookingList[index].startCoordinate}");
-                              print(
-                                  "endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
-                              print(
-                                  "startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
-                              print(
-                                  "end address order id:-->>${socketProvider.bookingList[index].id}");
-                              // print("order id:-->>${socketProvider.bookingList[index].id}");
+                                print(
+                                    "order id:-->>${socketProvider.bookingList[index].id}");
+                                print(
+                                    "total order id:-->>${socketProvider.bookingList[index].newTotal}");
+                                print(
+                                    "customerId order id:-->>${socketProvider.bookingList[index].customerId}");
+                                print(
+                                    "order id:-->>${socketProvider.bookingList[index].id}");
+                                print(
+                                    "distance order id:-->>${socketProvider.bookingList[index].distance}");
+                                print(
+                                    "start coordinate order id:-->>${socketProvider.bookingList[index].startCoordinate}");
+                                print(
+                                    "endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
+                                print(
+                                    "startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
+                                print(
+                                    "end address order id:-->>${socketProvider.bookingList[index].id}");
+                                // print("order id:-->>${socketProvider.bookingList[index].id}");
 
-                              logMe(
-                                  "customer id from session id:-->> ${session.customerId}");
+                                logMe(
+                                    "customer id from session id:-->> ${session.customerId}");
 
-                              homeProvider.setOrderDetails = OrderDetail(
-                                orderId: int.parse(
-                                    socketProvider.bookingList[index].id),
-                                totalPrice:
-                                    socketProvider.bookingList[index].total,
-                                userId: int.parse(socketProvider
-                                    .bookingList[index].customerId),
-                                driverId: int.parse(session.userId),
-                                distance:
-                                    socketProvider.bookingList[index].distance,
-                                orderStatus: 0,
-                                startCoordinate: socketProvider
-                                    .bookingList[index].startCoordinate,
-                                endCoordinate: socketProvider
-                                    .bookingList[index].endCoordinate,
-                                startAddress: socketProvider
-                                    .bookingList[index].startAddress,
-                                endAddress: socketProvider
-                                    .bookingList[index].endAddress,
-                                pendingAmount: socketProvider
-                                    .bookingList[index].pendingAmount,
-                                newTotal:
-                                    socketProvider.bookingList[index].newTotal,
-                              );
-
-                              // session.setOrderDetails =
-                              //     homeProvider.orderDetail!;
-
-                              //Socket
-
-                              //*** CUSTOMER DETAILS */
-
-                              homeProvider.setCustomerDetails =
-                                  CustomerDataModel(
-                                name: socketProvider.bookingList[index].name,
-                                phoneNumber:
-                                    socketProvider.bookingList[index].phone,
-                                photo: socketProvider.bookingList[index].image,
-                                id: int.parse(socketProvider
-                                    .bookingList[index].customerId),
-                                rating: socketProvider
-                                    .bookingList[index].customerRating,
-                              );
-
-                              // session.setCustomerDetails =
-                              //     homeProvider.customerDetailModel!;
-
-                              log("order details are:-->. ${homeProvider.orderDetail!}");
-                              print(
-                                  "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
-
-                              log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
-                              print(
-                                  "Customer details are:-->. ${homeProvider.customerDetailModel!}");
-
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                NewOrderPage.routeName,
-                                (route) => false,
-                                arguments: NewOrderPageArguments(
-                                  // orderTotal: socketProvider
-                                  //     .bookingList[index].newTotal,
-                                  orderDetail: homeProvider.orderDetail!,
-                                  customerDetailModel:
-                                      homeProvider.customerDetailModel!,
+                                homeProvider.setOrderDetails = OrderDetail(
+                                  orderId: int.parse(
+                                      socketProvider.bookingList[index].id),
+                                  totalPrice:
+                                      socketProvider.bookingList[index].total,
+                                  userId: int.parse(socketProvider
+                                      .bookingList[index].customerId),
+                                  driverId: int.parse(session.userId),
+                                  distance: socketProvider
+                                      .bookingList[index].distance,
                                   orderStatus: 0,
-                                ),
-                              );
-                            });
-                          },
-                          onReject: () {
-                            // Reject the ride
-                            socketProvider
-                                .rejectRideRequest(
-                                    orderId:
-                                        socketProvider.bookingList[index].id)
-                                .then((value) {
-                              print("reject order successfully");
-                              log("reject order successfully");
-                            });
-                          },
-                          request: socketProvider.bookingList,
-                          index: index,
-                        );
-                      },
-                    ),
-                  );
+                                  startCoordinate: socketProvider
+                                      .bookingList[index].startCoordinate,
+                                  endCoordinate: socketProvider
+                                      .bookingList[index].endCoordinate,
+                                  startAddress: socketProvider
+                                      .bookingList[index].startAddress,
+                                  endAddress: socketProvider
+                                      .bookingList[index].endAddress,
+                                  pendingAmount: socketProvider
+                                      .bookingList[index].pendingAmount,
+                                  newTotal: socketProvider
+                                      .bookingList[index].newTotal,
+                                );
+
+                                // session.setOrderDetails =
+                                //     homeProvider.orderDetail!;
+
+                                //Socket
+
+                                //*** CUSTOMER DETAILS */
+
+                                homeProvider.setCustomerDetails =
+                                    CustomerDataModel(
+                                  name: socketProvider.bookingList[index].name,
+                                  phoneNumber:
+                                      socketProvider.bookingList[index].phone,
+                                  photo:
+                                      socketProvider.bookingList[index].image,
+                                  id: int.parse(socketProvider
+                                      .bookingList[index].customerId),
+                                  rating: socketProvider
+                                      .bookingList[index].customerRating,
+                                );
+
+                                // session.setCustomerDetails =
+                                //     homeProvider.customerDetailModel!;
+
+                                log("order details are:-->. ${homeProvider.orderDetail!}");
+                                print(
+                                    "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
+
+                                log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
+                                print(
+                                    "Customer details are:-->. ${homeProvider.customerDetailModel!}");
+
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  NewOrderPage.routeName,
+                                  (route) => false,
+                                  arguments: NewOrderPageArguments(
+                                    // orderTotal: socketProvider
+                                    //     .bookingList[index].newTotal,
+                                    orderDetail: homeProvider.orderDetail!,
+                                    customerDetailModel:
+                                        homeProvider.customerDetailModel!,
+                                    orderStatus: 0,
+                                  ),
+                                );
+                              });
+                            },
+                            onReject: () {
+                              // Reject the ride
+                              socketProvider
+                                  .rejectRideRequest(
+                                      orderId:
+                                          socketProvider.bookingList[index].id)
+                                  .then((value) {
+                                print("reject order successfully");
+                                log("reject order successfully");
+                              });
+                            },
+                            request: socketProvider.bookingList,
+                            index: index,
+                          );
+                        },
+                      ),
+                    );
+        });
       },
     );
   }
