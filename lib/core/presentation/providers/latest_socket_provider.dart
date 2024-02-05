@@ -189,7 +189,11 @@ class LatestSocketProvider extends ChangeNotifier {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
         reconnectSocket(context);
-      } else {
+      } else if(event is Reconnected){
+   listenSocketRequests(context);
+        updateLatLngAtStarting();
+
+      }else {
         print("************ Socket State: $event***********");
       }
     });

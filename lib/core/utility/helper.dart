@@ -112,7 +112,7 @@ checkPermissinLocationNotification() async {
   }
 }
 
-Future<bool> showCancelConfirmationAlertDialog(
+Future<void> showCancelConfirmationAlertDialog(
     {required BuildContext context, required VoidCallback onTap}) async {
   return await showDialog(
     context: context,
