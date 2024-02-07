@@ -189,11 +189,10 @@ class LatestSocketProvider extends ChangeNotifier {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
         reconnectSocket(context);
-      } else if(event is Reconnected){
-   listenSocketRequests(context);
+      } else if (event is Reconnected) {
+        listenSocketRequests(context);
         updateLatLngAtStarting();
-
-      }else {
+      } else {
         print("************ Socket State: $event***********");
       }
     });
@@ -1166,7 +1165,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   accuracy: LocationAccuracy.bestForNavigation,
                   distanceFilter: 10,
                   forceLocationManager: false,
-                  intervalDuration: const Duration(seconds: 10),
+                  intervalDuration: const Duration(seconds: 5),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
                           notificationText: "Location is being used",
@@ -1179,6 +1178,7 @@ class LatestSocketProvider extends ChangeNotifier {
                 accuracy: LocationAccuracy.high,
                 activityType: ActivityType.fitness,
                 distanceFilter: 10,
+                timeLimit: const Duration(seconds: 5),
                 pauseLocationUpdatesAutomatically: true,
                 showBackgroundLocationIndicator: true,
               );
