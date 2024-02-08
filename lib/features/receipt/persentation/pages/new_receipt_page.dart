@@ -537,7 +537,7 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        "CA\$${provider.receiptData!.newTotal}" !=
+                                        "CA\$ ${provider.receiptData!.newTotal}" !=
                                                 ''
                                             ? convertToTwoDecimal(provider
                                                 .receiptData!.newTotal

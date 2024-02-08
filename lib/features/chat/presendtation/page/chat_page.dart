@@ -14,6 +14,7 @@ import 'package:appkey_taxiapp_driver/features/chat/presendtation/widget/sender_
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
@@ -161,9 +162,11 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                       ),
                     ),
                     child: provider.chatMessageList.isEmpty
-                        ? const Center(
-                            child: Text('No messages'),
-                          )
+                        ? Center(
+                            child: Lottie.asset(
+                                'assets/lottie_animation/chat_empty_animation.json'))
+                        // ? const Text('No messages')
+                        // )
                         : ListView.builder(
                             reverse: true,
                             itemCount: provider.chatMessageList.length,

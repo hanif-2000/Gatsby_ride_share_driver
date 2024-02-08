@@ -15,7 +15,6 @@ import 'package:appkey_taxiapp_driver/features/order/presentation/pages/new_orde
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/data/model/new_receipt_model.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../features/rating/presentation/page/give_rating_screen.dart';
@@ -61,8 +60,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     socketProvider.connectToSocket(context);
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
-    print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
 /*    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         socketProvider.disconnectSocket();
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 socketProvider.updateCurrentStatus(
                     status: int.parse(event.data.orderStatus.toString()));
                 homeProvider
-                    .fetchCustomerDetail(event.data.userId)
+                    .fetchCustomerDetail(event.data.userId.toString())
                     .listen((event2) async {
                   if (event2 is CustomerDetailLoaded) {
                     log("customer details in home page checking is :--> ${event2.data}");
@@ -231,35 +232,35 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
 
-    switch (state) {
-      case AppLifecycleState.resumed:
-        socketProvider.connectToSocket(context);
-        break;
-      case AppLifecycleState.paused:
-        socketProvider.disconnectSocket();
-      // The app is now in the background
-        print('App paused');
-        break;
-      case AppLifecycleState.inactive:
-        socketProvider.disconnectSocket();
-      // The app is in an inactive state (e.g., during a phone call)
-        print('App inactive');
-        break;
-      case AppLifecycleState.detached:
-        socketProvider.disconnectSocket();
-      // The app is detached (e.g., terminated)
-        print('App detached');
-        break;
-      case AppLifecycleState.hidden:
-        socketProvider.disconnectSocket();
+  //   switch (state) {
+  //     case AppLifecycleState.resumed:
+  //       socketProvider.connectToSocket(context);
+  //       break;
+  //     case AppLifecycleState.paused:
+  //       socketProvider.disconnectSocket();
+  //       // The app is now in the background
+  //       print('App paused');
+  //       break;
+  //     case AppLifecycleState.inactive:
+  //       socketProvider.disconnectSocket();
+  //       // The app is in an inactive state (e.g., during a phone call)
+  //       print('App inactive');
+  //       break;
+  //     case AppLifecycleState.detached:
+  //       socketProvider.disconnectSocket();
+  //       // The app is detached (e.g., terminated)
+  //       print('App detached');
+  //       break;
+  //     case AppLifecycleState.hidden:
+  //       socketProvider.disconnectSocket();
 
-        break;
-    }
-  }
+  //       break;
+  //   }
+  // }
 
   // fcmListener() async {
   //   final session = locator<Session>();
