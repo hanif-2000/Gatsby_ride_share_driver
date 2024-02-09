@@ -43,7 +43,7 @@ Future<void> main() async {
               create: (context) => locator<SplashProvider>(),
             ),
             ChangeNotifierProvider<LatestSocketProvider>(
-              create: (_) => LatestSocketProvider(),
+              create: (_) => locator<LatestSocketProvider>(),
             ),
 
             ChangeNotifierProvider<HomeProvider>(

@@ -36,8 +36,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FcmProvider _fcmProvider = locator<FcmProvider>();
 
   // var provider = locator<HomeProvider>();
-  var socketProvider = Provider.of<LatestSocketProvider>(
-      locator<GlobalKey<NavigatorState>>().currentContext!);
+  var socketProvider = locator<LatestSocketProvider>();
   var session = locator<Session>();
 
   Future<void> retrieveOrderReceiptFromLocal() async {

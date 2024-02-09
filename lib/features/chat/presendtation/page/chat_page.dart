@@ -76,198 +76,206 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: greyEFEDED,
-      body: Consumer<LatestSocketProvider>(builder: (context, provider, _) {
-        return Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 40),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/icons/auth/ic_back.svg',
-                          ),
-                        ),
-                        smallHorizontalSpacing(),
-
-                        CustomCacheNetworkImage(
-                            img: widget.chatDetail!.userPhoto!, size: 50),
-                        // Container(
-                        //   height: 50,
-                        //   width: 50,
-                        //   decoration: BoxDecoration(
-                        //     shape: BoxShape.circle,
-                        //     color: redD03B3B,
-                        //     image: DecorationImage(
-                        //         image: NetworkImage(
-                        //           '$BASE_URL${widget.chatDetail!.userPhoto}',
-                        //         ),
-                        //         fit: BoxFit.cover),
-                        //   ),
-                        // ),
-                        mediumHorizontalSpacing(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+    return ChangeNotifierProvider(
+      create: (context) => LatestSocketProvider(),
+      child: ChangeNotifierProvider(
+        create: (context) => LatestSocketProvider(),
+        child: Scaffold(
+          backgroundColor: greyEFEDED,
+          body: Consumer<LatestSocketProvider>(builder: (context, provider, _) {
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 40),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              '${widget.chatDetail!.userName}',
-                              textAlign: TextAlign.center,
-                              style: titleStyle
-                                  .copyWith(
-                                    fontSize: 16,
-                                  )
-                                  .usePoppinsW5Font(),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/icons/auth/ic_back.svg',
+                              ),
                             ),
-                            Text(
-                              'Active now',
-                              textAlign: TextAlign.center,
-                              style: titleStyle
-                                  .copyWith(fontSize: 12, color: greyB6B6B6)
-                                  .usePoppinsW4Font(),
+                            smallHorizontalSpacing(),
+
+                            CustomCacheNetworkImage(
+                                img: widget.chatDetail!.userPhoto!, size: 50),
+                            // Container(
+                            //   height: 50,
+                            //   width: 50,
+                            //   decoration: BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: redD03B3B,
+                            //     image: DecorationImage(
+                            //         image: NetworkImage(
+                            //           '$BASE_URL${widget.chatDetail!.userPhoto}',
+                            //         ),
+                            //         fit: BoxFit.cover),
+                            //   ),
+                            // ),
+                            mediumHorizontalSpacing(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${widget.chatDetail!.userName}',
+                                  textAlign: TextAlign.center,
+                                  style: titleStyle
+                                      .copyWith(
+                                        fontSize: 16,
+                                      )
+                                      .usePoppinsW5Font(),
+                                ),
+                                Text(
+                                  'Active now',
+                                  textAlign: TextAlign.center,
+                                  style: titleStyle
+                                      .copyWith(fontSize: 12, color: greyB6B6B6)
+                                      .usePoppinsW4Font(),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Visibility(
+                        visible: provider.isLoading == false,
+                        replacement: const Center(
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CupertinoActivityIndicator(
+                              color: black15141FColor,
+                            ),
+                          ),
+                        ),
+                        child: provider.chatMessageList.isEmpty
+                            ? Center(
+                                child: Lottie.asset(
+                                    'assets/lottie_animation/chat_empty_animation.json'))
+                            // ? const Text('No messages')
+                            // )
+                            : ListView.builder(
+                                reverse: true,
+                                itemCount: provider.chatMessageList.length,
+                                itemBuilder: (context, index) {
+                                  return provider.chatMessageList[index]
+                                              .senderType ==
+                                          'Customer'
+                                      ? ReceiverTile(
+                                          title: provider
+                                              .chatMessageList[index].message,
+                                        )
+                                      : SenderTile(
+                                          title: provider
+                                              .chatMessageList[index].message,
+                                        );
+                                },
+                              ),
+                      ),
+                      // child: Column(
+                      //   children: [
+                      //     mediumVerticalSpacing(),
+                      //     const SenderTile(
+                      //       title: 'Hello, are you nearby?',
+                      //     ),
+                      //     const ReceiverTile(
+                      //       title: 'I will be there in a few mins',
+                      //     ),
+                      //     const SenderTile(
+                      //       title: 'Okay, I am waiting at my location',
+                      //     ),
+                      //     const ReceiverTile(
+                      //       title:
+                      //           'Sorry, I am stuck in traffic. Please give me a more time',
+                      //     ),
+                      //     const SenderTile(
+                      //       title: 'Okay, I am waiting at my location',
+                      //     ),
+                      //     const ReceiverTile(
+                      //       title:
+                      //           'Sorry, I am stuck in traffic. Please give me a more time',
+                      //     ),
+                      //     const SenderTile(
+                      //       title: 'Okay, I am waiting at my location',
+                      //     ),
+                      //     const ReceiverTile(
+                      //       title:
+                      //           'Sorry, I am stuck in traffic. Please give me a more time',
+                      //     ),
+                      //   ],
+                      // ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Visibility(
-                    visible: provider.isLoading == false,
-                    replacement: const Center(
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: CupertinoActivityIndicator(
-                          color: black15141FColor,
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: provider.chatController,
+                          decoration: InputDecoration(
+                            hintText: 'Enter message...',
+                            hintStyle: titleStyle
+                                .copyWith(
+                                  fontSize: 14,
+                                  color: blackColor,
+                                )
+                                .usePoppinsW4Font(),
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
-                    ),
-                    child: provider.chatMessageList.isEmpty
-                        ? Center(
-                            child: Lottie.asset(
-                                'assets/lottie_animation/chat_empty_animation.json'))
-                        // ? const Text('No messages')
-                        // )
-                        : ListView.builder(
-                            reverse: true,
-                            itemCount: provider.chatMessageList.length,
-                            itemBuilder: (context, index) {
-                              return provider
-                                          .chatMessageList[index].senderType ==
-                                      'Customer'
-                                  ? ReceiverTile(
-                                      title: provider
-                                          .chatMessageList[index].message,
-                                    )
-                                  : SenderTile(
-                                      title: provider
-                                          .chatMessageList[index].message,
-                                    );
-                            },
+                      InkWell(
+                        onTap: () {
+                          if (provider.chatController.text.trim() == '') {
+                            showToast(message: "Please Enter your message");
+                          } else {
+                            socketProvider.sendChatMessage(
+                                message: provider.chatController.text.trim(),
+                                receiverId: widget.chatDetail!.userId);
+                            provider.chatController.text = '';
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: SvgPicture.asset(
+                            'assets/icons/home/ic_send.svg',
                           ),
+                        ),
+                      ),
+                    ],
                   ),
-                  // child: Column(
-                  //   children: [
-                  //     mediumVerticalSpacing(),
-                  //     const SenderTile(
-                  //       title: 'Hello, are you nearby?',
-                  //     ),
-                  //     const ReceiverTile(
-                  //       title: 'I will be there in a few mins',
-                  //     ),
-                  //     const SenderTile(
-                  //       title: 'Okay, I am waiting at my location',
-                  //     ),
-                  //     const ReceiverTile(
-                  //       title:
-                  //           'Sorry, I am stuck in traffic. Please give me a more time',
-                  //     ),
-                  //     const SenderTile(
-                  //       title: 'Okay, I am waiting at my location',
-                  //     ),
-                  //     const ReceiverTile(
-                  //       title:
-                  //           'Sorry, I am stuck in traffic. Please give me a more time',
-                  //     ),
-                  //     const SenderTile(
-                  //       title: 'Okay, I am waiting at my location',
-                  //     ),
-                  //     const ReceiverTile(
-                  //       title:
-                  //           'Sorry, I am stuck in traffic. Please give me a more time',
-                  //     ),
-                  //   ],
-                  // ),
                 ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
-              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: provider.chatController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter message...',
-                        hintStyle: titleStyle
-                            .copyWith(
-                              fontSize: 14,
-                              color: blackColor,
-                            )
-                            .usePoppinsW4Font(),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (provider.chatController.text.trim() == '') {
-                        showToast(message: "Please Enter your message");
-                      } else {
-                        socketProvider.sendChatMessage(
-                            message: provider.chatController.text.trim(),
-                            receiverId: widget.chatDetail!.userId);
-                        provider.chatController.text = '';
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: SvgPicture.asset(
-                        'assets/icons/home/ic_send.svg',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      }),
+              ],
+            );
+          }),
+        ),
+      ),
     );
   }
 }

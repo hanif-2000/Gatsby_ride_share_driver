@@ -81,7 +81,7 @@ class AppBarLoggedIn extends StatelessWidget {
                   context: context,
                   builder: (_) => CustomLogoutDialog(
                     positiveAction: () async {
-                      await socketProvider.disconnectSocket();
+                      // await socketProvider.disconnectSocket();
                       await sessionLogOut().then((_) => Navigator.of(context)
                           .pushNamedAndRemoveUntil(
                               SplashPage.routeName, (route) => false));

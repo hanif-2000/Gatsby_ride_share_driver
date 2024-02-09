@@ -37,7 +37,13 @@ class LatestSocketProvider extends ChangeNotifier {
   //   return _provider;
   // }
 
-  // LatestSocketProvider.internal();
+  static final LatestSocketProvider _provider = LatestSocketProvider.internal();
+
+  factory LatestSocketProvider() {
+    return _provider;
+  }
+
+  LatestSocketProvider.internal();
 
   final session = locator<Session>();
   // final orderProvider = locator<OrderProvider>();
@@ -175,47 +181,49 @@ class LatestSocketProvider extends ChangeNotifier {
     print(
         '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     _socket = WebSocket(
-        Uri.parse(
-            "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
-        pingInterval: const Duration(seconds: 5));
+      Uri.parse(
+          "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
+      // pingInterval: const Duration(seconds: 5)
+    );
 
     _socket.connection.listen((event) {
       if (event is Connected) {
         log("************ Connectd ***********");
         print("************ Connectd ***********");
         listenSocketRequests(context);
-        updateLatLngAtStarting();
+        // updateLatLngAtStarting();
       } else if (event is Disconnected) {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
-        reconnectSocket(context);
+        // reconnectSocket(context);
       } else if (event is Reconnected) {
         listenSocketRequests(context);
-        updateLatLngAtStarting();
+        // updateLatLngAtStarting();
       } else {
         print("************ Socket State: $event***********");
       }
     });
   }
 
-  reconnectSocket(
-    BuildContext context,
-  ) {
-    print("Disconnected=============>>${_socket.connection.state})");
-    if (_socket.connection.state is Disconnected &&
-        session.sessionToken.isNotEmpty) {
-      print("Disconnected=============>>");
-      Future.delayed(const Duration(seconds: 2), () {
-        connectToSocket(context);
-      });
-    } else {
-      print("Disconnected=============>> else");
-    }
-  }
+  // reconnectSocket(
+  //   BuildContext context,
+  // ) {
+  //   print("Disconnected=============>>${_socket.connection.state})");
+  //   if (_socket.connection.state is Disconnected &&
+  //       session.sessionToken.isNotEmpty) {
+  //     print("Disconnected=============>>");
+  //     Future.delayed(const Duration(seconds: 2), () {
+  //       connectToSocket(context);
+  //     });
+  //   } else {
+  //     print("Disconnected=============>> else");
+  //   }
+  // }
 
-  Future<void> disconnectSocket() async {
-    _socket.close(1000);
-  }
+  // Future<void> disconnectSocket() async {
+  //   _socket.close(1000);
+  // }
+
   // Future<void> disconnectSocket() async {
   //   _socket.close(1000, "Logout successful");
   // }
