@@ -20,7 +20,6 @@ import '../widgets/custom_dialog_logout.dart';
 import '../widgets/drawer_button.dart';
 import '../widgets/profile_drawer.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
-import 'package:provider/provider.dart';
 
 class HomeDrawerPage extends StatelessWidget {
   const HomeDrawerPage({
@@ -100,12 +99,14 @@ class HomeDrawerPage extends StatelessWidget {
                       builder: (_) => CustomLogoutDialog(
                         positiveAction: () async {
                           Navigator.pop(context);
+                          var provider = locator<HomeProvider>();
+
                           var dio = Dio();
                           String logOutUrl =
                               'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
                           final session = locator<Session>();
-                          var provider =
-                              Provider.of<HomeProvider>(context, listen: false);
+                          // var provider =
+                          //     Provider.of<HomeProvider>(context, listen: false);
                           showLoading();
                           provider.updateStatus(isFromLogout: true).listen(
                             (event) async {

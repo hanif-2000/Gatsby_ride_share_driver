@@ -284,8 +284,9 @@ class _FormEditBankState extends State<FormEditBank> {
                                               .then((_) {});
                                           final session = locator<Session>();
                                           var homeProvider =
-                                              Provider.of<HomeProvider>(context,
-                                                  listen: false);
+                                              locator<HomeProvider>();
+                                          // Provider.of<HomeProvider>(context,
+                                          //     listen: false);
                                           session.setSessionCategoryId =
                                               provider
                                                   .selectedCategory!.categoryId

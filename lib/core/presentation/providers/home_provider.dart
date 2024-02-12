@@ -74,13 +74,6 @@ class HomeProvider with ChangeNotifier {
 
   Timer? refreshRequestList;
 
-  //check if location Changed
-  // locationChanged() {
-  //   location.onLocationChanged;
-  //   location.changeSettings(
-  //       accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 10);
-  // }
-
   // getter
   bool get isOnline => _isOnline;
 
@@ -106,6 +99,8 @@ class HomeProvider with ChangeNotifier {
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
+
+    print("_isOnline is :-->> $_isOnline");
     // });
   }
 

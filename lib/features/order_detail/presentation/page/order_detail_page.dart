@@ -40,8 +40,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   convertSecondsToMinutes() {
     if (widget.order!.extraTimeTaken != '') {
-      int seconds = int.parse(widget.order!.extraTimeTaken
-          .toString()); // Replace this with your desired number of seconds
+      int seconds = int.parse((widget.order!.extraTimeTaken).toStringAsFixed(
+          0)); // Replace this with your desired number of seconds
 
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;

@@ -539,12 +539,8 @@ class ReceiptPage extends StatelessWidget {
                                       Text(
                                         "CA\$ ${provider.receiptData!.newTotal}" !=
                                                 ''
-                                            ? convertToTwoDecimal(provider
-                                                .receiptData!.newTotal
-                                                .toString())
-                                            : convertToTwoDecimal(provider
-                                                .receiptData!.newTotal
-                                                .toString())
+                                            ? "CA\$ ${convertToTwoDecimal(provider.receiptData!.newTotal.toString())}"
+                                            : "CA\$ ${convertToTwoDecimal(provider.receiptData!.total.toString())}"
                                         // 'CA\$ ${order.total}',
                                         // 'CA\$ ${provider.receiptData!.newTotal.toString()}'
                                         // : 'CA\$ ${provider.receiptData!.total.toString()}',

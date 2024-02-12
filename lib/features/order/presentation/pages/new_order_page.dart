@@ -102,9 +102,13 @@ class _NewOrderPageState extends State<NewOrderPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     // socketProvider.listenRequests();
     socketProvider.updateGetBytes();
     socketProvider.getTotalUnreadCount(session.customerId);
+    socketProvider.joinExitRoom(
+        type: 'unJoin', receiverId: int.parse(session.customerId.toString()));
+
     var subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -193,14 +197,14 @@ class _NewOrderPageState extends State<NewOrderPage>
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // checkOrderStatusTimer?.cancel();
-    // trackingTimer?.cancel();
-    // WidgetsBinding.instance.removeObserver(this);
-    socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   // checkOrderStatusTimer?.cancel();
+  //   // trackingTimer?.cancel();
+  //   // WidgetsBinding.instance.removeObserver(this);
+  //   socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
+  // }
 
   @override
   Widget build(BuildContext context) {

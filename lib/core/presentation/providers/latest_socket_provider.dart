@@ -42,6 +42,7 @@ class LatestSocketProvider extends ChangeNotifier {
   factory LatestSocketProvider() {
     return _provider;
   }
+  final bool _disposed = false;
 
   LatestSocketProvider.internal();
 
@@ -78,6 +79,21 @@ class LatestSocketProvider extends ChangeNotifier {
     rideText = txt;
     notifyListeners();
   }
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
+
+  // @override
+  // void notifyListeners() {
+  //   if (!_disposed) {
+  //     super.notifyListeners();
+  //   }
+  // }
+
+  // disposed(){
+
+  // }
 
   /// UPDATE CUSTOMER AND ORDER DETAILS TO LOCAL
 
@@ -231,6 +247,8 @@ class LatestSocketProvider extends ChangeNotifier {
   joinExitRoom({int? receiverId, required String type}) {
     markMessageAsRead(receiverId: receiverId);
     log("join socket called $type");
+    print("join socket called $type");
+
     if (type == 'Join') {
       isLoading = true;
       notifyListeners();
@@ -256,6 +274,12 @@ class LatestSocketProvider extends ChangeNotifier {
       jsonEncode(map),
     );
     // listenRequests();
+  }
+
+  updateRideList(Booking data) {
+    // bookingDataModel = BookingDataModel.fromJson(data);
+    bookingList.insert(0, data);
+    notifyListeners();
   }
 
   void listenSocketRequests(BuildContext context) {
@@ -428,6 +452,8 @@ class LatestSocketProvider extends ChangeNotifier {
   //   //Get total number of unread message
   getTotalUnreadCount(int? receiverId) {
     log("get total count");
+    print("get total count");
+
     final map = {
       "userID": session.userId,
       "serviceType": "UnreadCount",
@@ -440,6 +466,10 @@ class LatestSocketProvider extends ChangeNotifier {
     print("get total count:$map");
 
     _socket.send(jsonEncode(map));
+
+    print("customer id is: ${session.customerId} ");
+
+    // joinExitRoom(type: 'unJoin', receiverId: session.driverId);
 
     // listenRequests();
     // disconnectSocket();
@@ -661,6 +691,17 @@ class LatestSocketProvider extends ChangeNotifier {
             updateLatLng(
                 latLng: LatLng(session.currentLat, session.currentLang));
             print(map.toString());
+
+            if (status == "1") {
+              currentOrderStatus = 2;
+              rideText = "Reached Pick up Location";
+              setNewChangeOrderStatus = "1";
+              session.setOrderStatus = 1;
+              session.setRunningOrderStatus = 1;
+              dismissLoading();
+
+              setNewPolylineDirection(false);
+            }
 
             if (status == "2") {
               currentOrderStatus = 2;

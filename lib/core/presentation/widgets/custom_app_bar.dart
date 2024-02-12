@@ -66,7 +66,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
               child: SizedBox(
                 width: 70,
                 child: AnimatedToggleSwitch<bool>.dual(
@@ -76,18 +77,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   //  dif: 5.0,
 
                   borderWidth: 4.0,
-                /*  customStyleBuilder: (_,__,___){
+                  /*  customStyleBuilder: (_,__,___){
                     return ToggleStyle(
                       backgroundColor: provider.isOnline ? primaryColor : whiteAccentColor
                     );
 
                   },*/
-                 // height: 100,
+                  // height: 100,
                   style: ToggleStyle(
-                    borderColor: provider.isOnline ? primaryColor : greyA2A0A8 ,
-                    backgroundColor: provider.isOnline ? whiteAccentColor : whiteAccentColor ,
-                    indicatorColor: provider.isOnline ? whiteAccentColor : whiteAccentColor,
-
+                    borderColor: provider.isOnline ? primaryColor : greyA2A0A8,
+                    backgroundColor:
+                        provider.isOnline ? whiteAccentColor : whiteAccentColor,
+                    indicatorColor:
+                        provider.isOnline ? whiteAccentColor : whiteAccentColor,
                     borderRadius: BorderRadius.circular(50.0),
                     boxShadow: const [
                       BoxShadow(
@@ -100,12 +102,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
 
                   styleBuilder: (i) => ToggleStyle(
-                      indicatorColor: provider.isOnline ? whiteColor : whiteColor,
-                  backgroundColor:provider.isOnline ? primaryColor : greyA2A0A8 ,
-
-
-
-
+                    indicatorColor: provider.isOnline ? whiteColor : whiteColor,
+                    backgroundColor:
+                        provider.isOnline ? primaryColor : greyA2A0A8,
                   ),
                   // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
                   onChanged: (b) {

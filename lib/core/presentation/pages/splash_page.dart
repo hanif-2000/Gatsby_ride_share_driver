@@ -1,15 +1,22 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'package:appkey_taxiapp_driver/core/data/models/booking_data_model.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
+import 'package:dartz/dartz.dart' as dartz;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart' as hand;
 import 'package:permission_handler/permission_handler.dart';
 import '../../../features/login/presentation/pages/login_page.dart';
+import '../../data/models/socket_response_model/notification_ride_model.dart';
 import '../../utility/global_function.dart';
 import '../../utility/helper.dart';
 import '../../utility/injection.dart';
@@ -28,12 +35,106 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
-  final socketProvider = Provider.of<LatestSocketProvider>(
-      locator<GlobalKey<NavigatorState>>().currentContext!);
+  Future<dartz.Tuple2<String, Object>?> getPushNotificationRoute() async {
+    RemoteMessage? remoteMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    // final NotificationAppLaunchDetails? notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
+    NotificationRideModel? entity;
+    if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
+      print("RemoteMessage data  ${remoteMessage.data}");
+      // print("RemoteMessage data  ${(remoteMessage.data)}");
+      // print("RemoteMessage data  ${(remoteMessage.data["id"]["id"])}");
+
+      // NotificationRideModel notificationEntity =
+      //     NotificationRideModel.fromJson(remoteMessage.data);
+
+      if (remoteMessage.data["notificationTypeId"] == "CustomerBookRequest") {
+        var myData = json.decode(remoteMessage.data["id"]);
+        socketProvider.updateRideList(Booking(
+            id: myData["id"].toString(),
+            startCoordinate: myData["start_coordinate"].toString(),
+            endCoordinate: myData["end_coordinate"].toString(),
+            startAddress: myData["start_address"].toString(),
+            endAddress: myData["end_address"].toString(),
+            distance: myData["distance"].toString(),
+            paymentMethod: myData["payment_method"].toString(),
+            estimatedTime: myData["estimated_time"].toString(),
+            actualTime: myData["actual_time"].toString(),
+            total: myData["total"].toString(),
+            pendingAmount: myData["pending_amount"].toString(),
+            newTotal: myData["new_total"].toString(),
+            customerId: myData["customerID"].toString(),
+            name: myData["name"].toString(),
+            image: myData["image"].toString(),
+            longitude: myData["Longitude"].toString(),
+            latitude: myData["Latitude"].toString(),
+            phone: myData["phone"].toString(),
+            customerRating: myData["CustomerRating"].toString()));
+      }
+      // NotificationRideModel notificationEntity =
+      //     NotificationRideModel.fromJson(remoteMessage.data);
+      // // entity = NotificationRideModel();
+      // entity.title = remoteMessage.data['title'];
+      // entity.body = remoteMessage.data['body'];
+      // entity.type = remoteMessage.data['type'];
+      // return await callApi(notificationEntity);
+    } else if (notificationAppLaunchDetails != null &&
+        notificationAppLaunchDetails.didNotificationLaunchApp == true) {
+      // NotificationRideModel? entity = convertStringToNotificationEntity(
+      //     notificationAppLaunchDetails.notificationResponse?.payload);
+      if (entity != null) {
+        print("RemoteMessage data ${entity.toJson()}");
+        // return await callApi(entity);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+    return null;
+  }
+
+  final socketProvider = locator<LatestSocketProvider>();
+
+  // Provider.of<LatestSocketProvider>(
+  //     locator<GlobalKey<NavigatorState>>().currentContext!);
+
+  // Future<Tuple2<String, Object>?> getPushNotificationRoute() async {
+  //   RemoteMessage? remoteMessage =
+  //       await FirebaseMessaging.instance.getInitialMessage();
+  //   //   final NotificationAppLaunchDetails? notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  //   const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
+  //   NotificationEntity? entity;
+  //   if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
+  //     print("RemoteMessage data  ${remoteMessage.data}");
+  //     NotificationEntity notificationEntity =
+  //         NotificationEntity.fromJson(remoteMessage.data);
+  //     entity = NotificationEntity();
+  //     entity.title = remoteMessage.data['title'];
+  //     entity.body = remoteMessage.data['body'];
+  //     entity.type = remoteMessage.data['type'];
+  //     return await callApi(notificationEntity);
+  //   } else if (notificationAppLaunchDetails != null &&
+  //       notificationAppLaunchDetails.didNotificationLaunchApp == true) {
+  //     NotificationEntity? entity = convertStringToNotificationEntity(
+  //         notificationAppLaunchDetails.notificationResponse?.payload);
+  //     if (entity != null) {
+  //       print("RemoteMessage data ${entity.toJson()}");
+  //       // return await callApi(entity);
+  //     } else {
+  //       return null;
+  //     }
+  //   } else {
+  //     return null;
+  //   }
+  //   return null;
+  // }
 
   @override
   void initState() {
     super.initState();
+    getPushNotificationRoute();
 
     WidgetsBinding.instance.addObserver(this);
     Timer(const Duration(seconds: 3), () async {
@@ -62,6 +163,8 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                     if (value) {
                       checkProfileSession().then((value1) {
                         if (value1) {
+                          var session = locator<Session>();
+                          print("IS DRIVER ONLINE : ${session.isOnline}");
                           //   socketProvider.connectToSocket(context);
                           Navigator.pushNamedAndRemoveUntil(
                               context, HomePage.routeName, (route) => false);
@@ -92,6 +195,12 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                 if (value) {
                   checkProfileSession().then((value1) {
                     if (value1) {
+                      var session = locator<Session>();
+                      print("IS DRIVER ONLINE -: ${session.isOnline}");
+
+                      var homeProvider = locator<HomeProvider>();
+                      homeProvider.changeStatus = session.isOnline;
+
                       //  socketProvider.connectToSocket(context);
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);

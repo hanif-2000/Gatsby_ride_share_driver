@@ -40,6 +40,7 @@ class FirebaseHelper {
 
   static void incomingNotificationHandling() {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("on message opned called===============>>>>>>>>>>");
       print("on message listen called");
       print("on message listen called");
       print("remote message is------->>>>>. ${message.toMap().toString()}");

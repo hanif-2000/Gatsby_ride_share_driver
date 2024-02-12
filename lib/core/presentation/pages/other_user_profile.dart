@@ -5,7 +5,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 
 class OtherUserProfile extends StatelessWidget {
   const OtherUserProfile({Key? key}) : super(key: key);
@@ -15,9 +14,10 @@ class OtherUserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     // OrderProvider provider = Provider.of<OrderProvider>(context, listen: false);
-    var provider = Provider.of<LatestSocketProvider>(
-      locator<GlobalKey<NavigatorState>>().currentContext!,
-    );
+    var provider = locator<LatestSocketProvider>();
+    // Provider.of<LatestSocketProvider>(
+    //   locator<GlobalKey<NavigatorState>>().currentContext!,
+    // );
 
     return Scaffold(
       body: SafeArea(

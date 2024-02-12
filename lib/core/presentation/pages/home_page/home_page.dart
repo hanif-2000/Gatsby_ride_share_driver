@@ -37,6 +37,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // var provider = locator<HomeProvider>();
   var socketProvider = locator<LatestSocketProvider>();
+  // var homeProvider = locator<HomeProvider>();
+
   var session = locator<Session>();
 
   Future<void> retrieveOrderReceiptFromLocal() async {
@@ -51,6 +53,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     socketProvider.updateReceiptData(data: receiptData).then((value) {
       logMe("RECEIPT DATA UPDATED SUCCESS");
       log("order receipt data from session :-->> ${socketProvider.receiptData}");
+      print(
+          "order receipt data from session :-->> ${socketProvider.receiptData!.newTotal}");
     });
   }
 
@@ -59,6 +63,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     socketProvider.connectToSocket(context);
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
+    // var homeProvider = Provider.of<HomeProvider>(context, listen: false);
     print(
         "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
     print(
@@ -72,156 +78,160 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       // Got a new connectivity status!
     });*/
-    if (session.isOrderRunning) {
-      log("----order running called---");
-      showLoading();
 
-      if (session.runningOrderStatus == 7) {
-        log("----order running called runningOrderStatus 7---");
-        log("----order running called isPaymentDone ${session.isPaymentDone}");
-        log("----order running called israting done ${session.isRatingGiven}");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (session.isOrderRunning) {
+        log("----order running called---");
+        showLoading();
 
-        if (!session.isPaymentDone) {
+        if (session.runningOrderStatus == 7) {
+          log("----order running called runningOrderStatus 7---");
           log("----order running called isPaymentDone ${session.isPaymentDone}");
-          /*** Payment confirmation pending */
+          log("----order running called israting done ${session.isRatingGiven}");
 
-          retrieveOrderReceiptFromLocal().then((value) {
-            log("----order running called retreve order receipt from local storage ---");
+          if (!session.isPaymentDone) {
+            log("----order running called isPaymentDone ${session.isPaymentDone}");
+            /*** Payment confirmation pending */
 
-            homeProvider
-                .fetchOrderDetail(session.runningOrderId.toString())
-                .listen((event) {
-              if (event is OrderDetailLoaded) {
-                log("order details in home page checking is :--> ${event.data}");
-                print(
-                    "order details in home page checking is :--> ${event.data}");
+            retrieveOrderReceiptFromLocal().then((value) {
+              log("----order running called retreve order receipt from local storage ---");
 
-                socketProvider.updateOrderData(data: event.data);
-                socketProvider.setNewChangeOrderStatus =
-                    event.data.orderStatus.toString();
-                session.setRunningOrderStatus =
-                    int.parse(event.data.orderStatus.toString());
-                socketProvider.updateCurrentStatus(
-                    status: int.parse(event.data.orderStatus.toString()));
-                homeProvider
-                    .fetchCustomerDetail(event.data.userId.toString())
-                    .listen((event2) async {
-                  if (event2 is CustomerDetailLoaded) {
-                    log("customer details in home page checking is :--> ${event2.data}");
-                    print(
-                        "customer details in home page checking is :--> ${event2.data}");
+              homeProvider
+                  .fetchOrderDetail(session.runningOrderId.toString())
+                  .listen((event) {
+                if (event is OrderDetailLoaded) {
+                  log("order details in home page checking is :--> ${event.data}");
+                  print(
+                      "order details in home page checking is :--> ${event.data}");
 
-                    socketProvider
-                        .updateCustomerData(data: event2.data.data)
-                        .then((value) {
-                      dismissLoading();
-                      /**   Navigate to receipt screen */
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        ReceiptPage.routeName,
-                        (route) => false,
-                        arguments: RatingPageArguments(
-                          customerDataModel: socketProvider.customerDetail!,
-                          customerId: socketProvider.orderDetail!.userId,
-                        ),
-                      );
-                    });
-                  }
-                });
-              }
-            });
+                  socketProvider.updateOrderData(data: event.data);
+                  socketProvider.setNewChangeOrderStatus =
+                      event.data.orderStatus.toString();
+                  session.setRunningOrderStatus =
+                      int.parse(event.data.orderStatus.toString());
+                  socketProvider.updateCurrentStatus(
+                      status: int.parse(event.data.orderStatus.toString()));
+                  homeProvider
+                      .fetchCustomerDetail(event.data.userId.toString())
+                      .listen((event2) async {
+                    if (event2 is CustomerDetailLoaded) {
+                      log("customer details in home page checking is :--> ${event2.data}");
+                      print(
+                          "customer details in home page checking is :--> ${event2.data}");
 
-            print(
-                "home provider ordetails are:==>> ${homeProvider.orderDetail}");
-            print(
-                "home provider ordetails are:==>> ${homeProvider.orderDetail}");
-            log("session order STATUS IS :==>> ${session.orderStatus}");
-            log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
-          });
-        } else if (!session.isRatingGiven) {
-          homeProvider
-              .fetchCustomerDetail(session.customerId.toString())
-              .listen((event2) async {
-            if (event2 is CustomerDetailLoaded) {
-              log("customer details in home page checking is :--> ${event2.data}");
-              print(
-                  "customer details in home page checking is :--> ${event2.data}");
-
-              socketProvider
-                  .updateCustomerData(data: event2.data.data)
-                  .then((value) {
-                dismissLoading();
-
-/** Naviagte to rating screen  */
-
-                Navigator.pushNamedAndRemoveUntil(
-                  locator<GlobalKey<NavigatorState>>().currentContext!,
-                  GiveRatingScreen.routeName,
-                  (route) => false,
-                  arguments: RatingPageArguments(
-                    customerDataModel: socketProvider.customerDetail!,
-                    customerId: socketProvider.customerDetail!.id,
-                  ),
-                );
+                      socketProvider
+                          .updateCustomerData(data: event2.data.data)
+                          .then((value) {
+                        dismissLoading();
+                        /**   Navigate to receipt screen */
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          ReceiptPage.routeName,
+                          (route) => false,
+                          arguments: RatingPageArguments(
+                            customerDataModel: socketProvider.customerDetail!,
+                            customerId: socketProvider.orderDetail!.userId,
+                          ),
+                        );
+                      });
+                    }
+                  });
+                }
               });
-            }
-          });
-        }
-      } else {
-        // var id = _fcmProvider.incomingOrderDetail!.orderId;
-        log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
-        log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-        homeProvider
-            .fetchOrderDetail(session.runningOrderId.toString())
-            .listen((event) {
-          if (event is OrderDetailLoaded) {
-            log("order details in home page checking is :--> ${event.data}");
-            socketProvider.updateOrderData(data: event.data);
-            socketProvider.setNewChangeOrderStatus =
-                event.data.orderStatus.toString();
-            session.setRunningOrderStatus =
-                int.parse(event.data.orderStatus.toString());
-            socketProvider.updateCurrentStatus(
-                status: int.parse(event.data.orderStatus.toString()));
+              print(
+                  "home provider ordetails are:==>> ${homeProvider.orderDetail}");
+              print(
+                  "home provider ordetails are:==>> ${homeProvider.orderDetail}");
+              log("session order STATUS IS :==>> ${session.orderStatus}");
+              log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+            });
+          } else if (!session.isRatingGiven) {
             homeProvider
                 .fetchCustomerDetail(session.customerId.toString())
                 .listen((event2) async {
               if (event2 is CustomerDetailLoaded) {
                 log("customer details in home page checking is :--> ${event2.data}");
+                print(
+                    "customer details in home page checking is :--> ${event2.data}");
+
                 socketProvider
                     .updateCustomerData(data: event2.data.data)
                     .then((value) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    homeProvider.changeStatus = session.isOnline;
-                    dismissLoading();
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      NewOrderPage.routeName,
-                      (route) => false,
-                      arguments: NewOrderPageArguments(
-                        orderDetail: socketProvider.orderDetail!,
-                        customerDetailModel: socketProvider.customerDetail!,
-                        orderStatus: session.runningOrderStatus,
-                      ),
-                    );
-                  });
+                  dismissLoading();
+
+/** Naviagte to rating screen  */
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    locator<GlobalKey<NavigatorState>>().currentContext!,
+                    GiveRatingScreen.routeName,
+                    (route) => false,
+                    arguments: RatingPageArguments(
+                      customerDataModel: socketProvider.customerDetail!,
+                      customerId: socketProvider.customerDetail!.id,
+                    ),
+                  );
                 });
               }
             });
           }
-        });
+        } else {
+          // var id = _fcmProvider.incomingOrderDetail!.orderId;
+          log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
+          log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-        // print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-        print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-        log("session order STATUS IS :==>> ${session.orderStatus}");
-        log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+          homeProvider
+              .fetchOrderDetail(session.runningOrderId.toString())
+              .listen((event) {
+            if (event is OrderDetailLoaded) {
+              log("order details in home page checking is :--> ${event.data}");
+              socketProvider.updateOrderData(data: event.data);
+              socketProvider.setNewChangeOrderStatus =
+                  event.data.orderStatus.toString();
+              session.setRunningOrderStatus =
+                  int.parse(event.data.orderStatus.toString());
+              socketProvider.updateCurrentStatus(
+                  status: int.parse(event.data.orderStatus.toString()));
+              homeProvider
+                  .fetchCustomerDetail(session.customerId.toString())
+                  .listen((event2) async {
+                if (event2 is CustomerDetailLoaded) {
+                  log("customer details in home page checking is :--> ${event2.data}");
+                  socketProvider
+                      .updateCustomerData(data: event2.data.data)
+                      .then((value) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      homeProvider.changeStatus = session.isOnline;
+                      dismissLoading();
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        NewOrderPage.routeName,
+                        (route) => false,
+                        arguments: NewOrderPageArguments(
+                          orderDetail: socketProvider.orderDetail!,
+                          customerDetailModel: socketProvider.customerDetail!,
+                          orderStatus: session.runningOrderStatus,
+                        ),
+                      );
+                    });
+                  });
+                }
+              });
+            }
+          });
+
+          // print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+          print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
+          log("session order STATUS IS :==>> ${session.orderStatus}");
+          log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
+        }
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          homeProvider.changeStatus = session.isOnline;
+        });
       }
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        homeProvider.changeStatus = session.isOnline;
-      });
-    }
+    });
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -379,140 +389,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     log("home page build called ");
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(false); // if true allow back else block it
-      },
-      child: Scaffold(
-        // key: provider.globalKey,
-        resizeToAvoidBottomInset: false,
-        appBar: const CustomAppBar(
-          centerTitle: true,
-        ),
-        drawer: const HomeDrawerPage(),
-        body: Consumer<HomeProvider>(
-          builder: (context, provider, _) {
-            // var session = locator<Session>();
-
-            // log("is ORDER RUNNIG :--->>  ${session.isOrderRunning}");
-            // log("Order status is :--->>  ${session.orderStatus}");
-
-            // log('RUNNING order id --> ${session.runningOrderId}');
-            // if (session.isOrderRunning) {
-            //   provider
-            //       .fetchOrderDetail(session.runningOrderId.toString())
-            //       .listen(
-            //     (event1) {
-            //       if (event1 is OrderDetailLoaded) {
-            //         log("home page build called : order details loaded");
-            //         // var _deviceSize = MediaQuery.of(context).size;
-
-            //         bool isOrderLoaded = true;
-
-            //         event1.data.userId != null
-            //             ? provider
-            //                 .fetchCustomerDetail(event1.data.userId.toString())
-            //                 .listen(
-            //                 (event) async {
-            //                   if (event is CustomerDetailLoaded) {
-            //                     log("home page build called : Customer details loaded");
-
-            //                     bool isCustomerLoaded = true;
-            //                     if (isCustomerLoaded && isOrderLoaded) {
-            //                       Navigator.pushAndRemoveUntil<dynamic>(
-            //                         context,
-            //                         MaterialPageRoute<dynamic>(
-            //                           builder: (BuildContext context) =>
-            //                               OrderPage(
-            //                                   customerDetail:
-            //                                       provider.customerDetailModel!,
-            //                                   orderDetail:
-            //                                       provider.orderDetail!,
-            //                                   orderStatus:
-            //                                       event1.data.orderStatus),
-            //                         ),
-            //                         (route) =>
-            //                             false, //if you want to disable back feature set to false
-            //                       );
-
-            //                       // Navigator.pushNamed(
-            //                       //   context,
-            //                       //   OrderPage.routeName,
-            //                       //   // (route) => false,
-            //                       //   arguments: OrderPageArguments(
-            //                       //     orderDetail: provider.orderDetail!,
-            //                       //     customerDetailModel:
-            //                       //         provider.customerDetailModel!,
-            //                       //     orderStatus: event1.data.orderStatus,
-            //                       //   ),
-            //                       // );
-            //                     }
-
-            //                     // provider
-            //                     //     .submitStatusOrder(Order.driverAccept)
-            //                     //     .listen(
-            //                     //   (event) async {
-            //                     //     if (event is UpdateStatusOrderLoaded) {
-            //                     //       if (event.data.success == 1) {
-            //                     //         Navigator.pushNamed(
-            //                     //           context,
-            //                     //           OrderPage.routeName,
-            //                     //           // (route) => false,
-            //                     //           arguments: OrderPageArguments(
-            //                     //             orderDetail: provider.orderDetail!,
-            //                     //             customerDetailModel:
-            //                     //                 provider.customerDetailModel!,
-            //                     //           ),
-            //                     //         );
-            //                     //       } else if (event.data.message == 5) {
-            //                     //         // Navigator.of(context).pop();
-            //                     //         showDialog(
-            //                     //           context: context,
-            //                     //           builder: (context) => CommonDialog(
-            //                     //             title: appLoc.sorry,
-            //                     //             msg: appLoc.orderacceptedotherdriver,
-            //                     //             onTap: () {
-            //                     //               Navigator.of(context).pop();
-            //                     //             },
-            //                     //           ),
-            //                     //         );
-            //                     //       } else if (event.data.message == 6) {
-            //                     //         // Navigator.of(context).pop();
-            //                     //         showDialog(
-            //                     //           context: context,
-            //                     //           builder: (context) => CommonDialog(
-            //                     //             title: appLoc.sorry,
-            //                     //             msg: appLoc.ordernotfound,
-            //                     //             onTap: () {
-            //                     //               Navigator.of(context).pop();
-            //                     //             },
-            //                     //           ),
-            //                     //         );
-            //                     //       } else if (event.data.message == 7) {
-            //                     //         // Navigator.of(context).pop();
-            //                     //         showDialog(
-            //                     //           context: context,
-            //                     //           builder: (context) => CommonDialog(
-            //                     //             title: appLoc.sorry,
-            //                     //             msg: appLoc.orderhascancelled,
-            //                     //             onTap: () {
-            //                     //               Navigator.of(context).pop();
-            //                     //             },
-            //                     //           ),
-            //                     //         );
-            //                     //       }
-            //                     //     }
-            //                     //   },
-            //                     // );
-            //                   }
-            //                 },
-            //               )
-            //             : const SizedBox();
-            //       }
-            //     },
-            //   );
-            // }
-            return ListView(
+    return PopScope(
+      canPop: false,
+      child: Consumer<HomeProvider>(builder: (context, provider, _) {
+        return Scaffold(
+            // key: provider.globalKey,
+            resizeToAvoidBottomInset: false,
+            appBar: const CustomAppBar(
+              centerTitle: true,
+            ),
+            drawer: const HomeDrawerPage(),
+            // body: Consumer<HomeProvider>(
+            //   builder: (context, provider, _) {
+            body: ListView(
               children: <Widget>[
                 Container(
                   // height: 50,
@@ -551,48 +440,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 provider.projectType == ProjectType.requests
                     ? const RequestListWidget()
                     : const HistoryListWidget(),
-                // const NoProjects(),
-
-                // GoogleMap(
-                //   mapType: MapType.normal,
-                //   myLocationButtonEnabled: false,
-                //   zoomControlsEnabled: false,
-                //   initialCameraPosition: map.kJapanCoordinate,
-                //   onMapCreated: (GoogleMapController controller) async {
-                //     map.googleMapController = controller;
-                //     await map.setCurrentLocation();
-                //     // }
-                //   },
-                //   polylines: map.polylines,
-                //   markers: Set<Marker>.of(map.markers.values),
-                // ),
-                // SafeArea(
-                //   child: Stack(
-                //     children: [
-                //       Column(
-                //         mainAxisSize: MainAxisSize.max,
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: <Widget>[
-                //           Expanded(
-                //             child: Column(
-                //               crossAxisAlignment: CrossAxisAlignment.end,
-                //               mainAxisAlignment: MainAxisAlignment.end,
-                //               children: const [
-                //                 // CurrentLocationWidget(),
-                //                 // BottomContainerHome()
-                //               ],
-                //             ),
-                //           )
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // )
               ],
+            )
+
+            //   },
+            // ),
             );
-          },
-        ),
-      ),
+      }),
     );
   }
 

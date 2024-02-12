@@ -145,6 +145,8 @@ class GiveRatingScreen extends StatelessWidget {
                                 style: txtButtonStyle,
                               ),
                               event: () {
+                                var socketProvider =
+                                    locator<LatestSocketProvider>();
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                                 // if (provider.formKey.currentState!.validate()) {
@@ -166,6 +168,8 @@ class GiveRatingScreen extends StatelessWidget {
                                         break;
                                       case RatingSuccess:
                                         dismissLoading();
+                                        socketProvider.removeOrderFromList(
+                                            orderId: session.runningOrderId);
 
                                         session.setRunningOrderStatus = 0;
                                         session.setIsOrderRunning = false;
