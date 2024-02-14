@@ -7,6 +7,7 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_provider.dart';
 import 'package:appkey_taxiapp_driver/features/history/presentation/providers/history_state.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class HistoryListWidget extends StatelessWidget {
@@ -35,25 +36,37 @@ class HistoryListWidget extends StatelessWidget {
               case HistoryLoaded:
                 log("History Loaded");
 
-                final _data = (state.data as HistoryLoaded).data;
-                logMe('History length --> ${_data.length}');
-                if (_data.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: MediaQuery.sizeOf(context).height/3.5,),
-                      Text(
-                        appLoc.therearenopastorders,
-                        style: formLabelHeaderStyle,
-                      ),
-                    ],
+                final data = (state.data as HistoryLoaded).data;
+                logMe('History length --> ${data.length}');
+                if (data.isEmpty) {
+                  return Container(
+                    color: Colors.red,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: LottieBuilder.asset(
+                              'assets/lottie_animation/no_data_found.json'),
+                        )
+                      ],
+                    ),
                   );
+                  // return Column(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     SizedBox(height: MediaQuery.sizeOf(context).height/3.5,),
+                  //     Text(
+                  //       appLoc.therearenopastorders,
+                  //       style: formLabelHeaderStyle,
+                  //     ),
+                  //   ],
+                  // );
                 }
                 return Column(
                   children: List.generate(
-                    _data.length,
+                    data.length,
                     (index) => HistoryTile(
-                      order: _data[index],
+                      order: data[index],
                     ),
                   ),
                 );

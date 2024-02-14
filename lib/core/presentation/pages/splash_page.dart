@@ -83,12 +83,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
         notificationAppLaunchDetails.didNotificationLaunchApp == true) {
       // NotificationRideModel? entity = convertStringToNotificationEntity(
       //     notificationAppLaunchDetails.notificationResponse?.payload);
-      if (entity != null) {
-        print("RemoteMessage data ${entity.toJson()}");
-        // return await callApi(entity);
-      } else {
-        return null;
-      }
+      return null;
     } else {
       return null;
     }

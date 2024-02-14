@@ -6,6 +6,7 @@ import 'package:appkey_taxiapp_driver/features/history/presentation/providers/hi
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_email_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/change_password_provider.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,6 +32,11 @@ Future<void> main() async {
     await init();
     locator.isReady<Session>().then((_) async {
       await FirebaseHelper.init();
+      FirebaseMessaging.instance.onTokenRefresh.listen((String token) {
+        showToast(message: "new fcm token updated");
+        print("Refreshed FCM Token: $token");
+        updateFcmToken(token: token);
+      });
 
       // await FirebaseHelper.init().then((_) async {
       //   // await NotificationHelper().init();

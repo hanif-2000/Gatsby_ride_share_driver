@@ -207,7 +207,7 @@ class LatestSocketProvider extends ChangeNotifier {
         log("************ Connectd ***********");
         print("************ Connectd ***********");
         listenSocketRequests(context);
-        // updateLatLngAtStarting();
+        updateLatLngAtStarting();
       } else if (event is Disconnected) {
         log("************ DisConnectd ***********");
         print("************ DisConnectd ***********");
@@ -583,18 +583,19 @@ class LatestSocketProvider extends ChangeNotifier {
     logMe('UPADTE LATLONG -- > ${map.toString()}');
     print('UPADTE LATLONG -- > ${map.toString()}');
 
-    try {
-      _socket.connection.listen((event) {
-        if ((event is Connected) || event is Reconnected) {
-          _socket.send(json.encode(map));
-          print(map.toString());
+    // try {
+    //   _socket.connection.listen((event) {
+    //     if ((event is Connected) || event is Reconnected) {
+    _socket.send(json.encode(map));
+    print(map.toString());
 
-          notifyListeners();
-        }
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+    notifyListeners();
+    //   }
+    // }
+    // );
+    // } catch (e) {
+    //   print(e.toString());
+    // }
 
     // _socket!.send(jsonEncode(map));
   }
@@ -615,7 +616,7 @@ class LatestSocketProvider extends ChangeNotifier {
           if (event is Connected) {
             _socket.send(json.encode(map));
             print(map.toString());
-            // updateLatLngAtStarting();
+            updateLatLngAtStarting();
             updateLatLng(
                 latLng: LatLng(session.currentLat, session.currentLang));
 

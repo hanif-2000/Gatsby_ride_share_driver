@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/static/styles.dart';
 import '../providers/history_state.dart';
@@ -46,11 +47,16 @@ class _HistoryPageState extends State<HistoryPage> {
                 logMe('Data loaded ---> ${data.length}');
                 if (data.isEmpty) {
                   return Center(
-                    child: Text(
-                      appLoc.therearenopastorders,
-                      style: formLabelHeaderStyle,
-                    ),
-                  );
+                      child: LottieBuilder.asset(
+                          'assets/lottie_animation/no_data_found.json'));
+                  // return Center(
+                  //   child:
+
+                  //    Text(
+                  //     appLoc.therearenopastorders,
+                  //     style: formLabelHeaderStyle,
+                  //   ),
+                  // );
                 }
                 return Column(
                   children: List.generate(

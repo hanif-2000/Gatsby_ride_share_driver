@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appkey_taxiapp_driver/core/domain/entities/incoming_order.dart';
 import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../firebase_options.dart';
@@ -14,13 +15,18 @@ class FirebaseHelper {
   static late FirebaseMessaging messaging;
 
   static Future<void> init() async {
-    await Firebase.initializeApp();
-    logMe("Firebasee helperrrr");
     await Firebase.initializeApp(
         name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
     messaging = FirebaseMessaging.instance;
+
     await messaging.requestPermission();
     await NotificationHelper().init();
+
+    // messaging.onTokenRefresh.listen((String token) {
+    //   print("Refreshed FCM Token: $token");
+
+    //   updateFcmToken(token: token);
+    // });
     incomingNotificationHandling();
     /* await permissionHandler().then((authorized) async {
       log("IS AUTHORIZED:  $authorized");
@@ -43,7 +49,8 @@ class FirebaseHelper {
       print("on message opned called===============>>>>>>>>>>");
       print("on message listen called");
       print("on message listen called");
-      print("remote message is------->>>>>. ${message.toMap().toString()}");
+      print(
+          "remote message is------->>>>>.opned ${message.toMap().toString()}");
       fetchRemoteMessage(message);
 
       NotificationHelper notificationService = NotificationHelper();
@@ -56,15 +63,19 @@ class FirebaseHelper {
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final session = locator<Session>();
-      if (Platform.isIOS || session.sessionToken.isEmpty) {
+      if (session.sessionToken.isEmpty) {
         return;
       }
       log("on message listen called");
       print("on message listen called");
-      log("remote message is------->>>>>. ${message.toMap().toString()}");
+      log("remote message is------->>>>>.listen ${message.toMap().toString()}");
       fetchRemoteMessage(message);
       NotificationHelper notificationService = NotificationHelper();
       notificationService.showNotifications(message);
+    });
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((event) {
+      print("token is:  $event");
     });
   }
 
@@ -157,6 +168,12 @@ class FirebaseHelper {
       session.setSessionStatusOrder = '0';
       // await messaging.unsubscribeFromTopic(categoryId + "-new-order");
     }
+
+    //   FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+    //   print('FCM Token refreshed: $token');
+    //   // Perform actions in response to token refresh
+    //   // For example, update the token on your server
+    // });
   }
 
   static Future<void> unsubTopic() async {
@@ -198,4 +215,39 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // NotificationHelper notificationService = NotificationHelper();
 
   // logMe("Handling a background message: ${message.messageId}");
+}
+
+Future<void> updateFcmToken({required String token}) async {
+  try {
+    var session = locator<Session>();
+
+    var dio = Dio();
+
+    var params = {
+      "fcm_token": token,
+      "options": [1, 2, 3],
+    };
+
+    var res = await dio.post(
+      "https://php.parastechnologies.in/taxi/public/api/webservice/driver/update/fcm/token",
+      data: params,
+      options: Options(
+        headers: {"Authorization": "Bearer ${session.sessionToken}"},
+      ),
+    );
+
+    // Check response status code
+    if (res.statusCode == 200) {
+      // FCM token updated successfully
+      print("FCM Token updated successfully");
+
+      showToast(message: "new fcm token updated");
+    } else {
+      // Handle other status codes
+      print("Failed to update FCM Token: ${res.statusCode}");
+    }
+  } catch (e) {
+    // Handle Dio errors
+    print("Error updating FCM Token: $e");
+  }
 }

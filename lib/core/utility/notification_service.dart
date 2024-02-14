@@ -19,19 +19,22 @@ class NotificationHelper {
   Future<void> init() async {
     const String iconNotification = '@mipmap/launcher_icon';
 
-    const initializationSettingsAndroid = AndroidInitializationSettings(iconNotification);
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings(iconNotification);
 
     const darwinInitializationSettings = DarwinInitializationSettings(
         requestSoundPermission: false,
         requestAlertPermission: false,
         requestBadgePermission: false);
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: darwinInitializationSettings);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: selectNotification);
   }
+
   /// Create a [AndroidNotificationChannel] for heads up notifications
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -39,7 +42,6 @@ class NotificationHelper {
     description: 'This channel is used for important notifications.',
     // description
     importance: Importance.max,
-
   );
 
 /*  final AndroidNotificationDetails _androidNotificationDetails = const AndroidNotificationDetails(
@@ -54,6 +56,7 @@ class NotificationHelper {
           );*/
 
   Future<void> showNotifications(RemoteMessage message) async {
+    print("notification data is : ${message.data}");
     print("show notification called :-->> ${message.data}");
     print("show notification title :-->> ${message.data["title"]}");
     print("show notification message :-->> ${message.data["message"]}");
@@ -73,7 +76,8 @@ class NotificationHelper {
           playSound: true,
           priority: Priority.max,
           importance: Importance.max,
-          styleInformation: BigTextStyleInformation(message.data["message"]??""),
+          styleInformation:
+              BigTextStyleInformation(message.data["message"] ?? ""),
         ),
       ),
       //  NotificationDetails(android: _androidNotificationDetails),

@@ -1,5 +1,6 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/app_config.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
@@ -43,6 +44,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         var session = locator<Session>();
+        var socketProvider = locator<LatestSocketProvider>();
+
         // provider.changeStatus = session.isOnline;
 
         return AppBar(
@@ -111,6 +114,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     provider.changeStatus = b;
                     provider.updateStatus().listen((event) async {
                       session.setIsOnline = b;
+
+                      socketProvider.updateLatLngAtStarting();
                     });
                     return Future.delayed(
                       const Duration(
