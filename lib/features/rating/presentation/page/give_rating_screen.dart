@@ -208,6 +208,8 @@ class GiveRatingScreen extends StatelessWidget {
                                     txtButtonStyle.copyWith(color: blackColor),
                               ),
                               event: () {
+                                socketProvider.removeOrderFromList(
+                                    orderId: session.runningOrderId);
                                 session.setIsRatingGiven = true;
                                 session.setIsPaymentDone = true;
 
