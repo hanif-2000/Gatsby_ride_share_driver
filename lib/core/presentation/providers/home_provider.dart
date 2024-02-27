@@ -101,6 +101,8 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
 
     print("_isOnline is :-->> $_isOnline");
+    print("_isOnline is :-->> l $isOnline");
+
     // });
   }
 

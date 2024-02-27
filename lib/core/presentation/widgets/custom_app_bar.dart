@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
@@ -41,10 +43,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("appbar called");
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         var session = locator<Session>();
         var socketProvider = locator<LatestSocketProvider>();
+
+        log("app bar called in homepage");
+
+        log("app bar called in homepage isonline:-->>${provider.isOnline} ");
 
         // provider.changeStatus = session.isOnline;
 

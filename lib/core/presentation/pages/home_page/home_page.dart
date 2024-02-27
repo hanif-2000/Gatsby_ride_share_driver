@@ -80,8 +80,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });*/
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      homeProvider.changeStatus = session.isOnline;
       if (session.isOrderRunning) {
+        log("----order running called--- ${session.runningOrderStatus}");
         log("----order running called---");
+
         showLoading();
 
         if (session.runningOrderStatus == 7) {
@@ -143,7 +146,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   "home provider ordetails are:==>> ${homeProvider.orderDetail}");
               print(
                   "home provider ordetails are:==>> ${homeProvider.orderDetail}");
-              log("session order STATUS IS :==>> ${session.orderStatus}");
+              log("session order STATUS IS :==>> ${session.runningOrderStatus}");
               log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
             });
           } else if (!session.isRatingGiven) {
@@ -160,8 +163,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     .then((value) {
                   dismissLoading();
 
-/** Naviagte to rating screen  */
-
                   Navigator.pushNamedAndRemoveUntil(
                     locator<GlobalKey<NavigatorState>>().currentContext!,
                     GiveRatingScreen.routeName,
@@ -174,6 +175,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 });
               }
             });
+          } else {
+            dismissLoading();
           }
         } else {
           // var id = _fcmProvider.incomingOrderDetail!.orderId;
@@ -222,7 +225,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
           // print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
           print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
-          log("session order STATUS IS :==>> ${session.orderStatus}");
+          log("session order STATUS IS :==>> ${session.runningOrderStatus}");
           log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
         }
       } else {

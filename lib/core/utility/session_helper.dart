@@ -32,7 +32,7 @@ abstract class Session {
 
   set setCurrency(String currency);
 
-  set setOrderStatus(int orderStatus);
+  // set setOrderStatus(int orderStatus);
 
   set setDriverId(String driverId);
 
@@ -125,7 +125,7 @@ abstract class Session {
 
   String get sessionCategoryId;
 
-  int get orderStatus;
+  // int get orderStatus;
 
   Future<void> clearSession();
 
@@ -287,10 +287,10 @@ class SessionHelper implements Session {
     pref.setString(ESTIMATED_TIME, time);
   }
 
-  @override
-  set setOrderStatus(int orderStatus) {
-    pref.setInt(ORDER_STATUS, orderStatus);
-  }
+  // @override
+  // set setOrderStatus(int orderStatus) {
+  //   pref.setInt(ORDER_STATUS, orderStatus);
+  // }
 
   @override
   set setFcmToken(String fcmToken) {
@@ -451,8 +451,8 @@ class SessionHelper implements Session {
   @override
   String get driverId => pref.getString(DRIVER_ID) ?? '';
 
-  @override
-  int get orderStatus => pref.getInt(ORDER_STATUS) ?? 100;
+  // @override
+  // int get orderStatus => pref.getInt(ORDER_STATUS) ?? 100;
 
   @override
   String get currency => pref.getString(CURRENCY) ?? '';
@@ -497,7 +497,7 @@ class SessionHelper implements Session {
   @override
   Future<void> clearOrderSession() async {
     // await pref.remove(ORDER_ID);
-    await pref.remove(ORDER_STATUS);
+    // await pref.remove(ORDER_STATUS);
     // await pref.remove(DRIVER_ID);
     // await pref.remove(SESSION_ORDER_DETAILS);
     // await pref.remove(SESSION_CUSTOMER_DETAILS);

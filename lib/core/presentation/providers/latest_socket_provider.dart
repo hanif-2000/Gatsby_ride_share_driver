@@ -42,7 +42,7 @@ class LatestSocketProvider extends ChangeNotifier {
   factory LatestSocketProvider() {
     return _provider;
   }
-  final bool _disposed = false;
+  // final bool _disposed = false;
 
   LatestSocketProvider.internal();
 
@@ -620,6 +620,8 @@ class LatestSocketProvider extends ChangeNotifier {
             updateLatLng(
                 latLng: LatLng(session.currentLat, session.currentLang));
 
+            session.setRunningOrderStatus = 1;
+
             notifyListeners();
           }
         });
@@ -697,7 +699,7 @@ class LatestSocketProvider extends ChangeNotifier {
               currentOrderStatus = 2;
               rideText = "Reached Pick up Location";
               setNewChangeOrderStatus = "1";
-              session.setOrderStatus = 1;
+              // session.setOrderStatus = 1;
               session.setRunningOrderStatus = 1;
               dismissLoading();
 
@@ -708,7 +710,7 @@ class LatestSocketProvider extends ChangeNotifier {
               currentOrderStatus = 2;
               rideText = "Reached Pick up Location";
               setNewChangeOrderStatus = "2";
-              session.setOrderStatus = 2;
+              // session.setOrderStatus = 2;
               session.setRunningOrderStatus = 2;
               dismissLoading();
 
@@ -716,7 +718,7 @@ class LatestSocketProvider extends ChangeNotifier {
             } else if (status == '3') {
               currentOrderStatus = 3;
               setNewChangeOrderStatus = "3";
-              session.setOrderStatus = 3;
+              // session.setOrderStatus = 3;
               session.setRunningOrderStatus = 3;
               dismissLoading();
               setNewPolylineDirection(true);
@@ -731,13 +733,13 @@ class LatestSocketProvider extends ChangeNotifier {
 
               setNewPolylineDirection(true);
 
-              session.setOrderStatus = 5;
+              // session.setOrderStatus = 5;
 
               rideText = "End Trip";
             } else if (status == "7") {
               currentOrderStatus = 7;
               setNewChangeOrderStatus = "7";
-              session.setOrderStatus = 7;
+              // session.setOrderStatus = 7;
               session.setRunningOrderStatus = 7;
               dismissLoading();
 
@@ -1008,20 +1010,31 @@ class LatestSocketProvider extends ChangeNotifier {
 
     if (val == "1") {
       print("order accept called");
+      session.setRunningOrderStatus = 1;
+      // session.setOrderStatus = 1;
+
       showLoading();
       // _orderStatus = OrderStatus.departureToCustomerplace;
       setNewPolylineDirection(false);
     } else if (val == "2") {
+      session.setRunningOrderStatus = 2;
+      // session.setOrderStatus = 2;
       // _orderStatus = OrderStatus.arriveAtCustomerPlace;
       setNewPolylineDirection(false);
     } else if (val == "3") {
+      session.setRunningOrderStatus = 3;
+      // session.setOrderStatus = 3;
       setNewPolylineDirection(true);
       // _orderStatus = OrderStatus.departureToDestination;
     } else if (val == "5") {
+      session.setRunningOrderStatus = 5;
+      // session.setOrderStatus = 5;
       // _orderStatus = OrderStatus.arriveAtDestination;
 
       setNewPolylineDirection(true);
     } else if (val == "7") {
+      session.setRunningOrderStatus = 7;
+      // session.setOrderStatus = 7;
       showLoading();
       // _orderStatus = OrderStatus.complete;
     }
@@ -1162,7 +1175,8 @@ class LatestSocketProvider extends ChangeNotifier {
     String appleUrl;
     String googleUrl;
 
-    if ((session.orderStatus == 1) || (session.orderStatus == 2)) {
+    if ((session.runningOrderStatus == 1) ||
+        (session.runningOrderStatus == 2)) {
       url = 'google.navigation:q=$latOrigin,$lngOrigin&mode=d';
       googleUrl =
           'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
@@ -1253,7 +1267,8 @@ class LatestSocketProvider extends ChangeNotifier {
                     driverLatLng:
                         LatLng(position.latitude, position.longitude));
 
-                if (((session.orderStatus == 5) || (currentOrderStatus == 5))) {
+                if (((session.runningOrderStatus == 5) ||
+                    (currentOrderStatus == 5))) {
                   driverCoordinatesList
                       .add(LatLng(position.latitude, position.longitude));
                 }

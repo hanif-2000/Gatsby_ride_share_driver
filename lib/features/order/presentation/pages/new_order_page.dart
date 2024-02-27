@@ -247,9 +247,9 @@ class _NewOrderPageState extends State<NewOrderPage>
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              ((session.orderStatus == 0) ||
-                                      (session.orderStatus == 1) ||
-                                      (session.orderStatus == 2))
+                              ((session.runningOrderStatus == 0) ||
+                                      (session.runningOrderStatus == 1) ||
+                                      (session.runningOrderStatus == 2))
                                   ? OriginWidget(
                                       deviceWidth: deviceSize.width,
                                       originAddress:
