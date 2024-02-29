@@ -1229,7 +1229,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   accuracy: LocationAccuracy.bestForNavigation,
                   distanceFilter: 10,
                   forceLocationManager: false,
-                  intervalDuration: const Duration(seconds: 5),
+                  intervalDuration: const Duration(seconds: 20),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
                           notificationText: "Location is being used",
@@ -1239,13 +1239,12 @@ class LatestSocketProvider extends ChangeNotifier {
                               AndroidResource(name: "@mipmap/noti")));
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
-                accuracy: LocationAccuracy.high,
-                activityType: ActivityType.fitness,
-                distanceFilter: 10,
-                timeLimit: const Duration(seconds: 5),
-                pauseLocationUpdatesAutomatically: true,
-                showBackgroundLocationIndicator: true,
-              );
+                  accuracy: LocationAccuracy.bestForNavigation,
+                  activityType: ActivityType.automotiveNavigation,
+                  distanceFilter: 10,
+                  timeLimit: const Duration(seconds: 20),
+                  showBackgroundLocationIndicator: true,
+                  allowBackgroundLocationUpdates: true);
             } else {
               locationSettings = const LocationSettings(
                 accuracy: LocationAccuracy.high,

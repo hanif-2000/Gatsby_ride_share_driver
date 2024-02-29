@@ -1,3 +1,5 @@
+import 'package:geolocator/geolocator.dart';
+
 import '../../../../core/presentation/providers/form_provider.dart';
 import '../../../../core/utility/helper.dart';
 import '../../domain/usecases/do_login.dart';
@@ -9,11 +11,13 @@ class LoginProvider extends FormProvider {
 
   LoginProvider({required this.doLogin});
 
-  final lctn.Location locationService = lctn.Location();
-
   Stream<LoginState> doLoginApi() async* {
     yield LoginLoading();
-    lctn.LocationData locationData = await locationService.getLocation();
+    LocationPermission locationPermission = await Geolocator.checkPermission();
+    if (locationPermission == LocationPermission.denied) {
+      await Geolocator.requestPermission();
+    }
+    Position locationData = await Geolocator.getCurrentPosition();
     final loginResult = await doLogin.call(
         emailController.text,
         passwordController.text,
