@@ -84,13 +84,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
 
-                  tiltGesturesEnabled: false,
-                  rotateGesturesEnabled: false,
-                  scrollGesturesEnabled: true,
                   initialCameraPosition: homeProvider.kJapanCoordinate,
                   onMapCreated: (GoogleMapController controller) async {
-
-
                     homeProvider.googleMapController = controller;
                     final pickup = LatLng(
                         double.tryParse(widget.requestListModel!.startCoordinate

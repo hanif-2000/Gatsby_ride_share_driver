@@ -229,8 +229,11 @@ class _NewOrderPageState extends State<NewOrderPage>
                           mapType: MapType.normal,
                           myLocationButtonEnabled: false,
                           zoomControlsEnabled: true,
+                          tiltGesturesEnabled: false,
+                          rotateGesturesEnabled: false,
+                          scrollGesturesEnabled: true,
                           initialCameraPosition:
-                          socketProvider.kJapanCoordinate,
+                              socketProvider.kJapanCoordinate,
                           onMapCreated: (GoogleMapController controller) async {
                             socketProvider.googleMapController = controller;
                             await socketProvider.setCurrentLocation(
