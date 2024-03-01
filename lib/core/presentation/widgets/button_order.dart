@@ -332,7 +332,7 @@ class ButtonOrder extends StatelessWidget {
                     socketProvider.rideText,
                     style: txtButtonStyle,
                   ),
-                  event: () {
+                  event: () async{
                     showLoading();
                     print(
                         "**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
@@ -368,13 +368,16 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
-                      showLoading();
-                      SmartDialog.showLoading(
-                        animationType: SmartAnimationType.fade,
-                        backDismiss: false,
-                        msg: 'Calculating the Ride Price...',
-                        alignment: Alignment.center,
-                      );
+                      // showLoading();
+                     await Future.delayed(const Duration(seconds: 1),(){
+                        SmartDialog.showLoading(
+                          animationType: SmartAnimationType.fade,
+                          backDismiss: false,
+                          msg: 'Calculating the Ride Price...',
+                          alignment: Alignment.center,
+                        );
+                      });
+
                       /** END TRIP */
 
                       log("ride complete end time is:--->>>>${DateTime.now()}");
