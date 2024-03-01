@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
-import 'dart:math';
+import 'dart:math' as Math;
 import 'dart:ui' as ui;
 import 'package:appkey_taxiapp_driver/core/domain/usecases/do_update_location.dart';
 import 'package:appkey_taxiapp_driver/core/domain/usecases/get_customer_detail.dart';
@@ -47,6 +47,7 @@ class HomeProvider with ChangeNotifier {
   final session = locator<Session>();
   late BitmapDescriptor pickUpMarker, destinationMarker;
   Location location = Location();
+
 
   //Initial
   final lctn.Location locationService = lctn.Location();
@@ -415,10 +416,10 @@ class HomeProvider with ChangeNotifier {
     var lngs = markers.map<double>((m) => m.position.longitude).toList();
     var lats = markers.map<double>((m) => m.position.latitude).toList();
 
-    double topMost = lngs.reduce(max);
-    double leftMost = lats.reduce(min);
-    double rightMost = lats.reduce(max);
-    double bottomMost = lngs.reduce(min);
+    double topMost = lngs.reduce(Math.max);
+    double leftMost = lats.reduce(Math.min);
+    double rightMost = lats.reduce(Math.max);
+    double bottomMost = lngs.reduce(Math.min);
 
     LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),

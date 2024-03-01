@@ -45,17 +45,15 @@ class DialogButton {
 
 extension DialogButtonStyles on ButtonStyle {
   ButtonStyle roundedButtonStyle(Color color) => ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), backgroundColor: color,
         textStyle: const TextStyle(
                 fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)
             .usePoppinsW6Font(),
-        primary: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       );
   ButtonStyle textButtonStyle(Color color) => TextButton.styleFrom(
-        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+        foregroundColor: color, textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
             .usePoppinsW6Font(),
-        primary: color,
       );
 }
 

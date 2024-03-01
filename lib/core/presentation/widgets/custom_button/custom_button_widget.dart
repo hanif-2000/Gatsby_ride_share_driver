@@ -31,13 +31,11 @@ class CustomButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 side: BorderSide(color: showBorder ? Colors.black : bgColor),
                 borderRadius: BorderRadius.circular(10), // <-- Radius
-              ),
+              ), backgroundColor: bgColor,
               minimumSize: Size.fromHeight(buttonHeight ?? 58.0),
-              primary: bgColor,
             )
           : ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(buttonHeight ?? 58.0),
-              primary: bgColor,
+              minimumSize: Size.fromHeight(buttonHeight ?? 58.0), backgroundColor: bgColor,
               shape: shape),
       onPressed: () => event(),
       child: Row(

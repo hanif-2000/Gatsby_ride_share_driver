@@ -230,7 +230,7 @@ class _NewOrderPageState extends State<NewOrderPage>
                           myLocationButtonEnabled: false,
                           zoomControlsEnabled: true,
                           initialCameraPosition:
-                              socketProvider.kJapanCoordinate,
+                          socketProvider.kJapanCoordinate,
                           onMapCreated: (GoogleMapController controller) async {
                             socketProvider.googleMapController = controller;
                             await socketProvider.setCurrentLocation(
