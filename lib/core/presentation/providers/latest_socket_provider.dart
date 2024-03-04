@@ -554,13 +554,8 @@ class LatestSocketProvider extends ChangeNotifier {
     // _socket!.send(jsonEncode(map));
 
     try {
-      _socket.connection.listen((event) {
-        if (event is Connected) {
-          _socket.send(json.encode(map));
-
-          notifyListeners();
-        }
-      });
+      _socket.send(json.encode(map));
+      notifyListeners();
     } catch (e) {
       log(e.toString());
     }
@@ -1296,6 +1291,7 @@ class LatestSocketProvider extends ChangeNotifier {
                 if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
                   driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
                 }
+                googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(position.latitude, position.longitude,), 18,));
                 notifyListeners();
                 // updateLocation(_currentPosition!);
               }
@@ -1345,9 +1341,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var lngDestination = double.parse(splitDestination[1]);
     var coordinate = LatLng(driverLatLng.latitude, driverLatLng.longitude);
     if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(
-              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
           .then((result) async {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
@@ -1361,7 +1355,7 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-            zIndex: 10,
+            zIndex: 20,
             rotation: _currentPosition!.heading+tiltValue,
             infoWindow: InfoWindow(
                 title:
@@ -1410,7 +1404,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                  zIndex: 5,
+                  zIndex: 20,
                   rotation: _currentPosition!.heading +tiltValue,
                 );
 

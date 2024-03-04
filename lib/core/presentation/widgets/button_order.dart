@@ -381,18 +381,12 @@ class ButtonOrder extends StatelessWidget {
                       /** END TRIP */
 
                       log("ride complete end time is:--->>>>${DateTime.now()}");
-                      socketProvider
-                          .calculateTimeAndDistanceWhenRideCompeleted() // time calculate
-                          .then((value) => socketProvider
-                                  .calculateDistanceCovered(
-                                      context: context) //distance calculate
+                     await socketProvider.calculateTimeAndDistanceWhenRideCompeleted().then((value) => socketProvider
+                                  .calculateDistanceCovered(context: context)
                                   .then((value) {
-                                socketProvider
-                                    .updateOrderStatus(
+                                socketProvider.updateOrderStatus(
                                         status: "7",
-                                        actualTime: (double.tryParse(
-                                                session.estimatedTime))
-                                            .toString(),
+                                        actualTime: (double.tryParse(session.estimatedTime)).toString(),
                                         context: context,
                                         startTime: session.rideStartTime,
                                         endTime: DateTime.now().toString(),

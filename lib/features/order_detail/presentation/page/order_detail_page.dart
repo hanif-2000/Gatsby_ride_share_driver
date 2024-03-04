@@ -486,8 +486,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             PriceTile(
                               title: 'Total',
                               value:
+                              'CA\$ ${widget.order?.newTotal}',
                                   // 'CA\$ ${(double.parse(widget.order!.newTotal)).toStringAsFixed(2)}',
-                                  'CA\$ ${(double.parse(widget.order!.newTotal))}',
+                              // 'CA\$ ${(double.parse(widget.order?.newTotal.toString()??0.0))}',
 
                               // value: widget.order!.tip == '0'
                               //     ? 'CA\$ ${widget.order!.total.toStringAsFixed(2)}'

@@ -1,10 +1,14 @@
 String convertToTwoDecimal(String input) {
   try {
+    if(input.contains(",")){
+      return input;
+    }
     // Parse the input string to a double
     double inputValue = double.parse(input);
 
     // Convert to a string with only one decimal place
     String result = inputValue.toStringAsFixed(2);
+
 
     // Simulate an asynchronous operation
 

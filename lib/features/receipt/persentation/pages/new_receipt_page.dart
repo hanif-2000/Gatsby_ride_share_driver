@@ -9,6 +9,7 @@ import 'package:appkey_taxiapp_driver/core/utility/duration_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -403,8 +404,40 @@ class ReceiptPage extends StatelessWidget {
 
                                   IconButton(
                                       onPressed: () {
-                                        showModalBottomSheet(
+                                        _showPaymentInfo(context:context,
+                                            child: PaymentScreen(
+                                            newTotal:    provider.receiptData!.newTotal != "" ? convertToTwoDecimal(provider.receiptData!.newTotal.toString()): convertToTwoDecimal(provider.receiptData!.total.toString()),
+                                            pendingAmount:
+                                            provider.receiptData!.pendingAmount == '' ? '0'
+                                                : provider.receiptData!
+                                                .pendingAmount,
+                                            totalPrice:
+                                            provider.receiptData!.total,
+                                            extraDistance:
+                                            provider.receiptData!.extraDistance == ''
+                                                ? '0'
+                                                : provider.receiptData!
+                                                .extraDistance,
+                                            extraTime: provider.receiptData!.extraTime == ''
+                                                ? '0'
+                                                : provider
+                                                .receiptData!.extraTime,
+                                            extraDistancePrice:
+                                            provider.receiptData!.extraDistancePrice == ""
+                                                ? "0"
+                                                : provider.receiptData!
+                                                .extraDistancePrice,
+                                            extraTimePrice:
+                                            provider.receiptData!.extraTimePrice == ''
+                                                ? "0"
+                                                : provider.receiptData!
+                                                .extraTimePrice,
+                                            grandTotal: provider.receiptData!.newTotal,
+                                            distance: provider.receiptData!.distance.toString()));
+                                    /*    showModalBottomSheet(
                                           context: context,
+                                          enableDrag: true,
+
                                           builder: (context) {
                                             return PaymentScreen(
                                                 newTotal: provider
@@ -439,7 +472,7 @@ class ReceiptPage extends StatelessWidget {
                                                 grandTotal: provider.receiptData!.newTotal.toString(),
                                                 distance: provider.receiptData!.distance.toString());
                                           },
-                                        );
+                                        );*/
                                       },
                                       icon: const Icon(
                                           Icons.arrow_circle_right_outlined))
@@ -537,10 +570,9 @@ class ReceiptPage extends StatelessWidget {
                                             .usePoppinsW6Font(),
                                       ),
                                       Text(
-                                        "CA\$ ${provider.receiptData!.newTotal}" !=
-                                                ''
+                                        provider.receiptData!.newTotal != ""
                                             ? "CA\$ ${convertToTwoDecimal(provider.receiptData!.newTotal.toString())}"
-                                            : "CA\$ ${convertToTwoDecimal(provider.receiptData!.total.toString())}"
+                                            : "CA\$ ${convertToTwoDecimal(provider.receiptData!.total)}"
                                         // 'CA\$ ${order.total}',
                                         // 'CA\$ ${provider.receiptData!.newTotal.toString()}'
                                         // : 'CA\$ ${provider.receiptData!.total.toString()}',
@@ -906,6 +938,48 @@ class ReceiptPage extends StatelessWidget {
           // );
         },
       ),
+    );
+  }
+  void _showPaymentInfo({required BuildContext context, required Widget child}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          maxChildSize: 0.7,
+          expand: false,
+          builder: (context, scrollController) {
+            return Column(
+              children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     IconButton(onPressed: (){
+                       Navigator.pop(context);
+                     }, icon: const Icon(Icons.arrow_back_rounded)),
+                     Container(
+                       width: 50,
+                       height: 4,
+                       margin: const EdgeInsets.symmetric(vertical: 10),
+                       decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(20),
+                         color: Colors.grey,
+                       ),
+                     ),
+                     const SizedBox(height: 10,width: 20,)
+                   ],
+                 ),
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                      child: child),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
