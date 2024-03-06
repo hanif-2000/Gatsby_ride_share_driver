@@ -37,11 +37,6 @@ Future<void> main() async {
         print("Refreshed FCM Token: $token");
         updateFcmToken(token: token);
       });
-
-      // await FirebaseHelper.init().then((_) async {
-      //   // await NotificationHelper().init();
-      // });--------
-      // await NotificationHelper().init();
       runApp(
         MultiProvider(
           providers: [

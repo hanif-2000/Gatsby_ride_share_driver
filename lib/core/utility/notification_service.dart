@@ -23,9 +23,9 @@ class NotificationHelper {
         AndroidInitializationSettings(iconNotification);
 
     const darwinInitializationSettings = DarwinInitializationSettings(
-        requestSoundPermission: false,
-        requestAlertPermission: false,
-        requestBadgePermission: false);
+        requestSoundPermission: true,
+        requestAlertPermission: true,
+        requestBadgePermission: true);
     const InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid,

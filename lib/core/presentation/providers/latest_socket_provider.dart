@@ -241,9 +241,9 @@ class LatestSocketProvider extends ChangeNotifier {
   //   _socket.close(1000);
   // }
 
-  // Future<void> disconnectSocket() async {
-  //   _socket.close(1000, "Logout successful");
-  // }
+  Future<void> disconnectSocket() async {
+    _socket.close(1000, "Logout successful");
+  }
 
   joinExitRoom({int? receiverId, required String type}) {
     markMessageAsRead(receiverId: receiverId);
@@ -498,7 +498,6 @@ class LatestSocketProvider extends ChangeNotifier {
     _socket.send(jsonEncode(map));
   }
 
-
   //   //Initial
   CameraPosition kJapanCoordinate = const CameraPosition(
     target: DEFAULT_LATLNG,
@@ -533,7 +532,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
-  updateLatLng({LatLng? latLng, double ?bearing=0}) async {
+  updateLatLng({LatLng? latLng, double? bearing = 0}) async {
     print("=====******* UPDATE LAT LONG CALLED =======*******");
     print("current latlong:${latLng!.latitude},${latLng.longitude}");
     session.setCurrentLat = latLng.latitude;
@@ -546,7 +545,7 @@ class LatestSocketProvider extends ChangeNotifier {
       'Latitude': latLng.latitude,
       'Longitude': latLng.longitude,
       'OrderID': session.runningOrderId,
-      'bearing':bearing
+      'bearing': bearing
     };
     logMe('UPADTE LATLONG -- > ${map.toString()}');
     print('UPADTE LATLONG -- > ${map.toString()}');
@@ -921,7 +920,7 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdDriver,
           position: coordinate,
           icon: driverMarker,
-          rotation: _currentPosition!.heading +tiltValue,
+          rotation: _currentPosition!.heading + tiltValue,
           zIndex: 20,
           infoWindow: const InfoWindow(title: "driver"),
         );
@@ -931,12 +930,10 @@ class LatestSocketProvider extends ChangeNotifier {
         googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
-              target: coordinate,
-              zoom: 17,
+                target: coordinate,
+                zoom: 17,
                 tilt: 10,
-                bearing: _currentPosition?.heading??0
-
-            ),
+                bearing: _currentPosition?.heading ?? 0),
           ),
         );
 
@@ -1023,7 +1020,7 @@ class LatestSocketProvider extends ChangeNotifier {
   late StreamSubscription<Position>? locationbackSubscription;
   List<LatLng> driverCoordinatesList = [];
   Position? _currentPosition;
-  double tiltValue =155;
+  double tiltValue = 155;
 
   late LatLng originLatLng, destinationLatLng;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -1279,19 +1276,37 @@ class LatestSocketProvider extends ChangeNotifier {
                 distanceFilter: 10,
               );
             }
-            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) {
+            locationbackSubscription =
+                Geolocator.getPositionStream(locationSettings: locationSettings)
+                    .listen((Position? position) {
               if (position != null) {
                 _currentPosition = position;
 
-                print("**************** POSITION :  -->> ${_currentPosition!.latitude},${_currentPosition!.longitude}");
-                updateLatLng(latLng: LatLng(position.latitude, position.longitude,),bearing:position.heading +tiltValue);
+                print(
+                    "**************** POSITION :  -->> ${_currentPosition!.latitude},${_currentPosition!.longitude}");
+                updateLatLng(
+                    latLng: LatLng(
+                      position.latitude,
+                      position.longitude,
+                    ),
+                    bearing: position.heading + tiltValue);
 
-                createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
+                createMarker(
+                    driverLatLng:
+                        LatLng(position.latitude, position.longitude));
 
-                if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
-                  driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
+                if (((session.runningOrderStatus == 5) ||
+                    (currentOrderStatus == 5))) {
+                  driverCoordinatesList
+                      .add(LatLng(position.latitude, position.longitude));
                 }
-                googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(position.latitude, position.longitude,), 18,));
+                googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
+                  LatLng(
+                    position.latitude,
+                    position.longitude,
+                  ),
+                  18,
+                ));
                 notifyListeners();
                 // updateLocation(_currentPosition!);
               }
@@ -1341,7 +1356,9 @@ class LatestSocketProvider extends ChangeNotifier {
     var lngDestination = double.parse(splitDestination[1]);
     var coordinate = LatLng(driverLatLng.latitude, driverLatLng.longitude);
     if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(
+              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
           .then((result) async {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
@@ -1356,7 +1373,7 @@ class LatestSocketProvider extends ChangeNotifier {
             position: coordinate,
             icon: driverMarker,
             zIndex: 20,
-            rotation: _currentPosition!.heading+tiltValue,
+            rotation: _currentPosition!.heading + tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1405,7 +1422,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   position: coordinate,
                   icon: driverMarker,
                   zIndex: 20,
-                  rotation: _currentPosition!.heading +tiltValue,
+                  rotation: _currentPosition!.heading + tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1422,11 +1439,10 @@ class LatestSocketProvider extends ChangeNotifier {
                 googleMapController.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
-                      target: coordinate,
-                      zoom: zoom,
+                        target: coordinate,
+                        zoom: zoom,
                         tilt: 10,
-                        bearing: _currentPosition?.heading??0
-                    ),
+                        bearing: _currentPosition?.heading ?? 0),
                   ),
                 );
                 notifyListeners();
@@ -1452,8 +1468,8 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-            zIndex:20,
-            rotation: _currentPosition!.heading +tiltValue,
+            zIndex: 20,
+            rotation: _currentPosition!.heading + tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1502,7 +1518,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   position: coordinate,
                   icon: driverMarker,
                   zIndex: 20,
-                  rotation: _currentPosition!.heading+tiltValue,
+                  rotation: _currentPosition!.heading + tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1517,14 +1533,11 @@ class LatestSocketProvider extends ChangeNotifier {
                 );
                 newPolylines.add(polyline);
                 googleMapController.animateCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
+                  CameraUpdate.newCameraPosition(CameraPosition(
                       target: coordinate,
                       zoom: zoom,
-                        tilt: 10,
-                      bearing: _currentPosition?.heading??0
-                    )
-                  ),
+                      tilt: 10,
+                      bearing: _currentPosition?.heading ?? 0)),
                 );
                 notifyListeners();
               }

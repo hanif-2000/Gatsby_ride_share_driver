@@ -12,6 +12,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 import '../../../features/order/presentation/pages/new_order_page.dart';
 import '../../../features/receipt/persentation/pages/new_receipt_page.dart';
 import '../../static/styles.dart';
@@ -332,7 +333,7 @@ class ButtonOrder extends StatelessWidget {
                     socketProvider.rideText,
                     style: txtButtonStyle,
                   ),
-                  event: () async{
+                  event: () async {
                     showLoading();
                     print(
                         "**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
@@ -368,8 +369,10 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
+                      socketProvider.disconnectSocket();
                       // showLoading();
-                     await Future.delayed(const Duration(seconds: 1),(){
+                      await Future.delayed(const Duration(seconds: 5), () {
+                        socketProvider.connectToSocket(context);
                         SmartDialog.showLoading(
                           animationType: SmartAnimationType.fade,
                           backDismiss: false,
@@ -381,32 +384,39 @@ class ButtonOrder extends StatelessWidget {
                       /** END TRIP */
 
                       log("ride complete end time is:--->>>>${DateTime.now()}");
-                     await socketProvider.calculateTimeAndDistanceWhenRideCompeleted().then((value) => socketProvider
-                                  .calculateDistanceCovered(context: context)
-                                  .then((value) {
-                                socketProvider.updateOrderStatus(
-                                        status: "7",
-                                        actualTime: (double.tryParse(session.estimatedTime)).toString(),
-                                        context: context,
-                                        startTime: session.rideStartTime,
-                                        endTime: DateTime.now().toString(),
-                                        distance: session.estimatedDistance)
+                      await Future.delayed(const Duration(seconds: 5), () {
+                        socketProvider
+                            .calculateTimeAndDistanceWhenRideCompeleted()
+                            .then((value) => socketProvider
+                                    .calculateDistanceCovered(context: context)
                                     .then((value) {
-                                  dismissLoading();
-                                  SmartDialog.dismiss();
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    ReceiptPage.routeName,
-                                    (route) => false,
-                                    arguments: RatingPageArguments(
-                                      customerDataModel:
-                                          socketProvider.customerDetail!,
-                                      customerId:
-                                          socketProvider.orderDetail!.userId,
-                                    ),
-                                  );
-                                });
-                              }));
+                                  socketProvider
+                                      .updateOrderStatus(
+                                          status: "7",
+                                          actualTime: (double.tryParse(
+                                                  session.estimatedTime))
+                                              .toString(),
+                                          context: context,
+                                          startTime: session.rideStartTime,
+                                          endTime: DateTime.now().toString(),
+                                          distance: session.estimatedDistance)
+                                      .then((value) {
+                                    dismissLoading();
+                                    SmartDialog.dismiss();
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      ReceiptPage.routeName,
+                                      (route) => false,
+                                      arguments: RatingPageArguments(
+                                        customerDataModel:
+                                            socketProvider.customerDetail!,
+                                        customerId:
+                                            socketProvider.orderDetail!.userId,
+                                      ),
+                                    );
+                                  });
+                                }));
+                      });
 
                       // socketProvider.calculateDistanceCovered(context: context);
 
