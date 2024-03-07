@@ -45,22 +45,22 @@ class FirebaseHelper {
   }*/
 
   static void incomingNotificationHandling() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("on message opned called===============>>>>>>>>>>");
-      print("on message listen called");
-      print("on message listen called");
-      print(
-          "remote message is------->>>>>.opned ${message.toMap().toString()}");
-      fetchRemoteMessage(message);
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print("on message opned called===============>>>>>>>>>>");
+    //   print("on message listen called");
+    //   print("on message listen called");
+    //   print(
+    //       "remote message is------->>>>>.opned ${message.toMap().toString()}");
+    //   fetchRemoteMessage(message);
 
-      NotificationHelper notificationService = NotificationHelper();
-      notificationService.showNotifications(message);
-      /*  if(notificationEntity.message == SharedPreferenceHelper().getActiveChatId().toString()){
-        Utils.printLog("active chat id => ${SharedPreferenceHelper().getActiveChatId()} is same");
-        return;
-      }*/
-      //pushNextScreenFromForeground(notificationEntity);
-    });
+    //   NotificationHelper notificationService = NotificationHelper();
+    //   notificationService.showNotifications(message);
+    //   /*  if(notificationEntity.message == SharedPreferenceHelper().getActiveChatId().toString()){
+    //     Utils.printLog("active chat id => ${SharedPreferenceHelper().getActiveChatId()} is same");
+    //     return;
+    //   }*/
+    //   //pushNextScreenFromForeground(notificationEntity);
+    // });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final session = locator<Session>();
       if (session.sessionToken.isEmpty) {
