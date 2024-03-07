@@ -43,20 +43,10 @@ class _RequestListWidgetState extends State<RequestListWidget>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    //   timer = Timer.periodic(
-    //       const Duration(seconds: 10),
-    //       (Timer t) => Provider.of<HomeProvider>(context, listen: false)
-    //           .getRequestListData());
-    // }
-
-    // Stream<RequestListState> getRequestListStream() {
-    //   return Provider.of<HomeProvider>(context, listen: false)
-    //       .getRequestListData();
   }
 
   @override
   void dispose() {
-    // timer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();

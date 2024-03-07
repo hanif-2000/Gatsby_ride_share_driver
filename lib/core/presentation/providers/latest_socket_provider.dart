@@ -280,6 +280,7 @@ class LatestSocketProvider extends ChangeNotifier {
   updateRideList(Booking data) {
     // bookingDataModel = BookingDataModel.fromJson(data);
     bookingList.insert(0, data);
+    bookingList = bookingList.toSet().toList();
     notifyListeners();
   }
 
@@ -679,17 +680,14 @@ class LatestSocketProvider extends ChangeNotifier {
         'distance': distance ?? "0"
       };
       logMe('Update Status -- > ${map.toString()}');
-
       print('Update Status -- > ${map.toString()}');
 
       try {
         _socket.connection.listen((event) {
-          if (event is Connected) {
+          if (event is Connected || event is Reconnected ) {
             _socket.send(json.encode(map));
             dismissLoading();
-
-            updateLatLng(
-                latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
             print(map.toString());
 
             if (status == "1") {
