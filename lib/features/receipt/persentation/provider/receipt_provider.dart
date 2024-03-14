@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/receipt/domain/usercases/do_contact_us.dart';
@@ -21,7 +22,7 @@ class ReceiptProvider extends FormProvider {
   var dio = Dio();
 
   String paymentConfirmationUrl =
-      "https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation";
+      "${BASE_URL}api/webservice/driver/payment/confirmation";
 
   Stream<ReceiptState> getReceiptAPI() async* {
     dev.log("distance:${session.estimatedDistance}");
@@ -35,11 +36,7 @@ class ReceiptProvider extends FormProvider {
       logMe(statusCode);
       yield ReceiptFailure(failure: statusCode.message);
     }, (result) async* {
-      if (result != null) {
-        yield ReceiptSuccess(data: result);
-      } else {
-        yield ReceiptFailure(failure: appLoc.loginfailure);
-      }
+      yield ReceiptSuccess(data: result);
     });
   }
 
@@ -61,7 +58,7 @@ class ReceiptProvider extends FormProvider {
 
     try {
       var response = await dio.request(
-        'https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation',
+        '${BASE_URL}api/webservice/driver/payment/confirmation',
         data: data,
         options: Options(
             headers: {"Authorization": "Bearer ${session.sessionToken}"}),

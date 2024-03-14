@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/contact_us/persentation/pages/contact_us_page.dart';
@@ -103,7 +104,7 @@ class HomeDrawerPage extends StatelessWidget {
 
                           var dio = Dio();
                           String logOutUrl =
-                              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/logout';
+                              '${BASE_URL}api/webservice/driver/logout';
                           final session = locator<Session>();
                           // var provider =
                           //     Provider.of<HomeProvider>(context, listen: false);

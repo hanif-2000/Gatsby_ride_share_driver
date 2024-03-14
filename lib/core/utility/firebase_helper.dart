@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:appkey_taxiapp_driver/core/domain/entities/incoming_order.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/notification_service.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:dio/dio.dart';
@@ -229,7 +230,7 @@ Future<void> updateFcmToken({required String token}) async {
     };
 
     var res = await dio.post(
-      "https://php.parastechnologies.in/taxi/public/api/webservice/driver/update/fcm/token",
+      "${BASE_URL}api/webservice/driver/update/fcm/token",
       data: params,
       options: Options(
         headers: {"Authorization": "Bearer ${session.sessionToken}"},

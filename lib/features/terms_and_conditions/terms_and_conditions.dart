@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +20,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
 
   var loadingPercentage = 0;
   var error = false;
-  String url = "https://php.parastechnologies.in/taxi/public/terms";
+  String url = "${BASE_URL}terms";
 
   @override
   void initState() {

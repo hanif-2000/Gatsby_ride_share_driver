@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:appkey_taxiapp_driver/core/data/models/price_category_model.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/data/model/vehicle_type_respose_model.dart';
@@ -257,8 +258,7 @@ class ProfileEditProvider extends FormProvider {
   /// GET VEHICLE TYPES
 
   getVehicleTypes() async {
-    String url =
-        'https://php.parastechnologies.in/taxi/public/api/webservice/vehicle/categories';
+    String url = '${BASE_URL}api/webservice/vehicle/categories';
 
     try {
       var res = await dio.get(url);

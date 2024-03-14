@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_fiel
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/forgot_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
@@ -63,8 +64,7 @@ class _LoginFormState extends State<LoginForm> {
             'status': "0",
           });
 
-          String url =
-              'https://php.parastechnologies.in/taxi/public/api/webservice/driver/set-status';
+          String url = '${BASE_URL}api/webservice/driver/set-status';
           dio.options.headers["authorization"] =
               "Bearer ${session.sessionToken}";
           try {

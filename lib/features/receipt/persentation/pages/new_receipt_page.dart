@@ -4,6 +4,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/widgets/cache_network_wi
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_button/custom_button_widget.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/convert_decimal_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/duration_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
@@ -404,37 +405,34 @@ class ReceiptPage extends StatelessWidget {
 
                                   IconButton(
                                       onPressed: () {
-                                        _showPaymentInfo(context:context,
+                                        _showPaymentInfo(
+                                            context: context,
                                             child: PaymentScreen(
-                                            newTotal:    provider.receiptData!.newTotal != "" ? convertToTwoDecimal(provider.receiptData!.newTotal.toString()): convertToTwoDecimal(provider.receiptData!.total.toString()),
-                                            pendingAmount:
-                                            provider.receiptData!.pendingAmount == '' ? '0'
-                                                : provider.receiptData!
-                                                .pendingAmount,
-                                            totalPrice:
-                                            provider.receiptData!.total,
-                                            extraDistance:
-                                            provider.receiptData!.extraDistance == ''
-                                                ? '0'
-                                                : provider.receiptData!
-                                                .extraDistance,
-                                            extraTime: provider.receiptData!.extraTime == ''
-                                                ? '0'
-                                                : provider
-                                                .receiptData!.extraTime,
-                                            extraDistancePrice:
-                                            provider.receiptData!.extraDistancePrice == ""
-                                                ? "0"
-                                                : provider.receiptData!
-                                                .extraDistancePrice,
-                                            extraTimePrice:
-                                            provider.receiptData!.extraTimePrice == ''
-                                                ? "0"
-                                                : provider.receiptData!
-                                                .extraTimePrice,
-                                            grandTotal: provider.receiptData!.newTotal,
-                                            distance: provider.receiptData!.distance.toString()));
-                                    /*    showModalBottomSheet(
+                                                newTotal: provider.receiptData!.newTotal != ""
+                                                    ? convertToTwoDecimal(provider
+                                                        .receiptData!.newTotal
+                                                        .toString())
+                                                    : convertToTwoDecimal(provider
+                                                        .receiptData!.total
+                                                        .toString()),
+                                                pendingAmount: provider.receiptData!.pendingAmount == ''
+                                                    ? '0'
+                                                    : provider.receiptData!
+                                                        .pendingAmount,
+                                                totalPrice:
+                                                    provider.receiptData!.total,
+                                                extraDistance: provider.receiptData!.extraDistance == ''
+                                                    ? '0'
+                                                    : provider.receiptData!
+                                                        .extraDistance,
+                                                extraTime: provider.receiptData!.extraTime == ''
+                                                    ? '0'
+                                                    : provider.receiptData!.extraTime,
+                                                extraDistancePrice: provider.receiptData!.extraDistancePrice == "" ? "0" : provider.receiptData!.extraDistancePrice,
+                                                extraTimePrice: provider.receiptData!.extraTimePrice == '' ? "0" : provider.receiptData!.extraTimePrice,
+                                                grandTotal: provider.receiptData!.newTotal,
+                                                distance: provider.receiptData!.distance.toString()));
+                                        /*    showModalBottomSheet(
                                           context: context,
                                           enableDrag: true,
 
@@ -692,7 +690,7 @@ class ReceiptPage extends StatelessWidget {
                                                   try {
                                                     var response =
                                                         await dio.request(
-                                                      'https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation',
+                                                      '${BASE_URL}api/webservice/driver/payment/confirmation',
                                                       data: data,
                                                       options: Options(
                                                           method: 'POST',
@@ -805,7 +803,7 @@ class ReceiptPage extends StatelessWidget {
                                                   try {
                                                     var response =
                                                         await dio.post(
-                                                      'https://php.parastechnologies.in/taxi/public/api/webservice/driver/payment/confirmation',
+                                                      '${BASE_URL}api/webservice/driver/payment/confirmation',
                                                       data: data,
                                                       options: Options(
                                                           // method: 'POST',
@@ -940,7 +938,9 @@ class ReceiptPage extends StatelessWidget {
       ),
     );
   }
-  void _showPaymentInfo({required BuildContext context, required Widget child}) {
+
+  void _showPaymentInfo(
+      {required BuildContext context, required Widget child}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -951,29 +951,32 @@ class ReceiptPage extends StatelessWidget {
           builder: (context, scrollController) {
             return Column(
               children: [
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     IconButton(onPressed: (){
-                       Navigator.pop(context);
-                     }, icon: const Icon(Icons.arrow_back_rounded)),
-                     Container(
-                       width: 50,
-                       height: 4,
-                       margin: const EdgeInsets.symmetric(vertical: 10),
-                       decoration: BoxDecoration(
-                         borderRadius: BorderRadius.circular(20),
-                         color: Colors.grey,
-                       ),
-                     ),
-                     const SizedBox(height: 10,width: 20,)
-                   ],
-                 ),
-
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back_rounded)),
+                    Container(
+                      width: 50,
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                      width: 20,
+                    )
+                  ],
+                ),
                 Expanded(
                   child: SingleChildScrollView(
-                    controller: scrollController,
-                      child: child),
+                      controller: scrollController, child: child),
                 ),
               ],
             );

@@ -194,12 +194,18 @@ class LatestSocketProvider extends ChangeNotifier {
   // -----> function to connect the socket <--------- //
   Future<dynamic> connectToSocket(BuildContext context) async {
     log("-------->CONNECTING TO SOCKET <--------");
-    log('-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+
+    // ws://3.97.35.163:8051
+    log('-------> uri === ws://3.97.35.163:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
     print(
-        '-------> uri === ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+        '-------> uri === ws://3.97.35.163:8051?token=${session.chatToken}&room=0&userID=${session.userId}');
+    // _socket = WebSocket(
+    //   Uri.parse(
+    //       "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
+
     _socket = WebSocket(
       Uri.parse(
-          "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
+          "ws://3.97.35.163:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
       // pingInterval: const Duration(seconds: 5)
     );
 
@@ -684,10 +690,11 @@ class LatestSocketProvider extends ChangeNotifier {
 
       try {
         _socket.connection.listen((event) {
-          if (event is Connected || event is Reconnected ) {
+          if (event is Connected || event is Reconnected) {
             _socket.send(json.encode(map));
             dismissLoading();
-            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(
+                latLng: LatLng(session.currentLat, session.currentLang));
             print(map.toString());
 
             if (status == "1") {
