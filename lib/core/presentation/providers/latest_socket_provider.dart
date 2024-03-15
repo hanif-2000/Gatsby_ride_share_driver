@@ -1426,7 +1426,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                  zIndex: 20,
+                  zIndex: 10,
                   rotation: _currentPosition!.heading + tiltValue,
                 );
 

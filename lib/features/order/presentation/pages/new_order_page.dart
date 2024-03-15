@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
+import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -232,10 +233,17 @@ class _NewOrderPageState extends State<NewOrderPage>
                           tiltGesturesEnabled: false,
                           rotateGesturesEnabled: false,
                           scrollGesturesEnabled: true,
-                          initialCameraPosition:
-                              socketProvider.kJapanCoordinate,
+
+                          initialCameraPosition: const CameraPosition(
+                            target: DEFAULT_LATLNG,
+                            zoom: 14,
+                            tilt: 10,
+                          ),
+                          // initialCameraPosition:
+                          //     socketProvider.kJapanCoordinate,
                           onMapCreated: (GoogleMapController controller) async {
                             socketProvider.googleMapController = controller;
+
                             await socketProvider.setCurrentLocation(
                               widget.orderDetail,
                               widget.customerDetail,
