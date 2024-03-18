@@ -369,110 +369,37 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
-                      socketProvider.disconnectSocket();
-                      // showLoading();
-                      await Future.delayed(const Duration(seconds: 5), () {
-                        socketProvider.connectToSocket(context);
-                        SmartDialog.showLoading(
-                          animationType: SmartAnimationType.fade,
-                          backDismiss: false,
-                          msg: 'Calculating the Ride Price...',
-                          alignment: Alignment.center,
-                        );
+                      socketProvider.calculateTimeAndDistanceWhenRideCompeleted();
+                   //   socketProvider.disconnectSocket();
+                   //   socketProvider.connectToSocket(context);
+                      await Future.delayed(const Duration(seconds: 2),(){
+                        showLoading();
                       });
+                      socketProvider.calculateDistanceCovered2().whenComplete(() =>
+                           socketProvider.updateOrderStatus(status: "7", actualTime: (double.tryParse(session.estimatedTime)).toString(),
+                               context: context,
+                               startTime: session.rideStartTime,
+                               endTime: DateTime.now().toString(),
+                               distance: session.estimatedDistance)
+                               .whenComplete(() {
+                             dismissLoading();
+                             Navigator.pushNamedAndRemoveUntil(
+                               context,
+                               ReceiptPage.routeName, (route) => false,
+                               arguments: RatingPageArguments(
+                                 customerDataModel: socketProvider.customerDetail!,
+                                 customerId: socketProvider.orderDetail!.userId,
+                               ),
+                             );
+                           }));
+
 
                       /** END TRIP */
 
                       log("ride complete end time is:--->>>>${DateTime.now()}");
-                      await Future.delayed(const Duration(seconds: 5), () {
-                        socketProvider
-                            .calculateTimeAndDistanceWhenRideCompeleted()
-                            .then((value) => socketProvider
-                                    .calculateDistanceCovered(context: context)
-                                    .then((value) {
-                                  socketProvider
-                                      .updateOrderStatus(
-                                          status: "7",
-                                          actualTime: (double.tryParse(
-                                                  session.estimatedTime))
-                                              .toString(),
-                                          context: context,
-                                          startTime: session.rideStartTime,
-                                          endTime: DateTime.now().toString(),
-                                          distance: session.estimatedDistance)
-                                      .then((value) {
-                                    dismissLoading();
-                                    SmartDialog.dismiss();
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      ReceiptPage.routeName,
-                                      (route) => false,
-                                      arguments: RatingPageArguments(
-                                        customerDataModel:
-                                            socketProvider.customerDetail!,
-                                        customerId:
-                                            socketProvider.orderDetail!.userId,
-                                      ),
-                                    );
-                                  });
-                                }));
-                      });
 
-                      // socketProvider.calculateDistanceCovered(context: context);
+                    }
 
-                      // dismissLoading();
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //   context,
-                      //   ReceiptPage.routeName,
-                      //   (route) => false,
-                      //   arguments: RatingPageArguments(
-                      //     customerDataModel: socketProvider.customerDetail!,
-                      //     customerId: socketProvider.orderDetail!.userId,
-                      //   ),
-                      // );
-                    } else {}
-
-                    // provider.submitStatusOrder(false).listen(
-                    //   (event) async {
-                    //     if (event is UpdateStatusOrderLoaded) {
-                    //       log("UpdateStatusOrderLoaded called");
-
-                    //       if (provider.orderStatus ==
-                    //           OrderStatus.departureToCustomerplace) {
-                    //         session.setOrderStatus = 2;
-                    //       } else if (provider.orderStatus ==
-                    //           OrderStatus.arriveAtCustomerPlace) {
-                    //         session.setOrderStatus = 3;
-                    //         log("arrive at customer place called");
-                    //         // showDialog(
-                    //         //   barrierDismissible: false,
-                    //         //   context: context,
-                    //         //   builder: (context) {
-                    //         //     return WillPopScope(
-                    //         //       onWillPop: () async => false,
-                    //         //       child: DepartDialog(
-                    //         //         callback: (b, call) {
-                    //         //           if (call) {
-                    //         //             provider.callCustomer();
-                    //         //           }
-                    //         //         },
-                    //         //       ),
-                    //         //     );
-                    //         //   },
-                    //         // );
-                    //       } else if (provider.orderStatus ==
-                    //           OrderStatus.departureToDestination) {
-                    //         session.setOrderStatus = 5;
-                    //       } else if (provider.orderStatus ==
-                    //           OrderStatus.arriveAtDestination) {
-                    //         session.setOrderStatus = 6;
-                    //       } else if (provider.orderStatus ==
-                    //           OrderStatus.complete) {
-                    //         session.setOrderStatus = 7;
-                    //       }
-                    //     }
-                    //   },
-                    // );
                   },
                   buttonHeight: 48,
                   isRounded: true,

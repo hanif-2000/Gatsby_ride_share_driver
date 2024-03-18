@@ -121,7 +121,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     provider.changeStatus = b;
                     provider.updateStatus().listen((event) async {
                       session.setIsOnline = b;
-
                       socketProvider.updateLatLngAtStarting();
                     });
                     return Future.delayed(
