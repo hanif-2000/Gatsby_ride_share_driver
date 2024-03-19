@@ -802,8 +802,7 @@ class LatestSocketProvider extends ChangeNotifier {
     } else {
       logMe("ESTIMATED time is grater ");
 
-      session.setEstimatedTime =
-          (double.parse(session.estimatedTime.toString()) * 60).toString();
+      session.setEstimatedTime = (double.parse(session.estimatedTime.toString()) * 60).toString();
     }
   }
 
@@ -1003,6 +1002,7 @@ class LatestSocketProvider extends ChangeNotifier {
   Position? currentPosition;
   double tiltValue =-28;
   double zIndex =0;
+  String setEstimatedDistance ="0";
 
   late LatLng originLatLng, destinationLatLng;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -1236,11 +1236,11 @@ class LatestSocketProvider extends ChangeNotifier {
                   intervalDuration: const Duration(seconds: 7),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
-                          notificationText: "Location is being used",
-                          notificationTitle: "MedeviOn Driver",
+                          notificationText: "Location is being used for navigation",
+                          notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
-                          notificationIcon:
-                              AndroidResource(name: "@mipmap/noti")));
+                          setOngoing: true,
+                          notificationIcon: AndroidResource(name: "@mipmap/ic_launcher")));
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
@@ -1595,10 +1595,15 @@ class LatestSocketProvider extends ChangeNotifier {
       // Compare with estimated distance and update if necessary
       if (double.parse(session.estimatedDistance) < totalDistanceKm) {
         session.setEstimatedDistance = totalDistanceKm.toString();
+        setEstimatedDistance = totalDistanceKm.toString();
+        setEstimatedDistance = session.estimatedDistance;
+        print("setEstimatedDistance===>>> $setEstimatedDistance");
       } else {
-        log("Estimated distance is greater than actual distance");
+        setEstimatedDistance = session.estimatedDistance;
         print("Estimated distance is greater than actual distance");
+        print("setEstimatedDistance===>>> $setEstimatedDistance");
       }
+      notifyListeners();
     } catch (e) {
       log("Error calculating distance: $e");
       print("Error calculating distance: $e");

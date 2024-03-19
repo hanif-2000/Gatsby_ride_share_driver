@@ -369,35 +369,37 @@ class ButtonOrder extends StatelessWidget {
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
-                      socketProvider.calculateTimeAndDistanceWhenRideCompeleted();
-                   //   socketProvider.disconnectSocket();
-                   //   socketProvider.connectToSocket(context);
-                      await Future.delayed(const Duration(seconds: 2),(){
+                      try {
                         showLoading();
-                      });
-                      socketProvider.calculateDistanceCovered2().whenComplete(() =>
-                           socketProvider.updateOrderStatus(status: "7", actualTime: (double.tryParse(session.estimatedTime)).toString(),
-                               context: context,
-                               startTime: session.rideStartTime,
-                               endTime: DateTime.now().toString(),
-                               distance: session.estimatedDistance)
-                               .whenComplete(() {
-                             dismissLoading();
-                             Navigator.pushNamedAndRemoveUntil(
-                               context,
-                               ReceiptPage.routeName, (route) => false,
-                               arguments: RatingPageArguments(
-                                 customerDataModel: socketProvider.customerDetail!,
-                                 customerId: socketProvider.orderDetail!.userId,
-                               ),
-                             );
-                           }));
+                        socketProvider.calculateTimeAndDistanceWhenRideCompeleted();
+                        await socketProvider.calculateDistanceCovered2()
+                            .then((_) => socketProvider.updateOrderStatus(
+                          status: "7",
+                          actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
+                          context: context,
+                          startTime: session.rideStartTime,
+                          endTime: DateTime.now().toString(),
+                          distance: socketProvider.setEstimatedDistance
+                        ));
 
+                        dismissLoading();
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          ReceiptPage.routeName,
+                              (route) => false,
+                          arguments: RatingPageArguments(
+                            customerDataModel: socketProvider.customerDetail!,
+                            customerId: socketProvider.orderDetail!.userId,
+                          ),
+                        );
 
-                      /** END TRIP */
-
-                      log("ride complete end time is:--->>>>${DateTime.now()}");
-
+                        // Log ride completion time
+                        log("Ride complete end time is: ${DateTime.now()}");
+                      } catch (e) {
+                        dismissLoading();
+                        // Handle any errors here
+                        print('Error: $e');
+                      }
                     }
 
                   },
