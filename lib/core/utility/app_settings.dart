@@ -10,8 +10,7 @@ const String defaultCurrency = '\$';
 const String BASE_URL = 'https://api.gatsbyrideshare.com/';
 
 // const String BASE_URL_PHOTO = 'https://php.parastechnologies.in/taxi/public';
-const String BASE_URL_PHOTO =
-    'https://api.gatsbyrideshare.com/api/webservice/user_profile';
+const String BASE_URL_PHOTO = 'https://api.gatsbyrideshare.com/api/webservice/user_profile';
 
 // const String GOOGLEMAPKEY = "AIzaSyBLVQD5gh9CP8C4_yrzuhvn06ZfhfFUODE";
 const String GOOGLEMAPKEY = "AIzaSyAh44zG-nwjUK3-C0IR8lLpw2uBZfVukVY";

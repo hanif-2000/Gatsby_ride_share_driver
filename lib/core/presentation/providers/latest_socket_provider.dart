@@ -1147,8 +1147,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   Future<void> _getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     // setState(() {
     currentPosition = position;
     notifyListeners();
