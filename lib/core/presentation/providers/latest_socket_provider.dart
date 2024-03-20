@@ -1232,8 +1232,7 @@ class LatestSocketProvider extends ChangeNotifier {
               locationSettings = AndroidSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
                   distanceFilter: 10,
-                  forceLocationManager: false,
-                  intervalDuration: const Duration(seconds: 7),
+                  intervalDuration: const Duration(seconds: 10),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
                           notificationText: "Location is being used for navigation",
@@ -1244,9 +1243,7 @@ class LatestSocketProvider extends ChangeNotifier {
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
-                  activityType: ActivityType.automotiveNavigation,
                   distanceFilter: 10,
-                  timeLimit: const Duration(seconds: 10),
                   showBackgroundLocationIndicator: true,
                   allowBackgroundLocationUpdates: true);
             } else {
