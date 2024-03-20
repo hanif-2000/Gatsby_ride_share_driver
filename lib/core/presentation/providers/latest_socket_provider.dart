@@ -945,7 +945,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   updateGetBytes() {
-    getBytesFromAsset(carIconAsset, 120).then((value) {
+    getBytesFromAsset(carIconAsset, 90).then((value) {
       driverMarker = BitmapDescriptor.fromBytes(value);
 
     });
