@@ -182,9 +182,9 @@ class _NewOrderPageState extends State<NewOrderPage>
 
           if ((session.runningOrderStatus == 1) ||
               session.runningOrderStatus == 0) {
-            socketProvider.updateRideText(txt: "Start Ride to Customer Place");
+            socketProvider.updateRideText(txt: "Start Ride to Pickup");
           } else if (session.runningOrderStatus == 2) {
-            socketProvider.updateRideText(txt: "Reached to Customer Place");
+            socketProvider.updateRideText(txt: "Reached Pickup Location");
           } else if (session.runningOrderStatus == 3) {
             socketProvider.updateRideText(txt: "Start Trip");
           } else if (session.runningOrderStatus == 5) {
@@ -233,10 +233,11 @@ class _NewOrderPageState extends State<NewOrderPage>
                           tiltGesturesEnabled: false,
                           rotateGesturesEnabled: false,
                           scrollGesturesEnabled: true,
-                          initialCameraPosition:  CameraPosition(
+                          initialCameraPosition: CameraPosition(
                             target: DEFAULT_LATLNG,
                             zoom: 14,
-                            bearing: socketProvider.currentPosition?.heading??0,
+                            bearing:
+                                socketProvider.currentPosition?.heading ?? 0,
                             tilt: 0,
                           ),
                           // initialCameraPosition:
