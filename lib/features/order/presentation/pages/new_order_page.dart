@@ -249,6 +249,10 @@ class _NewOrderPageState extends State<NewOrderPage>
                               widget.customerDetail,
                             );
                           },
+                          onCameraMove: (val)async{
+                            await socketProvider.googleMapController.getVisibleRegion();
+
+                          },
                           polylines: socketProvider.newPolylines,
                           markers:
                               Set<Marker>.of(socketProvider.markers.values),
