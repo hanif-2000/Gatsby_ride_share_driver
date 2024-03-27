@@ -205,7 +205,8 @@ class LatestSocketProvider extends ChangeNotifier {
     //       "ws://shakti.parastechnologies.in:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
 
     _socket = WebSocket(
-      Uri.parse("ws://3.97.35.163:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
+      Uri.parse(
+          "ws://3.97.35.163:8051?token=${session.chatToken}&room=0&userID=${session.userId}"),
       // pingInterval: const Duration(seconds: 5)
     );
 
@@ -617,11 +618,12 @@ class LatestSocketProvider extends ChangeNotifier {
 
       try {
         _socket.connection.listen((event) {
-          if (event is Connected ||event is Reconnected ) {
+          if (event is Connected || event is Reconnected) {
             _socket.send(json.encode(map));
             print(map.toString());
             updateLatLngAtStarting();
-            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(
+                latLng: LatLng(session.currentLat, session.currentLang));
 
             session.setRunningOrderStatus = 1;
 
@@ -692,7 +694,9 @@ class LatestSocketProvider extends ChangeNotifier {
           if (event is Connected || event is Reconnected) {
             _socket.send(json.encode(map));
             dismissLoading();
-            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang), );
+            updateLatLng(
+              latLng: LatLng(session.currentLat, session.currentLang),
+            );
             print(map.toString());
             if (status == "1") {
               currentOrderStatus = 2;
@@ -794,7 +798,8 @@ class LatestSocketProvider extends ChangeNotifier {
     print("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
 
     print("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
-    print("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
+    print(
+        "trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
     if ((double.parse(session.estimatedTime)) < actualTime) {
       logMe("Actual time is grater ");
@@ -802,7 +807,8 @@ class LatestSocketProvider extends ChangeNotifier {
     } else {
       logMe("ESTIMATED time is grater ");
 
-      session.setEstimatedTime = (double.parse(session.estimatedTime.toString()) * 60).toString();
+      session.setEstimatedTime =
+          (double.parse(session.estimatedTime.toString()) * 60).toString();
     }
   }
 
@@ -810,10 +816,7 @@ class LatestSocketProvider extends ChangeNotifier {
   //   Provider.of<OrderProvider>(context, listen: false).updateText();
   // }
 
-
-
   /// Manage Tracking HERE
-
 
   setCurrentLocation(
       OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
@@ -869,7 +872,7 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdOrigin,
           position: originLatLng,
           rotation: tiltValue,
-         // zIndex: zIndex,
+          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.customerplace),
           icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
             return pickUpMarker = BitmapDescriptor.fromBytes(value);
@@ -881,7 +884,7 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdDestination,
           position: destinationLatLng,
           rotation: tiltValue,
-         // zIndex: zIndex,
+          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.destinationplace),
           icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
             return destinationMarker = BitmapDescriptor.fromBytes(value);
@@ -900,8 +903,8 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdDriver,
           position: coordinate,
           icon: driverMarker,
-         rotation: tiltValue,
-        //  zIndex: zIndex,
+          rotation: tiltValue,
+          //  zIndex: zIndex,
           infoWindow: const InfoWindow(title: "driver"),
         );
         markers[markerIdOrigin] = markerOrigin;
@@ -910,9 +913,9 @@ class LatestSocketProvider extends ChangeNotifier {
         googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
-                target: coordinate,
-                zoom: zoom,
-                ),
+              target: coordinate,
+              zoom: zoom,
+            ),
           ),
         );
 
@@ -947,7 +950,6 @@ class LatestSocketProvider extends ChangeNotifier {
   updateGetBytes() {
     getBytesFromAsset(carIconAsset, 90).then((value) {
       driverMarker = BitmapDescriptor.fromBytes(value);
-
     });
     getBytesFromAsset(pickupIcon, 100).then((value) async {
       pickUpMarker = BitmapDescriptor.fromBytes(value);
@@ -1000,9 +1002,9 @@ class LatestSocketProvider extends ChangeNotifier {
   late StreamSubscription<Position>? locationbackSubscription;
   List<LatLng> driverCoordinatesList = [];
   Position? currentPosition;
-  double tiltValue =-28;
-  double zIndex =0;
-  String setEstimatedDistance ="0";
+  double tiltValue = -28;
+  double zIndex = 0;
+  String setEstimatedDistance = "0";
 
   late LatLng originLatLng, destinationLatLng;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -1117,7 +1119,10 @@ class LatestSocketProvider extends ChangeNotifier {
       print(
           "------------------ GO TO ORIGIN FROM DRIVER---------- $latOrigin, $lngOrigin");
 
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin).then((result) {
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(
+              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+          .then((result) {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
           for (var point in result) {
@@ -1234,11 +1239,13 @@ class LatestSocketProvider extends ChangeNotifier {
                   intervalDuration: const Duration(seconds: 10),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
-                          notificationText: "Location is being used for navigation",
+                          notificationText:
+                              "Location is being used for navigation",
                           notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
                           setOngoing: true,
-                          notificationIcon: AndroidResource(name: "@mipmap/ic_launcher")));
+                          notificationIcon:
+                              AndroidResource(name: "@mipmap/ic_launcher")));
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
@@ -1251,7 +1258,9 @@ class LatestSocketProvider extends ChangeNotifier {
                 distanceFilter: 10,
               );
             }
-            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position)async {
+            locationbackSubscription =
+                Geolocator.getPositionStream(locationSettings: locationSettings)
+                    .listen((Position? position) async {
               if (position != null) {
                 currentPosition = position;
 
@@ -1264,12 +1273,16 @@ class LatestSocketProvider extends ChangeNotifier {
                     ),
                     bearing: position.heading + 155);
 
-                await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
-                if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
-                  driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
+                await createMarker(
+                    driverLatLng:
+                        LatLng(position.latitude, position.longitude));
+                if (((session.runningOrderStatus == 5) ||
+                    (currentOrderStatus == 5))) {
+                  driverCoordinatesList
+                      .add(LatLng(position.latitude, position.longitude));
                 }
-                await animateToLocation(position,googleMapController);
-               /* googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
+                await animateToLocation(position, googleMapController);
+                /* googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
                   LatLng(
                     position.latitude,
                     position.longitude,
@@ -1296,16 +1309,17 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-
-  Future<void> animateToLocation(Position position, GoogleMapController controller)async {
+  Future<void> animateToLocation(
+      Position position, GoogleMapController controller) async {
     double zoomLevel = zoom;
     LatLng latLng = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition = CameraPosition(
       target: latLng,
-      bearing:position.heading,
+      bearing: position.heading,
       zoom: zoomLevel,
     );
-   await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    await controller
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
   Future<bool?> getlocationPermissionStatus() async {
@@ -1339,7 +1353,10 @@ class LatestSocketProvider extends ChangeNotifier {
     var lngDestination = double.parse(splitDestination[1]);
     var coordinate = LatLng(driverLatLng.latitude, driverLatLng.longitude);
     if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin).then((result) async {
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(
+              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+          .then((result) async {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
           for (var point in result) {
@@ -1353,7 +1370,7 @@ class LatestSocketProvider extends ChangeNotifier {
             position: coordinate,
             icon: driverMarker,
             zIndex: zIndex,
-            rotation: currentPosition!.heading+tiltValue,
+            rotation: currentPosition!.heading + tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1370,7 +1387,6 @@ class LatestSocketProvider extends ChangeNotifier {
               endCap: Cap.roundCap);
           newPolylines.add(polyline);
           notifyListeners();
-
         } else {
           logMe("Polylinessss destinationnnn");
           await DirectionHelper()
@@ -1391,8 +1407,8 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                //  zIndex: zIndex,
-                 rotation: tiltValue,
+                  //  zIndex: zIndex,
+                  rotation: tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1409,9 +1425,10 @@ class LatestSocketProvider extends ChangeNotifier {
                 googleMapController.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
-                        target: coordinate,
-                        zoom: zoom,
-                        tilt: zoom,),
+                      target: coordinate,
+                      zoom: zoom,
+                      tilt: zoom,
+                    ),
                   ),
                 );
                 notifyListeners();
@@ -1437,8 +1454,8 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-         //   zIndex: zIndex,
-           rotation:  tiltValue,
+            //   zIndex: zIndex,
+            rotation: tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1468,7 +1485,10 @@ class LatestSocketProvider extends ChangeNotifier {
           // );
         } else {
           logMe("Polylinessss destinationnnn");
-          await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination).then(
+          await DirectionHelper()
+              .getRouteBetweenCoordinates(coordinate.latitude,
+                  coordinate.longitude, latDestination, lngDestination)
+              .then(
             (result) {
               if (result.isNotEmpty) {
                 polylineCoordinates = [];
@@ -1483,8 +1503,8 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                //  zIndex: zIndex,
-                  rotation:  tiltValue,
+                  //  zIndex: zIndex,
+                  rotation: tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1500,9 +1520,9 @@ class LatestSocketProvider extends ChangeNotifier {
                 newPolylines.add(polyline);
                 googleMapController.animateCamera(
                   CameraUpdate.newCameraPosition(CameraPosition(
-                      target: coordinate,
-                      zoom: zoom,
-                      tilt: zoom,
+                    target: coordinate,
+                    zoom: zoom,
+                    tilt: zoom,
                   )),
                 );
                 notifyListeners();
@@ -1531,10 +1551,11 @@ class LatestSocketProvider extends ChangeNotifier {
     return calculatedDistance;
   }*/
 
-
   // // ------------- Get distance between 2 lat long points
-  double setActualDistance({destinationLat, destinationLong, originLat, originLong})  {
-    double calculatedDistance = Geolocator.distanceBetween(originLat, originLong, destinationLat, destinationLong);
+  double setActualDistance(
+      {destinationLat, destinationLong, originLat, originLong}) {
+    double calculatedDistance = Geolocator.distanceBetween(
+        originLat, originLong, destinationLat, destinationLong);
     return calculatedDistance;
   }
 //   //calculate distance covered
@@ -1572,7 +1593,6 @@ class LatestSocketProvider extends ChangeNotifier {
   //   print("/********** Calculation Exited *************/");
   // }
 
-
   Future<void> calculateDistanceCovered2() async {
     List<double> differences = [];
 
@@ -1587,8 +1607,7 @@ class LatestSocketProvider extends ChangeNotifier {
             originLat: driverCoordinatesList[i].latitude,
             originLong: driverCoordinatesList[i].longitude,
             destinationLat: driverCoordinatesList[i - 1].latitude,
-            destinationLong: driverCoordinatesList[i - 1].longitude
-        );
+            destinationLong: driverCoordinatesList[i - 1].longitude);
 
         // Add the difference to the list
         differences.add(difference);
@@ -1598,7 +1617,8 @@ class LatestSocketProvider extends ChangeNotifier {
       }
 
       // Calculate the total distance covered
-      double totalDistance = differences.fold(0, (prev, element) => prev + element);
+      double totalDistance =
+          differences.fold(0, (prev, element) => prev + element);
 
       // Convert total distance to kilometers
       double totalDistanceKm = totalDistance / 1000.0;
