@@ -625,8 +625,7 @@ class LatestSocketProvider extends ChangeNotifier {
             _socket.send(json.encode(map));
             print(map.toString());
             updateLatLngAtStarting();
-            updateLatLng(
-                latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
 
             session.setRunningOrderStatus = 1;
 
@@ -1077,8 +1076,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     await _getCurrentLocation();
-    var coordinate =
-        LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
     if (isFromOrigin) {
       print("------------------ GO TO DESTINATION FROM ORIGIN---------- ");
       print(
@@ -1155,12 +1153,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
   Future<void> _getCurrentLocation() async {
     var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    // setState(() {
     currentPosition = position;
     notifyListeners();
-
     print("------************* >>>>>>. CURRRENT LOCATION IS $currentPosition");
-    // });
   }
 
   callCustomer() async {
@@ -1258,46 +1253,20 @@ class LatestSocketProvider extends ChangeNotifier {
                 distanceFilter: 10,
               );
             }
-            locationbackSubscription =
-                Geolocator.getPositionStream(locationSettings: locationSettings)
-                    .listen((Position? position) async {
+            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
               if (position != null) {
                 currentPosition = position;
 
-                print(
-                    "**************** POSITION :  -->> ${currentPosition!.latitude},${currentPosition!.longitude}");
-                updateLatLng(
-                    latLng: LatLng(
-                      position.latitude,
-                      position.longitude,
-                    ),
-                    bearing: position.heading + 155);
-
-                await createMarker(
-                    driverLatLng:
-                        LatLng(position.latitude, position.longitude));
-                if (((session.runningOrderStatus == 5) ||
-                    (currentOrderStatus == 5))) {
-                  driverCoordinatesList
-                      .add(LatLng(position.latitude, position.longitude));
+                print("**************** POSITION :  -->> ${currentPosition!.latitude},${currentPosition!.longitude}");
+                updateLatLng(latLng: LatLng(position.latitude, position.longitude), bearing: position.heading);
+                await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
+                if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
+                  driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
                 }
                 await animateToLocation(position, googleMapController);
-                /* googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
-                  LatLng(
-                    position.latitude,
-                    position.longitude,
-                  ),
-                  zoom,
-                ));*/
                 notifyListeners();
-                // updateLocation(_currentPosition!);
               }
 
-              // print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
-              // SOURCE_LOCATION = LatLng(position?.latitude??0.0, position?.longitude??0.0);
-              // if (markers.isNotEmpty) {
-              //   updateMapData();
-              // }
             });
           }
         } catch (e) {
@@ -1427,8 +1396,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
                         target: coordinate,
-                        zoom: zoom,
-                        tilt: zoom,),
+                        zoom: zoom),
                   ),
                 );
                 notifyListeners();
