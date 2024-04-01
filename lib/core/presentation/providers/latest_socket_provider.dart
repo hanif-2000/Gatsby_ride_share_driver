@@ -1522,7 +1522,6 @@ class LatestSocketProvider extends ChangeNotifier {
                   CameraUpdate.newCameraPosition(CameraPosition(
                       target: coordinate,
                       zoom: zoom,
-                      tilt: zoom,
                   )),
                 );
                 notifyListeners();
