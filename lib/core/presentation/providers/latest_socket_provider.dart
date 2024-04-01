@@ -71,6 +71,11 @@ class LatestSocketProvider extends ChangeNotifier {
     receiptData = data;
     notifyListeners();
   }
+  Future<void> updateZoom(CameraPosition val) async {
+    zoom = val.zoom;
+    notifyListeners();
+  }
+
 
   updateCurrentStatus({required int status}) {
     currentOrderStatus = status;
@@ -243,9 +248,7 @@ class LatestSocketProvider extends ChangeNotifier {
   //   }
   // }
 
-  // Future<void> disconnectSocket() async {
-  //   _socket.close(1000);
-  // }
+
 
   Future<void> disconnectSocket() async {
     _socket.close(1000, "Logout successful");
@@ -868,7 +871,7 @@ class LatestSocketProvider extends ChangeNotifier {
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdOrigin,
           position: originLatLng,
-          rotation: tiltValue,
+         // rotation: tiltValue,
          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.customerplace),
           icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
@@ -880,7 +883,7 @@ class LatestSocketProvider extends ChangeNotifier {
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdDestination,
           position: destinationLatLng,
-          rotation: tiltValue,
+        // rotation: tiltValue,
          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.destinationplace),
           icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
@@ -900,8 +903,6 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdDriver,
           position: coordinate,
           icon: driverMarker,
-         rotation: tiltValue,
-        //  zIndex: zIndex,
           infoWindow: const InfoWindow(title: "driver"),
         );
         markers[markerIdOrigin] = markerOrigin;
@@ -918,6 +919,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
         notifyListeners();
         dismissLoading();
+       // googleMapController.getZoomLevel();
       } else {
         try {
           var serviceStatusResult = await Geolocator.requestPermission();
@@ -945,7 +947,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   updateGetBytes() {
-    getBytesFromAsset(carIconAsset, 90).then((value) {
+    getBytesFromAsset(carIconAsset, 150).then((value) {
       driverMarker = BitmapDescriptor.fromBytes(value);
 
     });
@@ -1352,8 +1354,8 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-            zIndex: zIndex,
-            rotation: currentPosition!.heading+tiltValue,
+         //   zIndex: zIndex,
+         //   rotation: currentPosition!.heading+tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1392,7 +1394,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   position: coordinate,
                   icon: driverMarker,
                 //  zIndex: zIndex,
-                 rotation: tiltValue,
+               //  rotation: tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1438,7 +1440,7 @@ class LatestSocketProvider extends ChangeNotifier {
             position: coordinate,
             icon: driverMarker,
          //   zIndex: zIndex,
-           rotation:  tiltValue,
+          // rotation:  tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1484,7 +1486,7 @@ class LatestSocketProvider extends ChangeNotifier {
                   position: coordinate,
                   icon: driverMarker,
                 //  zIndex: zIndex,
-                  rotation:  tiltValue,
+                //  rotation:  tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
@@ -12,6 +13,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_b
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../features/terms_and_conditions/terms_and_conditions.dart';
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
@@ -101,10 +103,8 @@ class HomeDrawerPage extends StatelessWidget {
                         positiveAction: () async {
                           Navigator.pop(context);
                           var provider = locator<HomeProvider>();
-
                           var dio = Dio();
-                          String logOutUrl =
-                              '${BASE_URL}api/webservice/driver/logout';
+                          String logOutUrl = '${BASE_URL}api/webservice/driver/logout';
                           final session = locator<Session>();
                           // var provider =
                           //     Provider.of<HomeProvider>(context, listen: false);

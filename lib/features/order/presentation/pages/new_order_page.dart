@@ -233,24 +233,24 @@ class _NewOrderPageState extends State<NewOrderPage>
                           tiltGesturesEnabled: false,
                           rotateGesturesEnabled: false,
                           scrollGesturesEnabled: true,
+
                           initialCameraPosition: CameraPosition(
                             target: DEFAULT_LATLNG,
                             zoom: 14,
-                            bearing:
-                                socketProvider.currentPosition?.heading ?? 0,
+                            bearing: socketProvider.currentPosition?.heading ?? 0,
                             tilt: 0,
                           ),
                           // initialCameraPosition:
                           //     socketProvider.kJapanCoordinate,
                           onMapCreated: (GoogleMapController controller) async {
                             socketProvider.googleMapController = controller;
-
                             await socketProvider.setCurrentLocation(
                               widget.orderDetail,
                               widget.customerDetail,
                             );
                           },
                           onCameraMove: (val)async{
+                            socketProvider.updateZoom(val);
                             await socketProvider.googleMapController.getVisibleRegion();
 
                           },
