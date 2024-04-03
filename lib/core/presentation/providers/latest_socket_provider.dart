@@ -306,6 +306,7 @@ class LatestSocketProvider extends ChangeNotifier {
         print("socket listen CustomerBookRequest:-->> $response");
         bookingDataModel = BookingDataModel.fromJson(response);
         bookingList.insert(0, bookingDataModel!.data);
+        bookingList.toSet().toList();
         notifyListeners();
         print("socket listen bookingList:-->> ${bookingList.length}");
       }
