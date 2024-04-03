@@ -1083,8 +1083,7 @@ class LatestSocketProvider extends ChangeNotifier {
           "------------------ GO TO DESTINATION FROM ORIGIN---------- $latDestination,$lngDestination ");
 
       /*** GO TO DESTINATION FROM ORIGIN */
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
+      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
               latDestination, lngDestination)
           .then((result) {
         if (result.isNotEmpty) {
