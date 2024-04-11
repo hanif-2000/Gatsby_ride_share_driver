@@ -48,14 +48,14 @@ class SignUpPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      flex: 1,
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 10),
                       child: Text(
                         appLoc.createyouraccount,
                         textAlign: TextAlign.center,
                         style: formTextFieldStyle.copyWith(
-                          fontSize: 13,
+                          fontSize: 16,
                           color: grey7D7979,
                         ),
                       ),
