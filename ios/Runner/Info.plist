@@ -52,6 +52,8 @@
 	<string>Geolocation permission is required to determine user location for directions functionality and other map/GPS related parts</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Geolocation permission is required to determine user location for directions functionality and other map/GPS related parts</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Music permission is required to play music when notification arrived</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Geolocation permission is required to determine user location for directions functionality and other map/GPS related parts</string>
 	<key>NSPhotoLibraryUsageDescription</key>
