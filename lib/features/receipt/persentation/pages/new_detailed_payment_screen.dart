@@ -16,6 +16,12 @@ class PaymentScreen extends StatefulWidget {
   final String distance;
   final dynamic newTotal;
   final dynamic pendingAmount;
+  final dynamic techFee;
+  final dynamic baseFare;
+  final dynamic minimumFare;
+  final dynamic actualDistance;
+
+  final dynamic totalTime;
 
   const PaymentScreen({
     Key? key,
@@ -28,6 +34,11 @@ class PaymentScreen extends StatefulWidget {
     required this.distance,
     required this.newTotal,
     required this.pendingAmount,
+    required this.techFee,
+    required this.baseFare,
+    required this.minimumFare,
+    required this.actualDistance,
+    required this.totalTime,
   }) : super(key: key);
 
   @override
@@ -40,9 +51,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   // int extraSeconds = 0;
 
   var extraTimeTaken = "0";
+  var totalTimeTaken = "0";
 
   convertSecondsToMinutes() {
-    if (widget.extraTime != '') {
+    log("extra time :-->>${widget.extraTime}");
+    if ((widget.extraTime.toString() != '')) {
       int seconds = int.parse(
           widget.extraTime); // Replace this with your desired number of seconds
 
@@ -67,18 +80,47 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else {}
   }
 
+  convertSecondsToMinutesTotal() {
+    log("extra time :-->>${widget.totalTime}");
+    if ((widget.totalTime.toString() != '')) {
+      int seconds = int.parse(
+          widget.totalTime); // Replace this with your desired number of seconds
+
+      int minutes = seconds ~/ 60;
+      int remainingSeconds = seconds % 60;
+
+      int hours = minutes ~/ 60;
+      int remainingMinutes = minutes % 60;
+
+      print('$seconds seconds is equivalent to:');
+      print(
+          '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
+
+      setState(() {
+        totalTimeTaken = "$hours"
+            ' hr '
+            '$remainingMinutes'
+            ' min '
+            '$remainingSeconds'
+            ' sec ';
+      });
+    } else {}
+  }
+
   @override
   void initState() {
     convertSecondsToMinutes();
+    convertSecondsToMinutesTotal();
     super.initState();
 
     log("extra time is :${widget.extraTime}");
+    log("extra distance is :${widget.extraDistance}");
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left:20,right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -89,35 +131,46 @@ class _PaymentScreenState extends State<PaymentScreen> {
             fontFamily: "poPPinMedium",
             fontSize: 16,
           ),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Container(
             decoration: BoxDecoration(
               color: greyB2B2B2Color.withOpacity(0.13),
               borderRadius: BorderRadius.circular(8),
             ),
-            padding: const EdgeInsets.only(
-                top: 13, bottom: 13, left: 11, right: 11),
+            padding:
+                const EdgeInsets.only(top: 13, bottom: 13, left: 11, right: 11),
             child: Column(
               children: [
+                // TextInRow(
+                //   firstText: 'Distance',
+                //   secondText: "${widget.distance} Km",
+                // ),
+                // const Divider(
+                //   color: whiteAccentColor,
+                // ),
+                // TextInRow(
+                //   firstText: 'Estimated Amount',
+                //   secondText: r'CA$ ' +
+                //       convertToTwoDecimal(widget.totalPrice.toString()),
+                // ),
+                // const Divider(
+                //   color: whiteAccentColor,
+                // ),
+
                 TextInRow(
-                  firstText: 'Distance',
-                  secondText: "${widget.distance} Km",
+                  firstText: 'Distance Travelled',
+                  secondText: "${widget.actualDistance} Km",
                 ),
                 const Divider(
                   color: whiteAccentColor,
                 ),
-                TextInRow(
-                  firstText: 'Estimated Amount',
-                  secondText: r'CA$ ' +
-                      convertToTwoDecimal(widget.totalPrice.toString()),
-                ),
-                const Divider(
-                  color: whiteAccentColor,
-                ),
+
                 TextInRow(
                   firstText: 'Extra Distance',
                   // secondText: widget.extraDistance + " Km",
-                  secondText: widget.extraDistance + " Km",
+                  secondText: "${widget.extraDistance} Km",
                 ),
                 const Divider(
                   color: whiteAccentColor,
@@ -131,9 +184,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const Divider(
                   color: whiteAccentColor,
                 ),
+
+                TextInRow(
+                  firstText: 'Time Taken',
+                  secondText: totalTimeTaken.toString(),
+                  // secondText:
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
                 TextInRow(
                   firstText: 'Extra Time',
-                  secondText: extraTimeTaken,
+                  secondText: extraTimeTaken.toString(),
                   // secondText:
                 ),
                 const Divider(
@@ -148,15 +210,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const Divider(
                   color: whiteAccentColor,
                 ),
-                TextInRow(
-                  firstText: 'Actual Payment',
-                  // secondText: widget.extraTime.toString() + ' Min',
-                  secondText:
-                      "CA\$ ${convertToTwoDecimal(widget.totalPrice.toString())}",
-                ),
-                const Divider(
-                  color: whiteAccentColor,
-                ),
+                // TextInRow(
+                //   firstText: 'Actual Payment',
+                //   // secondText: widget.extraTime.toString() + ' Min',
+                //   secondText:
+                //       "CA\$ ${convertToTwoDecimal(widget.totalPrice.toString())}",
+                // ),
+                // const Divider(
+                //   color: whiteAccentColor,
+                // ),
                 TextInRow(
                   firstText: 'Customer Pending Payment',
                   // secondText: widget.extraTime.toString() + ' Min',
@@ -166,6 +228,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const Divider(
                   color: whiteAccentColor,
                 ),
+
+                TextInRow(
+                  firstText: 'Tech Fee',
+                  secondText:
+                      r'CA$ ' + convertToTwoDecimal(widget.techFee.toString()),
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
+                TextInRow(
+                  firstText: 'Base Fare',
+                  secondText:
+                      r'CA$ ' + convertToTwoDecimal(widget.baseFare.toString()),
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
+                TextInRow(
+                  firstText: 'Minimum Fare',
+                  secondText: r'CA$ ' +
+                      convertToTwoDecimal(widget.minimumFare.toString()),
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
+
                 TextInRow(
                     secondTextweight: FontWeight.w700,
                     firstText: 'Grand Total',
@@ -230,7 +318,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           //     child: CircularProgressIndicator(),
           //   ),
           // ),
-          // const SizedBox(height: 15)
+          SizedBox(height: MediaQuery.of(context).size.height * .05)
         ],
       ),
     );

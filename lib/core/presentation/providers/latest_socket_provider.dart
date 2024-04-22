@@ -71,11 +71,11 @@ class LatestSocketProvider extends ChangeNotifier {
     receiptData = data;
     notifyListeners();
   }
+
   Future<void> updateZoom(CameraPosition val) async {
     zoom = val.zoom;
     notifyListeners();
   }
-
 
   updateCurrentStatus({required int status}) {
     currentOrderStatus = status;
@@ -249,8 +249,6 @@ class LatestSocketProvider extends ChangeNotifier {
   //   }
   // }
 
-
-
   Future<void> disconnectSocket() async {
     _socket.close(1000, "Logout successful");
   }
@@ -298,7 +296,6 @@ class LatestSocketProvider extends ChangeNotifier {
     _socket.messages.listen((event) {
       var response = jsonDecode(event);
       print("socket listen :-->> $response");
-
 
       log('-----Event  ${response.toString()}');
 
@@ -627,7 +624,8 @@ class LatestSocketProvider extends ChangeNotifier {
             _socket.send(json.encode(map));
             print(map.toString());
             updateLatLngAtStarting();
-            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(
+                latLng: LatLng(session.currentLat, session.currentLang));
 
             session.setRunningOrderStatus = 1;
 
@@ -698,7 +696,9 @@ class LatestSocketProvider extends ChangeNotifier {
           if (event is Connected || event is Reconnected) {
             _socket.send(json.encode(map));
             dismissLoading();
-            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang), );
+            updateLatLng(
+              latLng: LatLng(session.currentLat, session.currentLang),
+            );
             print(map.toString());
             if (status == "1") {
               currentOrderStatus = 2;
@@ -800,26 +800,25 @@ class LatestSocketProvider extends ChangeNotifier {
     print("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
 
     print("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
-    print("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
+    print(
+        "trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
 
-    if ((double.parse(session.estimatedTime)) < actualTime) {
-      logMe("Actual time is grater ");
-      session.setEstimatedTime = (actualTime * 60).toString();
-    } else {
-      logMe("ESTIMATED time is grater ");
+    // if ((double.parse(session.estimatedTime)) < actualTime) {
+    //   logMe("Actual time is grater ");
+    session.setEstimatedTime = (actualTime * 60).toString();
+    // } else {
+    //   logMe("ESTIMATED time is grater ");
 
-      session.setEstimatedTime = (double.parse(session.estimatedTime.toString()) * 60).toString();
-    }
+    //   session.setEstimatedTime =
+    //       (double.parse(session.estimatedTime.toString()) * 60).toString();
+    // }
   }
 
   // updateText(context) {
   //   Provider.of<OrderProvider>(context, listen: false).updateText();
   // }
 
-
-
   /// Manage Tracking HERE
-
 
   setCurrentLocation(
       OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
@@ -874,8 +873,8 @@ class LatestSocketProvider extends ChangeNotifier {
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdOrigin,
           position: originLatLng,
-         // rotation: tiltValue,
-         // zIndex: zIndex,
+          // rotation: tiltValue,
+          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.customerplace),
           icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
             return pickUpMarker = BitmapDescriptor.fromBytes(value);
@@ -886,8 +885,8 @@ class LatestSocketProvider extends ChangeNotifier {
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdDestination,
           position: destinationLatLng,
-        // rotation: tiltValue,
-         // zIndex: zIndex,
+          // rotation: tiltValue,
+          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.destinationplace),
           icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
             return destinationMarker = BitmapDescriptor.fromBytes(value);
@@ -922,7 +921,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
         notifyListeners();
         dismissLoading();
-       // googleMapController.getZoomLevel();
+        // googleMapController.getZoomLevel();
       } else {
         try {
           var serviceStatusResult = await Geolocator.requestPermission();
@@ -952,7 +951,6 @@ class LatestSocketProvider extends ChangeNotifier {
   updateGetBytes() {
     getBytesFromAsset(carIconAsset, 150).then((value) {
       driverMarker = BitmapDescriptor.fromBytes(value);
-
     });
     getBytesFromAsset(pickupIcon, 100).then((value) async {
       pickUpMarker = BitmapDescriptor.fromBytes(value);
@@ -1005,9 +1003,9 @@ class LatestSocketProvider extends ChangeNotifier {
   late StreamSubscription<Position>? locationbackSubscription;
   List<LatLng> driverCoordinatesList = [];
   Position? currentPosition;
-  double tiltValue =-28;
-  double zIndex =0;
-  String setEstimatedDistance ="0";
+  double tiltValue = -28;
+  double zIndex = 0;
+  String setEstimatedDistance = "0";
 
   late LatLng originLatLng, destinationLatLng;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -1078,14 +1076,16 @@ class LatestSocketProvider extends ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     await _getCurrentLocation();
-    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    var coordinate =
+        LatLng(currentPosition!.latitude, currentPosition!.longitude);
     if (isFromOrigin) {
       print("------------------ GO TO DESTINATION FROM ORIGIN---------- ");
       print(
           "------------------ GO TO DESTINATION FROM ORIGIN---------- $latDestination,$lngDestination ");
 
       /*** GO TO DESTINATION FROM ORIGIN */
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
               latDestination, lngDestination)
           .then((result) {
         if (result.isNotEmpty) {
@@ -1153,7 +1153,8 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   Future<void> _getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
     notifyListeners();
     print("------************* >>>>>>. CURRRENT LOCATION IS $currentPosition");
@@ -1237,11 +1238,13 @@ class LatestSocketProvider extends ChangeNotifier {
                   intervalDuration: const Duration(seconds: 10),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
-                          notificationText: "Location is being used for navigation",
+                          notificationText:
+                              "Location is being used for navigation",
                           notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
                           setOngoing: true,
-                          notificationIcon: AndroidResource(name: "@mipmap/ic_launcher")));
+                          notificationIcon:
+                              AndroidResource(name: "@mipmap/ic_launcher")));
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
@@ -1254,20 +1257,28 @@ class LatestSocketProvider extends ChangeNotifier {
                 distanceFilter: 10,
               );
             }
-            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
+            locationbackSubscription =
+                Geolocator.getPositionStream(locationSettings: locationSettings)
+                    .listen((Position? position) async {
               if (position != null) {
                 currentPosition = position;
 
-                print("**************** POSITION :  -->> ${currentPosition!.latitude},${currentPosition!.longitude}");
-                updateLatLng(latLng: LatLng(position.latitude, position.longitude), bearing: position.heading);
-                await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
-                if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
-                  driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
+                print(
+                    "**************** POSITION :  -->> ${currentPosition!.latitude},${currentPosition!.longitude}");
+                updateLatLng(
+                    latLng: LatLng(position.latitude, position.longitude),
+                    bearing: position.heading);
+                await createMarker(
+                    driverLatLng:
+                        LatLng(position.latitude, position.longitude));
+                if (((session.runningOrderStatus == 5) ||
+                    (currentOrderStatus == 5))) {
+                  driverCoordinatesList
+                      .add(LatLng(position.latitude, position.longitude));
                 }
                 await animateToLocation(position, googleMapController);
                 notifyListeners();
               }
-
             });
           }
         } catch (e) {
@@ -1339,8 +1350,8 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-         //   zIndex: zIndex,
-         //   rotation: currentPosition!.heading+tiltValue,
+            //   zIndex: zIndex,
+            //   rotation: currentPosition!.heading+tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1357,7 +1368,6 @@ class LatestSocketProvider extends ChangeNotifier {
               endCap: Cap.roundCap);
           newPolylines.add(polyline);
           notifyListeners();
-
         } else {
           logMe("Polylinessss destinationnnn");
           await DirectionHelper()
@@ -1378,8 +1388,8 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                //  zIndex: zIndex,
-               //  rotation: tiltValue,
+                  //  zIndex: zIndex,
+                  //  rotation: tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1395,9 +1405,7 @@ class LatestSocketProvider extends ChangeNotifier {
                 newPolylines.add(polyline);
                 googleMapController.animateCamera(
                   CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                        target: coordinate,
-                        zoom: zoom),
+                    CameraPosition(target: coordinate, zoom: zoom),
                   ),
                 );
                 notifyListeners();
@@ -1423,8 +1431,8 @@ class LatestSocketProvider extends ChangeNotifier {
             markerId: markerIdDriver,
             position: coordinate,
             icon: driverMarker,
-         //   zIndex: zIndex,
-          // rotation:  tiltValue,
+            //   zIndex: zIndex,
+            // rotation:  tiltValue,
             infoWindow: InfoWindow(
                 title:
                     "Driver location: ${coordinate.latitude},${coordinate.longitude}"),
@@ -1472,8 +1480,8 @@ class LatestSocketProvider extends ChangeNotifier {
                   markerId: markerIdDriver,
                   position: coordinate,
                   icon: driverMarker,
-                //  zIndex: zIndex,
-                //  rotation:  tiltValue,
+                  //  zIndex: zIndex,
+                  //  rotation:  tiltValue,
                 );
 
                 markers[markerIdDriver] = markerDriver;
@@ -1489,8 +1497,8 @@ class LatestSocketProvider extends ChangeNotifier {
                 newPolylines.add(polyline);
                 googleMapController.animateCamera(
                   CameraUpdate.newCameraPosition(CameraPosition(
-                      target: coordinate,
-                      zoom: zoom,
+                    target: coordinate,
+                    zoom: zoom,
                   )),
                 );
                 notifyListeners();
@@ -1519,10 +1527,11 @@ class LatestSocketProvider extends ChangeNotifier {
     return calculatedDistance;
   }*/
 
-
   // // ------------- Get distance between 2 lat long points
-  double setActualDistance({destinationLat, destinationLong, originLat, originLong})  {
-    double calculatedDistance = Geolocator.distanceBetween(originLat, originLong, destinationLat, destinationLong);
+  double setActualDistance(
+      {destinationLat, destinationLong, originLat, originLong}) {
+    double calculatedDistance = Geolocator.distanceBetween(
+        originLat, originLong, destinationLat, destinationLong);
     return calculatedDistance;
   }
 //   //calculate distance covered
@@ -1560,7 +1569,6 @@ class LatestSocketProvider extends ChangeNotifier {
   //   print("/********** Calculation Exited *************/");
   // }
 
-
   Future<void> calculateDistanceCovered2() async {
     List<double> differences = [];
 
@@ -1592,16 +1600,16 @@ class LatestSocketProvider extends ChangeNotifier {
       double totalDistanceKm = totalDistance / 1000.0;
 
       // Compare with estimated distance and update if necessary
-      if (double.parse(session.estimatedDistance) < totalDistanceKm) {
-        session.setEstimatedDistance = totalDistanceKm.toString();
-        setEstimatedDistance = totalDistanceKm.toString();
-        setEstimatedDistance = session.estimatedDistance;
-        print("setEstimatedDistance===>>> $setEstimatedDistance");
-      } else {
-        setEstimatedDistance = session.estimatedDistance;
-        print("Estimated distance is greater than actual distance");
-        print("setEstimatedDistance===>>> $setEstimatedDistance");
-      }
+      // if (double.parse(session.estimatedDistance) < totalDistanceKm) {
+      session.setEstimatedDistance = totalDistanceKm.toString();
+      setEstimatedDistance = totalDistanceKm.toString();
+      setEstimatedDistance = session.estimatedDistance;
+      print("setEstimatedDistance===>>> $setEstimatedDistance");
+      // } else {
+      //   setEstimatedDistance = session.estimatedDistance;
+      //   print("Estimated distance is greater than actual distance");
+      //   print("setEstimatedDistance===>>> $setEstimatedDistance");
+      // }
       notifyListeners();
     } catch (e) {
       log("Error calculating distance: $e");

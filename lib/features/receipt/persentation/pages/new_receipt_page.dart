@@ -10,7 +10,6 @@ import 'package:appkey_taxiapp_driver/core/utility/duration_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/injection.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -294,7 +293,7 @@ class ReceiptPage extends StatelessWidget {
                                         .usePoppinsW6Font(),
                                   ),
                                   Text(
-                                    '${provider.receiptData!.distance} Km',
+                                    '${provider.receiptData!.distance1} Km',
                                     textAlign: TextAlign.center,
                                     style: titleStyle
                                         .copyWith(
@@ -406,32 +405,75 @@ class ReceiptPage extends StatelessWidget {
                                   IconButton(
                                       onPressed: () {
                                         _showPaymentInfo(
-                                            context: context,
-                                            child: PaymentScreen(
-                                                newTotal: provider.receiptData!.newTotal != ""
-                                                    ? convertToTwoDecimal(provider
-                                                        .receiptData!.newTotal
-                                                        .toString())
-                                                    : convertToTwoDecimal(provider
-                                                        .receiptData!.total
-                                                        .toString()),
-                                                pendingAmount: provider.receiptData!.pendingAmount == ''
-                                                    ? '0'
-                                                    : provider.receiptData!
-                                                        .pendingAmount,
-                                                totalPrice:
-                                                    provider.receiptData!.total,
-                                                extraDistance: provider.receiptData!.extraDistance == ''
-                                                    ? '0'
-                                                    : provider.receiptData!
-                                                        .extraDistance,
-                                                extraTime: provider.receiptData!.extraTime == ''
-                                                    ? '0'
-                                                    : provider.receiptData!.extraTime,
-                                                extraDistancePrice: provider.receiptData!.extraDistancePrice == "" ? "0" : provider.receiptData!.extraDistancePrice,
-                                                extraTimePrice: provider.receiptData!.extraTimePrice == '' ? "0" : provider.receiptData!.extraTimePrice,
-                                                grandTotal: provider.receiptData!.newTotal,
-                                                distance: provider.receiptData!.distance.toString()));
+                                          context: context,
+                                          child: PaymentScreen(
+                                            actualDistance:
+                                                provider.receiptData!.distance1,
+                                            totalTime: provider
+                                                        .receiptData!.actualTime
+                                                        .toString() ==
+                                                    "0.0"
+                                                ? "0"
+                                                : provider
+                                                    .receiptData!.actualTime,
+                                            minimumFare:
+                                                provider.receiptData!.minPrice,
+                                            baseFare:
+                                                provider.receiptData!.baseFare,
+                                            techFee:
+                                                provider.receiptData!.techFee,
+                                            newTotal: provider.receiptData!
+                                                        .newTotal !=
+                                                    ""
+                                                ? convertToTwoDecimal(provider
+                                                    .receiptData!.newTotal
+                                                    .toString())
+                                                : convertToTwoDecimal(provider
+                                                    .receiptData!.total
+                                                    .toString()),
+                                            pendingAmount: provider.receiptData!
+                                                        .pendingAmount ==
+                                                    ''
+                                                ? '0'
+                                                : provider
+                                                    .receiptData!.pendingAmount,
+                                            totalPrice:
+                                                provider.receiptData!.total,
+                                            extraDistance: provider.receiptData!
+                                                        .extraDistance ==
+                                                    ''
+                                                ? '0'
+                                                : provider
+                                                    .receiptData!.extraDistance,
+                                            extraTime: provider
+                                                        .receiptData!.extraTime
+                                                        .toString() ==
+                                                    ''
+                                                ? '0'
+                                                : provider
+                                                    .receiptData!.extraTime
+                                                    .toString(),
+                                            extraDistancePrice: provider
+                                                        .receiptData!
+                                                        .extraDistancePrice ==
+                                                    ""
+                                                ? "0"
+                                                : provider.receiptData!
+                                                    .extraDistancePrice,
+                                            extraTimePrice: provider
+                                                        .receiptData!
+                                                        .extraTimePrice ==
+                                                    ''
+                                                ? "0"
+                                                : provider.receiptData!
+                                                    .extraTimePrice,
+                                            grandTotal:
+                                                provider.receiptData!.newTotal,
+                                            distance: provider
+                                                .receiptData!.distance
+                                                .toString(),
+                                          ),
+                                        );
                                         /*    showModalBottomSheet(
                                           context: context,
                                           enableDrag: true,
@@ -839,7 +881,7 @@ class ReceiptPage extends StatelessWidget {
                                                               .id,
                                                         ),
                                                       );
-                                                      // Navigator
+                                                      // Navigators
                                                       //     .pushNamedAndRemoveUntil(
                                                       //   context,
                                                       //   GiveRatingScreen
@@ -942,47 +984,95 @@ class ReceiptPage extends StatelessWidget {
   void _showPaymentInfo(
       {required BuildContext context, required Widget child}) {
     showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          maxChildSize: 0.7,
-          expand: false,
-          builder: (context, scrollController) {
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back_rounded)),
-                    Container(
-                      width: 50,
-                      height: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey,
-                      ),
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => SingleChildScrollView(
+              child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0),
                     ),
-                    const SizedBox(
-                      height: 10,
-                      width: 20,
-                    )
-                  ],
+                  ),
+                  child: Wrap(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.arrow_back_rounded)),
+                          Container(
+                            width: 50,
+                            height: 4,
+                            margin: const EdgeInsets.symmetric(vertical: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                            width: 20,
+                          )
+                        ],
+                      ),
+                      child,
+                    ],
+                  ),
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                      controller: scrollController, child: child),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
+              ),
+            ));
+    // context: context,
+    // isScrollControlled: true,
+    // useSafeArea: false,
+    // builder: (BuildContext context) {
+    //   return Column(
+    //     children: [
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //         children: [
+    //           IconButton(
+    //               onPressed: () {
+    //                 Navigator.pop(context);
+    //               },
+    //               icon: const Icon(Icons.arrow_back_rounded)),
+    //           Container(
+    //             width: 50,
+    //             height: 4,
+    //             margin: const EdgeInsets.symmetric(vertical: 10),
+    //             decoration: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(20),
+    //               color: Colors.grey,
+    //             ),
+    //           ),
+    //           const SizedBox(
+    //             height: 10,
+    //             width: 20,
+    //           )
+    //         ],
+    //       ),
+    //       Expanded(
+    //         child: SingleChildScrollView(child: child),
+    //       ),
+    //     ],
+    //   );
+
+    // DraggableScrollableSheet(
+    //   // maxChildSize: 0.9,
+    //   expand: false,
+    //   builder: (context, scrollController) {
+    //     return
+
+    // },
+    // );
+    // },
+    // );
   }
 }

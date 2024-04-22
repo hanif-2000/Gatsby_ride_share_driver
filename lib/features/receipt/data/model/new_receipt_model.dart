@@ -61,6 +61,8 @@ class ReceiptData {
   dynamic priceKm;
   dynamic priceMin;
   dynamic baseFare;
+  dynamic techFee;
+
   dynamic minKm;
   dynamic minPrice;
   dynamic customerRating;
@@ -71,6 +73,7 @@ class ReceiptData {
   dynamic extraTimePrice;
   dynamic newTotal;
   dynamic tip;
+  dynamic distance1;
 
   ReceiptData({
     required this.id,
@@ -102,6 +105,8 @@ class ReceiptData {
     required this.extraTimePrice,
     required this.newTotal,
     required this.tip,
+    required this.distance1,
+    required this.techFee,
   });
 
   factory ReceiptData.fromJson(Map<String, dynamic> json) => ReceiptData(
@@ -109,6 +114,7 @@ class ReceiptData {
         startAddress: json["start_address"] ?? '',
         endAddress: json["end_address"] ?? "",
         distance: json["distance"] ?? '',
+        distance1: json["distance1"] ?? '',
         paymentMethod: json["payment_method"] ?? 1,
         estimatedTime: json["estimated_time"] ?? '',
         actualTime: json["actual_time"],
@@ -124,6 +130,7 @@ class ReceiptData {
         priceKm: json["price_km"] ?? "",
         priceMin: json["price_min"] ?? '',
         baseFare: json["base_fare"] ?? '',
+        techFee: json["tech_fee"] ?? '',
         minKm: json["min_km"] ?? '',
         minPrice: json["min_price"] ?? "",
         customerRating: json["CustomerRating"] ?? "0",
@@ -165,5 +172,7 @@ class ReceiptData {
         "extraTimePrice": extraTimePrice,
         "newTotal": newTotal,
         "tip": tip,
+        "distance1": distance1,
+        "techFee": techFee,
       };
 }
