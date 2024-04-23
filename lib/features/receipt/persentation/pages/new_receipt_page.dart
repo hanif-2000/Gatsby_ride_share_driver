@@ -293,7 +293,7 @@ class ReceiptPage extends StatelessWidget {
                                         .usePoppinsW6Font(),
                                   ),
                                   Text(
-                                    '${provider.receiptData!.distance1} Km',
+                                    '${double.parse(provider.receiptData!.distance1??"0").toStringAsFixed(2)} Km',
                                     textAlign: TextAlign.center,
                                     style: titleStyle
                                         .copyWith(
@@ -409,27 +409,21 @@ class ReceiptPage extends StatelessWidget {
                                           child: PaymentScreen(
                                             actualDistance:
                                                 provider.receiptData!.distance1,
-                                            totalTime: provider
-                                                        .receiptData!.actualTime
-                                                        .toString() ==
-                                                    "0.0"
-                                                ? "0"
+                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0"
                                                 : provider
                                                     .receiptData!.actualTime,
                                             minimumFare:
                                                 provider.receiptData!.minPrice,
                                             baseFare:
                                                 provider.receiptData!.baseFare,
-                                            techFee:
-                                                provider.receiptData!.techFee,
-                                            newTotal: provider.receiptData!
-                                                        .newTotal !=
+                                            techFee: provider.receiptData!.techFee,
+                                            newTotal: provider.receiptData!.newTotal !=
                                                     ""
                                                 ? convertToTwoDecimal(provider
                                                     .receiptData!.newTotal
                                                     .toString())
                                                 : convertToTwoDecimal(provider
-                                                    .receiptData!.total
+                                                    .receiptData!.newTotal
                                                     .toString()),
                                             pendingAmount: provider.receiptData!
                                                         .pendingAmount ==
@@ -438,7 +432,7 @@ class ReceiptPage extends StatelessWidget {
                                                 : provider
                                                     .receiptData!.pendingAmount,
                                             totalPrice:
-                                                provider.receiptData!.total,
+                                                provider.receiptData!.newTotal,
                                             extraDistance: provider.receiptData!
                                                         .extraDistance ==
                                                     ''
@@ -1003,11 +997,12 @@ class ReceiptPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
+                        /*  IconButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              icon: const Icon(Icons.arrow_back_rounded)),
+                              icon: const Icon(Icons.arrow_back_rounded)),*/
+                          const SizedBox(height: 20,width: 20,),
                           Container(
                             width: 50,
                             height: 4,

@@ -83,8 +83,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   convertSecondsToMinutesTotal() {
     log("extra time :-->>${widget.totalTime}");
     if ((widget.totalTime.toString() != '')) {
-      int seconds = int.parse(
-          widget.totalTime); // Replace this with your desired number of seconds
+      final seconds = double.parse(widget.totalTime).toInt(); // Replace this with your desired number of seconds
 
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;
@@ -160,8 +159,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 // ),
 
                 TextInRow(
-                  firstText: 'Distance Travelled',
-                  secondText: "${widget.actualDistance} Km",
+                  firstText: 'Total Distance',
+                  secondText: "${double.parse(widget.actualDistance.toString()).toStringAsFixed(2)} Km",
                 ),
                 const Divider(
                   color: whiteAccentColor,
@@ -186,7 +185,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
 
                 TextInRow(
-                  firstText: 'Time Taken',
+                  firstText: 'Total Time Taken',
                   secondText: totalTimeTaken.toString(),
                   // secondText:
                 ),
@@ -219,7 +218,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 // const Divider(
                 //   color: whiteAccentColor,
                 // ),
-                TextInRow(
+               /* TextInRow(
                   firstText: 'Customer Pending Payment',
                   // secondText: widget.extraTime.toString() + ' Min',
                   secondText:
@@ -228,11 +227,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const Divider(
                   color: whiteAccentColor,
                 ),
+*/        TextInRow(
+                  firstText: 'Minimum Fare',
+                  secondText: r'CA$ ' +
+                      convertToTwoDecimal(widget.minimumFare.toString()),
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
 
                 TextInRow(
                   firstText: 'Tech Fee',
                   secondText:
-                      r'CA$ ' + convertToTwoDecimal(widget.techFee.toString()),
+                      r'CA$ ' + convertToTwoDecimal(widget.techFee),
                 ),
                 const Divider(
                   color: whiteAccentColor,
@@ -241,14 +248,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   firstText: 'Base Fare',
                   secondText:
                       r'CA$ ' + convertToTwoDecimal(widget.baseFare.toString()),
-                ),
-                const Divider(
-                  color: whiteAccentColor,
-                ),
-                TextInRow(
-                  firstText: 'Minimum Fare',
-                  secondText: r'CA$ ' +
-                      convertToTwoDecimal(widget.minimumFare.toString()),
                 ),
                 const Divider(
                   color: whiteAccentColor,

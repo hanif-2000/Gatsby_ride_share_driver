@@ -328,7 +328,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
         if (acceptByOtherDriverModel!.driverId != session.userId) {
           bookingList.removeWhere((element) {
-            return element.id == cancelByUserModel!.orderId;
+            return element.id == acceptByOtherDriverModel!.data;
           });
 
           // CustomerDetailModel(data: CustomerDataModel(name: acceptByOtherDriverModel.data., phoneNumber: phoneNumber, photo: photo, id: id, rating: rating) )

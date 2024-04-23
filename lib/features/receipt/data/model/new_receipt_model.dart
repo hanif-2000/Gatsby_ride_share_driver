@@ -130,7 +130,7 @@ class ReceiptData {
         priceKm: json["price_km"] ?? "",
         priceMin: json["price_min"] ?? '',
         baseFare: json["base_fare"] ?? '',
-        techFee: json["tech_fee"] ?? '',
+        techFee: json["tech_fee"] ?? json["techFee"] ?? '0.0',
         minKm: json["min_km"] ?? '',
         minPrice: json["min_price"] ?? "",
         customerRating: json["CustomerRating"] ?? "0",
@@ -139,7 +139,7 @@ class ReceiptData {
         extraDistancePrice: json["extra_distance_price"] ?? "",
         extraTime: json["extra_time"] ?? "",
         extraTimePrice: json["extra_time_price"] ?? "",
-        newTotal: json["new_total"] ?? "",
+        newTotal: json["new_total"]??json["newTotal"] ?? "",
         tip: json["tip"] ?? '',
       );
 
