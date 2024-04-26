@@ -242,7 +242,7 @@ Future<void> updateFcmToken({required String token}) async {
       // FCM token updated successfully
       print("FCM Token updated successfully");
 
-      showToast(message: "new fcm token updated");
+    //  showToast(message: "new fcm token updated");
     } else {
       // Handle other status codes
       print("Failed to update FCM Token: ${res.statusCode}");

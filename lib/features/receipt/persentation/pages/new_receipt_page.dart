@@ -412,8 +412,7 @@ class ReceiptPage extends StatelessWidget {
                                             totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0"
                                                 : provider
                                                     .receiptData!.actualTime,
-                                            minimumFare:
-                                                provider.receiptData!.minPrice,
+                                            minimumFare:provider.receiptData!.minPrice !=""? provider.receiptData!.minPrice:"0.0",
                                             baseFare:
                                                 provider.receiptData!.baseFare,
                                             techFee: provider.receiptData!.techFee,
