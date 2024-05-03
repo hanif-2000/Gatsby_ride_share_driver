@@ -123,8 +123,7 @@ class UserProfileTile extends StatelessWidget {
                         )
                         .usePoppinsW6Font(),
                   ),
-                  Text(
-                    '${orderDetails!.distance} Km',
+                  Text('${orderDetails!.distance} Km',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(

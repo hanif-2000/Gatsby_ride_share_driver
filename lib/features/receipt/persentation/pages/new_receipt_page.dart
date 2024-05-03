@@ -407,8 +407,7 @@ class ReceiptPage extends StatelessWidget {
                                         _showPaymentInfo(
                                           context: context,
                                           child: PaymentScreen(
-                                            actualDistance:
-                                                provider.receiptData!.distance1,
+                                            actualDistance: provider.receiptData!.distance1,
                                             totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0"
                                                 : provider
                                                     .receiptData!.actualTime,
@@ -424,20 +423,14 @@ class ReceiptPage extends StatelessWidget {
                                                 : convertToTwoDecimal(provider
                                                     .receiptData!.newTotal
                                                     .toString()),
-                                            pendingAmount: provider.receiptData!
-                                                        .pendingAmount ==
-                                                    ''
+                                            pendingAmount: provider.receiptData!.pendingAmount == ''
                                                 ? '0'
                                                 : provider
                                                     .receiptData!.pendingAmount,
                                             totalPrice:
                                                 provider.receiptData!.newTotal,
-                                            extraDistance: provider.receiptData!
-                                                        .extraDistance ==
-                                                    ''
-                                                ? '0'
-                                                : provider
-                                                    .receiptData!.extraDistance,
+                                            extraDistance: provider.receiptData!.extraDistance == '' ? '0'
+                                                : provider.receiptData!.extraDistance,
                                             extraTime: provider
                                                         .receiptData!.extraTime
                                                         .toString() ==
@@ -460,11 +453,12 @@ class ReceiptPage extends StatelessWidget {
                                                 ? "0"
                                                 : provider.receiptData!
                                                     .extraTimePrice,
-                                            grandTotal:
-                                                provider.receiptData!.newTotal,
+                                            grandTotal: provider.receiptData!.newTotal,
                                             distance: provider
                                                 .receiptData!.distance
                                                 .toString(),
+                                            price_km: provider.receiptData!.priceKm,
+                                              price_min:provider.receiptData!.priceMin
                                           ),
                                         );
                                         /*    showModalBottomSheet(

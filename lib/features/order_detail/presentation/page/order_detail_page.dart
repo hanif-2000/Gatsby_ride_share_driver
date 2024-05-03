@@ -133,8 +133,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       Text(
                         getOrderStatus(widget.order!.status),
                         textAlign: TextAlign.center,
-                        style: titleStyle
-                            .copyWith(
+                        style: titleStyle.copyWith(
                               fontSize: 14,
                               color: getStatusColor(
                                 widget.order!.status,

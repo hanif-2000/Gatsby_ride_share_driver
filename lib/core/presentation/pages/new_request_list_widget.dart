@@ -115,14 +115,10 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     "customer id is:-> ${socketProvider.bookingList[index].customerId}");
                                 var session = locator<Session>();
                                 session.setIsOrderRunning = true;
-                                session.setEstimatedTime = socketProvider
-                                    .bookingList[index].estimatedTime;
-                                session.setEstimatedDistance =
-                                    socketProvider.bookingList[index].distance;
-                                session.setRunningOrderId = int.parse(
-                                    socketProvider.bookingList[index].id);
-                                session.setCustomerId = int.parse(socketProvider
-                                    .bookingList[index].customerId);
+                                session.setEstimatedTime = socketProvider.bookingList[index].estimatedTime;
+                                session.setEstimatedDistance = socketProvider.bookingList[index].distance;
+                                session.setRunningOrderId = int.parse(socketProvider.bookingList[index].id);
+                                session.setCustomerId = int.parse(socketProvider.bookingList[index].customerId);
 
                                 /*** ORDER DETAILS  */
 
@@ -157,21 +153,14 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                   userId: int.parse(socketProvider
                                       .bookingList[index].customerId),
                                   driverId: int.parse(session.userId),
-                                  distance: socketProvider
-                                      .bookingList[index].distance,
+                                  distance: socketProvider.bookingList[index].distance,
                                   orderStatus: 0,
-                                  startCoordinate: socketProvider
-                                      .bookingList[index].startCoordinate,
-                                  endCoordinate: socketProvider
-                                      .bookingList[index].endCoordinate,
-                                  startAddress: socketProvider
-                                      .bookingList[index].startAddress,
-                                  endAddress: socketProvider
-                                      .bookingList[index].endAddress,
-                                  pendingAmount: socketProvider
-                                      .bookingList[index].pendingAmount,
-                                  newTotal: socketProvider
-                                      .bookingList[index].newTotal,
+                                  startCoordinate: socketProvider.bookingList[index].startCoordinate,
+                                  endCoordinate: socketProvider.bookingList[index].endCoordinate,
+                                  startAddress: socketProvider.bookingList[index].startAddress,
+                                  endAddress: socketProvider.bookingList[index].endAddress,
+                                  pendingAmount: socketProvider.bookingList[index].pendingAmount,
+                                  newTotal: socketProvider.bookingList[index].newTotal,
                                 );
 
                                 // session.setOrderDetails =

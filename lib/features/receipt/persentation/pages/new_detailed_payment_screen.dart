@@ -20,8 +20,9 @@ class PaymentScreen extends StatefulWidget {
   final dynamic baseFare;
   final dynamic minimumFare;
   final dynamic actualDistance;
-
   final dynamic totalTime;
+  final dynamic price_km;
+  final dynamic price_min;
 
   const PaymentScreen({
     Key? key,
@@ -39,6 +40,8 @@ class PaymentScreen extends StatefulWidget {
     required this.minimumFare,
     required this.actualDistance,
     required this.totalTime,
+    required this.price_km,
+    required this.price_min,
   }) : super(key: key);
 
   @override
@@ -175,7 +178,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: whiteAccentColor,
                 ),
                 TextInRow(
-                  firstText: 'Extra Distance Price',
+                  firstText: 'Per Km Price',
+                  // secondText: widget.extraDistance + " Km",
+                  secondText:
+                      "CA\$ ${convertToTwoDecimal(widget.price_km??"0")}",
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
+                TextInRow(
+                  firstText: 'Total Distance Price',
                   // secondText: widget.extraDistance + " Km",
                   secondText:
                       "CA\$ ${convertToTwoDecimal(widget.extraDistancePrice.toString())}",
@@ -201,7 +213,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: whiteAccentColor,
                 ),
                 TextInRow(
-                  firstText: 'Extra Time Price',
+                  firstText: 'Per Minute Price',
+                  secondText:  "CA\$ ${convertToTwoDecimal(widget.price_min??"0")}",
+                  // secondText:
+                ),
+                const Divider(
+                  color: whiteAccentColor,
+                ),
+                TextInRow(
+                  firstText: 'Total Time Price',
                   // secondText: widget.extraTime.toString() + ' Min',
                   secondText:
                       "CA\$ ${convertToTwoDecimal(widget.extraTimePrice.toString())}",

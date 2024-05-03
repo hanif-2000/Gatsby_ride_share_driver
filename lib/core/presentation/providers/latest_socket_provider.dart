@@ -1271,10 +1271,8 @@ class LatestSocketProvider extends ChangeNotifier {
                 await createMarker(
                     driverLatLng:
                         LatLng(position.latitude, position.longitude));
-                if (((session.runningOrderStatus == 5) ||
-                    (currentOrderStatus == 5))) {
-                  driverCoordinatesList
-                      .add(LatLng(position.latitude, position.longitude));
+                if (((session.runningOrderStatus == 5) || (currentOrderStatus == 5))) {
+                  driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
                 }
                 await animateToLocation(position, googleMapController);
                 notifyListeners();
@@ -1528,91 +1526,44 @@ class LatestSocketProvider extends ChangeNotifier {
   }*/
 
   // // ------------- Get distance between 2 lat long points
-  double setActualDistance(
-      {destinationLat, destinationLong, originLat, originLong}) {
-    double calculatedDistance = Geolocator.distanceBetween(
-        originLat, originLong, destinationLat, destinationLong);
-    return calculatedDistance;
+  Future<double> setActualDistance({
+    required double originLat,
+    required double originLong,
+    required double destinationLat,
+    required double destinationLong,
+  }) async {
+    double distanceInMeters = Geolocator.distanceBetween(
+      originLat,
+      originLong,
+      destinationLat,
+      destinationLong,
+    );
+    return distanceInMeters; // Return distance in meters
   }
-//   //calculate distance covered
 
-  // Future<void> calculateDistanceCovered() async {
-  //   List<int> differences = [];
-  //
-  //   log("_lat long list are:-->> $driverCoordinatesList");
-  //
-  //   for (int i = 1; i < driverCoordinatesList.length; i++) {
-  //     // int diff = myList[i] - myList[i - 1];
-  //
-  //     await setActualDistance(
-  //             originLat: driverCoordinatesList[i].latitude,
-  //             originLong: driverCoordinatesList[i].longitude,
-  //             destinationLat: driverCoordinatesList[i - 1].latitude,
-  //             destinationLong: driverCoordinatesList[i - 1].longitude)
-  //         .then((value) {
-  //       differences.add(value);
-  //       print("Differences between elements: $differences");
-  //     });
-  //   }
-  //   print("Differences between elements----: $differences");
-  //
-  //   int sum = differences.fold(0, (previousValue, element) => previousValue + element);
-  //
-  //   print("Total sum of elements: $sum");
-  //
-  //   if (double.parse(session.estimatedDistance) < (sum / 1000)) {
-  //     session.setEstimatedDistance = (sum / 1000).toString();
-  //   } else {
-  //     log("estimated time is greater than actual time");
-  //     print("estimated time is greater than actual time");
-  //   }
-  //   print("/********** Calculation Exited *************/");
-  // }
 
   Future<void> calculateDistanceCovered2() async {
     List<double> differences = [];
-
-    // Log the list of coordinates
-    log("Driver coordinates list: $driverCoordinatesList");
-
+    print("Driver coordinates list: $driverCoordinatesList");
     try {
-      // Iterate over the list of coordinates
       for (int i = 1; i < driverCoordinatesList.length; i++) {
-        // Calculate distance asynchronously
-        double difference = setActualDistance(
+        double difference = await setActualDistance(
             originLat: driverCoordinatesList[i].latitude,
             originLong: driverCoordinatesList[i].longitude,
             destinationLat: driverCoordinatesList[i - 1].latitude,
             destinationLong: driverCoordinatesList[i - 1].longitude);
-
-        // Add the difference to the list
         differences.add(difference);
-
-        // Print intermediate differences
         print("Difference between elements: $difference");
       }
 
-      // Calculate the total distance covered
-      double totalDistance =
-          differences.fold(0, (prev, element) => prev + element);
-
-      // Convert total distance to kilometers
+      double totalDistance = differences.fold(0, (prev, element) => prev + element);
       double totalDistanceKm = totalDistance / 1000.0;
-
-      // Compare with estimated distance and update if necessary
-      // if (double.parse(session.estimatedDistance) < totalDistanceKm) {
       session.setEstimatedDistance = totalDistanceKm.toString();
       setEstimatedDistance = totalDistanceKm.toString();
       setEstimatedDistance = session.estimatedDistance;
       print("setEstimatedDistance===>>> $setEstimatedDistance");
-      // } else {
-      //   setEstimatedDistance = session.estimatedDistance;
-      //   print("Estimated distance is greater than actual distance");
-      //   print("setEstimatedDistance===>>> $setEstimatedDistance");
-      // }
       notifyListeners();
     } catch (e) {
-      log("Error calculating distance: $e");
       print("Error calculating distance: $e");
     }
 
