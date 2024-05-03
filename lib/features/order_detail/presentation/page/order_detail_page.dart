@@ -39,9 +39,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   var extraTimeTaken = "0 hr 0 Min 0 Sec";
 
   convertSecondsToMinutes() {
-    if (widget.order!.extraTimeTaken != '') {
-      int seconds = int.parse((widget.order!.extraTimeTaken).toStringAsFixed(
-          0)); // Replace this with your desired number of seconds
+    if (widget.order!.actual_time != '') {
+      int seconds = double.parse(widget.order!.actual_time!).toInt(); // Replace this with your desired number of seconds
 
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;
@@ -438,40 +437,44 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             //   title: 'Price',
                             //   value: 'CA\$ ${widget.order!.total}',
                             // ),
+
+
+                            PriceTile(
+                              title: 'Total Distance',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value: '${(widget.order!.distance)} Km',
+                            ),
+                            PriceTile(
+                              title: 'Total Time',
+                              value: ((widget.order!.extraTimeTaken != '') || (widget.order!.extraTimeTaken != null))
+                                  ? extraTimeTaken
+                                  : '0 hr 0 min 0 sec',
+                            ),
+                            PriceTile(
+                              title: 'Minimum Fare',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value:
+                              'CA\$ ${(widget.order!.minimum_fare)}',
+                            ),    PriceTile(
+                              title: 'Base Fare',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value:
+                              'CA\$ ${(widget.order!.base_fare)}',
+                            ), PriceTile(
+                              title: 'Tech Fee',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value:
+                                  'CA\$ ${(widget.order!.tech_fee)}',
+                            ),
                             PriceTile(
                               title: 'Current Ride Payment',
                               // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value: 'CA\$ ${(widget.order!.total)}',
+                              value: 'CA\$ ${(widget.order!.newTotal)}',
                             ),
                             PriceTile(
                               title: 'Pending Ride Payment',
                               value: 'CA\$ ${widget.order!.pendingAmount}',
                             ),
-                            PriceTile(
-                              title: 'Extra Time Taken',
-                              value: ((widget.order!.extraTimeTaken != '') ||
-                                      (widget.order!.extraTimeTaken != null))
-                                  ? extraTimeTaken
-                                  : '0 hr 0 min 0 sec',
-                            ),
-                            PriceTile(
-                              title: 'Extra Time Price',
-                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value: 'CA\$ ${(widget.order!.extraTimePrice)}',
-                            ),
-
-                            PriceTile(
-                              title: 'Extra Distance',
-                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value: '${(widget.order!.extraDistance)} Km',
-                            ),
-                            PriceTile(
-                              title: 'Extra Distance Price',
-                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value:
-                                  'CA\$ ${(widget.order!.extraDistancePrice)}',
-                            ),
-
                             PriceTile(
                               title: 'Tip',
                               value: 'CA\$ ${widget.order!.tip}',

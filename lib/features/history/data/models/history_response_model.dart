@@ -43,6 +43,7 @@ class HistoryOrder {
   String? endCoordinate;
   String? startAddress;
   String? endAddress;
+  String? actual_time;
   dynamic distance;
   dynamic total;
   dynamic grandTotal;
@@ -52,7 +53,6 @@ class HistoryOrder {
   dynamic extraTimePrice;
   dynamic extraDistance;
   dynamic extraDistancePrice;
-
   dynamic tip;
   dynamic orderTime;
   dynamic startTime;
@@ -68,6 +68,10 @@ class HistoryOrder {
   dynamic paymentStatus;
   int paymentMethod;
   int taxiType;
+  dynamic price_km;
+  dynamic tech_fee;
+  dynamic base_fare;
+  dynamic minimum_fare;
   String timestamp;
   VehicleCategory vehicleCategory;
   List<RatingList> ratingList;
@@ -107,11 +111,21 @@ class HistoryOrder {
     required this.extraTimeTaken,
     required this.extraTimePrice,
     required this.paymentStatus,
+     this.price_km,
+     this.tech_fee,
+     this.base_fare,
+     this.minimum_fare,
+     this.actual_time,
   });
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
         id: json["id"],
         driverId: json["driver_id"],
+        minimum_fare: json["minimum_fare"],
+        base_fare: json["base_fare"],
+         tech_fee: json["tech_fee"],
+         price_km: json["price_km"],
+         actual_time: json["actual_time"]??"0.0",
         customerId: json["customer_id"],
         startCoordinate: json["start_coordinate"],
         endCoordinate: json["end_coordinate"],
