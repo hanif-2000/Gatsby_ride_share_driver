@@ -1098,8 +1098,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   Future<void> _getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
     notifyListeners();
     print("------************* >>>>>>. CURRRENT LOCATION IS $currentPosition");
@@ -1179,12 +1178,11 @@ class LatestSocketProvider extends ChangeNotifier {
             if (Platform.isAndroid) {
               locationSettings = AndroidSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
-                  distanceFilter: 10,
-                  intervalDuration: const Duration(seconds: 10),
+                  distanceFilter: 20,
+                  intervalDuration: const Duration(seconds: 20),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
-                          notificationText:
-                              "Location is being used for navigation",
+                          notificationText: "Location is being used for navigation",
                           notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
                           setOngoing: true,
@@ -1193,13 +1191,13 @@ class LatestSocketProvider extends ChangeNotifier {
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
-                  distanceFilter: 10,
+                  distanceFilter: 20,
                   showBackgroundLocationIndicator: true,
                   allowBackgroundLocationUpdates: true);
             } else {
               locationSettings = const LocationSettings(
                 accuracy: LocationAccuracy.high,
-                distanceFilter: 10,
+                distanceFilter: 20,
               );
             }
             locationbackSubscription =
