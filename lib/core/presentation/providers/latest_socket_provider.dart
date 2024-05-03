@@ -1178,7 +1178,7 @@ class LatestSocketProvider extends ChangeNotifier {
             if (Platform.isAndroid) {
               locationSettings = AndroidSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
-                  distanceFilter: 20,
+                  distanceFilter: 10,
                   intervalDuration: const Duration(seconds: 20),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
@@ -1191,13 +1191,13 @@ class LatestSocketProvider extends ChangeNotifier {
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
-                  distanceFilter: 20,
+                  distanceFilter: 10,
                   showBackgroundLocationIndicator: true,
                   allowBackgroundLocationUpdates: true);
             } else {
               locationSettings = const LocationSettings(
                 accuracy: LocationAccuracy.high,
-                distanceFilter: 20,
+                distanceFilter: 10,
               );
             }
             locationbackSubscription =
