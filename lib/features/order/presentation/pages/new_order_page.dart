@@ -150,6 +150,7 @@ class _NewOrderPageState extends State<NewOrderPage>
       session.setStartCo = widget.orderDetail.startCoordinate;
       session.setEndCo = widget.orderDetail.endCoordinate;
 
+
       // session.setCustomerDetails = json.encode(widget.customerDetail);
 
       socketProvider.updateCustomerAndRideDetails(
@@ -160,8 +161,7 @@ class _NewOrderPageState extends State<NewOrderPage>
         distance: widget.orderDetail.distance.toString(),
       );
 
-      socketProvider
-          .updateCustomerData(
+      socketProvider.updateCustomerData(
               data: CustomerDataModel(
                   name: widget.customerDetail.name,
                   phoneNumber: widget.customerDetail.phoneNumber,

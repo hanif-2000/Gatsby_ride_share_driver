@@ -517,31 +517,13 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                     "estimated time is :-->> ${socketProvider.bookingList[widget.index].estimatedTime}");
                                                 print(
                                                     "estimated distance is :-->> ${socketProvider.bookingList[widget.index].distance}");
-                                                var session =
-                                                    locator<Session>();
-                                                session.setIsOrderRunning =
-                                                    true;
+                                                var session = locator<Session>();
+                                                session.setIsOrderRunning = true;
                                                 session.setEstimatedTime =
-                                                    socketProvider
-                                                        .bookingList[
-                                                            widget.index]
-                                                        .estimatedTime;
-                                                session.setEstimatedDistance =
-                                                    socketProvider
-                                                        .bookingList[
-                                                            widget.index]
-                                                        .distance;
-                                                session.setRunningOrderId =
-                                                    int.parse(socketProvider
-                                                        .bookingList[
-                                                            widget.index]
-                                                        .id);
-
-                                                session.setCustomerId =
-                                                    int.parse(socketProvider
-                                                        .bookingList[
-                                                            widget.index]
-                                                        .customerId);
+                                                    socketProvider.bookingList[widget.index].estimatedTime;
+                                                session.setEstimatedDistance = socketProvider.bookingList[widget.index].distance;
+                                                session.setRunningOrderId = int.parse(socketProvider.bookingList[widget.index].id);
+                                                session.setCustomerId = int.parse(socketProvider.bookingList[widget.index].customerId);
 
                                                 /*** ORDER DETAILS  */
 
@@ -561,51 +543,22 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                     "endCoordinate order id:-->>${socketProvider.bookingList[widget.index].endCoordinate}");
                                                 print(
                                                     "startAddress order id:-->>${socketProvider.bookingList[widget.index].startAddress}");
-                                                print(
-                                                    "end address order id:-->>${socketProvider.bookingList[widget.index].id}");
+                                                print("end address order id:-->>${socketProvider.bookingList[widget.index].id}");
                                                 // print("order id:-->>${socketProvider.bookingList[widget.index].id}");
 
-                                                homeProvider.setOrderDetails =
-                                                    OrderDetail(
-                                                  orderId: int.parse(
-                                                      socketProvider
-                                                          .bookingList[
-                                                              widget.index]
-                                                          .id),
-                                                  totalPrice: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .total,
-                                                  userId: int.parse(
-                                                      socketProvider
-                                                          .bookingList[
-                                                              widget.index]
-                                                          .customerId),
-                                                  driverId:
-                                                      int.parse(session.userId),
-                                                  distance: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .distance,
+                                                homeProvider.setOrderDetails = OrderDetail(
+                                                  orderId: int.parse(socketProvider.bookingList[widget.index].id),
+                                                  totalPrice: socketProvider.bookingList[widget.index].total,
+                                                  userId: int.parse(socketProvider.bookingList[widget.index].customerId),
+                                                  driverId: int.parse(session.userId),
+                                                  distance: socketProvider.bookingList[widget.index].distance,
                                                   orderStatus: 0,
-                                                  startCoordinate:
-                                                      socketProvider
-                                                          .bookingList[
-                                                              widget.index]
-                                                          .startCoordinate,
-                                                  endCoordinate: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .endCoordinate,
-                                                  startAddress: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .startAddress,
-                                                  endAddress: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .endAddress,
-                                                  pendingAmount: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .pendingAmount,
-                                                  newTotal: socketProvider
-                                                      .bookingList[widget.index]
-                                                      .newTotal,
+                                                  startCoordinate: socketProvider.bookingList[widget.index].startCoordinate,
+                                                  endCoordinate: socketProvider.bookingList[widget.index].endCoordinate,
+                                                  startAddress: socketProvider.bookingList[widget.index].startAddress,
+                                                  endAddress: socketProvider.bookingList[widget.index].endAddress,
+                                                  pendingAmount: socketProvider.bookingList[widget.index].pendingAmount,
+                                                  newTotal: socketProvider.bookingList[widget.index].newTotal,
                                                 );
 
                                                 // session.setOrderDetails =
@@ -615,9 +568,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
 
                                                 //*** CUSTOMER DETAILS */
 
-                                                homeProvider
-                                                        .setCustomerDetails =
-                                                    CustomerDataModel(
+                                                homeProvider.setCustomerDetails = CustomerDataModel(
                                                   name: socketProvider
                                                       .bookingList[widget.index]
                                                       .name,
@@ -639,12 +590,9 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                 //     homeProvider.customerDetailModel!;
 
                                                 log("order details are:-->. ${homeProvider.orderDetail!}");
-                                                print(
-                                                    "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
-
+                                                print("order details  home provdider are:-->. ${homeProvider.orderDetail!}");
                                                 log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
-                                                print(
-                                                    "Customer details are:-->. ${homeProvider.customerDetailModel!}");
+                                                print("Customer details are:-->. ${homeProvider.customerDetailModel!}");
 
                                                 Navigator
                                                     .pushNamedAndRemoveUntil(

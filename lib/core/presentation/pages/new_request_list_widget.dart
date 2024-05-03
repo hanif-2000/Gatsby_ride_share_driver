@@ -146,12 +146,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     "customer id from session id:-->> ${session.customerId}");
 
                                 homeProvider.setOrderDetails = OrderDetail(
-                                  orderId: int.parse(
-                                      socketProvider.bookingList[index].id),
-                                  totalPrice:
-                                      socketProvider.bookingList[index].total,
-                                  userId: int.parse(socketProvider
-                                      .bookingList[index].customerId),
+                                  orderId: int.parse(socketProvider.bookingList[index].id),
+                                  totalPrice: socketProvider.bookingList[index].total,
+                                  userId: int.parse(socketProvider.bookingList[index].customerId),
                                   driverId: int.parse(session.userId),
                                   distance: socketProvider.bookingList[index].distance,
                                   orderStatus: 0,
@@ -170,17 +167,12 @@ class _RequestListWidgetState extends State<RequestListWidget>
 
                                 //*** CUSTOMER DETAILS */
 
-                                homeProvider.setCustomerDetails =
-                                    CustomerDataModel(
+                                homeProvider.setCustomerDetails = CustomerDataModel(
                                   name: socketProvider.bookingList[index].name,
-                                  phoneNumber:
-                                      socketProvider.bookingList[index].phone,
-                                  photo:
-                                      socketProvider.bookingList[index].image,
-                                  id: int.parse(socketProvider
-                                      .bookingList[index].customerId),
-                                  rating: socketProvider
-                                      .bookingList[index].customerRating,
+                                  phoneNumber: socketProvider.bookingList[index].phone,
+                                  photo: socketProvider.bookingList[index].image,
+                                  id: int.parse(socketProvider.bookingList[index].customerId),
+                                  rating: socketProvider.bookingList[index].customerRating,
                                 );
 
                                 // session.setCustomerDetails =

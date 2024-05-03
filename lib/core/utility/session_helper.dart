@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../static/strings.dart';
@@ -58,11 +59,11 @@ abstract class Session {
 
   set setCurrentLat(double currentLat);
   set setCurrentLang(double currentLang);
-
   set setChatToken(String chatToken);
   set setStartTime(String rideStartTime);
   set setEndTime(String rideEndTime);
-
+  set setOriginLat(double lat);
+  set setOriginLong(double long);
   String get chatToken;
   String get rideStartTime;
   String get rideEndTime;
@@ -104,6 +105,8 @@ abstract class Session {
 
   /// * GET ORDER DETAILS
   String get orderDetails;
+  double get originLat;
+  double get originLong;
 
   /// * GET CUSTOMER DETAILS
   String get customerDetails;
@@ -356,6 +359,16 @@ class SessionHelper implements Session {
   set setEndTime(String rideEndTime) {
     pref.setString(RIDE_END_TIME, rideEndTime);
   }
+  @override
+  set setOriginLat(double lat) {
+    pref.setDouble(origin_lat, lat);
+  }
+
+  @override
+  set setOriginLong(double lat) {
+    pref.setDouble(origin_long, lat);
+  }
+
 
   @override
   String get chatToken => pref.getString(CHAT_TOKEN) ?? '';
@@ -374,6 +387,15 @@ class SessionHelper implements Session {
       pref.getString(SESSION_CUSTOMER_DETAILS) ??
       'session customer details are null';
 
+  @override
+  double get originLat  => pref.getDouble(origin_lat)??0.0;
+  @override
+  double get originLong  => pref.getDouble(origin_long)??0.0;
+
+  @override
+  set setOriginLatLong(LatLng rideEndTime) {
+
+  }
   @override
   double get currentLat => pref.getDouble(CURRENT_LAT) ?? 0.0;
 
@@ -514,4 +536,8 @@ class SessionHelper implements Session {
     // await pref.remove(PAYMENT_DONE);
     // await pref.remove(CUSTOMER_ID);
   }
+
+
+
+
 }

@@ -39,7 +39,7 @@ class ReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var session = locator<Session>();
-
+    print("ride start time from local storage is :-->${session.orderDetails}");
     // String actualTime =
     // formatDuration(int.parse(socketProvider.receiptData!.actualTime));
     // var _deviceSize = MediaQuery.of(context).size;
@@ -49,48 +49,6 @@ class ReceiptPage extends StatelessWidget {
     return Scaffold(
       body: Consumer<LatestSocketProvider>(
         builder: (context, provider, _) {
-          // if (provider.receiptData != null) {
-          //   convertSecondsToMinutes(time: 100).then((value) {
-          //     setState() {
-          //       actualTimeTaken = value;
-          //     }
-          //   });
-          // }
-          //         return StreamBuilder<ReceiptState>(
-          //           stream: provider.getReceiptAPI(),
-          //           builder: (context, state) {
-          //             print('$state');
-          //             switch (state.data.runtimeType) {
-          //               case ReceiptLoading:
-          //                 return const Center(child: CircularProgressIndicator());
-          //               case ReceiptFailure:
-          //                 final failure = (state.data as ReceiptFailure).failure;
-          //                 showToast(message: failure);
-          //                 return const SizedBox.shrink();
-          //               case ReceiptSuccess:
-          //                 final data0 = (state.data as ReceiptSuccess).data;
-          //                 if (data0 == null) {
-          //                   return Center(
-          //                     child: Text(
-          //                       appLoc.therearenopastorders,
-          //                       style: formLabelHeaderStyle,
-          //                     ),
-          //                   );
-          //                 }
-
-          //                 session.setCurrentOrderState = 100;
-          //                 session.setIsOrderRunning = false;
-          //                 OrderReceipt order = data0.orderReceipt.first;
-
-          //                 int time = (order.endTime!
-          //                             .difference(order.startTime!)
-          //                             .inMinutes) !=
-          //                         (-330)
-          //                     ? (order.endTime!
-          //                         .difference(order.startTime!)
-          //                         .inMinutes)
-          //                     : 0;!
-
           return provider.receiptData != null
               ? SingleChildScrollView(
                   child: Column(
@@ -130,19 +88,6 @@ class ReceiptPage extends StatelessWidget {
                                 CustomCacheNetworkImage(
                                     img: provider.receiptData!.image ?? '',
                                     size: 50),
-                                // Container(
-                                //   height: 50,
-                                //   width: 50,
-                                //   decoration: BoxDecoration(
-                                //     shape: BoxShape.circle,
-                                //     color: redD03B3B,
-                                //     image: DecorationImage(
-                                //       image: NetworkImage(
-                                //         '$BASE_URL${order.image}',
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                                 mediumHorizontalSpacing(),
                                 Column(
                                   children: [
@@ -337,57 +282,6 @@ class ReceiptPage extends StatelessWidget {
                               ),
                             ),
                             largeVerticalSpacing(),
-                            // Padding(
-                            //   padding: const EdgeInsets.all(8.0),
-                            //   child: SizedBox(
-                            //     width:
-                            //         MediaQuery.of(context).size.width / 2,
-                            //     height: 40,
-                            //     child: CustomButton(
-                            //         isRounded: true,
-                            //         text: "Payment Details",
-                            //         event: () {
-                            //           showModalBottomSheet(
-                            //             context: context,
-                            //             builder: (context) {
-                            //               return PaymentScreen(
-                            //                   totalPrice: order.total,
-                            //                   extraDistance:
-                            //                       order.extraDistance,
-                            //                   extraTime: order.extraTime,
-                            //                   extraDistancePrice:
-                            //                       order.extraDistancePrice,
-                            //                   extraMinPrice:
-                            //                       order.extraKmPrice,
-                            //                   grandTotal: order.total,
-                            //                   distance: order.distance);
-                            //             },
-                            //           );
-
-                            //           // Navigator.push(
-                            //           //     context,
-                            //           //     MaterialPageRoute(
-                            //           //       builder: (context) =>
-                            //           //           PaymentScreen(
-                            //           //               totalPrice:
-                            //           //                   order.grandTotal,
-                            //           //               extraDistance:
-                            //           //                   order.extraDistance,
-                            //           //               extraTime:
-                            //           //                   order.extraTime,
-                            //           //               extraDistancePrice: order
-                            //           //                   .extraDistancePrice,
-                            //           //               extraMinPrice:
-                            //           //                   order.extraKmPrice,
-                            //           //               grandTotal:
-                            //           //                   order.grandTotal,
-                            //           //               distance: order.distance),
-                            //           //     ));
-                            //         },
-                            //         bgColor: black030303),
-                            //   ),
-                            // ),
-
                             SizedBox(
                               width: MediaQuery.of(context).size.width,
                               child: Row(
@@ -503,36 +397,6 @@ class ReceiptPage extends StatelessWidget {
                                       },
                                       icon: const Icon(
                                           Icons.arrow_circle_right_outlined))
-
-                                  // SizedBox(
-                                  //   width: 100,
-                                  //   child: CustomButton(
-                                  //       text: "Payment Details",
-                                  //       event: () {
-                                  //         Navigator.push(
-                                  //             context,
-                                  //             MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   PaymentScreen(
-                                  //                       totalPrice: order
-                                  //                           .grandTotal,
-                                  //                       extraDistance: order
-                                  //                           .extraDistance,
-                                  //                       extraTime: order
-                                  //                           .extraTime,
-                                  //                       extraDistancePrice:
-                                  //                           order
-                                  //                               .extraDistancePrice,
-                                  //                       extraMinPrice: order
-                                  //                           .extraKmPrice,
-                                  //                       grandTotal: order
-                                  //                           .grandTotal,
-                                  //                       distance:
-                                  //                           order.distance),
-                                  //             ));
-                                  //       },
-                                  //       bgColor: black030303),
-                                  // )
                                 ],
                               ),
                             ),
@@ -620,48 +484,6 @@ class ReceiptPage extends StatelessWidget {
                             ),
                             mediumVerticalSpacing(),
 
-                            // Visibility(
-                            //   visible: provider.receiptData!.tip != 0,
-                            //   child: Container(
-                            //     padding: const EdgeInsets.all(14),
-                            //     decoration: BoxDecoration(
-                            //       color: greyB6B6B6.withOpacity(.3),
-                            //       borderRadius: BorderRadius.circular(10),
-                            //     ),
-                            //     child: Column(
-                            //       children: [
-                            //         smallVerticalSpacing(),
-                            //         Row(
-                            //           mainAxisAlignment:
-                            //               MainAxisAlignment.spaceBetween,
-                            //           children: [
-                            //             Text(
-                            //               'Tip',
-                            //               textAlign: TextAlign.center,
-                            //               style: titleStyle
-                            //                   .copyWith(
-                            //                     fontSize: 16,
-                            //                     color: grey7c7c7c,
-                            //                   )
-                            //                   .usePoppinsW6Font(),
-                            //             ),
-                            //             Text(
-                            //               'CA\$ ${provider.receiptData!.tip}',
-                            //               // '\$${order.total - ((order.total * 5) / 100)}',
-                            //               textAlign: TextAlign.center,
-                            //               style: titleStyle
-                            //                   .copyWith(
-                            //                     fontSize: 16,
-                            //                   )
-                            //                   .usePoppinsW5Font(),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-
                             largeVerticalSpacing(),
                             CustomButton(
                               text: Text(
@@ -739,20 +561,12 @@ class ReceiptPage extends StatelessWidget {
                                                           true;
 
                                                       // if (!context.mounted) {
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                        locator<
-                                                                GlobalKey<
-                                                                    NavigatorState>>()
-                                                            .currentContext!,
-                                                        GiveRatingScreen
-                                                            .routeName,
+                                                      Navigator.pushNamedAndRemoveUntil(
+                                                        locator<GlobalKey<NavigatorState>>().currentContext!,
+                                                        GiveRatingScreen.routeName,
                                                         (route) => false,
-                                                        arguments:
-                                                            RatingPageArguments(
-                                                          customerDataModel:
-                                                              provider
-                                                                  .customerDetail!,
+                                                        arguments: RatingPageArguments(
+                                                          customerDataModel: provider.customerDetail!,
                                                           customerId: provider
                                                               .customerDetail!
                                                               .id,

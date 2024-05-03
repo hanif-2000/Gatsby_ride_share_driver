@@ -234,21 +234,6 @@ class LatestSocketProvider extends ChangeNotifier {
     });
   }
 
-  // reconnectSocket(
-  //   BuildContext context,
-  // ) {
-  //   print("Disconnected=============>>${_socket.connection.state})");
-  //   if (_socket.connection.state is Disconnected &&
-  //       session.sessionToken.isNotEmpty) {
-  //     print("Disconnected=============>>");
-  //     Future.delayed(const Duration(seconds: 2), () {
-  //       connectToSocket(context);
-  //     });
-  //   } else {
-  //     print("Disconnected=============>> else");
-  //   }
-  // }
-
   Future<void> disconnectSocket() async {
     _socket.close(1000, "Logout successful");
   }
@@ -480,12 +465,6 @@ class LatestSocketProvider extends ChangeNotifier {
 
     print("customer id is: ${session.customerId} ");
 
-    // joinExitRoom(type: 'unJoin', receiverId: session.driverId);
-
-    // listenRequests();
-    // disconnectSocket();
-    // connectToSocket();
-    // listenRequests();
   }
 
   markMessageAsRead({
@@ -520,25 +499,6 @@ class LatestSocketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // rejectRequestSocket() {
-  //   final map = {
-  //     'serviceType': 'RejectRequest',
-  //     'driverID': session.userId,
-  //   };
-  //   logMe('reject request socket -- > ${map.toString()}');
-  //   _socket!.send(
-  //     jsonEncode(map),
-  //   );
-  // }
-
-  // acceptRequestSocket() {
-  //   final map = {
-  //     'serviceType': 'AcceptRequest',
-  //     'driverID': session.userId,
-  //   };
-  //   logMe('reject request socket -- > ${map.toString()}');
-  //   _socket!.send(jsonEncode(map));
-  // }
 
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
@@ -624,8 +584,7 @@ class LatestSocketProvider extends ChangeNotifier {
             _socket.send(json.encode(map));
             print(map.toString());
             updateLatLngAtStarting();
-            updateLatLng(
-                latLng: LatLng(session.currentLat, session.currentLang));
+            updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
 
             session.setRunningOrderStatus = 1;
 
@@ -781,6 +740,7 @@ class LatestSocketProvider extends ChangeNotifier {
     DateTime startTime = DateTime.parse(session.rideStartTime);
 
     print("ride start time from local storage is :-->$startTime");
+    print("ride start time from local storage is :-->${session.orderDetails}");
 
     Duration difference = (DateTime.now()).difference(startTime);
     print("Time differencec is -- $difference");
@@ -802,26 +762,14 @@ class LatestSocketProvider extends ChangeNotifier {
     print("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
     print(
         "trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
-
-    // if ((double.parse(session.estimatedTime)) < actualTime) {
-    //   logMe("Actual time is grater ");
     session.setEstimatedTime = (actualTime * 60).toString();
-    // } else {
-    //   logMe("ESTIMATED time is grater ");
 
-    //   session.setEstimatedTime =
-    //       (double.parse(session.estimatedTime.toString()) * 60).toString();
-    // }
   }
 
-  // updateText(context) {
-  //   Provider.of<OrderProvider>(context, listen: false).updateText();
-  // }
 
   /// Manage Tracking HERE
 
-  setCurrentLocation(
-      OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+  setCurrentLocation(OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
 
@@ -849,6 +797,8 @@ class LatestSocketProvider extends ChangeNotifier {
         var lngOrigin = double.parse(splitOrigin[1]);
         var latDestination = double.parse(splitDestination[0]);
         var lngDestination = double.parse(splitDestination[1]);
+        session.setOriginLong=latDestination;
+        session.setOriginLat=lngDestination;
         originAddress = orderDetail.startAddress;
         destinationAddress = orderDetail.endAddress;
         originLatLng = LatLng(latOrigin, lngOrigin);
@@ -1064,11 +1014,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var latLongOrigin = orderDetail!.startCoordinate;
     var latLongDestination = orderDetail!.endCoordinate;
 
-    print(
-        "origin and destiantion coordinates are: $latLongOrigin and $latLongDestination");
-    // var latLongOrigin = "30.703112393336106, 76.68201047927141";
-    // var latLongDestination = "30.706780957567652, 76.68569013476372";
-
+    print("origin and destiantion coordinates are: $latLongOrigin and $latLongDestination");
     var splitOrigin = latLongOrigin.split(",");
     var splitDestination = latLongDestination.split(",");
     var latOrigin = double.parse(splitOrigin[0]);
@@ -1076,8 +1022,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     await _getCurrentLocation();
-    var coordinate =
-        LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
     if (isFromOrigin) {
       print("------------------ GO TO DESTINATION FROM ORIGIN---------- ");
       print(
@@ -1566,7 +1511,6 @@ class LatestSocketProvider extends ChangeNotifier {
     } catch (e) {
       print("Error calculating distance: $e");
     }
-
     print("/********** Calculation Exited *************/");
   }
 

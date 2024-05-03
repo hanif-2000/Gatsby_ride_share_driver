@@ -41,3 +41,5 @@ const String START_ADD = 'start_add';
 const String END_ADD = 'end_add';
 const String START_CO = 'start_co';
 const String END_CO = 'end_co';
+const String origin_lat = 'origin_lat';
+const String origin_long = 'origin_long';
