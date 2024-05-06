@@ -797,8 +797,8 @@ class LatestSocketProvider extends ChangeNotifier {
         var lngOrigin = double.parse(splitOrigin[1]);
         var latDestination = double.parse(splitDestination[0]);
         var lngDestination = double.parse(splitDestination[1]);
-        session.setOriginLong=latDestination;
-        session.setOriginLat=lngDestination;
+        session.setOriginLong=lngOrigin;
+        session.setOriginLat=latOrigin;
         originAddress = orderDetail.startAddress;
         destinationAddress = orderDetail.endAddress;
         originLatLng = LatLng(latOrigin, lngOrigin);
@@ -816,15 +816,11 @@ class LatestSocketProvider extends ChangeNotifier {
         MarkerId markerIdOrigin = const MarkerId("origin");
         MarkerId markerIdDestination = const MarkerId("destination");
         MarkerId markerIdDriver = const MarkerId("driver");
-        var coordinate =
-            LatLng(currentPosition!.latitude, currentPosition!.longitude);
-
+        var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
         final Marker markerOrigin = Marker(
           anchor: const Offset(0.5, 0.5),
           markerId: markerIdOrigin,
           position: originLatLng,
-          // rotation: tiltValue,
-          // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.customerplace),
           icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
             return pickUpMarker = BitmapDescriptor.fromBytes(value);
@@ -844,8 +840,7 @@ class LatestSocketProvider extends ChangeNotifier {
           onTap: () {},
         );
 
-        print(
-            "COORDNATES ARE************** ${currentPosition!.latitude}, ${currentPosition!.longitude}");
+        print("COORDNATES ARE************** ${currentPosition!.latitude}, ${currentPosition!.longitude}");
 
         // var coordinate =
         //     LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
@@ -876,8 +871,7 @@ class LatestSocketProvider extends ChangeNotifier {
         try {
           var serviceStatusResult = await Geolocator.requestPermission();
           logMe("Service status activated after request: $serviceStatusResult");
-          if (serviceStatusResult != LocationPermission.always ||
-              serviceStatusResult != LocationPermission.whileInUse) {
+          if (serviceStatusResult != LocationPermission.always || serviceStatusResult != LocationPermission.whileInUse) {
             setCurrentLocation(orderDetail, customerDetail!);
             dismissLoading();
           }
@@ -1179,15 +1173,13 @@ class LatestSocketProvider extends ChangeNotifier {
               locationSettings = AndroidSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
                   distanceFilter: 10,
-                  intervalDuration: const Duration(seconds: 20),
                   foregroundNotificationConfig:
                       const ForegroundNotificationConfig(
                           notificationText: "Location is being used for navigation",
                           notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
                           setOngoing: true,
-                          notificationIcon:
-                              AndroidResource(name: "@mipmap/ic_launcher")));
+                          notificationIcon: AndroidResource(name: "@mipmap/ic_launcher")));
             } else if (Platform.isIOS) {
               locationSettings = AppleSettings(
                   accuracy: LocationAccuracy.bestForNavigation,
@@ -1469,12 +1461,12 @@ class LatestSocketProvider extends ChangeNotifier {
   }*/
 
   // // ------------- Get distance between 2 lat long points
-  Future<double> setActualDistance({
+/*  double setActualDistance({
     required double originLat,
     required double originLong,
     required double destinationLat,
     required double destinationLong,
-  }) async {
+  }) {
     double distanceInMeters = Geolocator.distanceBetween(
       originLat,
       originLong,
@@ -1482,25 +1474,56 @@ class LatestSocketProvider extends ChangeNotifier {
       destinationLong,
     );
     return distanceInMeters; // Return distance in meters
-  }
+  }*/
 
+
+  // Future<void> calculateDistanceCovered2() async {
+  //   List<double> differences = [];
+  //   print("Driver coordinates list: $driverCoordinatesList");
+  //   try {
+  //     for (int i = 1; i < driverCoordinatesList.length; i++) {
+  //       double difference = await setActualDistance(
+  //           originLat: driverCoordinatesList[i].latitude,
+  //           originLong: driverCoordinatesList[i].longitude,
+  //           destinationLat: driverCoordinatesList[i - 1].latitude,
+  //           destinationLong: driverCoordinatesList[i - 1].longitude);
+  //       differences.add(difference);
+  //       print("Difference between elements: $difference");
+  //     }
+  //
+  //     double totalDistance = differences.fold(0, (prev, element) => prev + element);
+  //     double totalDistanceKm = totalDistance / 1000.0;
+  //     session.setEstimatedDistance = totalDistanceKm.toString();
+  //     setEstimatedDistance = totalDistanceKm.toString();
+  //     setEstimatedDistance = session.estimatedDistance;
+  //     print("setEstimatedDistance===>>> $setEstimatedDistance");
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print("Error calculating distance: $e");
+  //   }
+  //   print("/********** Calculation Exited *************/");
+  // }
 
   Future<void> calculateDistanceCovered2() async {
-    List<double> differences = [];
-    print("Driver coordinates list: $driverCoordinatesList");
     try {
-      for (int i = 1; i < driverCoordinatesList.length; i++) {
-        double difference = await setActualDistance(
-            originLat: driverCoordinatesList[i].latitude,
-            originLong: driverCoordinatesList[i].longitude,
-            destinationLat: driverCoordinatesList[i - 1].latitude,
-            destinationLong: driverCoordinatesList[i - 1].longitude);
-        differences.add(difference);
-        print("Difference between elements: $difference");
-      }
-
-      double totalDistance = differences.fold(0, (prev, element) => prev + element);
-      double totalDistanceKm = totalDistance / 1000.0;
+      final originLat =  session.originLat;
+      final originLong =  session.originLong;
+      final lastPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+      final destinationLat =  lastPosition.latitude;
+      final destinationLong =  lastPosition.longitude;
+      double difference =  Geolocator.distanceBetween(
+        originLat,
+        originLong,
+        destinationLat,
+        destinationLong,
+      );
+      print("originLat===>>> $originLat");
+      print("originLong===>>> $originLong");
+      print("destinationLat===>>> $destinationLat");
+      print("destinationLong===>>> $destinationLong");
+      print("difference===>>> $difference");
+      double totalDistanceKm = difference / 1000.0;
+      print("totalDistanceKm===>>> $totalDistanceKm");
       session.setEstimatedDistance = totalDistanceKm.toString();
       setEstimatedDistance = totalDistanceKm.toString();
       setEstimatedDistance = session.estimatedDistance;

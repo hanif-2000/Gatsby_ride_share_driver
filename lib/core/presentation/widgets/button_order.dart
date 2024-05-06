@@ -38,7 +38,6 @@ class ButtonOrder extends StatelessWidget {
       required this.currentOrderStatus})
       : super(key: key);
 
-  // LatestSocketProvider socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
   Session session = locator<Session>();
 
   var dio = Dio();
@@ -46,17 +45,11 @@ class ButtonOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
-    final session = locator<Session>();
     return Consumer2(
       builder: (context, LatestSocketProvider socketProvider,
           HomeProvider homeProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
-        // print(
-        //     "Order total is:***********-------->>>>>> ${socketProvider.orderDetail!.newTotal}");
-        // print(
-        //     "Order total is:***********-------->>>>>> ${homeProvider.orderDetail!.newTotal}");
-
         log("session order status is:-->>${session.currentOrderState}");
         log("is order runnig : ${session.isOrderRunning}");
         return Container(
@@ -72,115 +65,6 @@ class ButtonOrder extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // provider.orderDetail != null
-              //     ? Padding(
-              //         padding: const EdgeInsets.symmetric(
-              //           vertical: 8.0,
-              //           horizontal: 8.0,
-              //         ),
-              //         child: Card(
-              //           child: Padding(
-              //             padding: const EdgeInsets.symmetric(
-              //               vertical: 8.0,
-              //               horizontal: 20.0,
-              //             ),
-              //             child: SizedBox(
-              //               height: 50,
-              //               child: Row(
-              //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //                 children: <Widget>[
-              //                   Expanded(
-              //                     flex: 5,
-              //                     child: Row(
-              //                       children: [
-              //                         Expanded(
-              //                           child: AutoSizeText(
-              //                             appLoc.distance,
-              //                             style: const TextStyle(
-              //                               fontWeight: FontWeight.normal,
-              //                             ),
-              //                             minFontSize: 15,
-              //                             maxFontSize: 18,
-              //                             maxLines: 1,
-              //                             overflow: TextOverflow.ellipsis,
-              //                           ),
-              //                         ),
-              //                         Expanded(
-              //                           child: AutoSizeText(
-              //                             mergeDistanceTxt(
-              //                                 provider.orderDetail!.distance),
-              //                             style: const TextStyle(
-              //                               fontWeight: FontWeight.bold,
-              //                               color: primaryColor,
-              //                             ),
-              //                             minFontSize: 16,
-              //                             maxFontSize: 20,
-              //                             maxLines: 1,
-              //                             overflow: TextOverflow.ellipsis,
-              //                           ),
-              //                         )
-              //                       ],
-              //                     ),
-              //                   ),
-              //                   Padding(
-              //                     padding:
-              //                         const EdgeInsets.symmetric(horizontal: 5),
-              //                     child: SizedBox(
-              //                       width: 1,
-              //                       child: Container(
-              //                         color: Colors.grey[350],
-              //                       ),
-              //                     ),
-              //                   ),
-              //                   const SizedBox(
-              //                     width: 8,
-              //                   ),
-              //                   Expanded(
-              //                     flex: 5,
-              //                     child: Container(
-              //                       child: Align(
-              //                         alignment: Alignment.centerLeft,
-              //                         child: Row(
-              //                           children: [
-              //                             Expanded(
-              //                               child: AutoSizeText(
-              //                                 appLoc.price,
-              //                                 style: const TextStyle(
-              //                                   fontWeight: FontWeight.normal,
-              //                                 ),
-              //                                 minFontSize: 15,
-              //                                 maxFontSize: 18,
-              //                                 maxLines: 1,
-              //                                 overflow: TextOverflow.ellipsis,
-              //                               ),
-              //                             ),
-              //                             Expanded(
-              //                               child: AutoSizeText(
-              //                                 mergePriceTxt(provider
-              //                                     .orderDetail!.totalPrice
-              //                                     .toString()),
-              //                                 style: const TextStyle(
-              //                                   fontWeight: FontWeight.bold,
-              //                                   color: primaryColor,
-              //                                 ),
-              //                                 minFontSize: 16,
-              //                                 maxFontSize: 20,
-              //                                 maxLines: 1,
-              //                                 overflow: TextOverflow.ellipsis,
-              //                               ),
-              //                             )
-              //                           ],
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   )
-              //                 ],
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : const SizedBox(),
 
               /**   SHOW CUSTOMER PROFILE TILE SECTION */
               UserProfileTile(
@@ -370,10 +254,9 @@ class ButtonOrder extends StatelessWidget {
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
-                        showLoading();
+                      Future.delayed(const Duration(seconds: 0),() => showLoading(),);
                         socketProvider.calculateTimeAndDistanceWhenRideCompeleted();
-                        await socketProvider.calculateDistanceCovered2()
-                            .then((_) => socketProvider.updateOrderStatus(
+                        await socketProvider.calculateDistanceCovered2().then((_) => socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
                           context: context,

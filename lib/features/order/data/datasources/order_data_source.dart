@@ -152,7 +152,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
 
   @override
   Future<OrderDetail> getDetailOrder(String orderId) async {
-    String url = 'api/webservice//getOrder?id=$orderId';
+    String url = 'api/webservice/getOrder?id=$orderId';
     dio.withToken();
     try {
       final response = await dio.get(
