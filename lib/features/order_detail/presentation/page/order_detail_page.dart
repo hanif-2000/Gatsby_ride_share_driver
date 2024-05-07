@@ -49,8 +49,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       int remainingMinutes = minutes % 60;
 
       print('$seconds seconds is equivalent to:');
-      print(
-          '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
+      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
 
       setState(() {
         extraTimeTaken = "$hours"
@@ -200,19 +199,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             child: CustomCacheNetworkImage(
                                 img: widget.order!.image, size: 45)
 
-                            // Container(
-                            //   height: 45,
-                            //   width: 45,
-                            //   decoration: BoxDecoration(
-                            //     shape: BoxShape.circle,
-                            //     color: redD03B3B,
-                            //     image: DecorationImage(
-                            //       image: NetworkImage(
-                            //         '$BASE_URL${order!.image}',
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             ),
                         mediumHorizontalSpacing(),
                         Column(
@@ -424,10 +410,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 ],
                               ),
                             ),
-                            PriceTile(
+                          /*  PriceTile(
                               title: 'Distance',
                               value: '${widget.order!.distance} KM',
-                            ),
+                            ),*/
                             PriceTile(
                               title: 'Cab Type',
                               value:
@@ -445,21 +431,32 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               value: '${(widget.order!.distance)} Km',
                             ),
                             PriceTile(
+                              title: 'Per km price',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(widget.order!.price_km)}',
+                            ),
+                            PriceTile(
                               title: 'Total Time',
                               value: ((widget.order!.extraTimeTaken != '') || (widget.order!.extraTimeTaken != null))
                                   ? extraTimeTaken
                                   : '0 hr 0 min 0 sec',
                             ),
                             PriceTile(
+                              title: 'Per minute price',
+                              // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
+                              value: 'CA\$ ${(widget.order!.price_per_min??0.0)}',
+                            ),
+                            PriceTile(
                               title: 'Minimum Fare',
                               // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
                               value:
                               'CA\$ ${(widget.order!.minimum_fare)}',
-                            ),    PriceTile(
+                            ),
+
+                            PriceTile(
                               title: 'Base Fare',
                               // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',
-                              value:
-                              'CA\$ ${(widget.order!.base_fare)}',
+                              value: 'CA\$ ${(widget.order!.base_fare)}',
                             ), PriceTile(
                               title: 'Tech Fee',
                               // value: 'CA\$ ${(widget.order!.grandTotal).toStringAsFixed(2)}',

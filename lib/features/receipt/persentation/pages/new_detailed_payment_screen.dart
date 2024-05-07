@@ -109,6 +109,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else {}
   }
 
+  String totalDistancePrice() {
+    double extraDistance = double.parse(widget.actualDistance.toString());
+    double priceKm = double.parse(widget.price_km.toString());
+    var totalDistancePrice = extraDistance*priceKm;
+    return totalDistancePrice.toStringAsFixed(2);
+
+  }
+
   @override
   void initState() {
     convertSecondsToMinutes();
@@ -145,21 +153,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const EdgeInsets.only(top: 13, bottom: 13, left: 11, right: 11),
             child: Column(
               children: [
-                // TextInRow(
-                //   firstText: 'Distance',
-                //   secondText: "${widget.distance} Km",
-                // ),
-                // const Divider(
-                //   color: whiteAccentColor,
-                // ),
-                // TextInRow(
-                //   firstText: 'Estimated Amount',
-                //   secondText: r'CA$ ' +
-                //       convertToTwoDecimal(widget.totalPrice.toString()),
-                // ),
-                // const Divider(
-                //   color: whiteAccentColor,
-                // ),
 
                 TextInRow(
                   firstText: 'Total Distance',
@@ -190,7 +183,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   firstText: 'Total Distance Price',
                   // secondText: widget.extraDistance + " Km",
                   secondText:
-                      "CA\$ ${convertToTwoDecimal(widget.extraDistancePrice.toString())}",
+                     // "CA\$ ${convertToTwoDecimal(widget.extraDistancePrice.toString())}",
+                      "CA\$ ${totalDistancePrice()}",
                 ),
                 const Divider(
                   color: whiteAccentColor,
