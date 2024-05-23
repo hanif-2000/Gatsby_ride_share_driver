@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/presentation/providers/form_provider.dart';
@@ -14,23 +16,27 @@ class LoginProvider extends FormProvider {
   Stream<LoginState> doLoginApi() async* {
     yield LoginLoading();
     LocationPermission locationPermission = await Geolocator.checkPermission();
+    logMe("lcoation permission:-->> $locationPermission");
     if (locationPermission == LocationPermission.denied) {
       await Geolocator.requestPermission();
+    } else {
+      Position locationData = await Geolocator.getCurrentPosition();
+
+      log("location :-->> ${locationData.latitude}");
+      final loginResult = await doLogin.call(
+          emailController.text,
+          passwordController.text,
+          '${locationData.latitude},${locationData.longitude}');
+      yield* loginResult.fold((statusCode) async* {
+        logMe(statusCode);
+        yield LoginFailure(failure: statusCode.message);
+      }, (result) async* {
+        if (result != null) {
+          yield LoginSuccess(data: result);
+        } else {
+          yield LoginFailure(failure: appLoc.loginfailure);
+        }
+      });
     }
-    Position locationData = await Geolocator.getCurrentPosition();
-    final loginResult = await doLogin.call(
-        emailController.text,
-        passwordController.text,
-        '${locationData.latitude},${locationData.longitude}');
-    yield* loginResult.fold((statusCode) async* {
-      logMe(statusCode);
-      yield LoginFailure(failure: statusCode.message);
-    }, (result) async* {
-      if (result != null) {
-        yield LoginSuccess(data: result);
-      } else {
-        yield LoginFailure(failure: appLoc.loginfailure);
-      }
-    });
   }
 }

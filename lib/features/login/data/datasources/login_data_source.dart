@@ -23,8 +23,7 @@ class LoginDataSourceImplementation implements LoginDataSource {
     String url = 'api/webservice/logindriver';
     // await FirebaseHelper.setupMessaging();
 
-
-  /*  if (session.sessionFcmToken == '') {
+    /*  if (session.sessionFcmToken == '') {
       FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
       _firebaseMessaging.getToken().then((token) {
         session.setFcmToken = token!;
@@ -35,8 +34,8 @@ class LoginDataSourceImplementation implements LoginDataSource {
 
     try {
       final session = locator<Session>();
-      final fcmToken = await FirebaseMessaging.instance.getToken()??"";
-      session.setFcmToken =fcmToken;
+      final fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      session.setFcmToken = fcmToken;
       print("fcmToken==> $fcmToken");
       FormData data = FormData.fromMap({
         'email': email,
