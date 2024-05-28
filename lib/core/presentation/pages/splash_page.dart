@@ -7,6 +7,7 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:dartz/dartz.dart' as dartz;
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,26 +52,51 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
 
       if (remoteMessage.data["notificationTypeId"] == "CustomerBookRequest") {
         var myData = json.decode(remoteMessage.data["id"]);
-        socketProvider.updateRideList(Booking(
-            id: myData["id"].toString(),
-            startCoordinate: myData["start_coordinate"].toString(),
-            endCoordinate: myData["end_coordinate"].toString(),
-            startAddress: myData["start_address"].toString(),
-            endAddress: myData["end_address"].toString(),
-            distance: myData["distance"].toString(),
-            paymentMethod: myData["payment_method"].toString(),
-            estimatedTime: myData["estimated_time"].toString(),
-            actualTime: myData["actual_time"].toString(),
-            total: myData["total"].toString(),
-            pendingAmount: myData["pending_amount"].toString(),
-            newTotal: myData["new_total"].toString(),
-            customerId: myData["customerID"].toString(),
-            name: myData["name"].toString(),
-            image: myData["image"].toString(),
-            longitude: myData["Longitude"].toString(),
-            latitude: myData["Latitude"].toString(),
-            phone: myData["phone"].toString(),
-            customerRating: myData["CustomerRating"].toString()));
+
+        var dio = Dio();
+
+        var session = locator<Session>();
+
+        var headers = {'Authorization': 'Bearer ${session.sessionToken}'};
+
+        var response = await dio.request(
+          'https://api.gatsbyrideshare.com/api/webservice/driver/order/status/${myData["id"]}',
+          options: Options(
+            method: 'GET',
+            headers: headers,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          print(json.encode(response.data));
+
+          if (response.data["data"]["status"] == 0) {
+            socketProvider.updateRideList(Booking(
+                id: myData["id"].toString(),
+                startCoordinate: myData["start_coordinate"].toString(),
+                endCoordinate: myData["end_coordinate"].toString(),
+                startAddress: myData["start_address"].toString(),
+                endAddress: myData["end_address"].toString(),
+                distance: myData["distance"].toString(),
+                paymentMethod: myData["payment_method"].toString(),
+                estimatedTime: myData["estimated_time"].toString(),
+                actualTime: myData["actual_time"].toString(),
+                total: myData["total"].toString(),
+                pendingAmount: myData["pending_amount"].toString(),
+                newTotal: myData["new_total"].toString(),
+                customerId: myData["customerID"].toString(),
+                name: myData["name"].toString(),
+                image: myData["image"].toString(),
+                longitude: myData["Longitude"].toString(),
+                latitude: myData["Latitude"].toString(),
+                phone: myData["phone"].toString(),
+                customerRating: myData["CustomerRating"].toString()));
+          }
+        } else {
+          print(response.statusMessage);
+        }
+
+        log("notification ride id :-->> $myData");
       }
       // NotificationRideModel notificationEntity =
       //     NotificationRideModel.fromJson(remoteMessage.data);
@@ -368,36 +394,8 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
       },
     );
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // return null;
+// }
 
 // import 'dart:async';
 // import 'dart:developer';
@@ -644,3 +642,4 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
 //     );
 //   }
 // }
+}
