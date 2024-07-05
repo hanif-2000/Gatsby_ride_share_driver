@@ -12,7 +12,7 @@ class NetworkInfoImplementation implements NetworkInfo {
   @override
   Future<bool> get isConnected async {
     final result = await connectivity.checkConnectivity();
-    switch (result) {
+    switch (result.first) {
       case ConnectivityResult.bluetooth:
       case ConnectivityResult.wifi:
       case ConnectivityResult.ethernet:

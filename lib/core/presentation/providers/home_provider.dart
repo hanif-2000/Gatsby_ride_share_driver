@@ -509,23 +509,12 @@ class HomeProvider with ChangeNotifier {
   setActualDistance(
       {destinationLat, destinationLong, originLat, originLong}) async {
     try {
-      // Get real distance
-      var response = await Dio().get(
-          'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      var response = await Dio().get('https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
       dev.log(" response of real distance:--->>> ${response.data}");
-
       var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
-      // distance = data.rows[0].elements[0].distance.text;
-      // estimatedTime = data.rows[0].elements[0].duration.value;
-      // estimatedTimeToShow = data.rows[0].elements[0].duration.text;
-
-      session.setEstimatedDistance =
-          (data.rows[0].elements[0].distance.value / 1000).toString();
-      session.setEstimatedTime =
-          (data.rows[0].elements[0].duration.value / 60).toStringAsFixed(1);
-
+      session.setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
+      session.setEstimatedTime = (data.rows[0].elements[0].duration.value / 60).toStringAsFixed(1);
       notifyListeners();
-
       dev.log("session distnace:--${session.estimatedDistance}");
       dev.log("session duration:--${session.estimatedTime}");
     } catch (e) {

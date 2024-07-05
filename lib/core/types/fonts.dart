@@ -16,7 +16,7 @@ TextStyle appFont(
   TextDecoration textDecoration = TextDecoration.none,
 }) {
   return GoogleFonts.notoSans(
-    textStyle: textStyle ?? Theme.of(context).textTheme.bodyText2,
+    textStyle: textStyle ?? Theme.of(context).textTheme.bodyMedium,
     fontWeight: FontWeight.w600,
     height: height,
     letterSpacing: letterSpacing,
