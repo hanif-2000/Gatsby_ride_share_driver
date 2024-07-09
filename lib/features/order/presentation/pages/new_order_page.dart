@@ -112,8 +112,8 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     var subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      log("-----------------------RESULT IS :----$result");
+        .listen((List<ConnectivityResult> result) {
+      log("-----------------------RESULT IS :----${result.first}");
       // Got a new connectivity status!
     }); // socketProvider.getTotalUnreadCount(widget.customerDetail.id);
 
