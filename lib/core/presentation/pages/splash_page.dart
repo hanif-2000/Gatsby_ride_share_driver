@@ -51,6 +51,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
       //     NotificationRideModel.fromJson(remoteMessage.data);
 
       if (remoteMessage.data["notificationTypeId"] == "CustomerBookRequest") {
+        // showToast(message: "RIDE DATA IN NOTIFICATION CALLED");
         var myData = json.decode(remoteMessage.data["id"]);
 
         var dio = Dio();

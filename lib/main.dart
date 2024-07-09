@@ -33,7 +33,7 @@ Future<void> main() async {
     locator.isReady<Session>().then((_) async {
       await FirebaseHelper.init();
       FirebaseMessaging.instance.onTokenRefresh.listen((String token) {
-        showToast(message: "new fcm token updated");
+        // showToast(message: "new fcm token updated");
         print("Refreshed FCM Token: $token");
         updateFcmToken(token: token);
       });
