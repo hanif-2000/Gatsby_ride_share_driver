@@ -91,6 +91,18 @@ class HomeDrawerPage extends StatelessWidget {
                           );
                         },
                       ),
+                      DrawerButtonItemWidget(
+                        title: "Delete Account",
+                        onTap: () {
+                          log("On click on delete account");
+
+                          deleteAccount(context);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   LoginPage.routeName,
+                          // );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -104,7 +116,8 @@ class HomeDrawerPage extends StatelessWidget {
                           Navigator.pop(context);
                           var provider = locator<HomeProvider>();
                           var dio = Dio();
-                          String logOutUrl = '${BASE_URL}api/webservice/driver/logout';
+                          String logOutUrl =
+                              '${BASE_URL}api/webservice/driver/logout';
                           final session = locator<Session>();
                           // var provider =
                           //     Provider.of<HomeProvider>(context, listen: false);
@@ -187,5 +200,36 @@ class HomeDrawerPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> deleteAccount(BuildContext context) async {
+    final session = locator<Session>();
+    String token = session.sessionToken;
+
+    final dio = Dio();
+    const String url =
+        'https://api.gatsbyrideshare.com/api/webservice/driver/account/delete';
+
+    try {
+      // Setting up headers, including authentication token if needed
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      // Sending DELETE request
+      final response = await dio.delete(
+        url,
+      );
+
+      if (response.statusCode == 200) {
+        await sessionLogOut().then(
+          (_) => Navigator.of(context)
+              .pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false),
+        );
+      } else {
+        showToast(message: "Something went wrong");
+      }
+    } catch (e) {
+      // Handle errors
+      showToast(message: "Something went wrong");
+    }
   }
 }

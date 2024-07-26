@@ -16,7 +16,7 @@
         android:label="Gatsby Driver"
         android:name="${applicationName}"
           android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs"/>
         <activity

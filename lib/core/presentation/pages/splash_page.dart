@@ -43,9 +43,9 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
     const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
     NotificationRideModel? entity;
     if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
-      print("RemoteMessage data  ${remoteMessage.data}");
-      // print("RemoteMessage data  ${(remoteMessage.data)}");
-      // print("RemoteMessage data  ${(remoteMessage.data["id"]["id"])}");
+      logMe("RemoteMessage data  ${remoteMessage.data}");
+      // logMe("RemoteMessage data  ${(remoteMessage.data)}");
+      // logMe("RemoteMessage data  ${(remoteMessage.data["id"]["id"])}");
 
       // NotificationRideModel notificationEntity =
       //     NotificationRideModel.fromJson(remoteMessage.data);
@@ -69,7 +69,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
         );
 
         if (response.statusCode == 200) {
-          print(json.encode(response.data));
+          logMe(json.encode(response.data));
 
           if (response.data["data"]["status"] == 0) {
             socketProvider.updateRideList(Booking(
@@ -94,7 +94,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                 customerRating: myData["CustomerRating"].toString()));
           }
         } else {
-          print(response.statusMessage);
+          logMe(response.statusMessage);
         }
 
         log("notification ride id :-->> $myData");
@@ -129,7 +129,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
   //   const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
   //   NotificationEntity? entity;
   //   if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
-  //     print("RemoteMessage data  ${remoteMessage.data}");
+  //     logMe("RemoteMessage data  ${remoteMessage.data}");
   //     NotificationEntity notificationEntity =
   //         NotificationEntity.fromJson(remoteMessage.data);
   //     entity = NotificationEntity();
@@ -142,7 +142,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
   //     NotificationEntity? entity = convertStringToNotificationEntity(
   //         notificationAppLaunchDetails.notificationResponse?.payload);
   //     if (entity != null) {
-  //       print("RemoteMessage data ${entity.toJson()}");
+  //       logMe("RemoteMessage data ${entity.toJson()}");
   //       // return await callApi(entity);
   //     } else {
   //       return null;
@@ -164,48 +164,46 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
       log("request permission value is:-->> $requestPermission");
       if (requestPermission == false) {
         await checkLocationAndPermission().then((value) async {
-          print("check location and permission value is:$value");
-          if (value) {
-            Position currentLatLng = await Geolocator.getCurrentPosition();
+          logMe("check location and permission value is:$value");
+          // if (value) {
+          // Position currentLatLng = await Geolocator.getCurrentPosition();
 
-            // print(
-            //     "**********------------ ${currentLatLng.latitude},${currentLatLng.longitude} ----------*********");
+          // logMe(
+          //     "**********------------ ${currentLatLng.latitude},${currentLatLng.longitude} ----------*********");
 
-            await sessionClearOrder();
-            context
-                .read<SplashProvider>()
-                .fetchCurrency()
-                .listen((state) async {
-              log("state runtime type:==${state.runtimeType}");
-              switch (state.runtimeType) {
-                case CurrencyLoaded:
-                  checkUserSession().then((value) async {
-                    //   sessionHelper.setCurrentLat = currentLatLng.latitude;
-                    //   sessionHelper.setCurrentLang = currentLatLng.longitude;
-                    if (value) {
-                      checkProfileSession().then((value1) {
-                        if (value1) {
-                          var session = locator<Session>();
-                          print("IS DRIVER ONLINE : ${session.isOnline}");
-                          //   socketProvider.connectToSocket(context);
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, HomePage.routeName, (route) => false);
-                        } else {
-                          Navigator.pushNamedAndRemoveUntil(context,
-                              CreateProfilePage.routeName, (route) => false);
-                        }
-                      });
-                    } else {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, LoginPage.routeName, (route) => false);
-                    }
-                  });
-                  break;
-              }
-            });
-          } else {
-            return;
-          }
+          await sessionClearOrder();
+          context.read<SplashProvider>().fetchCurrency().listen((state) async {
+            log("state runtime type:==${state.runtimeType}");
+            switch (state.runtimeType) {
+              case CurrencyLoaded:
+                checkUserSession().then((value) async {
+                  log("va;ue s--->> $value");
+                  //   sessionHelper.setCurrentLat = currentLatLng.latitude;
+                  //   sessionHelper.setCurrentLang = currentLatLng.longitude;
+                  if (value) {
+                    checkProfileSession().then((value1) {
+                      if (value1) {
+                        var session = locator<Session>();
+                        logMe("IS DRIVER ONLINE : ${session.isOnline}");
+                        //   socketProvider.connectToSocket(context);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, HomePage.routeName, (route) => false);
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            CreateProfilePage.routeName, (route) => false);
+                      }
+                    });
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, LoginPage.routeName, (route) => false);
+                  }
+                });
+                break;
+            }
+          });
+          // } else {
+          //  Naviga
+          // }
         });
       } else {
         await sessionClearOrder();
@@ -218,7 +216,7 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
                   checkProfileSession().then((value1) {
                     if (value1) {
                       var session = locator<Session>();
-                      print("IS DRIVER ONLINE -: ${session.isOnline}");
+                      logMe("IS DRIVER ONLINE -: ${session.isOnline}");
 
                       var homeProvider = locator<HomeProvider>();
                       homeProvider.changeStatus = session.isOnline;
@@ -318,10 +316,10 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.inactive:
-        print("sdfInactive");
+        logMe("sdfInactive");
         break;
       case AppLifecycleState.paused:
-        print("Paused");
+        logMe("Paused");
         break;
       case AppLifecycleState.resumed:
         if (await Permission.notification.request().isGranted) {
@@ -330,11 +328,11 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
         } else {
           log("notification is not granted");
         }
-        print("Resumed");
+        logMe("Resumed");
         break;
 
       case AppLifecycleState.detached:
-        print("detached");
+        logMe("detached");
 
         break;
       case AppLifecycleState.hidden:

@@ -38,10 +38,10 @@ class _LoginFormState extends State<LoginForm> {
     var dio = Dio();
     FocusManager.instance.primaryFocus?.unfocus();
     final provider = context.read<LoginProvider>();
-    provider.doLoginApi().listen((state) async {
+    provider.doLoginApi(context: context).listen((state) async {
       switch (state.runtimeType) {
         case LoginLoading:
-          showLoading();
+          // showLoading();
           break;
         case LoginFailure:
           final msg = (state as LoginFailure).failure;
