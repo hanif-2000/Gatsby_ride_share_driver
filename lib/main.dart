@@ -13,6 +13,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 
+import 'core/network/socket_helper.dart';
 import 'core/presentation/pages/splash_page.dart';
 import 'core/presentation/providers/place_picker_provider.dart';
 import 'core/routes/route.dart';
@@ -32,10 +33,10 @@ Future<void> main() async {
     await init();
     locator.isReady<Session>().then((_) async {
       await FirebaseHelper.init();
-      FirebaseMessaging.instance.onTokenRefresh.listen((String token) {
-        // showToast(message: "new fcm token updated");
+      WebSocketHelper().connect();
+      FirebaseMessaging.instance.onTokenRefresh.listen((String token) async{
         print("Refreshed FCM Token: $token");
-        updateFcmToken(token: token);
+         await updateFcmToken(token: token);
       });
       runApp(
         MultiProvider(

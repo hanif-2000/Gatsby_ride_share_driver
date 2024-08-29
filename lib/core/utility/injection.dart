@@ -100,6 +100,7 @@ import '../domain/usecases/get_google_place.dart';
 import '../domain/usecases/get_price_category.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
+import '../network/socket_helper.dart';
 import '../presentation/providers/fcm_provider.dart';
 import 'session_helper.dart';
 
@@ -112,9 +113,8 @@ final locator = GetIt.instance;
 
 Future<void> init() async {
   //network info
-  locator.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImplementation(locator<Connectivity>()));
-
+  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImplementation(locator<Connectivity>()));
+  locator.registerLazySingleton<WebSocketHelper>(() => WebSocketHelper());
   //external
   locator.registerLazySingleton<Dio>(() => DioClient().dio);
   locator.registerLazySingletonAsync<Session>(() async =>

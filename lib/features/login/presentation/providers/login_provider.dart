@@ -8,7 +8,6 @@ import '../../../../core/presentation/providers/form_provider.dart';
 import '../../../../core/utility/helper.dart';
 import '../../domain/usecases/do_login.dart';
 import 'login_state.dart';
-import 'package:location/location.dart' as lctn;
 
 class LoginProvider extends FormProvider {
   final DoLogin doLogin;

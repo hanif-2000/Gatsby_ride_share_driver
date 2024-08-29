@@ -58,73 +58,21 @@ class NewOrderPage extends StatefulWidget {
   State<NewOrderPage> createState() => _NewOrderPageState();
 }
 
-class _NewOrderPageState extends State<NewOrderPage>
-    with WidgetsBindingObserver {
-  var socketProvider = Provider.of<LatestSocketProvider>(
-      locator<GlobalKey<NavigatorState>>().currentContext!);
+class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver {
+
+  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
   var session = locator<Session>();
 
-  checkConnectivity() async {
-    final connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      log("==============$connectivityResult");
-      // I am connected to a mobile network.
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      log("==============$connectivityResult");
-
-      // I am connected to a wifi network.
-    } else if (connectivityResult == ConnectivityResult.ethernet) {
-      log("==============$connectivityResult");
-
-      // I am connected to a ethernet network.
-    } else if (connectivityResult == ConnectivityResult.vpn) {
-      log("==============$connectivityResult");
-
-      // I am connected to a vpn network.
-      // Note for iOS and macOS:
-      // There is no separate network interface type for [vpn].
-      // It returns [other] on any device (also simulator)
-    } else if (connectivityResult == ConnectivityResult.bluetooth) {
-      log("==============$connectivityResult");
-
-      // I am connected to a bluetooth.
-    } else if (connectivityResult == ConnectivityResult.other) {
-      log("==============$connectivityResult");
-
-      // I am connected to a network which is not in the above mentioned networks.
-    } else if (connectivityResult == ConnectivityResult.none) {
-      log("==============$connectivityResult");
-
-      // I am not connected to any network.
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // socketProvider.listenRequests();
     socketProvider.updateGetBytes();
     socketProvider.getTotalUnreadCount(session.customerId);
-    socketProvider.joinExitRoom(
-        type: 'unJoin', receiverId: int.parse(session.customerId.toString()));
-
-    var subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> result) {
-      log("-----------------------RESULT IS :----${result.first}");
-      // Got a new connectivity status!
-    }); // socketProvider.getTotalUnreadCount(widget.customerDetail.id);
-
-    // showLoading();
-    // session.setOrderId = widget.orderDetail.orderId.toString();
-
+    socketProvider.joinExitRoom(type: 'unJoin', receiverId: int.parse(session.customerId.toString()));
     log("new order page order details:->> ${widget.orderDetail}");
     log("new order page customer details:->> ${widget.customerDetail}");
-
-    // orderProvider.setOrderDetails = widget.orderDetail;
-
     socketProvider.getCurrentLocation();
     log("current order status is :-->> ${widget.orderStatus}");
     log("current order status is on order page init :-->> ${widget.orderStatus}");
@@ -136,11 +84,8 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       socketProvider.updateOrderData(data: widget.orderDetail);
-
       socketProvider.updateCurrentStatus(status: session.runningOrderStatus);
       socketProvider.updateOrderData(data: widget.orderDetail);
-      // session.setOrderDetails = json.encode(widget.orderDetail);
-
       session.setCustomerName = widget.customerDetail.name;
       session.setCustomerImg = widget.customerDetail.photo ?? '';
       session.setCustomerRating = widget.customerDetail.rating.toString();
@@ -149,10 +94,6 @@ class _NewOrderPageState extends State<NewOrderPage>
       session.setEndAdd = widget.orderDetail.endAddress;
       session.setStartCo = widget.orderDetail.startCoordinate;
       session.setEndCo = widget.orderDetail.endCoordinate;
-
-
-      // session.setCustomerDetails = json.encode(widget.customerDetail);
-
       socketProvider.updateCustomerAndRideDetails(
         name: widget.customerDetail.name,
         rating: widget.customerDetail.rating.toString(),
@@ -197,15 +138,6 @@ class _NewOrderPageState extends State<NewOrderPage>
       });
     });
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   // checkOrderStatusTimer?.cancel();
-  //   // trackingTimer?.cancel();
-  //   // WidgetsBinding.instance.removeObserver(this);
-  //   socketProvider.removeOrderFromList(orderId: widget.orderDetail.orderId);
-  // }
 
   @override
   Widget build(BuildContext context) {

@@ -46,12 +46,11 @@ class ButtonOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return Consumer2(
-      builder: (context, LatestSocketProvider socketProvider,
-          HomeProvider homeProvider, _) {
+      builder: (context, LatestSocketProvider socketProvider, HomeProvider homeProvider, _) {
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
         log("session order status is:-->>${session.currentOrderState}");
-        log("is order runnig : ${session.isOrderRunning}");
+        log("is order running : ${session.isOrderRunning}");
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: const BoxDecoration(
@@ -254,17 +253,15 @@ class ButtonOrder extends StatelessWidget {
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
-                      Future.delayed(const Duration(seconds: 0),() => showLoading(),);
-                        socketProvider.calculateTimeAndDistanceWhenRideCompeleted();
-                        await socketProvider.calculateDistanceCovered2().then((_) => socketProvider.updateOrderStatus(
+                        socketProvider.calculateDistanceCovered2();
+                         await Future.delayed(Duration(milliseconds: 500));
+                        socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
                           context: context,
                           startTime: session.rideStartTime,
                           endTime: DateTime.now().toString(),
-                          distance: socketProvider.setEstimatedDistance
-                        ));
-
+                        );
                         dismissLoading();
                         Navigator.pushNamedAndRemoveUntil(
                           context,

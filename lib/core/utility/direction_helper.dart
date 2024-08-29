@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:http/http.dart' as http;
 
 import '../data/models/point_latlng_model.dart';
@@ -9,26 +10,18 @@ class DirectionHelper {
   final client = http.Client();
   final googleApiKey = GOOGLEMAPKEY;
 
-  Future<List<PointLatLng>> getRouteBetweenCoordinates(double originLat,
-      double originLong, double destLat, double destLong) async {
+  Future<List<PointLatLng>> getRouteBetweenCoordinates(double originLat, double originLong, double destLat, double destLong) async {
     List<PointLatLng> polylinePoints = [];
-    print("direction polylines origin:  -->> $originLong,$destLat");
-
-    print("direction polylines destination:  -->> $destLat,$destLong");
-
-    String url =
-        "https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLong&destination=$destLat,$destLong&mode=driving&avoid=tolls&key=$googleApiKey";
-
-    var response = await http.get(Uri.parse(url));
+    print("/*********\n direction poly lines origin:  -->> $originLong,$originLat\n*****\ndirection poly lines destination:  -->> $destLat,$destLong");
     try {
+    String url = "https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLong&destination=$destLat,$destLong&mode=driving&avoid=tolls&key=$googleApiKey";
+    var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        polylinePoints = decodeEncodedPolyline(json
-            .decode(response.body)["routes"][0]["overview_polyline"]["points"]);
+        polylinePoints = decodeEncodedPolyline(json.decode(response.body)["routes"][0]["overview_polyline"]["points"]);
       }
     } catch (error) {
-      throw Exception(error.toString());
+      logMe(error);
     }
-    // print(polylinePoints);
     return polylinePoints;
   }
 

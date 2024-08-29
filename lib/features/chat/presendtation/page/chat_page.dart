@@ -36,9 +36,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    socketProvider.onInit();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      socketProvider.joinExitRoom(
-          receiverId: widget.chatDetail!.userId, type: 'Join');
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'Join');
     });
     // showLoading();
     WidgetsBinding.instance.addObserver(this);
@@ -49,13 +49,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log(" app lifecycle state is ------>>>>>>>   $state");
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      socketProvider.joinExitRoom(
-          receiverId: widget.chatDetail!.userId, type: 'unJoin');
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
     } else if (state == AppLifecycleState.resumed) {
-      socketProvider.joinExitRoom(
-          receiverId: widget.chatDetail!.userId, type: "Join");
+      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: "Join");
     }
   }
 
@@ -65,9 +62,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     super.dispose();
     // Future.delayed(const Duration(seconds: 1), () {
     // socketProvider.clearChatList();
-    socketProvider.joinExitRoom(
-        receiverId: widget.chatDetail!.userId, type: 'unJoin');
-
+    socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
     WidgetsBinding.instance.removeObserver(this);
 
     // socketProvider.disconnectSocket();

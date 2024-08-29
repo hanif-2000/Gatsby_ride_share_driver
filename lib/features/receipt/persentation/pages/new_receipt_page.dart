@@ -22,30 +22,18 @@ import '../../../rating/presentation/page/give_rating_screen.dart';
 import 'new_detailed_payment_screen.dart';
 
 class ReceiptPage extends StatelessWidget {
-  ReceiptPage(
-      {Key? key,
+  ReceiptPage({Key? key,
       this.id,
-      // required this.customerDataModel,
       required this.customerId})
       : super(key: key);
   static const routeName = '/ReceiptPage';
   final String? id;
-  // final CustomerDataModel customerDataModel;
   final int customerId;
   String actualTimeTaken = "0 Min";
-  var socketProvider = Provider.of<LatestSocketProvider>(
-      locator<GlobalKey<NavigatorState>>().currentContext!);
-
   @override
   Widget build(BuildContext context) {
     var session = locator<Session>();
     print("ride start time from local storage is :-->${session.orderDetails}");
-    // String actualTime =
-    // formatDuration(int.parse(socketProvider.receiptData!.actualTime));
-    // var _deviceSize = MediaQuery.of(context).size;
-    // return
-    //  ChangeNotifierProvider(
-    //   create: (context) => locator<ReceiptProvider>(),
     return Scaffold(
       body: Consumer<LatestSocketProvider>(
         builder: (context, provider, _) {
@@ -302,9 +290,7 @@ class ReceiptPage extends StatelessWidget {
                                           context: context,
                                           child: PaymentScreen(
                                             actualDistance: provider.receiptData!.distance1,
-                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0"
-                                                : provider
-                                                    .receiptData!.actualTime,
+                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0" : provider.receiptData!.actualTime,
                                             minimumFare:provider.receiptData!.minPrice !=""? provider.receiptData!.minPrice:"0.0",
                                             baseFare:
                                                 provider.receiptData!.baseFare,

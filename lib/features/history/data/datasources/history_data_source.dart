@@ -24,11 +24,8 @@ class HistoryDataSourceImplementation implements HistoryDataSource {
       final response = await dio.get(
         url,
       );
-      print("========>>>response$response");
       final model = HistoryResponseModel.fromJson(response.data);
-      print("========>>>success${model.success}");
       if (model.success == 1) {
-        print("========>>>historyOrder${model.historyOrder}");
         return model.historyOrder;
       } else if (response.data["message"] == "Account Suspended") {
         showToast(message: "Account Suspended");

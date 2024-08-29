@@ -3,7 +3,7 @@ import Flutter
 import GoogleMaps
 import FirebaseCore
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
@@ -11,6 +11,7 @@ import FirebaseCore
   ) -> Bool {
      GMSServices.provideAPIKey("AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs")
      FirebaseApp.configure()
+           application.applicationIconBadgeNumber = 0
             if #available(iOS 10.0, *) {
                 UNUserNotificationCenter.current().delegate = self
                 let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]

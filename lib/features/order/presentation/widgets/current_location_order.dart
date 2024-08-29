@@ -24,14 +24,8 @@ class CurrentLocationOrderWidget extends StatelessWidget {
                 // ),
                 backgroundColor: Colors.white,
                 onPressed: () async {
-                  // await provider.moveCameraToDriver();
                   await provider.startNavigationInMap();
                 },
-                // child: const Icon(
-                //   Icons.my_location_rounded,
-                //   color: Colors.grey,
-                //   size: 35,
-                // ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
