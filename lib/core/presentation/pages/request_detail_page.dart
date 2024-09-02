@@ -88,17 +88,17 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                   onMapCreated: (GoogleMapController controller) async {
                     homeProvider.googleMapController = controller;
                     final pickup = LatLng(
-                        double.tryParse(widget.requestListModel!.startCoordinate
+                        double.tryParse(widget.requestListModel!.startCoordinate!
                             .split(',')
                             .first)!,
-                        double.tryParse(widget.requestListModel!.startCoordinate
+                        double.tryParse(widget.requestListModel!.startCoordinate!
                             .split(',')
                             .last)!);
                     final drop = LatLng(
-                        double.tryParse(widget.requestListModel!.endCoordinate
+                        double.tryParse(widget.requestListModel!.endCoordinate!
                             .split(',')
                             .first)!,
-                        double.tryParse(widget.requestListModel!.endCoordinate
+                        double.tryParse(widget.requestListModel!.endCoordinate!
                             .split(',')
                             .last)!);
 
@@ -207,8 +207,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        widget.requestListModel!
-                                                            .startAddress,
+                                                        widget.requestListModel?.startAddress??"",
                                                         softWrap: false,
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -246,8 +245,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        widget.requestListModel!
-                                                            .endAddress,
+                                                        widget.requestListModel?.endAddress??"",
                                                         softWrap: false,
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -297,8 +295,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                 OtherUserProfile.routeName);
                                           },
                                           child: CustomCacheNetworkImage(
-                                              img: widget
-                                                  .requestListModel!.image,
+                                              img: widget.requestListModel?.image??"",
                                               size: 50),
 
                                           //  Container(
@@ -322,7 +319,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                           children: [
                                             Text(
                                               // '${widget.requestListModel!.firstName} ${widget.requestListModel!.lastName}',
-                                              widget.requestListModel!.name,
+                                              widget.requestListModel?.name??"",
                                               textAlign: TextAlign.center,
                                               style: titleStyle
                                                   .copyWith(
@@ -553,10 +550,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                   driverId: int.parse(session.userId),
                                                   distance: socketProvider.bookingList[widget.index].distance,
                                                   orderStatus: 0,
-                                                  startCoordinate: socketProvider.bookingList[widget.index].startCoordinate,
-                                                  endCoordinate: socketProvider.bookingList[widget.index].endCoordinate,
-                                                  startAddress: socketProvider.bookingList[widget.index].startAddress,
-                                                  endAddress: socketProvider.bookingList[widget.index].endAddress,
+                                                  startCoordinate: socketProvider.bookingList[widget.index].startCoordinate!,
+                                                  endCoordinate: socketProvider.bookingList[widget.index].endCoordinate!,
+                                                  startAddress: socketProvider.bookingList[widget.index].startAddress??"",
+                                                  endAddress: socketProvider.bookingList[widget.index].endAddress??"",
                                                   pendingAmount: socketProvider.bookingList[widget.index].pendingAmount,
                                                   newTotal: socketProvider.bookingList[widget.index].newTotal,
                                                 );
@@ -571,7 +568,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                                 homeProvider.setCustomerDetails = CustomerDataModel(
                                                   name: socketProvider
                                                       .bookingList[widget.index]
-                                                      .name,
+                                                      .name??"",
                                                   phoneNumber: socketProvider
                                                       .bookingList[widget.index]
                                                       .phone,

@@ -11,57 +11,29 @@ import '../../firebase_options.dart';
 import 'helper.dart';
 import 'injection.dart';
 import 'notification_handler.dart';
+import 'push_notification_helper.dart';
 
 class FirebaseHelper {
-  static late FirebaseMessaging messaging;
+
 
   static Future<void> init() async {
-    await Firebase.initializeApp(
-        name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
-    messaging = FirebaseMessaging.instance;
-
-    await messaging.requestPermission();
-    await NotificationHelper().init();
-
-    // messaging.onTokenRefresh.listen((String token) {
-    //   print("Refreshed FCM Token: $token");
-
-    //   updateFcmToken(token: token);
-    // });
-    incomingNotificationHandling();
-    /* await permissionHandler().then((authorized) async {
-      log("IS AUTHORIZED:  $authorized");
-
-    //  await setupMessaging();
-    });*/
+    await Firebase.initializeApp(name: 'driver', options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseMessaging.instance.requestPermission();
+    await PushNotificationService().init();
+   // await NotificationHelper().init();
+   // incomingNotificationHandling();
   }
 
-/*  static Future<void> setupMessaging() async {
- */ /*   await messaging.getToken().then((token){
-      final session = locator<Session>();
-      logMe("firebase-token: $token");
-      session.setFcmToken = token!;
-    });*/ /*
-     incomingNotificationHandling();
-  }*/
-
   static void incomingNotificationHandling() {
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print("on message opned called===============>>>>>>>>>>");
-    //   print("on message listen called");
-    //   print("on message listen called");
-    //   print(
-    //       "remote message is------->>>>>.opned ${message.toMap().toString()}");
-    //   fetchRemoteMessage(message);
-
-    //   NotificationHelper notificationService = NotificationHelper();
-    //   notificationService.showNotifications(message);
-    //   /*  if(notificationEntity.message == SharedPreferenceHelper().getActiveChatId().toString()){
-    //     Utils.printLog("active chat id => ${SharedPreferenceHelper().getActiveChatId()} is same");
-    //     return;
-    //   }*/
-    //   //pushNextScreenFromForeground(notificationEntity);
-    // });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("on message opned called===============>>>>>>>>>>");
+      print("on message listen called");
+      print("on message listen called");
+      print("remote message is------->>>>>.opned ${message.toMap().toString()}");
+      fetchRemoteMessage(message);
+      NotificationHelper notificationService = NotificationHelper();
+      notificationService.showNotifications(message);
+    });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final session = locator<Session>();
       if (session.sessionToken.isEmpty) {
@@ -75,9 +47,6 @@ class FirebaseHelper {
       notificationService.showNotifications(message);
     });
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((event) {
-      print("token is:  $event");
-    });
   }
 
   static fetchRemoteMessage(RemoteMessage message) {
@@ -100,37 +69,12 @@ class FirebaseHelper {
     log("notification sentTime :${message.sentTime}");
     log("notification threadId :${message.threadId}");
     log("notification ttl :${message.ttl}");
-
     log("remote message called");
-
-    // if (message.notification!.title == 'New Booking' ||
-    //     message.notification!.title == 'Booking Cancelled') {
-    // var homeProvider = Provider.of<HomeProvider>(
-    //     locator<GlobalKey<NavigatorState>>().currentContext!,
-    //     listen: false);
-    // final GlobalKey<ScaffoldState> key = GlobalKey();
-
-    // Session session = locator<Session>();
-    // if (!session.isOrderRunning) {
-    // homeProvider.getRequestListData().listen((event) {
-    //   log("event is -->> $event");
-    // if (event is RequestListLoaded) {
-    //   logMe(
-    //       'Request list data loaded success----------> ${event.data.length}');
-    // Navigator.pushNamedAndRemoveUntil(
-    //     locator<GlobalKey<NavigatorState>>().currentContext!,
-    //     HomePage.routeName,
-    //     (route) => false);
-    // }
-    // });
-    // }
-    // }
-
     logMe('data: ${message.data}');
-    late String? title;
-    late String? body;
-    late String? orderId;
-    late String? clickAction;
+    String? title;
+    String? body;
+    String? orderId;
+    String? clickAction;
     final Map<String, dynamic> data = message.data;
     if (Platform.isIOS) {
       title = data["title"];
@@ -170,53 +114,16 @@ class FirebaseHelper {
       // await messaging.unsubscribeFromTopic(categoryId + "-new-order");
     }
 
-    //   FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-    //   print('FCM Token refreshed: $token');
-    //   // Perform actions in response to token refresh
-    //   // For example, update the token on your server
-    // });
   }
 
   static Future<void> unsubTopic() async {
     final session = locator<Session>();
     String categoryId = session.sessionCategoryId;
-    await messaging.unsubscribeFromTopic("$categoryId-new-order");
-  }
-
-  static Future<bool> permissionHandler() async {
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    logMe('User granted permission: ${settings.authorizationStatus}');
-    return settings.authorizationStatus == AuthorizationStatus.authorized;
+    await FirebaseMessaging.instance.unsubscribeFromTopic("$categoryId-new-order");
   }
 }
 
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  log("background message called");
 
-  NotificationHelper notificationService = NotificationHelper();
-
-  notificationService.showNotifications(message);
-
-  //No need for showing Notification manually.
-  //For BackgroundMessages: Firebase automatically sends a Notification.
-  //If you call the flutterLocalNotificationsPlugin.show()-Methode for
-  //example the Notification will be displayed twice.
-  return;
-  // await Firebase.initializeApp();
-
-  // NotificationHelper notificationService = NotificationHelper();
-
-  // logMe("Handling a background message: ${message.messageId}");
-}
 
 Future<void> updateFcmToken({required String token}) async {
   try {

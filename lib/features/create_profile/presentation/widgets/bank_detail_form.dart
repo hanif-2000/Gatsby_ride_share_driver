@@ -17,8 +17,8 @@ import 'package:provider/provider.dart';
 
 class FormBankDetail extends StatefulWidget {
   const FormBankDetail({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<FormBankDetail> createState() => _FormBankDetailState();

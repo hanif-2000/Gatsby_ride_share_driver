@@ -9,7 +9,7 @@ import '../widgets/contact_us_form.dart';
 import 'package:provider/provider.dart';
 
 class ContactUsPage extends StatelessWidget {
-  const ContactUsPage({Key? key}) : super(key: key);
+  const ContactUsPage({super.key});
   static const routeName = '/ContactUsPage';
 
   @override

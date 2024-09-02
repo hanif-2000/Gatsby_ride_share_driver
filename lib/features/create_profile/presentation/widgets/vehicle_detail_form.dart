@@ -17,8 +17,8 @@ import 'package:provider/provider.dart';
 
 class FormVehicleDetail extends StatefulWidget {
   const FormVehicleDetail({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<FormVehicleDetail> createState() => _FormVehicleDetailState();

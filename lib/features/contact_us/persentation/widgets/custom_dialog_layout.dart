@@ -16,7 +16,7 @@ class CustomDialogLayout extends StatelessWidget {
   final double? padding;
 
   const CustomDialogLayout(
-      {Key? key,
+      {super.key,
       this.onClose,
       this.onDone,
       this.image,
@@ -24,8 +24,7 @@ class CustomDialogLayout extends StatelessWidget {
       this.description,
       this.padding = 0,
       this.height = 65,
-      this.width = 61})
-      : super(key: key);
+      this.width = 61});
 
   @override
   Widget build(BuildContext context) {

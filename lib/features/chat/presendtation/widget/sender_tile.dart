@@ -4,7 +4,7 @@ import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:flutter/material.dart';
 
 class SenderTile extends StatelessWidget {
-  const SenderTile({Key? key, this.title}) : super(key: key);
+  const SenderTile({super.key, this.title});
   final String? title;
 
   @override

@@ -25,8 +25,7 @@ import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final RouteObserver<ModalRoute<void>> routeObserver =
-    RouteObserver<ModalRoute<void>>();
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -34,10 +33,10 @@ Future<void> main() async {
     locator.isReady<Session>().then((_) async {
       await FirebaseHelper.init();
       WebSocketHelper().connect();
-      FirebaseMessaging.instance.onTokenRefresh.listen((String token) async{
+  /*    FirebaseMessaging.instance.onTokenRefresh.listen((String token) async{
         print("Refreshed FCM Token: $token");
          await updateFcmToken(token: token);
-      });
+      });*/
       runApp(
         MultiProvider(
           providers: [
@@ -51,9 +50,6 @@ Future<void> main() async {
             ChangeNotifierProvider<HomeProvider>(
               create: (context) => locator<HomeProvider>(),
             ),
-            // ChangeNotifierProvider<OrderProvider>(
-            //   create: (context) => locator<OrderProvider>(),
-            // ),
             ChangeNotifierProvider<PlacePickerProvider>(
               create: (context) => locator<PlacePickerProvider>(),
             ),
@@ -75,9 +71,6 @@ Future<void> main() async {
             ChangeNotifierProvider<ChangePasswordProvider>(
               create: (context) => locator<ChangePasswordProvider>(),
             ),
-            // ChangeNotifierProvider<ChatProvider>(
-            //   create: (context) => locator<ChatProvider>(),
-            // ),
           ],
           builder: (context, _) => const MyApp(),
         ),
@@ -89,7 +82,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

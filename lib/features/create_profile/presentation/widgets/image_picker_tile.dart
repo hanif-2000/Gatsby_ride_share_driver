@@ -8,8 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ImagePickerTile extends StatelessWidget {
   const ImagePickerTile(
-      {Key? key, required this.title, this.onTap, this.selectedImage = '', this.onDelete})
-      : super(key: key);
+      {super.key, required this.title, this.onTap, this.selectedImage = '', this.onDelete});
   final String title;
   final Function()? onTap;
   final Function()? onDelete;

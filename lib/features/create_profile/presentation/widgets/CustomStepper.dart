@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CustomStepper extends StatelessWidget {
-  const CustomStepper({Key? key}) : super(key: key);
+  const CustomStepper({super.key});
 
   @override
   Widget build(BuildContext context) {

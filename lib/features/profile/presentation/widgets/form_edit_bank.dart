@@ -278,10 +278,8 @@ class _FormEditBankState extends State<FormEditBank> {
                                         break;
                                       case ProfileUpdateSuccess:
                                         dismissLoading();
-                                        if (provider.selectedCategory !=
-                                            provider.defaultSelectedCategory) {
-                                          await FirebaseHelper.unsubTopic()
-                                              .then((_) {});
+                                        if (provider.selectedCategory != provider.defaultSelectedCategory) {
+                                          await FirebaseHelper.unsubTopic().then((_) {});
                                           final session = locator<Session>();
                                           var homeProvider =
                                               locator<HomeProvider>();

@@ -41,10 +41,10 @@ class BookingDataModel {
 
 class Booking {
   dynamic id;
-  String startCoordinate;
-  String endCoordinate;
-  String startAddress;
-  String endAddress;
+  String ?startCoordinate;
+  String ?endCoordinate;
+  String ?startAddress;
+  String ?endAddress;
   dynamic distance;
   dynamic paymentMethod;
   dynamic estimatedTime;
@@ -53,37 +53,40 @@ class Booking {
   dynamic pendingAmount;
   dynamic newTotal;
   dynamic customerId;
-  String name;
-  String image;
+  String ?name;
+  String ?image;
   dynamic longitude;
   dynamic latitude;
   dynamic phone;
   dynamic customerRating;
+  int ?driver_id;
 
   Booking({
-    required this.id,
-    required this.startCoordinate,
-    required this.endCoordinate,
-    required this.startAddress,
-    required this.endAddress,
-    required this.distance,
-    required this.paymentMethod,
-    required this.estimatedTime,
-    required this.actualTime,
-    required this.total,
-    required this.pendingAmount,
-    required this.newTotal,
-    required this.customerId,
-    required this.name,
-    required this.image,
-    required this.longitude,
-    required this.latitude,
-    required this.phone,
-    required this.customerRating,
+     this.id,
+     this.startCoordinate,
+     this.endCoordinate,
+     this.startAddress,
+     this.endAddress,
+     this.distance,
+     this.paymentMethod,
+     this.estimatedTime,
+     this.actualTime,
+     this.total,
+     this.pendingAmount,
+     this.newTotal,
+     this.customerId,
+     this.name,
+     this.image,
+     this.longitude,
+     this.latitude,
+     this.phone,
+     this.customerRating,
+    this.driver_id
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) => Booking(
         id: json["id"],
+        driver_id: json["driver_id"],
         startCoordinate: json["start_coordinate"] ?? "",
         endCoordinate: json["end_coordinate"] ?? "",
         startAddress: json["start_address"] ?? "",
@@ -107,6 +110,7 @@ class Booking {
   Map<String, dynamic> toJson() => {
         "id": id,
         "start_coordinate": startCoordinate,
+        "driver_id": driver_id,
         "end_coordinate": endCoordinate,
         "start_address": startAddress,
         "end_address": endAddress,

@@ -181,9 +181,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
   late WebSocketHelper _socketHelper;
 
-  void onInit() {
+  void onInit(){
     _socketHelper = WebSocketHelper();
-    if (_socketHelper.isConnected == false) {
+    if(!_socketHelper.isConnected){
       _socketHelper.connect();
     }
     _socket = _socketHelper.getSocket();
@@ -257,6 +257,8 @@ class LatestSocketProvider extends ChangeNotifier {
     // bookingDataModel = BookingDataModel.fromJson(data);
     bookingList.insert(0, data);
     bookingList = bookingList.toSet().toList();
+    final Set<int> seenIds = {};
+    bookingList = bookingList.where((booking) => seenIds.add(booking.id)).toList();
     notifyListeners();
   }
 
@@ -687,6 +689,61 @@ class LatestSocketProvider extends ChangeNotifier {
     _orderDetail = val;
     notifyListeners();
   }
+///****************************** Get Order Status *****************************************
+  Future<void> getOrderStatus(String id) async {
+    if(id.isEmpty){
+      return;
+    }
+    try {
+      // Setup Dio
+      final dio = Dio();
+      final headers = {'Authorization': 'Bearer ${session.sessionToken}'};
+      print(session.sessionToken);
+      var response = await dio.get(
+        'https://api.gatsbyrideshare.com/api/webservice/driver/order/status/$id',
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200 && response.data["data"] != null) {
+        final bookingModel = Booking.fromJson(response.data["data"]);
+        print("getOrderStatus =========>>>>>${response.data.toString()}");
+        if(bookingModel.driver_id == null){
+          updateRideList(bookingModel);
+        }
+       /* updateRideList(Booking(
+          id: myData["id"].toString(),
+          startCoordinate: myData["start_coordinate"].toString(),
+          endCoordinate: myData["end_coordinate"].toString(),
+          startAddress: myData["start_address"].toString(),
+          endAddress: myData["end_address"].toString(),
+          distance: myData["distance"].toString(),
+          paymentMethod: myData["payment_method"].toString(),
+          estimatedTime: myData["estimated_time"].toString(),
+          actualTime: myData["actual_time"].toString(),
+          total: myData["total"].toString(),
+          pendingAmount: myData["pending_amount"].toString(),
+          newTotal: myData["new_total"].toString(),
+          customerId: myData["customerID"].toString(),
+          name: myData["name"].toString(),
+          image: myData["image"].toString(),
+          longitude: myData["Longitude"].toString(),
+          latitude: myData["Latitude"].toString(),
+          phone: myData["phone"].toString(),
+          customerRating: myData["CustomerRating"].toString(),
+        ));*/
+      } else {
+        logMe(response.statusMessage);
+      }
+    } catch (e) {
+      logMe("Error in getPushNotificationRoute: $e");
+    }
+  }
+
+
+
+
+
+
 
   /// *****************-------------->>>>>>>. CALCULATE TIME AND DISTANCE WHEN TRIP END <<<<<<<--------   ****************************///////
 
@@ -720,8 +777,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   /// Manage Tracking HERE
 
-  Future<void> setCurrentLocation(
-      OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+  Future<void> setCurrentLocation(OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
     log("order details are: $orderDetail");
@@ -1076,8 +1132,7 @@ class LatestSocketProvider extends ChangeNotifier {
                           notificationTitle: "Gatsby Driver",
                           enableWakeLock: true,
                           setOngoing: true,
-                          notificationIcon:
-                              AndroidResource(name: "@mipmap/ic_launcher")));
+                          notificationIcon: AndroidResource(name: "@mipmap/launcher_icon")));
             } else {
               locationSettings = AppleSettings(
                 accuracy: LocationAccuracy.bestForNavigation,
@@ -1088,13 +1143,8 @@ class LatestSocketProvider extends ChangeNotifier {
             DateTime? lastUpdatePolyLine;
             Duration throttleDuration = const Duration(seconds: 2);
             Duration throttleDurationPolyLine = const Duration(seconds: 5);
-            locationbackSubscription =
-                Geolocator.getPositionStream(locationSettings: locationSettings)
-                    .listen((Position? position) async {
-              if (position != null &&
-                  (lastUpdate == null ||
-                      DateTime.now().difference(lastUpdate!) >
-                          throttleDuration)) {
+            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
+              if (position != null && (lastUpdate == null || DateTime.now().difference(lastUpdate!) > throttleDuration)) {
                 currentPosition = position;
                 lastUpdate = DateTime.now();
                 log("****************NEW POSITION :-->> ${currentPosition!.latitude},${currentPosition!.longitude}",

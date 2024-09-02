@@ -5,6 +5,7 @@ import 'package:appkey_taxiapp_driver/core/data/models/booking_data_model.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
+import 'package:appkey_taxiapp_driver/core/utility/push_notification_helper.dart';
 import 'package:appkey_taxiapp_driver/features/create_profile/presentation/pages/create_profile.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:dio/dio.dart';
@@ -37,93 +38,31 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
 
-  Future<void> getPushNotificationRoute() async {
-    try {
-      RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-      const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
 
-      if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
-        logMe("RemoteMessage data: ${remoteMessage.data}");
-
-        if (remoteMessage.data["notificationTypeId"] == "CustomerBookRequest") {
-          // Decode data
-          var myData = json.decode(remoteMessage.data["id"]);
-
-          // Setup Dio
-          var dio = Dio();
-          var session = locator<Session>();
-          var headers = {'Authorization': 'Bearer ${session.sessionToken}'};
-
-          // Fetch ride status
-          var response = await dio.get(
-            'https://api.gatsbyrideshare.com/api/webservice/driver/order/status/${myData["id"]}',
-            options: Options(headers: headers),
-          );
-
-          if (response.statusCode == 200) {
-            logMe(json.encode(response.data));
-            if (response.data["data"]["status"] == 0) {
-              socketProvider.updateRideList(Booking(
-                id: myData["id"].toString(),
-                startCoordinate: myData["start_coordinate"].toString(),
-                endCoordinate: myData["end_coordinate"].toString(),
-                startAddress: myData["start_address"].toString(),
-                endAddress: myData["end_address"].toString(),
-                distance: myData["distance"].toString(),
-                paymentMethod: myData["payment_method"].toString(),
-                estimatedTime: myData["estimated_time"].toString(),
-                actualTime: myData["actual_time"].toString(),
-                total: myData["total"].toString(),
-                pendingAmount: myData["pending_amount"].toString(),
-                newTotal: myData["new_total"].toString(),
-                customerId: myData["customerID"].toString(),
-                name: myData["name"].toString(),
-                image: myData["image"].toString(),
-                longitude: myData["Longitude"].toString(),
-                latitude: myData["Latitude"].toString(),
-                phone: myData["phone"].toString(),
-                customerRating: myData["CustomerRating"].toString(),
-              ));
-            }
-          } else {
-            logMe(response.statusMessage);
-          }
-
-          log("Notification ride ID: $myData");
-        }
-      }
-    } catch (e) {
-      logMe("Error in getPushNotificationRoute: $e");
-    }
-  }
-
-  final socketProvider = locator<LatestSocketProvider>();
 
   @override
   void initState(){
     super.initState();
-    getPushNotificationRoute();
+    //getPushNotificationRoute();
     WidgetsBinding.instance.addObserver(this);
     Timer(const Duration(seconds: 3), () async {
       bool requestPermission = await checkLocationAndPermission();
       log("Request permission value: $requestPermission");
-
       if (!requestPermission) {
         requestPermission = await checkLocationAndPermission();
         logMe("Rechecked location and permission value: $requestPermission");
       }
-
+      await _getDataFromNotification();
       await sessionClearOrder();
       bool isSessionValid = await checkUserSession();
       if (isSessionValid) {
         bool hasProfile = await checkProfileSession();
         if (hasProfile) {
           var session = locator<Session>();
-          logMe("Is driver online: ${session.isOnline}");
           var homeProvider = locator<HomeProvider>();
           homeProvider.changeStatus = session.isOnline;
-
           Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
+          logMe("Is driver online: ${session.isOnline}");
         } else {
           Navigator.pushNamedAndRemoveUntil(context, CreateProfilePage.routeName, (route) => false);
         }
@@ -137,6 +76,10 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
+  }
+ FutureOr<String?> _getDataFromNotification()async{
+    final data = await PushNotificationService().getPushNotificationRoute();
+    return data?.$1;
   }
 
   @override

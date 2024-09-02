@@ -575,8 +575,7 @@ class HomeProvider with ChangeNotifier {
 
   updateLocation() async {
     dev.log("Update location function called");
-
-    locationService.getLocation().then((value) {
+    await locationService.getLocation().then((value) {
       var bearing = value.heading;
       var lat = value.latitude;
       var lng = value.longitude;

@@ -216,12 +216,6 @@ class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver
                                             socketProvider.currentOrderStatus,
                                         newMessgeCount:
                                             socketProvider.unreadMessageCount),
-
-                                    // BottomContainerOrder(
-                                    //   newMessgeCount:
-                                    //       socketProvider.unreadMessageCount,
-                                    //   currentOrderStatus: session.currentOrderState,
-                                    // ),
                                   ],
                                 ),
                               ),
