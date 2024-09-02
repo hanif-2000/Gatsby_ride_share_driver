@@ -257,8 +257,10 @@ class LatestSocketProvider extends ChangeNotifier {
     // bookingDataModel = BookingDataModel.fromJson(data);
     bookingList.insert(0, data);
     bookingList = bookingList.toSet().toList();
-    final Set<int> seenIds = {};
-    bookingList = bookingList.where((booking) => seenIds.add(booking.id)).toList();
+    final Set<String> seenIds = {};
+    final uniqueBookings = bookingList.where((booking) => seenIds.add(booking.id.toString())).toList();
+    bookingList.clear();
+    bookingList.addAll(uniqueBookings);
     notifyListeners();
   }
 
@@ -273,8 +275,10 @@ class LatestSocketProvider extends ChangeNotifier {
         if (!checkId) {
           bookingList.insert(0, bookingDataModel!.data);
           bookingList.toSet().toList();
-          final Set<int> seenIds = {};
-          bookingList = bookingList.where((booking) => seenIds.add(booking.id)).toList();
+          final Set<String> seenIds = {};
+          final uniqueBookings = bookingList.where((booking) => seenIds.add(booking.id.toString())).toList();
+          bookingList.clear();
+          bookingList.addAll(uniqueBookings);
         }
         notifyListeners();
       }
