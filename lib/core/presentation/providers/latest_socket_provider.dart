@@ -268,14 +268,14 @@ class LatestSocketProvider extends ChangeNotifier {
       log("socket listen :-->> $response");
       if (response['type'] == "CustomerBookRequest") {
         bookingDataModel = BookingDataModel.fromJson(response);
-        bool checkId =
-            checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
+        bool checkId = checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
         logMe("check id is -> $checkId");
         if (!checkId) {
           bookingList.insert(0, bookingDataModel!.data);
           bookingList.toSet().toList();
+          final Set<int> seenIds = {};
+          bookingList = bookingList.where((booking) => seenIds.add(booking.id)).toList();
         }
-
         notifyListeners();
       }
 
