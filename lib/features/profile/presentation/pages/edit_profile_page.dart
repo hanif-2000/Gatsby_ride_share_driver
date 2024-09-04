@@ -9,7 +9,7 @@ import '../../../../core/utility/injection.dart';
 class EditProfilePage extends StatefulWidget {
   static const String routeName = "EditProfilePage";
 
-  const EditProfilePage({Key? key}) : super(key: key);
+  const EditProfilePage({super.key});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();

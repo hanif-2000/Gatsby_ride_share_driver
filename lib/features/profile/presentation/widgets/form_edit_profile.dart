@@ -22,8 +22,8 @@ import '../../../../core/utility/validation_helper.dart';
 
 class FormEditProfile extends StatefulWidget {
   const FormEditProfile({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<FormEditProfile> createState() => _FormEditProfileState();
@@ -107,10 +107,11 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                       context: context,
                                       imagePicker: provider.imagePicker,
                                       successCallBack: (file) {
-                                        provider.setProfileImage(file!.path);
-                                        provider
-                                            .doUploadProfileApi(file.path)
-                                            .listen((state) async {
+                                        if(file==null){
+                                          return;
+                                        }
+                                        provider.setProfileImage(file);
+                                        provider.doUploadProfileApi(file).listen((state) async {
                                           switch (state.runtimeType) {
                                             case UploadLoading:
                                               showLoading();
@@ -123,14 +124,9 @@ class _FormEditProfileState extends State<FormEditProfile> {
                                               showToast(message: msg);
                                               break;
                                             case UploadSuccess:
-                                              final imageName =
-                                                  (state as UploadSuccess).data;
-                                              // showToast(
-                                              //     message: appLoc.success);
-                                              provider.setProfileUploadImage(
-                                                  imageName!);
-                                              logMe(
-                                                  'Image Name ---> ${provider.profileUploadImage}');
+                                              final imageName = (state as UploadSuccess).data;
+                                              provider.setProfileUploadImage(imageName!);
+                                              logMe('Image Name ---> ${provider.profileUploadImage}');
                                               dismissLoading();
                                               break;
                                           }

@@ -127,11 +127,12 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                           ImagePickerHelper.showPicker(
                             context: context,
                             imagePicker: provider.imagePicker,
-                            successCallBack: (file) {
-                              provider.setProfileImage(file!.path);
-                              provider
-                                  .doUploadProfileApi(file.path)
-                                  .listen((state) async {
+                            successCallBack: (path) {
+                              if(path== null){
+                                return;
+                              }
+                              provider.setProfileImage(path);
+                              provider.doUploadProfileApi(path).listen((state) async {
                                 switch (state.runtimeType) {
                                   case UploadLoading:
                                     showLoading();
@@ -418,9 +419,12 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     context: context,
                     imagePicker: provider.imagePicker,
                     successCallBack: (file) {
-                      provider.setDlImageFront(file!.path);
+                      if(file== null){
+                        return;
+                      }
+                      provider.setDlImageFront(file);
                       provider
-                          .doUploadProfileApi(file.path)
+                          .doUploadProfileApi(file)
                           .listen((state) async {
                         switch (state.runtimeType) {
                           case UploadLoading:
@@ -466,9 +470,12 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     context: context,
                     imagePicker: provider.imagePicker,
                     successCallBack: (file) {
-                      provider.setDlImageBack(file!.path);
+                      if(file==null){
+                        return;
+                      }
+                      provider.setDlImageBack(file);
                       provider
-                          .doUploadProfileApi(file.path)
+                          .doUploadProfileApi(file)
                           .listen((state) async {
                         switch (state.runtimeType) {
                           case UploadLoading:

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class UploadState extends Equatable {
+sealed class UploadState extends Equatable {
   @override
   List<Object?> get props => [];
 }

@@ -222,6 +222,9 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   void joinExitRoom({int? receiverId, required String type}) {
+    if(!_socketHelper.isConnected){
+      _socketHelper.connect();
+    }
     markMessageAsRead(receiverId: receiverId);
     log("join socket called $type");
     log("join socket called $type");
@@ -254,7 +257,6 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   void updateRideList(Booking data) {
-    // bookingDataModel = BookingDataModel.fromJson(data);
     bookingList.insert(0, data);
     bookingList = bookingList.toSet().toList();
     final Set<String> seenIds = {};

@@ -200,51 +200,6 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               largeVerticalSpacing(),
-              // Row(
-              //   children: [
-              //     const Flexible(
-              //       fit: FlexFit.loose,
-              //       flex: 1,
-              //       child: Divider(),
-              //     ),
-              //     Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              //       child: Text(
-              //         'Or login with',
-              //         textAlign: TextAlign.center,
-              //         style: formTextFieldStyle.copyWith(
-              //             fontSize: 15,
-              //             color: greyA2A0A8,
-              //             fontWeight: FontWeight.w400),
-              //       ),
-              //     ),
-              //     const Flexible(
-              //       fit: FlexFit.loose,
-              //       flex: 1,
-              //       child: Divider(),
-              //     ),
-              //   ],
-              // ),
-              // largeVerticalSpacing(),
-              // CustomButton(
-              //   text: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       SvgPicture.asset('assets/icons/auth/ic_facebook.svg'),
-              //       mediumHorizontalSpacing(),
-              //       Text(
-              //         appLoc.login_with_facebook,
-              //         style: txtButtonStyle,
-              //       ),
-              //     ],
-              //   ),
-              //   // buttonHeight: MediaQuery.of(context).size.height * 0.080,
-              //   buttonHeight: 48,
-              //   isRounded: true,
-              //   event: () async {},
-              //   bgColor: blue3B5998,
-              // ),
-              // largeVerticalSpacing(),
             ],
           ),
         ),
