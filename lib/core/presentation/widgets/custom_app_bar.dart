@@ -47,7 +47,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         var session = locator<Session>();
-        var socketProvider = locator<LatestSocketProvider>();
+        var socketProvider = context.read<LatestSocketProvider>();
+
 
         log("app bar called in homepage");
 

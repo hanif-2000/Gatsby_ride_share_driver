@@ -36,12 +36,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FcmProvider _fcmProvider = locator<FcmProvider>();
 
   // var provider = locator<HomeProvider>();
-  var socketProvider = locator<LatestSocketProvider>();
+ // var socketProvider = locator<LatestSocketProvider>();
   // var homeProvider = locator<HomeProvider>();
 
   var session = locator<Session>();
 
   Future<void> retrieveOrderReceiptFromLocal() async {
+    final socketProvider = context.read<LatestSocketProvider>();
     // Retrieve the JSON string from local storage
     String? jsonData = session.orderReceipt;
     // ReceiptData dataMap = json.decode(jsonData);
@@ -61,38 +62,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    final socketProvider = context.read<LatestSocketProvider>();
     socketProvider.onInit();
     socketProvider.resetAfterRideEnd();
     //socketProvider.connectToSocket(context);
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
 
     // var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    print(
-        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
-    print(
-        "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
-/*    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        socketProvider.disconnectSocket();
-      } else {
-        //socketProvider.disconnectSocket();
-        socketProvider.connectToSocket(context);
-      }
-      // Got a new connectivity status!
-    });*/
+    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeProvider.changeStatus = session.isOnline;
       if (session.isOrderRunning) {
         log("----order running called--- ${session.runningOrderStatus}");
-        log("----order running called---");
-
         showLoading();
 
         if (session.runningOrderStatus == 7) {
           log("----order running called runningOrderStatus 7---");
           log("----order running called isPaymentDone ${session.isPaymentDone}");
-          log("----order running called israting done ${session.isRatingGiven}");
+          log("----order running called is rating done ${session.isRatingGiven}");
 
           if (!session.isPaymentDone) {
             log("----order running called isPaymentDone ${session.isPaymentDone}");

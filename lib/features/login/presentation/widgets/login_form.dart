@@ -32,7 +32,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  var socketProvider = locator<LatestSocketProvider>();
+ // var socketProvider = locator<LatestSocketProvider>();
   // var socketProvider = Provider.of<LatestSocketProvider>(
   //     locator<GlobalKey<NavigatorState>>().currentContext!);
   void submit() {
@@ -78,8 +78,7 @@ class _LoginFormState extends State<LoginForm> {
             final model = ChangeStatusesponseModel.fromJson(response.data);
 
             print("change status model is :--> ${model.message}");
-            Navigator.pushNamedAndRemoveUntil(
-                context, HomePage.routeName, (route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
             logMe("Authorization Token: ${session.sessionToken}");
             break;
           } catch (e) {

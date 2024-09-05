@@ -226,7 +226,6 @@ class ButtonOrder extends StatelessWidget {
                       socketProvider.updateOrderStatus(
                         status: "2",
                         actualTime: "0",
-                        context: context,
                         startTime: '',
                         endTime: '',
                       );
@@ -236,7 +235,6 @@ class ButtonOrder extends StatelessWidget {
                       socketProvider.updateOrderStatus(
                         status: "3",
                         actualTime: "0",
-                        context: context,
                         startTime: '',
                         endTime: '',
                       );
@@ -247,18 +245,16 @@ class ButtonOrder extends StatelessWidget {
                       socketProvider.updateOrderStatus(
                         status: "5",
                         actualTime: "0",
-                        context: context,
                         startTime: DateTime.now().toString(),
                         endTime: '',
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
                         socketProvider.calculateDistanceCovered2();
-                         await Future.delayed(Duration(milliseconds: 500));
+                         await Future.delayed(const Duration(milliseconds: 500));
                         socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
-                          context: context,
                           startTime: session.rideStartTime,
                           endTime: DateTime.now().toString(),
                         );
@@ -319,14 +315,12 @@ class ButtonOrder extends StatelessWidget {
                             Navigator.pop(context);
                             showLoading();
 
-                            socketProvider
-                                .updateOrderStatus(
+                            socketProvider.updateOrderStatus(
                                     status: "8",
                                     actualTime: "0",
                                     endTime: '',
                                     startTime: '',
-                                    context: context)
-                                .then((value) {
+                            ).then((value) {
                               session.setRunningOrderStatus = 0;
                               session.setIsOrderRunning = false;
                               session.clearOrderSession();

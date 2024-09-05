@@ -47,10 +47,6 @@ class ImagePickerHelper {
     }
   }
 
-  bool isImageExceedOver3MB(int? byte) {
-    if (byte == null) return false;
-    return byte > 12000000;
-  }
   Future<XFile?> _compressFile(File file) async {
     final mimeType = lookupMimeType(file.path);
     if (mimeType == null) {

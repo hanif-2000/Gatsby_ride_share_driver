@@ -30,20 +30,8 @@ import '../../utility/direction_helper.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 
 class LatestSocketProvider extends ChangeNotifier {
-  static final LatestSocketProvider _provider = LatestSocketProvider.internal();
-
-  factory LatestSocketProvider() {
-    return _provider;
-  }
-
-  // final bool _disposed = false;
-
-  LatestSocketProvider.internal();
 
   final session = locator<Session>();
-
-  // final orderProvider = locator<OrderProvider>();
-
   var unreadCount = '0';
   final chatController = TextEditingController();
 
@@ -222,38 +210,38 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   void joinExitRoom({int? receiverId, required String type}) {
-    if(!_socketHelper.isConnected){
-      _socketHelper.connect();
-    }
-    markMessageAsRead(receiverId: receiverId);
-    log("join socket called $type");
-    log("join socket called $type");
+    try{
+      if(!_socketHelper.isConnected){
+        _socketHelper.connect();
+      }
+      markMessageAsRead(receiverId: receiverId);
+      log("join socket called $type");
+      log("join socket called $type");
 
-    if (type == 'Join') {
-      isLoading = true;
-      notifyListeners();
-    } else if (type == 'unJoin') {
-      getTotalUnreadCount(receiverId);
-      // clearChatList();
-    }
-    // if (type == 'join') {
-    //   markMessageAsRead(receiverId: receiverId);
-    // }
-    final map = {
-      'type': 'Driver',
-      'serviceType': type,
-      'UserID': session.userId,
-      'roomID': (int.parse(session.userId) > receiverId!)
-          ? '$receiverId-${session.userId}'
-          : '${session.userId}-$receiverId',
-    };
-    logMe('Join Exit room socket -- > ${map.toString()}');
-    log('Join Exit room socket -- > ${map.toString()}');
+      if (type == 'Join') {
+        isLoading = true;
+        notifyListeners();
+      }
+      else if (type == 'unJoin') {
+        getTotalUnreadCount(receiverId);
+        // clearChatList();
+      }
+      final map = {
+        'type': 'Driver',
+        'serviceType': type,
+        'UserID': session.userId,
+        'roomID': (int.parse(session.userId) > receiverId!)
+            ? '$receiverId-${session.userId}'
+            : '${session.userId}-$receiverId',
+      };
+      logMe('Join Exit room socket -- > ${map.toString()}');
+      _socket.send(
+        jsonEncode(map),
+      );
+    }catch(e){
+      print("Error========>>>>>>>>.: $e");
 
-    _socket.send(
-      jsonEncode(map),
-    );
-    // listenRequests();
+    }
   }
 
   void updateRideList(Booking data) {
@@ -371,7 +359,6 @@ class LatestSocketProvider extends ChangeNotifier {
       }
       if (response['type'] == 'UnreadCount') {
         log("unread message count called");
-
         updateUnReadMessages(count: response['data']);
       }
     });
@@ -385,12 +372,12 @@ class LatestSocketProvider extends ChangeNotifier {
   void addSingleChat(ChatModel chat) {
     log("my single chat data is:-->> $chat");
     _chatMessagesList.insert(0, chat);
+    //_chatMessagesList.toSet().toList();
     notifyListeners();
   }
 
   void updateUnReadMessages({required int count}) {
     unreadMessageCount = count;
-
     log("un read message count is:-->> $unreadMessageCount");
     notifyListeners();
   }
@@ -400,80 +387,96 @@ class LatestSocketProvider extends ChangeNotifier {
     int? receiverId,
     String? messageType = 'Text',
   }) {
-    // final chatProvider = locator<ChatProvider>();
-    final map = {
-      "userID": session.userId,
-      "serviceType": "Chat",
-      "recieverID": receiverId,
-      "msg": message,
-      "room": (int.parse(session.userId) > receiverId!)
-          ? '$receiverId-${session.userId}'
-          : '${session.userId}-$receiverId',
-      "MessageType": "Text",
-      "SenderType": "Driver",
-      "RecieverType": "Customer",
-      "type": "Chat"
-    };
-    log('Message send ---> ${map.toString()}');
-
-    _socket.send(jsonEncode(map));
-    addSingleChat(
-      ChatModel(
-        id: session.runningOrderId.toString(),
-        messageType: 'Text',
-        roomId: (int.parse(session.userId) > receiverId)
+    try{
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
+      }
+      final map = {
+        "userID": session.userId,
+        "serviceType": "Chat",
+        "recieverID": receiverId,
+        "msg": message,
+        "room": (int.parse(session.userId) > receiverId!)
             ? '$receiverId-${session.userId}'
             : '${session.userId}-$receiverId',
-        message: message,
-        senderType: 'Driver',
-        recieverType: 'Customer',
-        sourceUserId: session.userId,
-        targetUserId: receiverId.toString(),
-        createdOn: DateTime.now(),
-        modifiedOn: DateTime.now(),
-      ),
-    );
+        "MessageType": "Text",
+        "SenderType": "Driver",
+        "RecieverType": "Customer",
+        "type": "Chat"
+      };
+      log('Message send ---> ${map.toString()}');
+
+      _socket.send(jsonEncode(map));
+      addSingleChat(
+        ChatModel(
+          id: session.runningOrderId.toString(),
+          messageType: 'Text',
+          roomId: (int.parse(session.userId) > receiverId)
+              ? '$receiverId-${session.userId}'
+              : '${session.userId}-$receiverId',
+          message: message,
+          senderType: 'Driver',
+          recieverType: 'Customer',
+          sourceUserId: session.userId,
+          targetUserId: receiverId.toString(),
+          createdOn: DateTime.now(),
+          modifiedOn: DateTime.now(),
+        ),
+      );
+    }catch(e){
+      print("Error========>>>>>>>>.: $e");
+    }
+
   }
 
   //   //Get total number of unread message
   void getTotalUnreadCount(int? receiverId) {
-    log("get total count");
-    log("get total count");
+    log("=====================get total count================");
+    try{
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
+      }
+      final map = {
+        "userID": session.userId,
+        "serviceType": "UnreadCount",
+        "room": (int.parse(session.userId) > receiverId!)
+            ? '$receiverId-${session.userId}'
+            : '${session.userId}-$receiverId',
+        "UserType": 'driver'
+      };
+      log("get total count:$map");
+      _socket.send(jsonEncode(map));
+      log("customer id is: ${session.customerId} ");
+    }catch(e){
+      print("Error========>>>>>>>>.: $e");
+    }
 
-    final map = {
-      "userID": session.userId,
-      "serviceType": "UnreadCount",
-      "room": (int.parse(session.userId) > receiverId!)
-          ? '$receiverId-${session.userId}'
-          : '${session.userId}-$receiverId',
-      "UserType": 'driver'
-    };
-    log("get total count:$map");
-    log("get total count:$map");
-
-    _socket.send(jsonEncode(map));
-
-    log("customer id is: ${session.customerId} ");
   }
 
-  void markMessageAsRead({
-    int? receiverId,
-  }) {
-    log("mark message as read  called");
-    final map = {
-      "userID": session.userId,
-      "serviceType": "",
-      "recieverID": receiverId,
-      "room": (int.parse(session.userId) > receiverId!)
-          ? '$receiverId-${session.userId}'
-          : '${session.userId}-$receiverId',
-      "SenderType": "Driver",
-      "RecieverType": "Customer",
-      "type": "read"
-    };
+  void markMessageAsRead({int? receiverId,}) {
+    try{
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
+      }
+      log("mark message as read  called");
+      final map = {
+        "userID": session.userId,
+        "serviceType": "",
+        "recieverID": receiverId,
+        "room": (int.parse(session.userId) > receiverId!)
+            ? '$receiverId-${session.userId}'
+            : '${session.userId}-$receiverId',
+        "SenderType": "Driver",
+        "RecieverType": "Customer",
+        "type": "read"
+      };
 
-    log("mark as read $map");
-    _socket.send(jsonEncode(map));
+      log("mark as read $map");
+      _socket.send(jsonEncode(map));
+    }catch(e){
+      print("Error========>>>>>>>>.: $e");
+    }
+
   }
 
   //   //Initial
@@ -491,8 +494,10 @@ class LatestSocketProvider extends ChangeNotifier {
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
   void updateLatLng({LatLng? latLng, double? bearing = 0}) async {
+    if(!_socketHelper.isConnected){
+      _socketHelper.connect();
+    }
     log("=====******* UPDATE LAT LONG CALLED =======*******");
-
     final map = {
       'serviceType': 'UpdatedLatLong',
       'UserID': session.userId,
@@ -505,21 +510,22 @@ class LatestSocketProvider extends ChangeNotifier {
     log('UPDATE DRIVER LAT LONG -- > ${map.toString()}');
     try {
       _socket.send(jsonEncode(map));
-      //  _socketHelper.reconnect();
       session.setCurrentLat = latLng.latitude;
       session.setCurrentLang = latLng.longitude;
     } catch (e) {
-      log(e.toString());
+      print("Error========>>>>>>>>.: $e");
     }
   }
 
   void updateLatLngAtStarting() async {
     log("update lat long at starting called");
     Position currentLatLng = await Geolocator.getCurrentPosition();
+    if (!_socketHelper.isConnected) {
+      _socketHelper.connect();
+    }
     log("current latlong:${currentLatLng.latitude},${currentLatLng.longitude}");
     session.setCurrentLat = currentLatLng.latitude;
     session.setCurrentLang = currentLatLng.longitude;
-
     final map = {
       'serviceType': 'UpdatedLatLong',
       'UserID': session.userId,
@@ -537,33 +543,28 @@ class LatestSocketProvider extends ChangeNotifier {
   /// ----------------- *********************      ACCEPT THE RIDE **************** --------------------
   Future<bool> acceptRideRequest({required orderId}) async {
     try {
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
+      }
       final map = {
         'serviceType': 'Accept',
         'UserID': session.userId,
         'orderID': orderId
       };
       logMe('accept ride request socket -- > ${map.toString()}');
-
       try {
-        _socket.connection.listen((event) {
-          if (event is Connected || event is Reconnected) {
-            isSocketConnected = true;
-            _socket.send(json.encode(map));
-            log(map.toString());
-            updateLatLngAtStarting();
-            updateLatLng(
-                latLng: LatLng(session.currentLat, session.currentLang));
-            session.setRunningOrderStatus = 1;
-
-            notifyListeners();
-          }
-        });
+        _socket.send(json.encode(map));
+        updateLatLngAtStarting();
+        updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+        session.setRunningOrderStatus = 1;
         session.setIsOrderRunning = true;
+        notifyListeners();
       } catch (e) {
         log(e.toString());
       }
       return true;
     } catch (e) {
+      print("Error========>>>>>>>>.: $e");
       return false;
     }
   }
@@ -571,6 +572,9 @@ class LatestSocketProvider extends ChangeNotifier {
   /// -------------******************      REJECT THE RIDE     ************------------------------
   Future<bool> rejectRideRequest({required orderId}) async {
     try {
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
+      }
       final map = {
         'serviceType': 'Reject',
         'UserID': session.userId,
@@ -578,7 +582,6 @@ class LatestSocketProvider extends ChangeNotifier {
       };
       logMe('reject ride request socket -- > ${map.toString()}');
       _socket.send(jsonEncode(map));
-
       bookingList.removeWhere((element) {
         return element.id == orderId;
       });
@@ -590,106 +593,88 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-  /// ----------- ****************  UPDATE ORDER RIDE STATUS ********* -------------
-  Future<bool> updateOrderStatus(
-      {required String status,
-      required String actualTime,
-      required String startTime,
-      required String endTime,
-      String? distance,
-      required context}) async {
-    log("update order status called");
-    log("update order status called $status");
+  Future<bool> updateOrderStatus({
+    required String status,
+    required String actualTime,
+    required String startTime,
+    required String endTime,
+    String? distance,
+  }) async {
+    log("updateOrderStatus called: $status");
+
+    final map = {
+      'serviceType': 'ChangeStatus',
+      'orderID': session.runningOrderId,
+      'Status': status,
+      'actualTime': actualTime,
+      'StartTime': startTime,
+      'EndTime': endTime,
+      'distance': distance ?? setEstimatedDistance,
+    };
+
+    log('Update Status Payload: $map');
+
     try {
-      final map = {
-        'serviceType': 'ChangeStatus',
-        'orderID': session.runningOrderId,
-        'Status': status,
-        'actualTime': actualTime,
-        'StartTime': startTime,
-        'EndTime': endTime,
-        'distance': setEstimatedDistance
-      };
-      log('Update Status -- > ${map.toString()}');
-
-      try {
-        _socket.connection.listen((event) {
-          if (event is Connected || event is Reconnected) {
-            isSocketConnected = true;
-            _socket.send(json.encode(map));
-            dismissLoading();
-            updateLatLng(
-              latLng: LatLng(session.currentLat, session.currentLang),
-            );
-            log(map.toString());
-            if (status == "1") {
-              currentOrderStatus = 2;
-              rideText = "Reached Pick up Location";
-              setNewChangeOrderStatus = "1";
-              session.setRunningOrderStatus = 1;
-              dismissLoading();
-              setNewPolylineDirection(false);
-            }
-
-            if (status == "2") {
-              currentOrderStatus = 2;
-              rideText = "Reached Pick up Location";
-              setNewChangeOrderStatus = "2";
-              // session.setOrderStatus = 2;
-              session.setRunningOrderStatus = 2;
-              dismissLoading();
-
-              setNewPolylineDirection(false);
-            } else if (status == '3') {
-              currentOrderStatus = 3;
-              setNewChangeOrderStatus = "3";
-              // session.setOrderStatus = 3;
-              session.setRunningOrderStatus = 3;
-              dismissLoading();
-              setNewPolylineDirection(true);
-
-              rideText = "Start Trip";
-            } else if (status == '5') {
-              currentOrderStatus = 5;
-              setNewChangeOrderStatus = "5";
-
-              session.setRunningOrderStatus = 5;
-              dismissLoading();
-
-              setNewPolylineDirection(true);
-
-              // session.setOrderStatus = 5;
-
-              rideText = "End Trip";
-            } else if (status == "7") {
-              currentOrderStatus = 7;
-              setNewChangeOrderStatus = "7";
-              // session.setOrderStatus = 7;
-              session.setRunningOrderStatus = 7;
-              dismissLoading();
-              //setNewPolylineDirection(true);
-              locationbackSubscription?.cancel();
-              rideText = "Start Ride to Pick up Location";
-            } else {
-              log("Ride canceled by the driver");
-            }
-
-            notifyListeners();
-          } else {
-            disconnectSocket();
-            onInit();
-            // connectToSocket(context);
-          }
-        });
-      } catch (e) {
-        log(e.toString());
+      if (!_socketHelper.isConnected) {
+        _socketHelper.connect();
       }
 
+      _socket.send(json.encode(map));
+      dismissLoading();
+      _handleOrderStatusChange(status);
+      updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+      notifyListeners();
       return true;
     } catch (e) {
+      print("Error========>>>>>>>>.: $e");
       return false;
     }
   }
+
+// Helper method to handle status changes
+  void _handleOrderStatusChange(String status) {
+    switch (status) {
+      case "1":
+        _setOrderState(2, "Reached Pick up Location", "1", false);
+        break;
+      case "2":
+        _setOrderState(2, "Reached Pick up Location", "2", false);
+        break;
+      case "3":
+        _setOrderState(3, "Start Trip", "3", true);
+        break;
+
+      case "5":
+        _setOrderState(5, "End Trip", "5", true);
+        break;
+      case "7":
+        _setOrderState(7, "Start Ride to Pick up Location", "7", false);
+        locationbackSubscription?.cancel();
+        break;
+
+      default:
+        log("Ride canceled by the driver");
+        break;
+    }
+  }
+
+
+  void _setOrderState(int orderStatus, String rideMessage, String changeOrderStatus, bool polylineDirection) {
+    currentOrderStatus = orderStatus;
+    rideText = rideMessage;
+    setNewChangeOrderStatus = changeOrderStatus;
+    session.setRunningOrderStatus = orderStatus;
+    dismissLoading();
+    setNewPolylineDirection(polylineDirection);
+  }
+
+
+
+
+
+
+
+
 
   set setOrderDetails(OrderDetail val) {
     _orderDetail = val;
@@ -834,8 +819,8 @@ class LatestSocketProvider extends ChangeNotifier {
           markerId: markerIdOrigin,
           position: originLatLng,
           infoWindow: InfoWindow(title: appLoc.customerplace),
-          icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
-            return pickUpMarker = BitmapDescriptor.fromBytes(value);
+          icon: await getBytesFromAsset(pickupIcon, 25).then((value) {
+            return pickUpMarker = BitmapDescriptor.bytes(value);
           }),
           onTap: () {},
         );
@@ -846,8 +831,8 @@ class LatestSocketProvider extends ChangeNotifier {
           // rotation: tiltValue,
           // zIndex: zIndex,
           infoWindow: InfoWindow(title: appLoc.destinationplace),
-          icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
-            return destinationMarker = BitmapDescriptor.fromBytes(value);
+          icon: await getBytesFromAsset(destinationIcon, 30).then((value) {
+            return destinationMarker = BitmapDescriptor.bytes(value);
           }),
           onTap: () {},
         );
@@ -888,7 +873,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   updateGetBytes() {
-    getBytesFromAsset(carIconAsset, 55).then((value) {
+    getBytesFromAsset(carIconAsset, 50).then((value) {
       driverMarker = BitmapDescriptor.bytes(value);
     });
     getBytesFromAsset(pickupIcon, 50).then((value) async {
@@ -939,6 +924,8 @@ class LatestSocketProvider extends ChangeNotifier {
   Position? currentPosition;
   double tiltValue = -28;
   double zIndex = 0;
+  double lastLatitude = 0;
+  double lastLongitude = 0;
   String setEstimatedDistance = "0.0";
 
   late LatLng originLatLng, destinationLatLng;
@@ -987,8 +974,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     await _getCurrentLocation();
-    var coordinate =
-        LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
     if (isFromOrigin) {
       log("------------------ GO TO DESTINATION FROM ORIGIN---------- $latDestination,$lngDestination ");
 
@@ -1122,71 +1108,94 @@ class LatestSocketProvider extends ChangeNotifier {
     try {
       var status = await getLocationPermissionStatus();
       if (status != null && status) {
-        try {
-          var permissionStatus = await permission.Permission.location.request();
-          if (permissionStatus == permission.PermissionStatus.granted) {
-            LocationSettings locationSettings = const LocationSettings();
-
-            if (Platform.isAndroid) {
-              locationSettings = AndroidSettings(
-                  accuracy: LocationAccuracy.bestForNavigation,
-                  distanceFilter: 30,
-                  foregroundNotificationConfig:
-                      const ForegroundNotificationConfig(
-                          notificationText:
-                              "Location is being used for navigation",
-                          notificationTitle: "Gatsby Driver",
-                          enableWakeLock: true,
-                          setOngoing: true,
-                          notificationIcon: AndroidResource(name: "@mipmap/launcher_icon")));
-            } else {
-              locationSettings = AppleSettings(
-                accuracy: LocationAccuracy.bestForNavigation,
-                distanceFilter: 30,
-              );
-            }
-            DateTime? lastUpdate;
-            DateTime? lastUpdatePolyLine;
-            Duration throttleDuration = const Duration(seconds: 2);
-            Duration throttleDurationPolyLine = const Duration(seconds: 5);
-            locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
-              if (position != null && (lastUpdate == null || DateTime.now().difference(lastUpdate!) > throttleDuration)) {
-                currentPosition = position;
+        var permissionStatus = await permission.Permission.location.request();
+        if (permissionStatus == permission.PermissionStatus.granted) {
+          // Get platform-specific location settings
+          LocationSettings locationSettings = _getPlatformLocationSettings();
+          DateTime? lastUpdate;
+          DateTime? lastUpdatePolyLine;
+          Duration throttleDuration = const Duration(seconds: 2);
+          Duration throttleDurationPolyLine = const Duration(seconds: 5);
+          // Listen to location updates
+          locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
+              if (position != null && _shouldUpdateLocation(lastUpdate, throttleDuration)) {
+                await _handleLocationUpdate(position, throttleDurationPolyLine, lastUpdatePolyLine);
                 lastUpdate = DateTime.now();
-                log("****************NEW POSITION :-->> ${currentPosition!.latitude},${currentPosition!.longitude}",
-                    name: "LOCATION UPDATED");
-                if (lastUpdatePolyLine == null ||
-                    DateTime.now().difference(lastUpdatePolyLine!) >
-                        throttleDurationPolyLine) {
-                  lastUpdatePolyLine = DateTime.now();
-                  await createMarker(
-                      driverLatLng:
-                          LatLng(position.latitude, position.longitude));
-                }
-                if (session.runningOrderStatus == 5 ||
-                    currentOrderStatus == 5) {
-                  driverCoordinatesList
-                      .add(LatLng(position.latitude, position.longitude));
-                }
-                await animateToLocation(position, googleMapController)
-                    .whenComplete(
-                  () {
-                    updateLatLng(
-                        latLng: LatLng(position.latitude, position.longitude),
-                        bearing: position.heading);
-                  },
-                );
               }
-            });
-          }
-        } catch (e) {
-          log(e.toString());
+            },
+            onError: (e) => log('Error receiving position updates: $e'),
+          );
+        } else {
+          log("Location permission denied");
         }
-      } else {}
+      } else {
+        log("Location services are not enabled");
+      }
     } catch (e) {
-      log(e.toString());
+      log("Error in getCurrentLocation: $e");
     }
   }
+
+  LocationSettings _getPlatformLocationSettings() {
+    if (Platform.isAndroid) {
+      return AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 20,
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText: "Location is being used for navigation",
+          notificationTitle: "Gatsby Driver",
+          enableWakeLock: true,
+          setOngoing: true,
+          notificationIcon: AndroidResource(name: "@mipmap/launcher_icon"),
+        ),
+      );
+    } else {
+      return AppleSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 20,
+      );
+    }
+  }
+
+  bool _shouldUpdateLocation(DateTime? lastUpdate, Duration throttleDuration) {
+    return lastUpdate == null || DateTime.now().difference(lastUpdate) > throttleDuration;
+  }
+
+  bool _isDistanceMoreThan1Meter(LatLng start, LatLng end) {
+    log("=====******* Distance Between =======>>>>>>>>>${Geolocator.distanceBetween(start.latitude, start.longitude, end.latitude, end.longitude)}");
+    log("=====******* start =======>>>>>>>>>${start.latitude}, ${start.longitude}");
+    log("=====******* end =======>>>>>>>>>${end.latitude}, ${end.longitude}");
+    return Geolocator.distanceBetween(start.latitude, start.longitude, end.latitude, end.longitude) > 1;
+  }
+
+  Future<void> _handleLocationUpdate(
+      Position position,
+      Duration throttleDurationPolyLine,
+      DateTime? lastUpdatePolyLine,
+      ) async {
+    final start = LatLng(lastLatitude, lastLongitude);
+    final end = LatLng(position.latitude, position.longitude);
+    log("New position: ${position.latitude}, ${position.longitude}", name: "LOCATION UPDATED");
+    if (lastUpdatePolyLine == null || DateTime.now().difference(lastUpdatePolyLine) > throttleDurationPolyLine) {
+      if ((lastLatitude == 0 && lastLongitude == 0)|| _isDistanceMoreThan1Meter(start, end)) {
+        lastLatitude = position.latitude;
+        lastLongitude = position.longitude;
+        await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
+      }
+    }
+    if ((lastLatitude == 0 && lastLongitude == 0) || _isDistanceMoreThan1Meter(start, end)) {
+      if (session.runningOrderStatus == 5 || currentOrderStatus == 5) {
+        driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
+      }
+      await animateToLocation(position, googleMapController).whenComplete(() {
+        updateLatLng(
+          latLng: LatLng(position.latitude, position.longitude),
+          bearing: position.heading,
+        );
+      });
+    }
+  }
+
 
   Future<void> animateToLocation(
       Position position, GoogleMapController controller) async {
@@ -1235,10 +1244,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var lngDestination = double.parse(splitDestination[1]);
     var coordinate = LatLng(driverLatLng.latitude, driverLatLng.longitude);
     if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(
-              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
-          .then((result) async {
+      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin).then((result) async {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
           for (var point in result) {
@@ -1271,10 +1277,7 @@ class LatestSocketProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           logMe("Polylinessss destinationnnn");
-          await DirectionHelper()
-              .getRouteBetweenCoordinates(coordinate.latitude,
-                  coordinate.longitude, latDestination, lngDestination)
-              .then(
+          await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination).then(
             (result) {
               if (result.isNotEmpty) {
                 polylineCoordinates = [];
@@ -1402,6 +1405,8 @@ class LatestSocketProvider extends ChangeNotifier {
     setEstimatedDistance = "0.0";
     polylineCoordinates.clear();
     newPolylines.clear();
+    lastLatitude =0;
+    lastLongitude =0;
   }
 
   void calculateDistanceCovered2() {

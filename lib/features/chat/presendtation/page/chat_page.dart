@@ -27,12 +27,13 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
-  var socketProvider = locator<LatestSocketProvider>();
+ late LatestSocketProvider socketProvider;
   var sessionProvider = locator<Session>();
 
   @override
   void initState() {
     super.initState();
+     socketProvider = context.read<LatestSocketProvider>();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'Join');
@@ -41,20 +42,24 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    log(" app lifecycle state is ------>>>>>>>   $state");
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
-    } else if (state == AppLifecycleState.resumed) {
-      socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: "Join");
+    log("didChangeAppLifecycleState ------>>>>>>>   $state");
+    if(context.mounted){
+    //  final socketProvider = context.read<LatestSocketProvider>();
+      if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+        socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
+      } else if (state == AppLifecycleState.resumed) {
+        socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: "Join");
+      }
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
-    ///socketProvider.getTotalUnreadCount(widget.chatDetail!.userId);
+   // final socketProvider = context.read<LatestSocketProvider>();
     socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
     WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+
   }
 
   @override
@@ -63,7 +68,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       top: false,
       child: Scaffold(
         backgroundColor: greyEFEDED,
-        body: Consumer<LatestSocketProvider>(builder: (context, provider, _) {
+        body: Consumer<LatestSocketProvider>(builder: (context, latestSocketProvider, _) {
+          final socketProvider = context.read<LatestSocketProvider>();
           return Column(
             children: [
               Container(
@@ -123,7 +129,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Visibility(
-                      visible: provider.isLoading == false,
+                      visible: socketProvider.isLoading == false,
                       replacement: const Center(
                         child: SizedBox(
                           height: 50,
@@ -133,7 +139,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      child: provider.chatMessageList.isEmpty
+                      child: socketProvider.chatMessageList.isEmpty
                           ? Center(
                               child: Lottie.asset(
                                   'assets/lottie_animation/chat_empty_animation.json'))
@@ -141,17 +147,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                           // )
                           : ListView.builder(
                               reverse: true,
-                              itemCount: provider.chatMessageList.length,
+                              itemCount: socketProvider.chatMessageList.length,
                               itemBuilder: (context, index) {
-                                return provider.chatMessageList[index]
+                                return socketProvider.chatMessageList[index]
                                             .senderType ==
                                         'Customer'
                                     ? ReceiverTile(
-                                        title: provider
+                                        title: socketProvider
                                             .chatMessageList[index].message,
                                       )
                                     : SenderTile(
-                                        title: provider
+                                        title: socketProvider
                                             .chatMessageList[index].message,
                                       );
                               },
@@ -173,7 +179,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: provider.chatController,
+                        controller: socketProvider.chatController,
                         decoration: InputDecoration(
                           hintText: 'Enter message...',
                           hintStyle: titleStyle
@@ -188,13 +194,14 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                     ),
                     InkWell(
                       onTap: () {
-                        if (provider.chatController.text.trim() == '') {
+                        if (socketProvider.chatController.text.trim() == '') {
                           showToast(message: "Please Enter your message");
                         } else {
+                          final socketProvider = context.read<LatestSocketProvider>();
                           socketProvider.sendChatMessage(
-                              message: provider.chatController.text.trim(),
+                              message: socketProvider.chatController.text.trim(),
                               receiverId: widget.chatDetail!.userId);
-                          provider.chatController.text = '';
+                          socketProvider.chatController.text = '';
                         }
                       },
                       child: Padding(

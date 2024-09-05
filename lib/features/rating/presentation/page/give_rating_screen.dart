@@ -145,15 +145,11 @@ class GiveRatingScreen extends StatelessWidget {
                                 style: txtButtonStyle,
                               ),
                               event: () {
-                                var socketProvider =
-                                    locator<LatestSocketProvider>();
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
+                             //   var socketProvider = locator<LatestSocketProvider>();
+                                final socketProvider = context.read<LatestSocketProvider>();
+                                FocusScope.of(context).requestFocus(FocusNode());
                                 // if (provider.formKey.currentState!.validate()) {
-                                provider
-                                    .addRating(
-                                  customerId: customerId,
-                                )
+                                provider.addRating(customerId: customerId,)
                                     .listen(
                                   (event) async {
                                     switch (event.runtimeType) {

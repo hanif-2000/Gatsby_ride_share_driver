@@ -14,15 +14,15 @@ import 'package:provider/provider.dart';
 
 class BottomProfile extends StatefulWidget {
   const BottomProfile({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<BottomProfile> createState() => _BottomProfileState();
 }
 
 class _BottomProfileState extends State<BottomProfile> {
-  var socketProvider = locator<LatestSocketProvider>();
+ // var socketProvider = locator<LatestSocketProvider>();
 
   // var socketProvider = Provider.of<LatestSocketProvider>(
   //     locator<GlobalKey<NavigatorState>>().currentContext!);

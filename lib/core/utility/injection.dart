@@ -123,8 +123,8 @@ Future<void> init() async {
   locator.registerLazySingleton<Connectivity>(() => Connectivity());
   locator.registerLazySingleton<GlobalKey<ScaffoldState>>(
       () => GlobalKey<ScaffoldState>());
-  locator.registerLazySingleton<LatestSocketProvider>(
-      () => LatestSocketProvider());
+/*  locator.registerLazySingleton<LatestSocketProvider>(
+      () => LatestSocketProvider());*/
 
   //repository
   locator.registerLazySingleton<CurrencyRepository>(

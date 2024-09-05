@@ -60,7 +60,7 @@ class NewOrderPage extends StatefulWidget {
 
 class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver {
 
-  var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
+  //var socketProvider = Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!);
   var session = locator<Session>();
 
 
@@ -68,6 +68,7 @@ class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    final socketProvider = context.read<LatestSocketProvider>();
     socketProvider.updateGetBytes();
     socketProvider.getTotalUnreadCount(session.customerId);
     socketProvider.joinExitRoom(type: 'unJoin', receiverId: int.parse(session.customerId.toString()));
@@ -144,89 +145,86 @@ class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver
     log("order page build widget called");
 
     log("session order status ${session.currentOrderState}");
-
     var deviceSize = MediaQuery.of(context).size;
+    final socketProvider = context.read<LatestSocketProvider>();
     return PopScope(
         canPop: false,
-        child: ChangeNotifierProvider(
-          create: (context) => LatestSocketProvider(),
-          child: Consumer<LatestSocketProvider>(
-            builder: (context, LatestSocketProvider socketProvider, _) {
-              return SafeArea(
-                top: false,
-                child: Scaffold(
-                    resizeToAvoidBottomInset: false,
-                    body: Stack(
-                      children: <Widget>[
-                        GoogleMap(
-                          mapType: MapType.normal,
-                          myLocationButtonEnabled: false,
-                          zoomControlsEnabled: true,
-                          tiltGesturesEnabled: false,
-                          rotateGesturesEnabled: false,
-                          scrollGesturesEnabled: true,
-                          initialCameraPosition: CameraPosition(
-                            target: DEFAULT_LATLNG,
-                            zoom: 14,
-                            bearing: socketProvider.currentPosition?.heading ?? 0,
-                            tilt: 0,
-                          ),
-                          // initialCameraPosition:
-                          //     socketProvider.kJapanCoordinate,
-                          onMapCreated: (GoogleMapController controller) async {
-                            socketProvider.googleMapController = controller;
-                            await socketProvider.setCurrentLocation(
-                              widget.orderDetail,
-                              widget.customerDetail,
-                            );
-                          },
-                          onCameraMove: (val)async{
-                            socketProvider.updateZoom(val);
-                            await socketProvider.googleMapController.getVisibleRegion();
+        child: Consumer<LatestSocketProvider>(
+          builder: (context, LatestSocketProvider socket, _) {
+            return SafeArea(
+              top: false,
+              child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: Stack(
+                    children: <Widget>[
+                      GoogleMap(
+                        mapType: MapType.normal,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: true,
+                        tiltGesturesEnabled: false,
+                        rotateGesturesEnabled: false,
+                        scrollGesturesEnabled: true,
+                        initialCameraPosition: CameraPosition(
+                          target: DEFAULT_LATLNG,
+                          zoom: 14,
+                          bearing: socketProvider.currentPosition?.heading ?? 0,
+                          tilt: 0,
+                        ),
+                        // initialCameraPosition:
+                        //     socketProvider.kJapanCoordinate,
+                        onMapCreated: (GoogleMapController controller) async {
+                          socketProvider.googleMapController = controller;
+                          await socketProvider.setCurrentLocation(
+                            widget.orderDetail,
+                            widget.customerDetail,
+                          );
+                        },
+                        onCameraMove: (val)async{
+                          socketProvider.updateZoom(val);
+                          await socketProvider.googleMapController.getVisibleRegion();
 
-                          },
-                          polylines: socketProvider.newPolylines,
-                          markers: Set<Marker>.of(socketProvider.markers.values),
-                        ),
-                        SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ((session.runningOrderStatus == 0) ||
-                                      (session.runningOrderStatus == 1) ||
-                                      (session.runningOrderStatus == 2))
-                                  ? OriginWidget(
-                                      deviceWidth: deviceSize.width,
-                                      originAddress:
-                                          widget.orderDetail.startAddress,
-                                    )
-                                  : DestinationWidget(
-                                      deviceWidth: deviceSize.width,
-                                      endAddress: widget.orderDetail.endAddress,
-                                    ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    const CurrentLocationOrderWidget(),
-                                    ButtonOrder(
-                                        currentOrderStatus:
-                                            socketProvider.currentOrderStatus,
-                                        newMessgeCount:
-                                            socketProvider.unreadMessageCount),
-                                  ],
-                                ),
+                        },
+                        polylines: socketProvider.newPolylines,
+                        markers: Set<Marker>.of(socketProvider.markers.values),
+                      ),
+                      SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ((session.runningOrderStatus == 0) ||
+                                (session.runningOrderStatus == 1) ||
+                                (session.runningOrderStatus == 2))
+                                ? OriginWidget(
+                              deviceWidth: deviceSize.width,
+                              originAddress:
+                              widget.orderDetail.startAddress,
+                            )
+                                : DestinationWidget(
+                              deviceWidth: deviceSize.width,
+                              endAddress: widget.orderDetail.endAddress,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const CurrentLocationOrderWidget(),
+                                  ButtonOrder(
+                                      currentOrderStatus:
+                                      socketProvider.currentOrderStatus,
+                                      newMessgeCount:
+                                      socketProvider.unreadMessageCount),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    )),
-              );
-            },
-          ),
-        ));
+                      ),
+                    ],
+                  )),
+            );
+          },
+        ),);
   }
 }

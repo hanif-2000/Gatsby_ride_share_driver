@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../data/models/notification_entity.dart';
 import '../presentation/providers/latest_socket_provider.dart';
@@ -172,9 +175,10 @@ class PushNotificationService {
   }
 
   void _pushNextScreenFromForeground(NotificationEntity notificationEntity) async {
-    final tuple2 = await callApi(notificationEntity);
-    if (tuple2 != null) {
-    /*  if (myRouteObserver.currentRoute == Routes.notification &&
+     await callApi(notificationEntity);
+   // final tuple2 = await callApi(notificationEntity);
+ /*   if (tuple2 != null) {
+    *//*  if (myRouteObserver.currentRoute == Routes.notification &&
           Getters.getContext!.mounted) {
         Getters.getContext!.read<NotificationBloc>().add(GetNotifications());
       } else if (myRouteObserver.currentRoute == Routes.courseDetail &&
@@ -183,15 +187,20 @@ class PushNotificationService {
         toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
       } else {
         toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
-      }*/
-    }
+      }*//*
+    }*/
   }
 
   Future<(String, Object?)?> callApi(NotificationEntity entity) async {
     if(entity.notificationTypeId=="CustomerBookRequest"){
-      final socketProvider = locator<LatestSocketProvider>();
-      await socketProvider.getOrderStatus(entity.order_id??"");
+      if(locator<GlobalKey<NavigatorState>>().currentContext!.mounted){
+        final socketProvider =  Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!,listen: false);
+        await socketProvider.getOrderStatus(entity.order_id??"");
+      }
+
     }
+    return null;
+
 
 
 
