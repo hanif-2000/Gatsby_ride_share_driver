@@ -46,12 +46,11 @@ class NewOrderPage extends StatefulWidget {
   final dynamic orderTotal;
 
   const NewOrderPage(
-      {Key? key,
+      {super.key,
       required this.orderDetail,
       required this.customerDetail,
       required this.orderTotal,
-      required this.orderStatus})
-      : super(key: key);
+      required this.orderStatus});
   static const routeName = '/OrderPage';
 
   @override

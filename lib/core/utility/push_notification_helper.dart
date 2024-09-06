@@ -192,10 +192,10 @@ class PushNotificationService {
   }
 
   Future<(String, Object?)?> callApi(NotificationEntity entity) async {
-    if(entity.notificationTypeId=="CustomerBookRequest"){
+    if(entity.type=="CustomerBookRequest"){
       if(locator<GlobalKey<NavigatorState>>().currentContext!.mounted){
         final socketProvider =  Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!,listen: false);
-        await socketProvider.getOrderStatus(entity.order_id??"");
+        await socketProvider.getOrderStatus(entity.id??"");
       }
 
     }
@@ -219,8 +219,8 @@ class PushNotificationService {
       NotificationEntity notificationEntity = NotificationEntity.fromJson(remoteMessage.data);
       notificationEntity.title = remoteMessage.data['title'];
       notificationEntity.body = remoteMessage.data['body'];
-      notificationEntity.notificationTypeId = remoteMessage.data['notificationTypeId'];
-      notificationEntity.order_id = remoteMessage.data['order_id'];
+      notificationEntity.type = remoteMessage.data['type'];
+      notificationEntity.id = remoteMessage.data['id'];
       return callApi(notificationEntity);
     }
     if (notificationAppLaunchDetails?.didNotificationLaunchApp == true) {

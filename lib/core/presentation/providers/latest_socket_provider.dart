@@ -277,7 +277,7 @@ class LatestSocketProvider extends ChangeNotifier {
       if (response['type'] == 'CancelByUser') {
         cancelByUserModel = CancelByUserModel.fromJson(response);
         bookingList.removeWhere((element) {
-          return element.id == cancelByUserModel!.orderId;
+          return element.id.toString() == cancelByUserModel!.orderId.toString();
         });
         notifyListeners();
       }

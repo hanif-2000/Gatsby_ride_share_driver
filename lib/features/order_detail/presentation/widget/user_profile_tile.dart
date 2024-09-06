@@ -16,20 +16,12 @@ class UserProfileTile extends StatelessWidget {
   final OrderDetail? orderDetails;
 
   const UserProfileTile(
-      {Key? key, required this.customerDataModel, required this.orderDetails})
-      : super(key: key);
+      {super.key, required this.customerDataModel, required this.orderDetails});
 
   @override
   Widget build(BuildContext context) {
-    logMe("Customer data model is :->> $customerDataModel");
-    // return Consumer<OrderProvider>(
-    //   builder: (context, provider, _) {
     return ((customerDataModel == null) || (customerDataModel == ''))
         ? const Text("Fetching data Please Wait ... ")
-
-        //  const CircularProgressIndicator(
-        //     color: Colors.blue,
-        //   )
         : Row(
             children: [
               InkWell(
@@ -38,21 +30,6 @@ class UserProfileTile extends StatelessWidget {
                   },
                   child: CustomCacheNetworkImage(
                       img: customerDataModel!.photo!, size: 45)
-
-                  //  Container(
-                  //   height: 45,
-                  //   width: 45,
-                  //   decoration: BoxDecoration(
-                  //     shape: BoxShape.circle,
-                  //     color: redD03B3B,
-                  //     image: DecorationImage(
-                  //       image: NetworkImage(
-                  //         '$BASE_URL${provider.customerDetail!.photo}',
-                  //       ),
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
                   ),
               mediumHorizontalSpacing(),
               Column(
@@ -76,9 +53,7 @@ class UserProfileTile extends StatelessWidget {
                       children: [
                         SvgPicture.asset('assets/icons/home/ic_start.svg'),
                         smallHorizontalSpacing(),
-                        Text(
-                          convertToOneDecimal(
-                              customerDataModel!.rating.toString()),
+                        Text(customerDataModel!.rating.toString().isNotEmpty?  convertToOneDecimal(customerDataModel!.rating.toString()):"0.0",
                           // double.tryParse(customerDataModel!.rating.toString())
                           //         ?.toStringAsFixed(1) ??
                           //     "",

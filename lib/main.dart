@@ -24,7 +24,6 @@ import 'core/utility/injection.dart';
 import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
-// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +45,6 @@ Future<void> main() async {
             ChangeNotifierProvider<LatestSocketProvider>(
               create: (_) => LatestSocketProvider(),
             ),
-
             ChangeNotifierProvider<HomeProvider>(
               create: (context) => locator<HomeProvider>(),
             ),
@@ -83,7 +81,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

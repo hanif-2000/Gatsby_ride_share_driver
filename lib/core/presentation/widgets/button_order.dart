@@ -46,7 +46,8 @@ class ButtonOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return Consumer2(
-      builder: (context, LatestSocketProvider socketProvider, HomeProvider homeProvider, _) {
+      builder: (context, LatestSocketProvider provider, HomeProvider homeProvider, _) {
+        final socketProvider = context.read<LatestSocketProvider>();
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
         log("session order status is:-->>${session.currentOrderState}");
@@ -90,101 +91,46 @@ class ButtonOrder extends StatelessWidget {
                                 style: txtButtonStyle,
                               ),
                               event: () {
-                                // session.currentOrderState == 1
-                                //     ? provider.callCustomer()
-                                //     : session.currentOrderState == 2
-                                //         ? provider.callCustomer()
-                                //         : session.currentOrderState == 3
-                                //             ?
-
                                 socketProvider.callCustomer();
-                                // : () {};
-
-                                // provider.callCustomer();
                               },
                               buttonHeight: 48,
                               isRounded: true,
-                              bgColor:
-                                  //  session.currentOrderState == 1
-                                  //     ?
-                                  green2DAA5F
-                              // : session.currentOrderState == 2
-                              //     ? green2DAA5F
-                              //     : session.currentOrderState == 3
-                              //         ? green2DAA5F
-                              //         : grey606060Color,
+                              bgColor:green2DAA5F
+
                               ),
                         ),
                         smallHorizontalSpacing(),
-                        Stack(
-                          children: [
-                            SizedBox(
-                              width: deviceSize.width * .44,
-                              child: CustomButton(
-                                  image: 'assets/icons/order/ic_message.svg',
-                                  text: Text(
-                                    'Message',
-                                    style: txtButtonStyle,
+                        SizedBox(
+                          width: deviceSize.width * .44,
+                          child: CustomButton(
+                              image: 'assets/icons/order/ic_message.svg',
+                              text: Text(
+                                'Message',
+                                style: txtButtonStyle,
+                              ),
+                              event: () {
+
+
+                                print("Customer name____>>. ${socketProvider.customerDetail!.name}");
+                                print("Customer name____>>. ${socketProvider.customerDetail!.photo}");
+                                print("Customer name____>>. ${socketProvider.customerDetail!.id}");
+
+                                Navigator.pushNamed(
+                                  context,
+                                  ChatPage.routeName,
+                                  arguments: ChatDetail(
+                                    socketProvider.customerDetail!.name,
+                                    socketProvider.customerDetail!.photo,
+                                    socketProvider.customerDetail!.id,
                                   ),
-                                  event: () {
-                                    // session.currentOrderState == 1
-                                    //     ?
+                                );
 
-                                    print(
-                                        "Customer name____>>. ${socketProvider.customerDetail!.name}");
-                                    print(
-                                        "Customer name____>>. ${socketProvider.customerDetail!.photo}");
-                                    print(
-                                        "Customer name____>>. ${socketProvider.customerDetail!.id}");
+                              },
+                              buttonHeight: 48,
+                              isRounded: true,
+                              bgColor: blue249DE0
 
-                                    Navigator.pushNamed(
-                                      context,
-                                      ChatPage.routeName,
-                                      arguments: ChatDetail(
-                                        socketProvider.customerDetail!.name,
-                                        socketProvider.customerDetail!.photo,
-                                        socketProvider.customerDetail!.id,
-                                      ),
-                                    );
-                                    //     : session.currentOrderState == 2
-                                    //         ? Navigator.pushNamed(
-                                    //             context, ChatPage.routeName,
-                                    //             arguments: ChatDetail(
-                                    //               provider
-                                    //                   .customerDetail!.data.name,
-                                    //               provider
-                                    //                   .customerDetail!.data.photo,
-                                    //               provider
-                                    //                   .customerDetail!.data.id,
-                                    //             ))
-                                    //         : session.currentOrderState == 3
-                                    //             ? Navigator.pushNamed(
-                                    //                 context, ChatPage.routeName,
-                                    //                 arguments: ChatDetail(
-                                    //                   provider.customerDetail!
-                                    //                       .data.name,
-                                    //                   provider.customerDetail!
-                                    //                       .data.photo,
-                                    //                   provider.customerDetail!
-                                    //                       .data.id,
-                                    //                 ))
-                                    //             : () {};
-                                  },
-                                  buttonHeight: 48,
-                                  isRounded: true,
-                                  bgColor:
-                                      //  session.currentOrderState == 1
-                                      //     ?
-
-                                      blue249DE0
-                                  // : session.currentOrderState == 2
-                                  //     ? blue249DE0
-                                  //     : session.currentOrderState == 3
-                                  //         ? blue249DE0
-                                  //         : grey606060Color,
-                                  ),
-                            ),
-                          ],
+                              ),
                         ),
                       ],
                     ),

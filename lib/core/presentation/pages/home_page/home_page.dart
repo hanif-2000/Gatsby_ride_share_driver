@@ -65,13 +65,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final socketProvider = context.read<LatestSocketProvider>();
     socketProvider.onInit();
     socketProvider.resetAfterRideEnd();
-    //socketProvider.connectToSocket(context);
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-
-    // var homeProvider = Provider.of<HomeProvider>(context, listen: false);
     print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
     print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
-
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeProvider.changeStatus = session.isOnline;
       if (session.isOrderRunning) {
@@ -90,21 +87,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             retrieveOrderReceiptFromLocal().then((value) {
               log("----order running called retreve order receipt from local storage ---");
 
-              homeProvider
-                  .fetchOrderDetail(session.runningOrderId.toString())
-                  .listen((event) {
+              homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
                 if (event is OrderDetailLoaded) {
-                  log("order details in home page checking is :--> ${event.data}");
-                  print(
-                      "order details in home page checking is :--> ${event.data}");
-
+                  print("order details in home page checking is :--> ${event.data}");
                   socketProvider.updateOrderData(data: event.data);
-                  socketProvider.setNewChangeOrderStatus =
-                      event.data.orderStatus.toString();
-                  session.setRunningOrderStatus =
-                      int.parse(event.data.orderStatus.toString());
-                  socketProvider.updateCurrentStatus(
-                      status: int.parse(event.data.orderStatus.toString()));
+                  socketProvider.setNewChangeOrderStatus = event.data.orderStatus.toString();
+                  session.setRunningOrderStatus = int.parse(event.data.orderStatus.toString());
+                  socketProvider.updateCurrentStatus(status: int.parse(event.data.orderStatus.toString()));
                   homeProvider
                       .fetchCustomerDetail(event.data.userId.toString())
                       .listen((event2) async {
@@ -140,7 +129,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               log("session order STATUS IS :==>> ${session.runningOrderStatus}");
               log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
             });
-          } else if (!session.isRatingGiven) {
+          }
+          else if (!session.isRatingGiven) {
             homeProvider
                 .fetchCustomerDetail(session.customerId.toString())
                 .listen((event2) async {
@@ -170,13 +160,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             dismissLoading();
           }
         } else {
-          // var id = _fcmProvider.incomingOrderDetail!.orderId;
           log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
           log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-          homeProvider
-              .fetchOrderDetail(session.runningOrderId.toString())
-              .listen((event) {
+          homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
             if (event is OrderDetailLoaded) {
               log("order details in home page checking is :--> ${event.data}");
               socketProvider.updateOrderData(data: event.data);
@@ -223,7 +210,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
     });
 
-    WidgetsBinding.instance.addObserver(this);
+
   }
 
   @override

@@ -101,11 +101,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                           return NewRequestTile(
                             onAccept: () {
                               // Accept the Ride
-                              socketProvider
-                                  .acceptRideRequest(
-                                      orderId:
-                                          socketProvider.bookingList[index].id)
-                                  .then((value) {
+                              socketProvider.acceptRideRequest(orderId: socketProvider.bookingList[index].id).then((value) {
                                 print(
                                     "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
                                 print(
@@ -131,8 +127,6 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                 print("endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
                                 print("startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
                                 print("end address order id:-->>${socketProvider.bookingList[index].id}");
-                                // print("order id:-->>${socketProvider.bookingList[index].id}");
-
                                 logMe("customer id from session id:-->> ${session.customerId}");
 
                                 homeProvider.setOrderDetails = OrderDetail(
@@ -149,32 +143,17 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                   pendingAmount: socketProvider.bookingList[index].pendingAmount.toString(),
                                   newTotal: socketProvider.bookingList[index].newTotal,
                                 );
-
-                                // session.setOrderDetails =
-                                //     homeProvider.orderDetail!;
-
-                                //Socket
-
-                                //*** CUSTOMER DETAILS */
-
                                 homeProvider.setCustomerDetails = CustomerDataModel(
                                   name: socketProvider.bookingList[index].name??"",
                                   phoneNumber: socketProvider.bookingList[index].phone,
                                   photo: socketProvider.bookingList[index].image,
                                   id: int.parse(socketProvider.bookingList[index].customerId.toString()),
                                   rating: socketProvider.bookingList[index].customerRating,
+
                                 );
 
-                                // session.setCustomerDetails =
-                                //     homeProvider.customerDetailModel!;
-
-                                log("order details are:-->. ${homeProvider.orderDetail!}");
-                                print(
-                                    "order details  home provdider are:-->. ${homeProvider.orderDetail!}");
-
-                                log("Customer details are:-->. ${homeProvider.customerDetailModel!}");
-                                print(
-                                    "Customer details are:-->. ${homeProvider.customerDetailModel!}");
+                                print("=========\nOrder details  home provider are:-->. ${homeProvider.orderDetail!}");
+                                print("=========\nCustomer details are:-->. ${homeProvider.customerDetailModel!}");
 
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
@@ -184,8 +163,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                     // orderTotal: socketProvider
                                     //     .bookingList[index].newTotal,
                                     orderDetail: homeProvider.orderDetail!,
-                                    customerDetailModel:
-                                        homeProvider.customerDetailModel!,
+                                    customerDetailModel: homeProvider.customerDetailModel!,
                                     orderStatus: 0,
                                   ),
                                 );
@@ -193,13 +171,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
                             },
                             onReject: () {
                               // Reject the ride
-                              socketProvider
-                                  .rejectRideRequest(
-                                      orderId:
-                                          socketProvider.bookingList[index].id)
+                              socketProvider.rejectRideRequest(orderId: socketProvider.bookingList[index].id)
                                   .then((value) {
                                 print("reject order successfully");
-                                log("reject order successfully");
                               });
                             },
                             request: socketProvider.bookingList,
