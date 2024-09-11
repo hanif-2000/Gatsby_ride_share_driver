@@ -383,14 +383,8 @@ class _RequestDetailPageState extends State<RequestDetailPage> {
                                           children: [
                                             Text(
                                               'CA\$ ${convertToTwoDecimal(widget.requestListModel!.newTotal)}',
-
-                                              // '\$${widget.requestListModel!.total.toStringAsFixed(2)}',
                                               textAlign: TextAlign.center,
-                                              style: titleStyle
-                                                  .copyWith(
-                                                    fontSize: 16,
-                                                  )
-                                                  .usePoppinsW6Font(),
+                                              style: titleStyle.copyWith(fontSize: 16,).usePoppinsW6Font(),
                                             ),
                                             Text(
                                               '${convertToTwoDecimal(widget.requestListModel!.distance)} Km',

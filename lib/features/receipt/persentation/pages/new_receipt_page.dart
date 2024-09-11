@@ -790,11 +790,6 @@ class ReceiptPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        /*  IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.arrow_back_rounded)),*/
                           const SizedBox(height: 20,width: 20,),
                           Container(
                             width: 50,
@@ -817,50 +812,5 @@ class ReceiptPage extends StatelessWidget {
                 ),
               ),
             ));
-    // context: context,
-    // isScrollControlled: true,
-    // useSafeArea: false,
-    // builder: (BuildContext context) {
-    //   return Column(
-    //     children: [
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: [
-    //           IconButton(
-    //               onPressed: () {
-    //                 Navigator.pop(context);
-    //               },
-    //               icon: const Icon(Icons.arrow_back_rounded)),
-    //           Container(
-    //             width: 50,
-    //             height: 4,
-    //             margin: const EdgeInsets.symmetric(vertical: 10),
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(20),
-    //               color: Colors.grey,
-    //             ),
-    //           ),
-    //           const SizedBox(
-    //             height: 10,
-    //             width: 20,
-    //           )
-    //         ],
-    //       ),
-    //       Expanded(
-    //         child: SingleChildScrollView(child: child),
-    //       ),
-    //     ],
-    //   );
-
-    // DraggableScrollableSheet(
-    //   // maxChildSize: 0.9,
-    //   expand: false,
-    //   builder: (context, scrollController) {
-    //     return
-
-    // },
-    // );
-    // },
-    // );
   }
 }

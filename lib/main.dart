@@ -32,10 +32,6 @@ Future<void> main() async {
     locator.isReady<Session>().then((_) async {
       await FirebaseHelper.init();
       WebSocketHelper().connect();
-  /*    FirebaseMessaging.instance.onTokenRefresh.listen((String token) async{
-        print("Refreshed FCM Token: $token");
-         await updateFcmToken(token: token);
-      });*/
       runApp(
         MultiProvider(
           providers: [

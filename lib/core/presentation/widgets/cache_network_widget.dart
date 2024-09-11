@@ -10,15 +10,15 @@ class CustomCacheNetworkImage extends StatelessWidget {
   final String img;
   final double size;
   const CustomCacheNetworkImage({
-    Key? key,
+    super.key,
     required this.img,
     required this.size,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     log("image value is:------>>>. $img");
-    return ((img == '') || (img == '-') || (img == null))
+    return ((img == '') || (img == '-'))
         ? CircleAvatar(
             backgroundColor: transparentColor,
             radius: size / 2,
@@ -40,50 +40,12 @@ class CustomCacheNetworkImage extends StatelessWidget {
             progressIndicatorBuilder: (context, url, downloadProgress) {
               if (downloadProgress.progress != null) {
                 var percent = (downloadProgress.progress!) * 100;
-
-                log("Download percentage is :" + percent.toInt().toString());
-              } else {}
-              log("DOWNLOAD PROGRESS IS:-->> " +
-                  downloadProgress.progress.toString());
-              // log("DOWNLOAD PROGRESS IS:-->> " + progress.toString());
-
+                log("Download percentage is :${percent.toInt()}");
+              }
+              log("DOWNLOAD PROGRESS IS:-->> ${downloadProgress.progress}");
               return CircularProgressIndicator(
                 value: downloadProgress.progress,
               );
-
-              // return CircularPercentIndicator(
-              //   animation: true,
-              //   radius: size / 2,
-              //   lineWidth: 5.0,
-              //   percent: (downloadProgress.progress != null)
-              //       ? (downloadProgress.progress)!
-              //       : 1.0,
-              //   center: Text(
-              //     downloadProgress.progress != null
-              //         ? (((downloadProgress.progress!) * 100)
-              //                 .toInt()
-              //                 .toString() +
-              //             '%')
-              //         : '',
-              //     style: const TextStyle(color: blackColor),
-              //   ),
-              //   progressColor: Colors.green,
-              // );
-              // Stack(
-              //   children: [
-
-              //     CircularProgressIndicator(
-              //       strokeWidth: 8.0,
-              //       value: downloadProgress.progress,
-              //     ),
-              //     Text(downloadProgress.progress != null
-              //         ? (((downloadProgress.progress!) * 100)
-              //                 .toInt()
-              //                 .toString() +
-              //             '%')
-              //         : '')
-              //   ],
-              // );
             },
             errorWidget: (context, url, error) => const Icon(Icons.error),
           );

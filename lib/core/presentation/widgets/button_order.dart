@@ -164,10 +164,8 @@ class ButtonOrder extends StatelessWidget {
                   ),
                   event: () async {
                     showLoading();
-                    print(
-                        "**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
-                    if ((socketProvider.currentOrderStatus == 0) ||
-                        socketProvider.currentOrderStatus == 1) {
+                    print("**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
+                    if ((socketProvider.currentOrderStatus == 0) || socketProvider.currentOrderStatus == 1) {
                       /** start ride to customer place */
                       socketProvider.updateOrderStatus(
                         status: "2",
@@ -196,9 +194,9 @@ class ButtonOrder extends StatelessWidget {
                       );
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
-                        socketProvider.calculateDistanceCovered2();
-                         await Future.delayed(const Duration(milliseconds: 500));
-                        socketProvider.updateOrderStatus(
+                         await socketProvider.calculateDistanceCovered2();
+                         await Future.delayed(const Duration(milliseconds: 300));
+                          socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
                           startTime: session.rideStartTime,
@@ -255,12 +253,9 @@ class ButtonOrder extends StatelessWidget {
                       showCancelConfirmationAlertDialog(
                           context: context,
                           onTap: () async {
-                            socketProvider.removeOrderFromList(
-                                orderId: session.runningOrderId);
-
+                            socketProvider.removeOrderFromList(orderId: session.runningOrderId);
                             Navigator.pop(context);
                             showLoading();
-
                             socketProvider.updateOrderStatus(
                                     status: "8",
                                     actualTime: "0",
@@ -286,103 +281,12 @@ class ButtonOrder extends StatelessWidget {
                                 log("**** Something went wrong");
                               }
                             });
-                            // String updateStatusUrl =
-                            //     'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status';
-
-                            // var data = FormData.fromMap(
-                            //     {'id': session.runningOrderId, 'status': '8'});
-
-                            // log("form data is: ${data.fields}");
-                            // log("Session token: ${session.sessionToken}");
-                            // dio.options.headers["Authorization"] =
-                            //     "Bearer +${session.sessionToken}";
-
-                            // var res =
-                            //     await dio.post(updateStatusUrl, data: data);
-
-                            // log("status code is" + res.statusCode.toString());
-
-                            // if (res.statusCode == 200) {
-                            //   if (res.data["success"] == 1) {
-                            //     log("Ride is canceled");
-                            //     Navigator.pushNamedAndRemoveUntil(
-                            //       context,
-                            //       HomePage.routeName,
-                            //       (route) => false,
-                            //     );
-                            //   } else {
-                            //     showToast(
-                            //         message:
-                            //             "Something went wrong Please try again");
-                            //   }
-                            // }
-
-                            // try {
-                            //   var response = await dio.request(
-                            //     'https://php.parastechnologies.in/taxi/public/api/webservice/driver/update-status',
-                            //     options: Options(
-                            //       method: 'POST',
-                            //       headers: {
-                            //         "Authorization":
-                            //             "Bearer ${provider.session.sessionToken}"
-                            //       },
-                            //     ),
-                            //     data: data,
-                            //   );
-                            //   // Response res =
-                            //   //     await dio.post(updateStatusUrl, data: data);
-
-                            //   log("status code is${response.statusCode}");
-
-                            //   if (response.statusCode == 200) {
-                            //     dismissLoading();
-                            //     if (response.data["success"] == 1) {
-                            //       session.setCurrentOrderState = 100;
-                            //       session.setIsOrderRunning = false;
-                            //       provider.clearState();
-                            //       dismissLoading();
-
-                            //       log("Ride is canceled");
-
-                            //       Navigator.pushNamedAndRemoveUntil(
-                            //         context,
-                            //         HomePage.routeName,
-                            //         (route) => false,
-                            //       );
-                            //     } else {
-                            //       showToast(
-                            //           message:
-                            //               "Something went wrong Please try again");
-                            //     }
-                            // //   }
-                            // } catch (e) {
-                            //   dismissLoading();
-
-                            //   log("exception :-->> $e");
-                            //   log(e.toString());
-                            // }
-
-                            // provider
-                            //     .submitStatusOrder(true)
-                            //     .listen((event) async {
-                            //   if (event is UpdateStatusOrderLoaded) {
-                            //     log("UpdateStatusOrderLoaded called");
-                            //   }
-                            // });
-
-                            // Navigator.pushNamedAndRemoveUntil(
-                            //   context,
-                            //   HomePage.routeName,
-                            //   (route) => false,
-                            // );
-                            // log("Ride is canceled");
                           });
                     },
                     buttonHeight: 48,
                     isRounded: true,
                     bgColor: Colors.red),
               ),
-
               mediumVerticalSpacing(),
             ],
           ),

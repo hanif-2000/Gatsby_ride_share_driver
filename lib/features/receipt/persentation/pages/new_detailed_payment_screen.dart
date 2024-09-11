@@ -25,7 +25,7 @@ class PaymentScreen extends StatefulWidget {
   final dynamic price_min;
 
   const PaymentScreen({
-    Key? key,
+    super.key,
     required this.totalPrice,
     required this.extraDistance,
     required this.extraTime,
@@ -42,45 +42,38 @@ class PaymentScreen extends StatefulWidget {
     required this.totalTime,
     required this.price_km,
     required this.price_min,
-  }) : super(key: key);
+  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  // int extraMinutes = 0;
-  // int extraHour = 0;
-  // int extraSeconds = 0;
-
   var extraTimeTaken = "0";
   var totalTimeTaken = "0";
 
   convertSecondsToMinutes() {
     log("extra time :-->>${widget.extraTime}");
     if ((widget.extraTime.toString() != '')) {
-      int seconds = int.parse(
-          widget.extraTime); // Replace this with your desired number of seconds
+      int seconds = int.parse(widget.extraTime); // Replace this with your desired number of seconds
 
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;
-
       int hours = minutes ~/ 60;
       int remainingMinutes = minutes % 60;
-
       print('$seconds seconds is equivalent to:');
-      print(
-          '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
-
+      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
       setState(() {
-        extraTimeTaken = "$hours"
-            ' hr '
-            '$remainingMinutes'
-            ' min '
-            '$remainingSeconds'
-            ' sec ';
+        extraTimeTaken = _getText(hours,remainingMinutes);
       });
-    } else {}
+    }
+  }
+ String _getText(int hours, int minutes){
+    if(hours==0){
+      return "$minutes minutes";
+    }else{
+      return "$hours hr $minutes min ";
+    }
   }
 
   convertSecondsToMinutesTotal() {
@@ -95,16 +88,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       int remainingMinutes = minutes % 60;
 
       print('$seconds seconds is equivalent to:');
-      print(
-          '$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
+      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
 
       setState(() {
-        totalTimeTaken = "$hours"
-            ' hr '
-            '$remainingMinutes'
-            ' min '
-            '$remainingSeconds'
-            ' sec ';
+        totalTimeTaken = _getText(hours,remainingMinutes);
       });
     } else {}
   }
@@ -223,25 +210,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const Divider(
                   color: whiteAccentColor,
                 ),
-                // TextInRow(
-                //   firstText: 'Actual Payment',
-                //   // secondText: widget.extraTime.toString() + ' Min',
-                //   secondText:
-                //       "CA\$ ${convertToTwoDecimal(widget.totalPrice.toString())}",
-                // ),
-                // const Divider(
-                //   color: whiteAccentColor,
-                // ),
-               /* TextInRow(
-                  firstText: 'Customer Pending Payment',
-                  // secondText: widget.extraTime.toString() + ' Min',
-                  secondText:
-                      "CA\$ ${convertToTwoDecimal(widget.pendingAmount.toString())}",
-                ),
-                const Divider(
-                  color: whiteAccentColor,
-                ),
-*/        TextInRow(
+                TextInRow(
                   firstText: 'Minimum Fare',
                   secondText: r'CA$ ' +
                       convertToTwoDecimal(widget.minimumFare.toString()),

@@ -30,23 +30,21 @@ import '../../utility/direction_helper.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 
 class LatestSocketProvider extends ChangeNotifier {
-
   final session = locator<Session>();
   var unreadCount = '0';
   final chatController = TextEditingController();
-
   List<ChatModel> _chatMessagesList = [];
   late StreamSubscription<Position>? locationbackSubscription;
   int currentOrderStatus = 0;
   String rideText = "Start Ride to Pickup Location";
-
   late GoogleMapController googleMapController;
-
+  LatLng currentLatLng = const LatLng(0.0, 0.0);
   final dio = Dio();
 
-  // CustomerDataModel? customerDataModel;
+  ///orderDetail
   OrderDetail? orderDetail;
 
+  ///receiptData
   ReceiptData? receiptData;
 
   Future<void> updateReceiptData({data}) async {
@@ -68,10 +66,6 @@ class LatestSocketProvider extends ChangeNotifier {
     rideText = txt;
     notifyListeners();
   }
-
-  @override
-  // ignore: must_call_super
-  void dispose() {}
 
   /// UPDATE CUSTOMER AND ORDER DETAILS TO LOCAL
 
@@ -169,9 +163,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
   late WebSocketHelper _socketHelper;
 
-  void onInit(){
+  void onInit() {
     _socketHelper = WebSocketHelper();
-    if(!_socketHelper.isConnected){
+    if (!_socketHelper.isConnected) {
       _socketHelper.connect();
     }
     _socket = _socketHelper.getSocket();
@@ -185,17 +179,13 @@ class LatestSocketProvider extends ChangeNotifier {
       if (event is Connected) {
         isSocketConnected = true;
         log("************ Socket State: Connect ***********");
-        // listenSocketRequests();
         updateLatLngAtStarting();
       } else if (event is Disconnected) {
         isSocketConnected = false;
         log("************ Socket State: DisConnect ***********");
-        // reconnectSocket(context);
       } else if (event is Reconnected) {
         isSocketConnected = true;
         log("************ Socket State: Reconnected ***********");
-        // listenSocketRequests();
-        // updateLatLngAtStarting();
       } else {
         isSocketConnected = false;
         log("************ Socket State: $event***********");
@@ -203,15 +193,9 @@ class LatestSocketProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> disconnectSocket() async {
-    if (isSocketConnected) {
-      _socket.close(1000, "Logout successful");
-    }
-  }
-
   void joinExitRoom({int? receiverId, required String type}) {
-    try{
-      if(!_socketHelper.isConnected){
+    try {
+      if (!_socketHelper.isConnected) {
         _socketHelper.connect();
       }
       markMessageAsRead(receiverId: receiverId);
@@ -221,8 +205,7 @@ class LatestSocketProvider extends ChangeNotifier {
       if (type == 'Join') {
         isLoading = true;
         notifyListeners();
-      }
-      else if (type == 'unJoin') {
+      } else if (type == 'unJoin') {
         getTotalUnreadCount(receiverId);
         // clearChatList();
       }
@@ -238,9 +221,8 @@ class LatestSocketProvider extends ChangeNotifier {
       _socket.send(
         jsonEncode(map),
       );
-    }catch(e){
+    } catch (e) {
       print("Error========>>>>>>>>.: $e");
-
     }
   }
 
@@ -248,10 +230,26 @@ class LatestSocketProvider extends ChangeNotifier {
     bookingList.insert(0, data);
     bookingList = bookingList.toSet().toList();
     final Set<String> seenIds = {};
-    final uniqueBookings = bookingList.where((booking) => seenIds.add(booking.id.toString())).toList();
+    final uniqueBookings = bookingList
+        .where((booking) => seenIds.add(booking.id.toString()))
+        .toList();
     bookingList.clear();
     bookingList.addAll(uniqueBookings);
     notifyListeners();
+  }
+
+  // Save UserData to SharedPreferences
+  void _saveOrderReceipt() {
+    session.setIsPaymentDone = false;
+    session.setIsRatingGiven = false;
+    logMe("save order receipt called");
+
+    if (receiptData != null) {
+      logMe("save order receipt called receiptResponseModel ==== NOT NULL");
+
+      session.setOrderReceipt = json.encode(receiptData!);
+      // _prefs.setString(_userDataKey, jsonEncode(_userData!.toMap()));
+    }
   }
 
   void _listenSocketRequests() {
@@ -260,13 +258,16 @@ class LatestSocketProvider extends ChangeNotifier {
       log("socket listen :-->> $response");
       if (response['type'] == "CustomerBookRequest") {
         bookingDataModel = BookingDataModel.fromJson(response);
-        bool checkId = checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
+        bool checkId =
+            checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
         logMe("check id is -> $checkId");
         if (!checkId) {
           bookingList.insert(0, bookingDataModel!.data);
           bookingList.toSet().toList();
           final Set<String> seenIds = {};
-          final uniqueBookings = bookingList.where((booking) => seenIds.add(booking.id.toString())).toList();
+          final uniqueBookings = bookingList
+              .where((booking) => seenIds.add(booking.id.toString()))
+              .toList();
           bookingList.clear();
           bookingList.addAll(uniqueBookings);
         }
@@ -274,7 +275,7 @@ class LatestSocketProvider extends ChangeNotifier {
       }
 
       // <------------------ Cancel BY Customer --------->>>>>
-      if (response['type'] == 'CancelByUser') {
+      else if (response['type'] == 'CancelByUser') {
         cancelByUserModel = CancelByUserModel.fromJson(response);
         bookingList.removeWhere((element) {
           return element.id.toString() == cancelByUserModel!.orderId.toString();
@@ -283,7 +284,7 @@ class LatestSocketProvider extends ChangeNotifier {
       }
 
       // <------------------ Accept BY OTHER DRIVER --------->>>>>
-      if (response['type'] == 'AcceptByOther') {
+      else if (response['type'] == 'AcceptByOther') {
         log("*****----->>> RIDE ACCEPTED BY OTHER -----<<<<<");
         acceptByOtherDriverModel = AcceptByOtherDriverModel.fromJson(response);
         log("Ride details are:-->> $acceptByOtherDriverModel");
@@ -302,39 +303,23 @@ class LatestSocketProvider extends ChangeNotifier {
           log("driver is mine ");
         }
       }
-      // Save UserData to SharedPreferences
-      void saveOrderReceipt() {
-        session.setIsPaymentDone = false;
-        session.setIsRatingGiven = false;
-        logMe("save order receipt called");
-
-        if (receiptData != null) {
-          logMe("save order receipt called receiptResponseModel ==== NOT NULL");
-
-          session.setOrderReceipt = json.encode(receiptData!);
-          // _prefs.setString(_userDataKey, jsonEncode(_userData!.toMap()));
-        }
-      }
 
       // <------------------ RIDE END OR COMPLETED --------->>>>>
-      if (response['type'] == 'endTrip') {
+      else if (response['type'] == 'endTrip') {
         updateReceiptData(data: ReceiptData.fromJson(response["data"]));
-
-        // receiptData = ReceiptData.fromJson(response);
+        _saveOrderReceipt();
         notifyListeners();
-        saveOrderReceipt();
-
         log("my receipt data is:-->> $receiptData");
       }
 
       // <----------- Checking When request come ---------> //
-      if (response['type'] == 'MessageList') {
+      else if (response['type'] == 'MessageList') {
         log("messgae type is MESSAGE LIST");
         log('Message list data-----> ${response['data']}');
         isLoading = false;
         notifyListeners();
         if (response['data'] != null) {
-          addChatAll(
+          _addChatAll(
             List<ChatModel>.from(
               response["data"].map(
                 (x) => ChatModel.fromMap(x),
@@ -344,11 +329,10 @@ class LatestSocketProvider extends ChangeNotifier {
           // dismissLoading();
           log("chat data is :-->>${chatMessageList.length}");
         } else {
-          addChatAll([]);
+          _addChatAll([]);
           // dismissLoading();
         }
-      }
-      if (response['type'] == 'Chat') {
+      } else if (response['type'] == 'Chat') {
         addSingleChat(
           ChatModel.fromMap(
             response['data'],
@@ -356,15 +340,14 @@ class LatestSocketProvider extends ChangeNotifier {
         );
 
         log("chat data is :-->>${chatMessageList.length}");
-      }
-      if (response['type'] == 'UnreadCount') {
+      } else if (response['type'] == 'UnreadCount') {
         log("unread message count called");
         updateUnReadMessages(count: response['data']);
       }
     });
   }
 
-  void addChatAll(List<ChatModel> list) {
+  void _addChatAll(List<ChatModel> list) {
     _chatMessagesList = list;
     notifyListeners();
   }
@@ -372,7 +355,6 @@ class LatestSocketProvider extends ChangeNotifier {
   void addSingleChat(ChatModel chat) {
     log("my single chat data is:-->> $chat");
     _chatMessagesList.insert(0, chat);
-    //_chatMessagesList.toSet().toList();
     notifyListeners();
   }
 
@@ -387,7 +369,7 @@ class LatestSocketProvider extends ChangeNotifier {
     int? receiverId,
     String? messageType = 'Text',
   }) {
-    try{
+    try {
       if (!_socketHelper.isConnected) {
         _socketHelper.connect();
       }
@@ -423,16 +405,15 @@ class LatestSocketProvider extends ChangeNotifier {
           modifiedOn: DateTime.now(),
         ),
       );
-    }catch(e){
+    } catch (e) {
       print("Error========>>>>>>>>.: $e");
     }
-
   }
 
   //   //Get total number of unread message
   void getTotalUnreadCount(int? receiverId) {
     log("=====================get total count================");
-    try{
+    try {
       if (!_socketHelper.isConnected) {
         _socketHelper.connect();
       }
@@ -447,14 +428,15 @@ class LatestSocketProvider extends ChangeNotifier {
       log("get total count:$map");
       _socket.send(jsonEncode(map));
       log("customer id is: ${session.customerId} ");
-    }catch(e){
+    } catch (e) {
       print("Error========>>>>>>>>.: $e");
     }
-
   }
 
-  void markMessageAsRead({int? receiverId,}) {
-    try{
+  void markMessageAsRead({
+    int? receiverId,
+  }) {
+    try {
       if (!_socketHelper.isConnected) {
         _socketHelper.connect();
       }
@@ -473,10 +455,9 @@ class LatestSocketProvider extends ChangeNotifier {
 
       log("mark as read $map");
       _socket.send(jsonEncode(map));
-    }catch(e){
+    } catch (e) {
       print("Error========>>>>>>>>.: $e");
     }
-
   }
 
   //   //Initial
@@ -485,7 +466,7 @@ class LatestSocketProvider extends ChangeNotifier {
     zoom: 14.4746,
   );
 
-  void clearChatList() {
+  void _clearChatList() {
     _chatMessagesList.clear();
     _chatMessagesList = [];
     notifyListeners();
@@ -493,8 +474,8 @@ class LatestSocketProvider extends ChangeNotifier {
 
   /// ***************************------------------>>>>>>> UPDATE LAT LONG <<<<<<<<<< *****************--------->>>>>..
 
-  void updateLatLng({LatLng? latLng, double? bearing = 0}) async {
-    if(!_socketHelper.isConnected){
+  void _updateLatLng({LatLng? latLng, double? bearing = 0}) async {
+    if (!_socketHelper.isConnected) {
       _socketHelper.connect();
     }
     log("=====******* UPDATE LAT LONG CALLED =======*******");
@@ -555,7 +536,7 @@ class LatestSocketProvider extends ChangeNotifier {
       try {
         _socket.send(json.encode(map));
         updateLatLngAtStarting();
-        updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+        _updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
         session.setRunningOrderStatus = 1;
         session.setIsOrderRunning = true;
         notifyListeners();
@@ -600,9 +581,42 @@ class LatestSocketProvider extends ChangeNotifier {
     required String endTime,
     String? distance,
   }) async {
-    log("updateOrderStatus called: $status");
+    log("updateOrderStatus called with status: $status");
+    final payload = _buildPayload(
+      status: status,
+      actualTime: actualTime,
+      startTime: startTime,
+      endTime: endTime,
+      distance: distance,
+    );
+    log('Update Status Payload: $payload');
+    try {
+      await _ensureSocketConnection();
+      await _updateCurrentLocation();
+      if (status == "7") {
+        await _handleStatus7();
+      }
+      await Future.delayed(const Duration(milliseconds: 200));
+      _socket.send(json.encode(payload));
+      dismissLoading();
+      await _handleOrderStatusChange(status);
+      notifyListeners();
+      return true;
+    } catch (e, stackTrace) {
+      log("Error in updateOrderStatus: $e", error: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
 
-    final map = {
+// Helper method to build the payload
+  Map<String, dynamic> _buildPayload({
+    required String status,
+    required String actualTime,
+    required String startTime,
+    required String endTime,
+    String? distance,
+  }) {
+    return {
       'serviceType': 'ChangeStatus',
       'orderID': session.runningOrderId,
       'Status': status,
@@ -611,78 +625,76 @@ class LatestSocketProvider extends ChangeNotifier {
       'EndTime': endTime,
       'distance': distance ?? setEstimatedDistance,
     };
+  }
 
-    log('Update Status Payload: $map');
-
-    try {
-      if (!_socketHelper.isConnected) {
-        _socketHelper.connect();
-      }
-
-      _socket.send(json.encode(map));
-      dismissLoading();
-      _handleOrderStatusChange(status);
-      updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("Error========>>>>>>>>.: $e");
-      return false;
+// Ensure the socket is connected before proceeding
+  Future<void> _ensureSocketConnection() async {
+    if (!_socketHelper.isConnected) {
+      log("Socket not connected. Attempting to connect...");
+      _socketHelper.connect();
     }
   }
 
+// Update current location using the correct LatLng
+  Future<void> _updateCurrentLocation() async {
+    if (currentLatLng.latitude != 0 && currentLatLng.longitude != 0) {
+      _updateLatLng(latLng: LatLng(currentLatLng.latitude, currentLatLng.longitude));
+    } else {
+      _updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
+    }
+  }
+
+// Handle specific logic for status "7"
+  Future<void> _handleStatus7() async {
+    locationbackSubscription?.cancel();
+    await Future.delayed(const Duration(milliseconds: 300));
+    log("Location updates cancelled for status 7");
+  }
+
 // Helper method to handle status changes
-  void _handleOrderStatusChange(String status) {
+  Future<void> _handleOrderStatusChange(String status) async {
     switch (status) {
       case "1":
-        _setOrderState(2, "Reached Pick up Location", "1", false);
+        await _setOrderState(2, "Reached Pick up Location", "1", false);
         break;
       case "2":
-        _setOrderState(2, "Reached Pick up Location", "2", false);
+        await _setOrderState(2, "Reached Pick up Location", "2", false);
         break;
       case "3":
-        _setOrderState(3, "Start Trip", "3", true);
+        await _setOrderState(3, "Start Trip", "3", true);
         break;
 
       case "5":
-        _setOrderState(5, "End Trip", "5", true);
+        await _setOrderState(5, "End Trip", "5", true);
         break;
       case "7":
-        _setOrderState(7, "Start Ride to Pick up Location", "7", false);
-        locationbackSubscription?.cancel();
+        await _setOrderState(7, "Start Ride to Pick up Location", "7", false);
         break;
-
       default:
         log("Ride canceled by the driver");
         break;
     }
   }
 
-
-  void _setOrderState(int orderStatus, String rideMessage, String changeOrderStatus, bool polylineDirection) {
+  Future<void> _setOrderState(int orderStatus, String rideMessage, String changeOrderStatus, bool polylineDirection) async {
     currentOrderStatus = orderStatus;
     rideText = rideMessage;
     setNewChangeOrderStatus = changeOrderStatus;
     session.setRunningOrderStatus = orderStatus;
     dismissLoading();
-    setNewPolylineDirection(polylineDirection);
+    if (orderStatus != 7) {
+      await setNewPolylineDirection(polylineDirection);
+    }
   }
-
-
-
-
-
-
-
-
 
   set setOrderDetails(OrderDetail val) {
     _orderDetail = val;
     notifyListeners();
   }
-///****************************** Get Order Status *****************************************
+
+  ///****************************** Get Order Status *****************************************
   Future<void> getOrderStatus(String id) async {
-    if(id.isEmpty){
+    if (id.isEmpty) {
       return;
     }
     try {
@@ -698,30 +710,9 @@ class LatestSocketProvider extends ChangeNotifier {
       if (response.statusCode == 200 && response.data["data"] != null) {
         final bookingModel = Booking.fromJson(response.data["data"]);
         print("getOrderStatus =========>>>>>${response.data.toString()}");
-        if(bookingModel.driver_id == null){
+        if (bookingModel.driver_id == null) {
           updateRideList(bookingModel);
         }
-       /* updateRideList(Booking(
-          id: myData["id"].toString(),
-          startCoordinate: myData["start_coordinate"].toString(),
-          endCoordinate: myData["end_coordinate"].toString(),
-          startAddress: myData["start_address"].toString(),
-          endAddress: myData["end_address"].toString(),
-          distance: myData["distance"].toString(),
-          paymentMethod: myData["payment_method"].toString(),
-          estimatedTime: myData["estimated_time"].toString(),
-          actualTime: myData["actual_time"].toString(),
-          total: myData["total"].toString(),
-          pendingAmount: myData["pending_amount"].toString(),
-          newTotal: myData["new_total"].toString(),
-          customerId: myData["customerID"].toString(),
-          name: myData["name"].toString(),
-          image: myData["image"].toString(),
-          longitude: myData["Longitude"].toString(),
-          latitude: myData["Latitude"].toString(),
-          phone: myData["phone"].toString(),
-          customerRating: myData["CustomerRating"].toString(),
-        ));*/
       } else {
         logMe(response.statusMessage);
       }
@@ -730,45 +721,27 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-
-
-
-
-
-
   /// *****************-------------->>>>>>>. CALCULATE TIME AND DISTANCE WHEN TRIP END <<<<<<<--------   ****************************///////
 
-  Future<void> calculateTimeAndDistanceWhenRideCompleted() async {
+  void calculateTimeAndDistanceWhenRideCompleted() {
     session.setEndTime = DateTime.now().toString();
     DateTime startTime = DateTime.parse(session.rideStartTime);
+    Duration difference = DateTime.now().difference(startTime);
 
-    log("ride start time from local storage is :-->$startTime");
-    log("ride start time from local storage is :-->${session.orderDetails}");
+    double actualTimeInMinutes = difference.inMinutes.toDouble();
+    session.setEstimatedTime = (actualTimeInMinutes * 60).toString(); // Store estimated time in seconds
 
-    Duration difference = (DateTime.now()).difference(startTime);
-    log("Time differencec is -- $difference");
-
-    int days = difference.inDays;
-    int hours = difference.inHours % 24;
-    int minutes = difference.inMinutes % 60;
-    int seconds = difference.inSeconds % 60;
-
-    log(" trip end:-->> total actual distnce in seconds after trip end :-->> $seconds");
-
-    double actualTime = double.parse(difference.inMinutes.toString());
-
-    log("actual time in minute is :-->> $actualTime");
-
-    log("$days day(s) $hours hour(s) $minutes minute(s) $seconds second(s).");
-
-    log("trip end:-->>  estimated time ::==>>${session.estimatedTime}");
-    log("trip end:-->> estimated distance ::==>>${session.estimatedDistance}");
-    session.setEstimatedTime = (actualTime * 60).toString();
+    log("Ride Start Time: $startTime", name: "Calculate Time And Distance");
+    log("Actual time in minutes: $actualTimeInMinutes");
+    log("Trip end: estimated time: ${session.estimatedTime}");
+    log("Trip end: estimated distance: ${session.estimatedDistance}");
   }
+
 
   /// Manage Tracking HERE
 
-  Future<void> setCurrentLocation(OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+  Future<void> setCurrentLocation(
+      OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
     log("order details are: $orderDetail");
@@ -956,13 +929,12 @@ class LatestSocketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setNewPolylineDirection(
+  FutureOr<void> setNewPolylineDirection(
     bool isFromOrigin,
   ) async {
     newPolylines.clear();
     log("***************************************** IS FROM LOGIN IS--------***********************$isFromOrigin *************--------");
     log("set polylines order details  are:-->> $orderDetail");
-
     showLoading();
     var latLongOrigin = orderDetail!.startCoordinate;
     var latLongDestination = orderDetail!.endCoordinate;
@@ -974,7 +946,8 @@ class LatestSocketProvider extends ChangeNotifier {
     var latDestination = double.parse(splitDestination[0]);
     var lngDestination = double.parse(splitDestination[1]);
     await _getCurrentLocation();
-    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    var coordinate =
+        LatLng(currentPosition!.latitude, currentPosition!.longitude);
     if (isFromOrigin) {
       log("------------------ GO TO DESTINATION FROM ORIGIN---------- $latDestination,$lngDestination ");
 
@@ -998,13 +971,9 @@ class LatestSocketProvider extends ChangeNotifier {
               endCap: Cap.roundCap);
 
           newPolylines.add(polyline);
-          // updatePolyline(val: polyline);
-
-          // polylines.add(polyline);
           notifyListeners();
           log("Polyline created  from origin $polylineCoordinates");
           log("Polyline created  from newPolylines origin $newPolylines");
-
           dismissLoading();
         }
       });
@@ -1013,7 +982,6 @@ class LatestSocketProvider extends ChangeNotifier {
       /*** GO TO ORIGIN  */
       logMe("Polylinessss ORIGIN created");
       log("------------------ GO TO ORIGIN FROM DRIVER---------- $latOrigin, $lngOrigin");
-
       await DirectionHelper()
           .getRouteBetweenCoordinates(
               coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
@@ -1044,6 +1012,7 @@ class LatestSocketProvider extends ChangeNotifier {
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
+    currentLatLng = LatLng(position.latitude, position.longitude);
     notifyListeners();
     log("------************* >>>>>>. CURRRENT LOCATION IS $currentPosition");
   }
@@ -1117,9 +1086,15 @@ class LatestSocketProvider extends ChangeNotifier {
           Duration throttleDuration = const Duration(seconds: 2);
           Duration throttleDurationPolyLine = const Duration(seconds: 5);
           // Listen to location updates
-          locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) async {
-              if (position != null && _shouldUpdateLocation(lastUpdate, throttleDuration)) {
-                await _handleLocationUpdate(position, throttleDurationPolyLine, lastUpdatePolyLine);
+          locationbackSubscription =
+              Geolocator.getPositionStream(locationSettings: locationSettings)
+                  .listen(
+            (Position? position) async {
+              if (position != null &&
+                  _shouldUpdateLocation(lastUpdate, throttleDuration)) {
+                currentLatLng = LatLng(position.latitude, position.longitude);
+                await _handleLocationUpdate(
+                    position, throttleDurationPolyLine, lastUpdatePolyLine);
                 lastUpdate = DateTime.now();
               }
             },
@@ -1158,44 +1133,55 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   bool _shouldUpdateLocation(DateTime? lastUpdate, Duration throttleDuration) {
-    return lastUpdate == null || DateTime.now().difference(lastUpdate) > throttleDuration;
+    return lastUpdate == null ||
+        DateTime.now().difference(lastUpdate) > throttleDuration;
   }
 
   bool _isDistanceMoreThan1Meter(LatLng start, LatLng end) {
     log("=====******* Distance Between =======>>>>>>>>>${Geolocator.distanceBetween(start.latitude, start.longitude, end.latitude, end.longitude)}");
     log("=====******* start =======>>>>>>>>>${start.latitude}, ${start.longitude}");
     log("=====******* end =======>>>>>>>>>${end.latitude}, ${end.longitude}");
-    return Geolocator.distanceBetween(start.latitude, start.longitude, end.latitude, end.longitude) > 1;
+    return Geolocator.distanceBetween(
+            start.latitude, start.longitude, end.latitude, end.longitude) >
+        1;
   }
 
   Future<void> _handleLocationUpdate(
-      Position position,
-      Duration throttleDurationPolyLine,
-      DateTime? lastUpdatePolyLine,
-      ) async {
+    Position position,
+    Duration throttleDurationPolyLine,
+    DateTime? lastUpdatePolyLine,
+  ) async {
     final start = LatLng(lastLatitude, lastLongitude);
     final end = LatLng(position.latitude, position.longitude);
-    log("New position: ${position.latitude}, ${position.longitude}", name: "LOCATION UPDATED");
-    if (lastUpdatePolyLine == null || DateTime.now().difference(lastUpdatePolyLine) > throttleDurationPolyLine) {
-      if ((lastLatitude == 0 && lastLongitude == 0)|| _isDistanceMoreThan1Meter(start, end)) {
+    log("New position: ${position.latitude}, ${position.longitude}",
+        name: "LOCATION UPDATED");
+    if (lastUpdatePolyLine == null ||
+        DateTime.now().difference(lastUpdatePolyLine) >
+            throttleDurationPolyLine) {
+      if ((lastLatitude == 0 && lastLongitude == 0) ||
+          _isDistanceMoreThan1Meter(start, end)) {
         lastLatitude = position.latitude;
         lastLongitude = position.longitude;
-        await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
+        await createMarker(
+            driverLatLng: LatLng(position.latitude, position.longitude));
       }
     }
-    if ((lastLatitude == 0 && lastLongitude == 0) || _isDistanceMoreThan1Meter(start, end)) {
+    if ((lastLatitude == 0 && lastLongitude == 0) ||
+        _isDistanceMoreThan1Meter(start, end)) {
       if (session.runningOrderStatus == 5 || currentOrderStatus == 5) {
-        driverCoordinatesList.add(LatLng(position.latitude, position.longitude));
+        driverCoordinatesList
+            .add(LatLng(position.latitude, position.longitude));
+      } else if (session.runningOrderStatus == 7 || currentOrderStatus == 7) {
+        return;
       }
       await animateToLocation(position, googleMapController).whenComplete(() {
-        updateLatLng(
+        _updateLatLng(
           latLng: LatLng(position.latitude, position.longitude),
           bearing: position.heading,
         );
       });
     }
   }
-
 
   Future<void> animateToLocation(
       Position position, GoogleMapController controller) async {
@@ -1207,8 +1193,10 @@ class LatestSocketProvider extends ChangeNotifier {
       zoom: zoomLevel,
     );
     await controller.animateCamera(
+
       CameraUpdate.newCameraPosition(
         cameraPosition,
+
       ),
     );
   }
@@ -1244,7 +1232,10 @@ class LatestSocketProvider extends ChangeNotifier {
     var lngDestination = double.parse(splitDestination[1]);
     var coordinate = LatLng(driverLatLng.latitude, driverLatLng.longitude);
     if ((currentOrderStatus == 1) || (currentOrderStatus == 2)) {
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin).then((result) async {
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(
+              coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
+          .then((result) async {
         if (result.isNotEmpty) {
           polylineCoordinates = [];
           for (var point in result) {
@@ -1277,7 +1268,10 @@ class LatestSocketProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           logMe("Polylinessss destinationnnn");
-          await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination).then(
+          await DirectionHelper()
+              .getRouteBetweenCoordinates(coordinate.latitude,
+                  coordinate.longitude, latDestination, lngDestination)
+              .then(
             (result) {
               if (result.isNotEmpty) {
                 polylineCoordinates = [];
@@ -1405,11 +1399,12 @@ class LatestSocketProvider extends ChangeNotifier {
     setEstimatedDistance = "0.0";
     polylineCoordinates.clear();
     newPolylines.clear();
-    lastLatitude =0;
-    lastLongitude =0;
+    lastLatitude = 0;
+    lastLongitude = 0;
   }
 
-  void calculateDistanceCovered2() {
+
+  Future<void> calculateDistanceCovered2()async {
     calculateTimeAndDistanceWhenRideCompleted();
     List<double> differences = [];
     log("Driver coordinates list: $driverCoordinatesList");
@@ -1424,14 +1419,20 @@ class LatestSocketProvider extends ChangeNotifier {
         differences.add(difference);
         log("Difference inSideForLoop between elements: $difference");
       }
-      double totalDistance =
-          differences.fold(0, (prev, element) => prev + element);
+      double totalDistance = differences.fold(0, (prev, element) => prev + element);
+
       log("Total distance traveled: $totalDistance meters");
-      double totalDistanceKm = totalDistance / 1000.0;
-      session.setEstimatedDistance = totalDistanceKm.toString();
-      setEstimatedDistance = totalDistanceKm.toString();
-      // setEstimatedDistance = session.estimatedDistance;
-      log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+      if (totalDistance > 500) {
+        double totalDistanceKm = (totalDistance + 100) / 1000.0;
+        session.setEstimatedDistance = totalDistanceKm.toString();
+        setEstimatedDistance = totalDistanceKm.toString();
+        log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+      } else {
+        double totalDistanceKm = totalDistance / 1000.0;
+        session.setEstimatedDistance = totalDistanceKm.toString();
+        setEstimatedDistance = totalDistanceKm.toString();
+        log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+      }
       notifyListeners();
     } catch (e, s) {
       log("Error calculating distance: $e $s");
