@@ -22,10 +22,9 @@ import '../../../rating/presentation/page/give_rating_screen.dart';
 import 'new_detailed_payment_screen.dart';
 
 class ReceiptPage extends StatelessWidget {
-  ReceiptPage({Key? key,
+  ReceiptPage({super.key,
       this.id,
-      required this.customerId})
-      : super(key: key);
+      required this.customerId});
   static const routeName = '/ReceiptPage';
   final String? id;
   final int customerId;
@@ -181,24 +180,8 @@ class ReceiptPage extends StatelessWidget {
                                         .usePoppinsW6Font(),
                                   ),
                                   Text(
-                                    DateFormat.jm().format((DateFormat(
-                                                "yyyy-MM-dd HH:mm:ss")
-                                            .parse(
-                                                provider.receiptData!.createdAt
-                                                        .toString() ??
-                                                    DateTime.now().toString(),
-                                                true))
+                                    DateFormat.jm().format((DateFormat("yyyy-MM-dd HH:mm:ss").parse(provider.receiptData!.createdAt.toString() ?? DateTime.now().toString(), true))
                                         .toLocal()),
-
-                                    // DateFormat.jm().format(
-                                    //     (DateFormat("yyyy-MM-dd HH:mm:ss")
-                                    //             .parse(
-                                    //                 provider
-                                    //                     .receiptData!.orderTime
-                                    //                     .toString(),
-                                    //                 true))
-                                    //         .toLocal()),
-                                    // DateFormat.jm().format(order.orderTime),
                                     textAlign: TextAlign.center,
                                     style: titleStyle
                                         .copyWith(
@@ -292,8 +275,7 @@ class ReceiptPage extends StatelessWidget {
                                             actualDistance: provider.receiptData!.distance1,
                                             totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0" : provider.receiptData!.actualTime,
                                             minimumFare:provider.receiptData!.minPrice !=""? provider.receiptData!.minPrice:"0.0",
-                                            baseFare:
-                                                provider.receiptData!.baseFare,
+                                            baseFare: provider.receiptData!.baseFare,
                                             techFee: provider.receiptData!.techFee,
                                             newTotal: provider.receiptData!.newTotal !=
                                                     ""
@@ -558,17 +540,6 @@ class ReceiptPage extends StatelessWidget {
                                                               .id,
                                                         ),
                                                       );
-                                                      // } else {
-                                                      //   return;
-                                                      // }
-
-                                                      // Navigator
-                                                      // .pushNamedAndRemoveUntil(
-                                                      //     context,
-                                                      //     HomePage
-                                                      //         .routeName,
-                                                      //     (route) =>
-                                                      //         false);
                                                     } else {
                                                       dismissLoading();
 
@@ -581,19 +552,6 @@ class ReceiptPage extends StatelessWidget {
 
                                                     log(e.toString());
                                                   }
-
-                                                  // provider
-                                                  //     .paymentConfirmation(
-                                                  //         paymentStatus:
-                                                  //             'yes',
-                                                  //         context: context);
-
-                                                  // Navigator
-                                                  //     .pushNamedAndRemoveUntil(
-                                                  //         context,
-                                                  //         HomePage
-                                                  //             .routeName,
-                                                  //         (route) => false);
                                                 },
                                                 bgColor: black030303),
                                           ),
@@ -754,22 +712,12 @@ class ReceiptPage extends StatelessWidget {
                   ),
                 )
               : const Center(child: CircularProgressIndicator());
-
-          // }
-          // return const SizedBox.shrink();
-          // },
-          // );
-          // },
-          // ),
-          // ),
-          // );
         },
       ),
     );
   }
 
-  void _showPaymentInfo(
-      {required BuildContext context, required Widget child}) {
+  void _showPaymentInfo({required BuildContext context, required Widget child}) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,

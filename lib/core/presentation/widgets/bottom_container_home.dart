@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 class BottomContainerHome extends StatelessWidget {
   const BottomContainerHome({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
@@ -49,31 +49,6 @@ class BottomContainerHome extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // FlutterSwitch(
-                  //     duration: const Duration(seconds: 0),
-                  //     width: 130,
-                  //     activeText: appLoc.online,
-                  //     inactiveText: appLoc.offLine,
-                  //     activeTextColor: whiteColor,
-                  //     inactiveTextColor: whiteColor,
-                  //     activeColor: primaryColor,
-                  //     inactiveColor: Colors.black,
-                  //     activeToggleColor: Colors.black,
-                  //     inactiveToggleColor: Colors.grey,
-                  //     activeIcon: const Icon(
-                  //       Icons.local_taxi,
-                  //       color: Colors.white,
-                  //     ),
-                  //     inactiveIcon: const Icon(
-                  //       Icons.local_taxi,
-                  //       color: Colors.white,
-                  //     ),
-                  //     value: provider.isOnline,
-                  //     showOnOff: true,
-                  //     onToggle: (bool val) {
-                  //       provider.changeStatus = val;
-                  //       provider.updateStatus().listen((event) async {});
-                  //     }),
                   AnimatedToggleSwitch<bool>.dual(
                     current: provider.isOnline,
                     first: false,
@@ -123,7 +98,7 @@ class BottomContainerHome extends StatelessWidget {
                                         color: whiteColor,
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold)
-                                    .usePoppinsW6Font())),
+                                        .usePoppinsW6Font())),
                   ),
                 ],
               ),

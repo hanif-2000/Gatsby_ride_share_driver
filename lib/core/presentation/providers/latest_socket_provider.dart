@@ -39,6 +39,7 @@ class LatestSocketProvider extends ChangeNotifier {
   String rideText = "Start Ride to Pickup Location";
   late GoogleMapController googleMapController;
   LatLng currentLatLng = const LatLng(0.0, 0.0);
+  bool isWithIn1Km =false;
   final dio = Dio();
 
   ///orderDetail
@@ -596,7 +597,7 @@ class LatestSocketProvider extends ChangeNotifier {
       if (status == "7") {
         await _handleStatus7();
       }
-      await Future.delayed(const Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 300));
       _socket.send(json.encode(payload));
       dismissLoading();
       await _handleOrderStatusChange(status);
@@ -721,27 +722,11 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-  /// *****************-------------->>>>>>>. CALCULATE TIME AND DISTANCE WHEN TRIP END <<<<<<<--------   ****************************///////
-
-  void calculateTimeAndDistanceWhenRideCompleted() {
-    session.setEndTime = DateTime.now().toString();
-    DateTime startTime = DateTime.parse(session.rideStartTime);
-    Duration difference = DateTime.now().difference(startTime);
-
-    double actualTimeInMinutes = difference.inMinutes.toDouble();
-    session.setEstimatedTime = (actualTimeInMinutes * 60).toString(); // Store estimated time in seconds
-
-    log("Ride Start Time: $startTime", name: "Calculate Time And Distance");
-    log("Actual time in minutes: $actualTimeInMinutes");
-    log("Trip end: estimated time: ${session.estimatedTime}");
-    log("Trip end: estimated distance: ${session.estimatedDistance}");
-  }
 
 
   /// Manage Tracking HERE
 
-  Future<void> setCurrentLocation(
-      OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+  Future<void> setCurrentLocation(OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
     log("order details are: $orderDetail");
@@ -1009,8 +994,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   Future<void> _getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
     currentLatLng = LatLng(position.latitude, position.longitude);
     notifyListeners();
@@ -1042,16 +1026,12 @@ class LatestSocketProvider extends ChangeNotifier {
     if ((session.runningOrderStatus == 1) ||
         (session.runningOrderStatus == 2)) {
       url = 'google.navigation:q=$latOrigin,$lngOrigin&mode=d';
-      googleUrl =
-          'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
-      appleUrl =
-          'https://maps.apple.com/?saddr=&daddr=$latOrigin,$lngOrigin&directionsmode=driving';
+      googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
+      appleUrl = 'https://maps.apple.com/?saddr=&daddr=$latOrigin,$lngOrigin&directionsmode=driving';
     } else {
       url = 'google.navigation:q=$latDestination,$lngDestination&mode=d';
-      googleUrl =
-          'https://www.google.com/maps/search/?api=1&query=$latDestination,$lngDestination';
-      appleUrl =
-          'https://maps.apple.com/?saddr=&daddr=$latDestination,$lngDestination&directionsmode=driving';
+      googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latDestination,$lngDestination';
+      appleUrl = 'https://maps.apple.com/?saddr=&daddr=$latDestination,$lngDestination&directionsmode=driving';
     }
     Uri appleUri = Uri.parse(appleUrl);
     Uri googleUri = Uri.parse(googleUrl);
@@ -1086,15 +1066,11 @@ class LatestSocketProvider extends ChangeNotifier {
           Duration throttleDuration = const Duration(seconds: 2);
           Duration throttleDurationPolyLine = const Duration(seconds: 5);
           // Listen to location updates
-          locationbackSubscription =
-              Geolocator.getPositionStream(locationSettings: locationSettings)
-                  .listen(
+          locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
             (Position? position) async {
-              if (position != null &&
-                  _shouldUpdateLocation(lastUpdate, throttleDuration)) {
+              if (position != null && _shouldUpdateLocation(lastUpdate, throttleDuration)) {
                 currentLatLng = LatLng(position.latitude, position.longitude);
-                await _handleLocationUpdate(
-                    position, throttleDurationPolyLine, lastUpdatePolyLine);
+                await _handleLocationUpdate(position, throttleDurationPolyLine, lastUpdatePolyLine);
                 lastUpdate = DateTime.now();
               }
             },
@@ -1162,8 +1138,7 @@ class LatestSocketProvider extends ChangeNotifier {
           _isDistanceMoreThan1Meter(start, end)) {
         lastLatitude = position.latitude;
         lastLongitude = position.longitude;
-        await createMarker(
-            driverLatLng: LatLng(position.latitude, position.longitude));
+        await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
       }
     }
     if ((lastLatitude == 0 && lastLongitude == 0) ||
@@ -1268,9 +1243,7 @@ class LatestSocketProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           logMe("Polylinessss destinationnnn");
-          await DirectionHelper()
-              .getRouteBetweenCoordinates(coordinate.latitude,
-                  coordinate.longitude, latDestination, lngDestination)
+          await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination)
               .then(
             (result) {
               if (result.isNotEmpty) {
@@ -1311,8 +1284,7 @@ class LatestSocketProvider extends ChangeNotifier {
         }
       });
     } else {
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
+      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
               latDestination, lngDestination)
           .then((result) async {
         if (result.isNotEmpty) {
@@ -1401,44 +1373,98 @@ class LatestSocketProvider extends ChangeNotifier {
     newPolylines.clear();
     lastLatitude = 0;
     lastLongitude = 0;
+    isWithIn1Km = false;
   }
 
 
-  Future<void> calculateDistanceCovered2()async {
-    calculateTimeAndDistanceWhenRideCompleted();
-    List<double> differences = [];
-    log("Driver coordinates list: $driverCoordinatesList");
-    try {
-      for (int i = 1; i < driverCoordinatesList.length; i++) {
-        double difference = Geolocator.distanceBetween(
-          driverCoordinatesList[i].latitude,
-          driverCoordinatesList[i].longitude,
-          driverCoordinatesList[i - 1].latitude,
-          driverCoordinatesList[i - 1].longitude,
-        );
-        differences.add(difference);
-        log("Difference inSideForLoop between elements: $difference");
-      }
-      double totalDistance = differences.fold(0, (prev, element) => prev + element);
 
-      log("Total distance traveled: $totalDistance meters");
-      if (totalDistance > 500) {
-        double totalDistanceKm = (totalDistance + 100) / 1000.0;
-        session.setEstimatedDistance = totalDistanceKm.toString();
-        setEstimatedDistance = totalDistanceKm.toString();
-        log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
-      } else {
-        double totalDistanceKm = totalDistance / 1000.0;
-        session.setEstimatedDistance = totalDistanceKm.toString();
-        setEstimatedDistance = totalDistanceKm.toString();
-        log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+  Future<bool>  setActualDistance({destinationLat, destinationLong, originLat, originLong}) async {
+    try {
+      var response = await Dio().get('https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      log(" response of real distance:--->>> ${response.data}");
+      var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
+      session.setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
+      setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
+      double distanceInMeters = Geolocator.distanceBetween(
+        originLat,
+        originLong,
+        destinationLat,
+        destinationLong,
+      );
+      return distanceInMeters<=1000;
+    } catch (e,s) {
+      print("$e, $s");
+      return false;
+    }
+  }
+
+  Future<void> calculateDistanceCovered2()async {
+    try{
+      if(currentLatLng.latitude==0 && currentLatLng.longitude==0){
+        await _getCurrentLocation();
       }
-      notifyListeners();
+    session.setEndTime = DateTime.now().toString();
+    DateTime startTime = DateTime.parse(session.rideStartTime);
+    Duration difference = DateTime.now().difference(startTime);
+    double actualTimeInMinutes = difference.inMinutes.toDouble();
+    session.setEstimatedTime = (actualTimeInMinutes * 60).toString(); // Store estimated time in seconds
+    log("Ride Start Time: $startTime\n Actual time in minutes: $actualTimeInMinutes\n Trip end: estimated time:${session.estimatedTime},\nrip end: estimated distance: ${session.estimatedDistance}", name: "Calculate Time And Distance");
+    var latLongOrigin = _orderDetail!.startCoordinate;
+    var splitOrigin = latLongOrigin.split(",");
+    var latOrigin = double.parse(splitOrigin[0]);
+    var lngOrigin = double.parse(splitOrigin[1]);
+   final bool isWithIn1km = await setActualDistance(destinationLong: currentLatLng.longitude,destinationLat: currentLatLng.latitude,originLong: lngOrigin ,originLat: latOrigin);
+   isWithIn1Km = isWithIn1km;
+    notifyListeners();
     } catch (e, s) {
       log("Error calculating distance: $e $s");
     }
-    log("/********** Calculation Exited *************/");
   }
+
+  // Future<void> calculateDistanceCovered2()async {
+  //   session.setEndTime = DateTime.now().toString();
+  //   DateTime startTime = DateTime.parse(session.rideStartTime);
+  //   Duration difference = DateTime.now().difference(startTime);
+  //
+  //   double actualTimeInMinutes = difference.inMinutes.toDouble();
+  //   session.setEstimatedTime = (actualTimeInMinutes * 60).toString(); // Store estimated time in seconds
+  //
+  //   log("Ride Start Time: $startTime\n Actual time in minutes: $actualTimeInMinutes\n"
+  //       "Trip end: estimated time:${session.estimatedTime},\nrip end: estimated distance: ${session.estimatedDistance}", name: "Calculate Time And Distance");
+  //
+  //   List<double> differences = [];
+  //   log("Driver coordinates list: $driverCoordinatesList");
+  //   try {
+  //     for (int i = 1; i < driverCoordinatesList.length; i++) {
+  //       double difference = Geolocator.distanceBetween(
+  //         driverCoordinatesList[i].latitude,
+  //         driverCoordinatesList[i].longitude,
+  //         driverCoordinatesList[i - 1].latitude,
+  //         driverCoordinatesList[i - 1].longitude,
+  //       );
+  //       differences.add(difference);
+  //       log("Difference inSideForLoop between elements: $difference");
+  //     }
+  //     double totalDistance = differences.fold(0, (prev, element) => prev + element);
+  //
+  //     log("Total distance traveled: $totalDistance meters");
+  //     if (totalDistance > 5000) {
+  //       double totalDistanceKm = (totalDistance + 200) / 1000.0;
+  //       session.setEstimatedDistance = totalDistanceKm.toString();
+  //       setEstimatedDistance = totalDistanceKm.toString();
+  //       log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+  //     } else {
+  //       double totalDistanceKm = totalDistance / 1000.0;
+  //       session.setEstimatedDistance = totalDistanceKm.toString();
+  //       setEstimatedDistance = totalDistanceKm.toString();
+  //       log("setEstimatedDistance===>>> $setEstimatedDistance In Kilo Meter");
+  //     }
+  //     notifyListeners();
+  //   } catch (e, s) {
+  //     log("Error calculating distance: $e $s");
+  //   }
+  //   log("/********** Calculation Exited *************/");
+  // }
 
   clearState() {
     polylineCoordinates.clear();

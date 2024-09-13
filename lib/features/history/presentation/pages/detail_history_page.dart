@@ -10,7 +10,7 @@ import '../../data/models/history_response_model.dart';
 class DetailHistoryPage extends StatefulWidget {
   final HistoryOrder item;
   static const String routeName = "DetailHistoryPage";
-  const DetailHistoryPage({Key? key, required this.item}) : super(key: key);
+  const DetailHistoryPage({super.key, required this.item});
 
   @override
   State<DetailHistoryPage> createState() => _DetailHistoryPageState();

@@ -10,12 +10,11 @@ class PaymentTile extends StatelessWidget {
   final bool selected;
 
   const PaymentTile(
-      {Key? key,
+      {super.key,
       required this.assets,
       required this.title,
       required this.selected,
-      required this.onTap})
-      : super(key: key);
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import '../providers/login_provider.dart';
 import '../widgets/login_form.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
   static const routeName = '/login';
 
   @override

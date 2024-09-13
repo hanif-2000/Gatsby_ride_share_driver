@@ -15,8 +15,7 @@ class AppBarLoggedIn extends StatelessWidget {
   final double appbarHeight;
 
   const AppBarLoggedIn(
-      {Key? key, required this.boxConstraints, required this.appbarHeight})
-      : super(key: key);
+      {super.key, required this.boxConstraints, required this.appbarHeight});
 
   @override
   Widget build(BuildContext context) {

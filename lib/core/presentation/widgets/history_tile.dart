@@ -8,13 +8,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class HistoryTile extends StatelessWidget {
-  const HistoryTile({Key? key, this.order}) : super(key: key);
+  const HistoryTile({super.key, this.order});
   final HistoryOrder? order;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print("order Detail=============>>>>>>>.$order");
         Navigator.pushNamed(context, OrderDetailPage.routeName,
             arguments: order);
       },

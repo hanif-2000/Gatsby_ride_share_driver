@@ -506,8 +506,7 @@ class HomeProvider with ChangeNotifier {
     });
   }
 
-  setActualDistance(
-      {destinationLat, destinationLong, originLat, originLong}) async {
+  setActualDistance({destinationLat, destinationLong, originLat, originLong}) async {
     try {
       var response = await Dio().get('https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
       dev.log(" response of real distance:--->>> ${response.data}");

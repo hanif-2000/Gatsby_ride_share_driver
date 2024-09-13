@@ -149,14 +149,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: whiteAccentColor,
                 ),
 
-                TextInRow(
+           /*     TextInRow(
                   firstText: 'Extra Distance',
                   // secondText: widget.extraDistance + " Km",
                   secondText: "${widget.extraDistance} Km",
                 ),
                 const Divider(
                   color: whiteAccentColor,
-                ),
+                ),*/
                 TextInRow(
                   firstText: 'Per Km Price',
                   // secondText: widget.extraDistance + " Km",
@@ -240,66 +240,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     secondTextweight: FontWeight.w700,
                     firstText: 'Grand Total',
                     secondText: r'CA$ ' + widget.newTotal
-                    // widget.newTotal != ""
-                    //     ? (double.parse(widget.grandTotal.toString()))
-                    //         .toStringAsFixed(2)
-                    //     : "0",
                     ),
               ],
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(vertical: _deviceSize.height * .02),
-          //   child: const Text(
-          //     "Payment Through",
-          //     style: TextStyle(
-          //       fontFamily: "poPPinMedium",
-          //       fontSize: 13.0,
-          //       color: grey7D7979Color,
-          //     ),
-          //   ),
-          // ),
-
-          // GooglePayButton(
-          //   paymentConfigurationAsset: 'google_pay_config.json',
-          //   paymentItems: _paymentItems,
-          //   style: GooglePayButtonStyle.black,
-          //   type: GooglePayButtonType.pay,
-          //   margin: const EdgeInsets.only(top: 15.0),
-          //   onPaymentResult: onGooglePayResult,
-          //   loadingIndicator: const Center(
-          //     child: CircularProgressIndicator(),
-          //   ),
-          // )
-
-          // // Example pay button configured using an asset
-          // FutureBuilder<PaymentConfiguration>(
-          //     future: _googlePayConfigFuture,
-          //     builder: (context, snapshot) => snapshot.hasData
-          //         ? GooglePayButton(
-          //             paymentConfiguration: snapshot.data!,
-          //             paymentItems: _paymentItems,
-          //             type: GooglePayButtonType.buy,
-          //             margin: const EdgeInsets.only(top: 15.0),
-          //             onPaymentResult: onGooglePayResult,
-          //             loadingIndicator: const Center(
-          //               child: CircularProgressIndicator(),
-          //             ),
-          //           )
-          //         : const SizedBox.shrink()),
-          // // Example pay button configured using a string
-          // ApplePayButton(
-          //   paymentConfiguration: PaymentConfiguration.fromJsonString(
-          //       payment_configurations.defaultApplePay),
-          //   paymentItems: _paymentItems,
-          //   style: ApplePayButtonStyle.black,
-          //   type: ApplePayButtonType.buy,
-          //   margin: const EdgeInsets.only(top: 15.0),
-          //   onPaymentResult: onApplePayResult,
-          //   loadingIndicator: const Center(
-          //     child: CircularProgressIndicator(),
-          //   ),
-          // ),
           SizedBox(height: MediaQuery.of(context).size.height * .05)
         ],
       ),

@@ -8,6 +8,7 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/ch
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/profile_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -27,6 +28,7 @@ import 'features/profile/presentation/providers/profile_edit_provider.dart';
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   try {
     await init();
     locator.isReady<Session>().then((_) async {

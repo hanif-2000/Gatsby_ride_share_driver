@@ -10,9 +10,9 @@ class HistoryItem extends StatefulWidget {
   final HistoryOrder data;
 
   const HistoryItem({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
 
   @override
   _HistoryItemState createState() => _HistoryItemState();
@@ -25,6 +25,7 @@ class _HistoryItemState extends State<HistoryItem> {
 
     return GestureDetector(
         onTap: () {
+          print(widget.data);
           Navigator.pushNamed(context, DetailHistoryPage.routeName,
               arguments: widget.data);
         },

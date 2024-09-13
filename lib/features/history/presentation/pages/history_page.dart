@@ -4,7 +4,6 @@ import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/static/styles.dart';
 import '../providers/history_state.dart';
 import '../providers/history_provider.dart';
 import '../widgets/history_item.dart';
@@ -12,7 +11,7 @@ import '../widgets/history_item.dart';
 class HistoryPage extends StatefulWidget {
   static const String routeName = "HistoryPage";
 
-  const HistoryPage({Key? key}) : super(key: key);
+  const HistoryPage({super.key});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -49,14 +48,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   return Center(
                       child: LottieBuilder.asset(
                           'assets/lottie_animation/no_data_found.json'));
-                  // return Center(
-                  //   child:
-
-                  //    Text(
-                  //     appLoc.therearenopastorders,
-                  //     style: formLabelHeaderStyle,
-                  //   ),
-                  // );
                 }
                 return Column(
                   children: List.generate(

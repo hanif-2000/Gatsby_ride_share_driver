@@ -195,7 +195,7 @@ class ButtonOrder extends StatelessWidget {
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
                          await socketProvider.calculateDistanceCovered2();
-                         await Future.delayed(const Duration(milliseconds: 300));
+                         await Future.delayed(const Duration(milliseconds: 200));
                           socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
@@ -205,8 +205,7 @@ class ButtonOrder extends StatelessWidget {
                         dismissLoading();
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          ReceiptPage.routeName,
-                              (route) => false,
+                          ReceiptPage.routeName, (route) => false,
                           arguments: RatingPageArguments(
                             customerDataModel: socketProvider.customerDetail!,
                             customerId: socketProvider.orderDetail!.userId,
