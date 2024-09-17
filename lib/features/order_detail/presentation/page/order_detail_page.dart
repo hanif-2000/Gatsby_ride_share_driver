@@ -27,7 +27,7 @@ import '../widget/price_tile.dart';
 import '../widget/rating_tile.dart';
 
 class OrderDetailPage extends StatefulWidget {
-  const OrderDetailPage({Key? key, this.order}) : super(key: key);
+  const OrderDetailPage({super.key, this.order});
   static const routeName = '/OrderDetailPage';
   final HistoryOrder? order;
 
@@ -39,12 +39,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   var extraTimeTaken = "0 hr 0 Min 0 Sec";
 
   convertSecondsToMinutes() {
-    if (widget.order!.actual_time != '') {
-      int seconds = double.parse(widget.order!.actual_time!).toInt(); // Replace this with your desired number of seconds
-
+    if (widget.order!.actualTime != '') {
+      int seconds = double.parse(widget.order!.actualTime!).roundToDouble().toInt(); // Replace this with your desired number of seconds
       int minutes = seconds ~/ 60;
       int remainingSeconds = seconds % 60;
-
       int hours = minutes ~/ 60;
       int remainingMinutes = minutes % 60;
 

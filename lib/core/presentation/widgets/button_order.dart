@@ -201,6 +201,7 @@ class ButtonOrder extends StatelessWidget {
                           actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
                           startTime: session.rideStartTime,
                           endTime: DateTime.now().toString(),
+                              isWithin1km: socketProvider.isWithIn1Km
                         );
                         dismissLoading();
                         Navigator.pushNamedAndRemoveUntil(

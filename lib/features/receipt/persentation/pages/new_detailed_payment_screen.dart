@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/utility/convert_decimal_helper.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/static/colors.dart';
+import '../../../../core/utility/duration_helper.dart';
 import '../../widgets/common_text.dart';
 import '../../widgets/text_in_row.dart';
 
@@ -49,52 +50,7 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  var extraTimeTaken = "0";
-  var totalTimeTaken = "0";
 
-  convertSecondsToMinutes() {
-    log("extra time :-->>${widget.extraTime}");
-    if ((widget.extraTime.toString() != '')) {
-      int seconds = int.parse(widget.extraTime); // Replace this with your desired number of seconds
-
-      int minutes = seconds ~/ 60;
-      int remainingSeconds = seconds % 60;
-      int hours = minutes ~/ 60;
-      int remainingMinutes = minutes % 60;
-      print('$seconds seconds is equivalent to:');
-      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
-      setState(() {
-        extraTimeTaken = _getText(hours,remainingMinutes);
-      });
-    }
-  }
- String _getText(int hours, int minutes){
-    if(hours==0){
-      return "$minutes minutes";
-    }else{
-      return "$hours hr $minutes min ";
-    }
-  }
-
-  convertSecondsToMinutesTotal() {
-    log("extra time :-->>${widget.totalTime}");
-    if ((widget.totalTime.toString() != '')) {
-      final seconds = double.parse(widget.totalTime).toInt(); // Replace this with your desired number of seconds
-
-      int minutes = seconds ~/ 60;
-      int remainingSeconds = seconds % 60;
-
-      int hours = minutes ~/ 60;
-      int remainingMinutes = minutes % 60;
-
-      print('$seconds seconds is equivalent to:');
-      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
-
-      setState(() {
-        totalTimeTaken = _getText(hours,remainingMinutes);
-      });
-    } else {}
-  }
 
   String totalDistancePrice() {
     double extraDistance = double.parse(widget.actualDistance.toString());
@@ -106,8 +62,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   void initState() {
-    convertSecondsToMinutes();
-    convertSecondsToMinutesTotal();
     super.initState();
 
     log("extra time is :${widget.extraTime}");
@@ -179,20 +133,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                 TextInRow(
                   firstText: 'Total Time Taken',
-                  secondText: totalTimeTaken.toString(),
+                  secondText: formatDuration(widget.totalTime),
                   // secondText:
                 ),
                 const Divider(
                   color: whiteAccentColor,
                 ),
-                TextInRow(
+               /* TextInRow(
                   firstText: 'Extra Time',
                   secondText: extraTimeTaken.toString(),
                   // secondText:
                 ),
                 const Divider(
                   color: whiteAccentColor,
-                ),
+                ),*/
                 TextInRow(
                   firstText: 'Per Minute Price',
                   secondText:  "CA\$ ${convertToTwoDecimal(widget.price_min??"0")}",

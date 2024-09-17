@@ -238,9 +238,7 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                   Text(
                                     // actualTime,
-                                    formatDuration(double.parse(
-                                            provider.receiptData!.actualTime)
-                                        .toInt()),
+                                    formatDuration(double.parse(provider.receiptData!.actualTime.toString()).toInt()),
                                     // "${provider.receiptData!.actualTime} Min",
                                     textAlign: TextAlign.center,
                                     style: titleStyle
@@ -273,30 +271,19 @@ class ReceiptPage extends StatelessWidget {
                                           context: context,
                                           child: PaymentScreen(
                                             actualDistance: provider.receiptData!.distance1,
-                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0" : provider.receiptData!.actualTime,
+                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0" : double.parse(provider.receiptData!.actualTime.toString()).toInt(),
                                             minimumFare:provider.receiptData!.minPrice !=""? provider.receiptData!.minPrice:"0.0",
                                             baseFare: provider.receiptData!.baseFare,
                                             techFee: provider.receiptData!.techFee,
-                                            newTotal: provider.receiptData!.newTotal !=
-                                                    ""
-                                                ? convertToTwoDecimal(provider
-                                                    .receiptData!.newTotal
-                                                    .toString())
-                                                : convertToTwoDecimal(provider
-                                                    .receiptData!.newTotal
-                                                    .toString()),
+                                            newTotal: provider.receiptData!.newTotal != ""
+                                                ? convertToTwoDecimal(provider.receiptData!.newTotal.toString())
+                                                : convertToTwoDecimal(provider.receiptData!.newTotal.toString()),
                                             pendingAmount: provider.receiptData!.pendingAmount == ''
                                                 ? '0'
-                                                : provider
-                                                    .receiptData!.pendingAmount,
-                                            totalPrice:
-                                                provider.receiptData!.newTotal,
-                                            extraDistance: provider.receiptData!.extraDistance == '' ? '0'
-                                                : provider.receiptData!.extraDistance,
-                                            extraTime: provider
-                                                        .receiptData!.extraTime
-                                                        .toString() ==
-                                                    ''
+                                                : provider.receiptData!.pendingAmount,
+                                            totalPrice: provider.receiptData!.newTotal,
+                                            extraDistance: provider.receiptData!.extraDistance == '' ? '0' : provider.receiptData!.extraDistance,
+                                            extraTime: provider.receiptData!.extraTime.toString() == ''
                                                 ? '0'
                                                 : provider
                                                     .receiptData!.extraTime
@@ -323,45 +310,6 @@ class ReceiptPage extends StatelessWidget {
                                               price_min:provider.receiptData!.priceMin
                                           ),
                                         );
-                                        /*    showModalBottomSheet(
-                                          context: context,
-                                          enableDrag: true,
-
-                                          builder: (context) {
-                                            return PaymentScreen(
-                                                newTotal: provider
-                                                    .receiptData!.newTotal
-                                                    .toString(),
-                                                pendingAmount:
-                                                    provider.receiptData!.pendingAmount == ''
-                                                        ? '0'
-                                                        : provider.receiptData!
-                                                            .pendingAmount,
-                                                totalPrice:
-                                                    provider.receiptData!.total,
-                                                extraDistance:
-                                                    provider.receiptData!.extraDistance == ''
-                                                        ? '0'
-                                                        : provider.receiptData!
-                                                            .extraDistance,
-                                                extraTime: provider.receiptData!.extraTime == ''
-                                                    ? '0'
-                                                    : provider
-                                                        .receiptData!.extraTime,
-                                                extraDistancePrice:
-                                                    provider.receiptData!.extraDistancePrice == ""
-                                                        ? "0"
-                                                        : provider.receiptData!
-                                                            .extraDistancePrice,
-                                                extraTimePrice:
-                                                    provider.receiptData!.extraTimePrice == ''
-                                                        ? "0"
-                                                        : provider.receiptData!
-                                                            .extraTimePrice,
-                                                grandTotal: provider.receiptData!.newTotal.toString(),
-                                                distance: provider.receiptData!.distance.toString());
-                                          },
-                                        );*/
                                       },
                                       icon: const Icon(
                                           Icons.arrow_circle_right_outlined))
@@ -387,8 +335,6 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      // SvgPicture.asset(
-                                      //     'assets/icons/home/ic_card_master.svg'),
                                       smallHorizontalSpacing(),
                                       Text(
                                         getPaymentType(int.parse(provider

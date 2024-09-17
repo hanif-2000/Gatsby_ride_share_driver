@@ -168,6 +168,7 @@ class _RequestListWidgetState extends State<RequestListWidget>
                                   ),
                                 );
                               });
+
                             },
                             onReject: () {
                               // Reject the ride

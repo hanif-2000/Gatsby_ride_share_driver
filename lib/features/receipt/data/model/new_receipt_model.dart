@@ -1,13 +1,3 @@
-// To parse this JSON data, do
-//
-//     final newReceiptModel = newReceiptModelFromJson(jsonString);
-
-// NewReceiptModel newReceiptModelFromJson(String str) =>
-//     NewReceiptModel.fromJson(json.decode(str));
-
-// String newReceiptModelToJson(NewReceiptModel data) =>
-//     json.encode(data.toJson());
-
 class NewReceiptModel {
   dynamic response;
   String message;
@@ -49,6 +39,7 @@ class ReceiptData {
   dynamic paymentMethod;
   dynamic estimatedTime;
   dynamic actualTime;
+  dynamic actual_time;
   DateTime createdAt;
   dynamic total;
   dynamic pendingAmount;
@@ -83,6 +74,7 @@ class ReceiptData {
     required this.paymentMethod,
     required this.estimatedTime,
     required this.actualTime,
+    required this.actual_time,
     required this.total,
     required this.pendingAmount,
     required this.customerId,
@@ -117,7 +109,8 @@ class ReceiptData {
         distance1: json["distance1"] ?? '',
         paymentMethod: json["payment_method"] ?? 1,
         estimatedTime: json["estimated_time"] ?? '',
-        actualTime: json["actual_time"],
+        actual_time: json["actual_time"]??"0",
+        actualTime: json["actualTime"]??"0",
         total: json["total"] ?? "0",
         pendingAmount: json["pending_amount"] ?? "0",
         customerId: json["customerID"] ?? "0",
@@ -150,7 +143,8 @@ class ReceiptData {
         "distance": distance,
         "payment_method": paymentMethod,
         "estimated_time": estimatedTime,
-        "actual_time": actualTime.split(',')[0],
+        "actual_time": actual_time.split(',')[0],
+        "actualTime": actualTime,
         "total": total,
         "pending_amount": pendingAmount,
         "customerID": customerId,

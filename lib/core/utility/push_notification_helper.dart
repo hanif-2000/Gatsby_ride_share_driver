@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:appkey_taxiapp_driver/core/presentation/pages/history_list_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -139,17 +138,15 @@ class PushNotificationService {
     });
   }
 
-  /* Future? _onSelectNotification(String? payload) {
-    if (Getters.authToken?.isEmpty??true) {
-      return null;
+  Future<void> clearAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+    if (Platform.isIOS) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.cancelAll();
     }
-    NotificationEntity? entity = convertStringToNotificationEntity(payload);
-    printLog("notification onSelectNotification ${entity.toString()}");
-    if (entity != null) {
-      _pushNextScreenFromForeground(entity);
-    }
-    return null;
-  }*/
+
+  }
 
   Future<void> _showNotifications(NotificationEntity notificationEntity) async {
     Random random = Random();

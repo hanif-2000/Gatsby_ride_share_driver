@@ -42,7 +42,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    log("didChangeAppLifecycleState ------>>>>>>>   $state");
+    log("didChangeAppLifecycleState  >>>>>>>>>>>------->>>>>>>>>>>>>>   $state");
     if(context.mounted){
     //  final socketProvider = context.read<LatestSocketProvider>();
       if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {

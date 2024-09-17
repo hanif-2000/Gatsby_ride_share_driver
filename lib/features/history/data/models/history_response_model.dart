@@ -44,6 +44,7 @@ class HistoryOrder {
   String? startAddress;
   String? endAddress;
   String? actual_time;
+  String? actualTime;
   dynamic distance;
   dynamic total;
   dynamic grandTotal;
@@ -120,6 +121,7 @@ class HistoryOrder {
      this.actual_time,
      this.price_min,
      this.price_per_min,
+    this.actualTime
   });
 
   factory HistoryOrder.fromJson(Map<String, dynamic> json) => HistoryOrder(
@@ -130,6 +132,7 @@ class HistoryOrder {
          tech_fee: json["tech_fee"],
          price_km: json["price_km"],
          actual_time: json["actual_time"]??"0.0",
+         actualTime: json["actualTime"]??"0.0",
         customerId: json["customer_id"],
         startCoordinate: json["start_coordinate"],
         endCoordinate: json["end_coordinate"],
@@ -196,6 +199,7 @@ class HistoryOrder {
         "id": id,
         "driver_id": driverId,
         "customer_id": customerId,
+        "actualTime": actualTime,
         "start_coordinate": startCoordinate,
         "end_coordinate": endCoordinate,
         "start_address": startAddress,
