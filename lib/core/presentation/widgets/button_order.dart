@@ -38,7 +38,7 @@ class ButtonOrder extends StatelessWidget {
       required this.currentOrderStatus})
       : super(key: key);
 
-  Session session = locator<Session>();
+
 
   var dio = Dio();
 
@@ -48,6 +48,7 @@ class ButtonOrder extends StatelessWidget {
     return Consumer2(
       builder: (context, LatestSocketProvider provider, HomeProvider homeProvider, _) {
         final socketProvider = context.read<LatestSocketProvider>();
+        final session = locator<Session>();
         log("unread message count is --------->>>>>>:${socketProvider.unreadMessageCount}");
         log("current status from previous screen  is $currentOrderStatus}");
         log("session order status is:-->>${session.currentOrderState}");
@@ -198,7 +199,7 @@ class ButtonOrder extends StatelessWidget {
                          await Future.delayed(const Duration(milliseconds: 200));
                           socketProvider.updateOrderStatus(
                           status: "7",
-                          actualTime: double.tryParse(session.estimatedTime)?.toString() ?? '',
+                          actualTime: session.estimatedTime,
                           startTime: session.rideStartTime,
                           endTime: DateTime.now().toString(),
                               isWithin1km: socketProvider.isWithIn1Km

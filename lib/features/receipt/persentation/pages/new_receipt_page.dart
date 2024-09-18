@@ -238,7 +238,7 @@ class ReceiptPage extends StatelessWidget {
                                   ),
                                   Text(
                                     // actualTime,
-                                    formatDuration(double.parse(provider.receiptData!.actualTime.toString()).toInt()),
+                                    formatDuration(double.parse(provider.receiptData!.actual_time.toString()).toInt()),
                                     // "${provider.receiptData!.actualTime} Min",
                                     textAlign: TextAlign.center,
                                     style: titleStyle
@@ -271,7 +271,7 @@ class ReceiptPage extends StatelessWidget {
                                           context: context,
                                           child: PaymentScreen(
                                             actualDistance: provider.receiptData!.distance1,
-                                            totalTime: provider.receiptData!.actualTime.toString() == "0.0" ? "0" : double.parse(provider.receiptData!.actualTime.toString()).toInt(),
+                                            totalTime: provider.receiptData!.actual_time.toString() == "0.0" ? "0" : double.parse(provider.receiptData!.actual_time.toString()).toInt(),
                                             minimumFare:provider.receiptData!.minPrice !=""? provider.receiptData!.minPrice:"0.0",
                                             baseFare: provider.receiptData!.baseFare,
                                             techFee: provider.receiptData!.techFee,
