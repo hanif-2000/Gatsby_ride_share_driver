@@ -19,6 +19,7 @@ import '../../../../core/static/colors.dart';
 import '../../../../core/static/dimens.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/app_settings.dart';
+import '../../../../core/utility/duration_helper.dart';
 import '../../../../core/utility/helper.dart';
 import '../../../rating/presentation/page/give_rating_screen.dart';
 import '../../../rating/presentation/page/rating_list_page.dart';
@@ -36,35 +37,6 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-  var extraTimeTaken = "0 hr 0 Min 0 Sec";
-
-  convertSecondsToMinutes() {
-    if (widget.order!.actualTime != '') {
-      int seconds = double.parse(widget.order!.actualTime!).roundToDouble().toInt(); // Replace this with your desired number of seconds
-      int minutes = seconds ~/ 60;
-      int remainingSeconds = seconds % 60;
-      int hours = minutes ~/ 60;
-      int remainingMinutes = minutes % 60;
-
-      print('$seconds seconds is equivalent to:');
-      print('$hours hours, $remainingMinutes minutes, and $remainingSeconds seconds');
-
-      setState(() {
-        extraTimeTaken = "$hours"
-            ' hr '
-            '$remainingMinutes'
-            ' min '
-            '$remainingSeconds'
-            ' sec ';
-      });
-    } else {}
-  }
-
-  @override
-  void initState() {
-    convertSecondsToMinutes();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -435,9 +407,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             ),
                             PriceTile(
                               title: 'Total Time',
-                              value: ((widget.order!.extraTimeTaken != '') || (widget.order!.extraTimeTaken != null))
-                                  ? extraTimeTaken
-                                  : '0 hr 0 min 0 sec',
+                              value: formatDuration(double.tryParse(widget.order!.actual_time.toString())?.toInt()??0),
+
                             ),
                             PriceTile(
                               title: 'Per minute price',

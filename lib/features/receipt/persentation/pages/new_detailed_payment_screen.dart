@@ -60,13 +60,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    log("extra time is :${widget.extraTime}");
-    log("extra distance is :${widget.extraDistance}");
-  }
 
   @override
   Widget build(BuildContext context) {
