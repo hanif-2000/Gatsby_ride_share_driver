@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/static/styles.dart';
 import 'package:appkey_taxiapp_driver/core/types/fonts.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
@@ -13,7 +12,6 @@ import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_b
 import 'package:appkey_taxiapp_driver/features/profile/presentation/pages/edit_vehicle_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../features/terms_and_conditions/terms_and_conditions.dart';
 import '../../static/colors.dart';
 import '../../utility/helper.dart';
@@ -26,8 +24,8 @@ import 'package:appkey_taxiapp_driver/core/presentation/providers/home_provider.
 
 class HomeDrawerPage extends StatelessWidget {
   const HomeDrawerPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +99,7 @@ class HomeDrawerPage extends StatelessWidget {
                           //   context,
                           //   LoginPage.routeName,
                           // );
+                          //
                         },
                       ),
                     ],
