@@ -25,7 +25,7 @@ import '../../providers/home_provider.dart';
 import '../new_request_list_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
   static const routeName = '/home';
 
   @override
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FcmProvider _fcmProvider = locator<FcmProvider>();
 
   // var provider = locator<HomeProvider>();
- // var socketProvider = locator<LatestSocketProvider>();
+  // var socketProvider = locator<LatestSocketProvider>();
   // var homeProvider = locator<HomeProvider>();
 
   var session = locator<Session>();
@@ -66,8 +66,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     socketProvider.onInit();
     socketProvider.resetAfterRideEnd();
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
-    print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
+    print(
+        "********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeProvider.changeStatus = session.isOnline;
@@ -87,13 +89,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             retrieveOrderReceiptFromLocal().then((value) {
               log("----order running called retreve order receipt from local storage ---");
 
-              homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
+              homeProvider
+                  .fetchOrderDetail(session.runningOrderId.toString())
+                  .listen((event) {
                 if (event is OrderDetailLoaded) {
-                  print("order details in home page checking is :--> ${event.data}");
+                  print(
+                      "order details in home page checking is :--> ${event.data}");
                   socketProvider.updateOrderData(data: event.data);
-                  socketProvider.setNewChangeOrderStatus = event.data.orderStatus.toString();
-                  session.setRunningOrderStatus = int.parse(event.data.orderStatus.toString());
-                  socketProvider.updateCurrentStatus(status: int.parse(event.data.orderStatus.toString()));
+                  socketProvider.setNewChangeOrderStatus =
+                      event.data.orderStatus.toString();
+                  session.setRunningOrderStatus =
+                      int.parse(event.data.orderStatus.toString());
+                  socketProvider.updateCurrentStatus(
+                    status: int.parse(
+                      event.data.orderStatus.toString(),
+                    ),
+                  );
                   homeProvider
                       .fetchCustomerDetail(event.data.userId.toString())
                       .listen((event2) async {
@@ -129,8 +140,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               log("session order STATUS IS :==>> ${session.runningOrderStatus}");
               log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
             });
-          }
-          else if (!session.isRatingGiven) {
+          } else if (!session.isRatingGiven) {
             homeProvider
                 .fetchCustomerDetail(session.customerId.toString())
                 .listen((event2) async {
@@ -163,13 +173,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           log("session order id is:-------->>>>>>.. ${session.runningOrderId}");
           log("session customer id is:-------->>>>>>.. ${session.customerId}");
 
-          homeProvider.fetchOrderDetail(session.runningOrderId.toString()).listen((event) {
+          homeProvider
+              .fetchOrderDetail(session.runningOrderId.toString())
+              .listen((event) {
             if (event is OrderDetailLoaded) {
               log("order details in home page checking is :--> ${event.data}");
               socketProvider.updateOrderData(data: event.data);
-              socketProvider.setNewChangeOrderStatus = event.data.orderStatus.toString();
-              session.setRunningOrderStatus = int.parse(event.data.orderStatus.toString());
-              socketProvider.updateCurrentStatus(status: int.parse(event.data.orderStatus.toString()));
+              socketProvider.setNewChangeOrderStatus =
+                  event.data.orderStatus.toString();
+              session.setRunningOrderStatus =
+                  int.parse(event.data.orderStatus.toString());
+              socketProvider.updateCurrentStatus(
+                  status: int.parse(event.data.orderStatus.toString()));
               homeProvider
                   .fetchCustomerDetail(session.customerId.toString())
                   .listen((event2) async {
@@ -209,8 +224,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         });
       }
     });
-
-
   }
 
   @override

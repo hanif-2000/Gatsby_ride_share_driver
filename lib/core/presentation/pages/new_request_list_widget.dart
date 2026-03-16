@@ -100,56 +100,54 @@ class _RequestListWidgetState extends State<RequestListWidget>
                         itemBuilder: (context, index) {
                           return NewRequestTile(
                             onAccept: () {
-                              // Accept the Ride
-                              socketProvider.acceptRideRequest(orderId: socketProvider.bookingList[index].id).then((value) {
+                              // Capture booking before async call to avoid stale index crash
+                              final booking = socketProvider.bookingList[index];
+                              socketProvider.acceptRideRequest(orderId: booking.id).then((value) {
                                 print(
-                                    "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
+                                    "estimated time is :-->> ${booking.estimatedTime}");
                                 print(
-                                    "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
+                                    "estimated distance is :-->> ${booking.distance}");
 
                                 print(
-                                    "customer id is:-> ${socketProvider.bookingList[index].customerId}");
+                                    "customer id is:-> ${booking.customerId}");
                                 var session = locator<Session>();
                                 session.setIsOrderRunning = true;
-                                session.setEstimatedTime = socketProvider.bookingList[index].estimatedTime;
-                                session.setEstimatedDistance = socketProvider.bookingList[index].distance.toString();
-                                session.setRunningOrderId = int.parse(socketProvider.bookingList[index].id.toString());
-                                session.setCustomerId = int.parse(socketProvider.bookingList[index].customerId.toString());
+                                session.setEstimatedTime = booking.estimatedTime;
+                                session.setEstimatedDistance = booking.distance.toString();
+                                session.setRunningOrderId = int.parse(booking.id.toString());
+                                session.setCustomerId = int.parse(booking.customerId.toString());
 
                                 /*** ORDER DETAILS  */
 
-                                print("order id:-->>${socketProvider.bookingList[index].id}");
-                                print("total order id:-->>${socketProvider.bookingList[index].newTotal}");
-                                print("customerId order id:-->>${socketProvider.bookingList[index].customerId}");
-                                print("order id:-->>${socketProvider.bookingList[index].id}");
-                                print("distance order id:-->>${socketProvider.bookingList[index].distance}");
-                                print("start coordinate order id:-->>${socketProvider.bookingList[index].startCoordinate}");
-                                print("endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
-                                print("startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
-                                print("end address order id:-->>${socketProvider.bookingList[index].id}");
+                                print("order id:-->>${booking.id}");
+                                print("total order id:-->>${booking.newTotal}");
+                                print("customerId order id:-->>${booking.customerId}");
+                                print("distance order id:-->>${booking.distance}");
+                                print("start coordinate order id:-->>${booking.startCoordinate}");
+                                print("endCoordinate order id:-->>${booking.endCoordinate}");
+                                print("startAddress order id:-->>${booking.startAddress}");
                                 logMe("customer id from session id:-->> ${session.customerId}");
 
                                 homeProvider.setOrderDetails = OrderDetail(
-                                  orderId: int.parse(socketProvider.bookingList[index].id.toString()),
-                                  totalPrice: socketProvider.bookingList[index].total,
-                                  userId: int.parse(socketProvider.bookingList[index].customerId.toString()),
+                                  orderId: int.parse(booking.id.toString()),
+                                  totalPrice: booking.total,
+                                  userId: int.parse(booking.customerId.toString()),
                                   driverId: int.parse(session.userId),
-                                  distance: socketProvider.bookingList[index].distance.toString(),
+                                  distance: booking.distance.toString(),
                                   orderStatus: 0,
-                                  startCoordinate: socketProvider.bookingList[index].startCoordinate??"0.0",
-                                  endCoordinate: socketProvider.bookingList[index].endCoordinate??"0.0",
-                                  startAddress: socketProvider.bookingList[index].startAddress??"",
-                                  endAddress: socketProvider.bookingList[index].endAddress??"",
-                                  pendingAmount: socketProvider.bookingList[index].pendingAmount.toString(),
-                                  newTotal: socketProvider.bookingList[index].newTotal,
+                                  startCoordinate: booking.startCoordinate??"0.0",
+                                  endCoordinate: booking.endCoordinate??"0.0",
+                                  startAddress: booking.startAddress??"",
+                                  endAddress: booking.endAddress??"",
+                                  pendingAmount: booking.pendingAmount.toString(),
+                                  newTotal: booking.newTotal,
                                 );
                                 homeProvider.setCustomerDetails = CustomerDataModel(
-                                  name: socketProvider.bookingList[index].name??"",
-                                  phoneNumber: socketProvider.bookingList[index].phone,
-                                  photo: socketProvider.bookingList[index].image,
-                                  id: int.parse(socketProvider.bookingList[index].customerId.toString()),
-                                  rating: socketProvider.bookingList[index].customerRating,
-
+                                  name: booking.name??"",
+                                  phoneNumber: booking.phone,
+                                  photo: booking.image,
+                                  id: int.parse(booking.customerId.toString()),
+                                  rating: booking.customerRating,
                                 );
 
                                 print("=========\nOrder details  home provider are:-->. ${homeProvider.orderDetail!}");

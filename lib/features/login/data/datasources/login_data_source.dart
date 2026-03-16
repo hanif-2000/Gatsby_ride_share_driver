@@ -33,10 +33,19 @@ class LoginDataSourceImplementation implements LoginDataSource {
     }*/
 
     try {
+      // final session = locator<Session>();
+      // final fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      // session.setFcmToken = fcmToken;
+      // print("fcmToken==> $fcmToken");
       final session = locator<Session>();
-      final fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
-      session.setFcmToken = fcmToken;
-      print("fcmToken==> $fcmToken");
+      String fcmToken = '';
+try {
+  fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+} catch (e) {
+  print('FCM token fetch failed: $e, using empty token');
+}
+session.setFcmToken = fcmToken;
+print("fcmToken==> $fcmToken");
       FormData data = FormData.fromMap({
         'email': email,
         'password': password,

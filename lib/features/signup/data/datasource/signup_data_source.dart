@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:appkey_taxiapp_driver/features/signup/data/model/signup_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,18 +12,23 @@ abstract class SignupDataSource {
 
 class SignupDataSourceImplementation implements SignupDataSource {
   final Dio dio;
-
   SignupDataSourceImplementation({required this.dio});
 
   @override
   Future<SignupResponseModel?> doSignup(
       String email, String password, String position) async {
     String url = 'api/webservice/driver/signup';
-    // await FirebaseHelper.setupMessaging();
     try {
-      final fcmToken = await FirebaseMessaging.instance.getToken()??"";
+      String fcmToken = '';
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      } catch (e) {
+        print('FCM token fetch failed: $e, using empty token');
+        fcmToken = '';
+      }
+
       final session = locator<Session>();
-      session.setFcmToken=fcmToken;
+      session.setFcmToken = fcmToken;
       FormData data = FormData.fromMap({
         'email': email,
         'password': password,
@@ -40,9 +44,7 @@ class SignupDataSourceImplementation implements SignupDataSource {
       print('Signup response ---> ${response.data}');
       final model = SignupResponseModel.fromJson(response.data);
       if (model.success == 1) {
-        // session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
-        // session.setSessionCategoryId = model.data!.categoryId.toString();
         return model;
       } else {
         return model;

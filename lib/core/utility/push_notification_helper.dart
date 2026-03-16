@@ -22,25 +22,24 @@ class PushNotificationService {
 
   PushNotificationService._internal();
 
-  /// Create a [AndroidNotificationChannel] for heads up notifications
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
+    'high_importance_channel',
+    'High Importance Notifications',
     description: 'This channel is used for important notifications.',
-    // description
     importance: Importance.max,
-
   );
 
   final BehaviorSubject<String?> _selectNotificationSubject = BehaviorSubject<String?>();
 
-  //instance of FlutterLocalNotificationsPlugin
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   final session = locator<Session>();
+
   Future<void> init() async {
     _configureSelectNotificationSubject();
+
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/launcher_icon');
+
     DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
@@ -56,45 +55,33 @@ class PushNotificationService {
 
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
-        if (notificationResponse.notificationResponseType ==
-            NotificationResponseType.selectedNotification) {
+      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
+        if (notificationResponse.notificationResponseType == NotificationResponseType.selectedNotification) {
           _selectNotificationSubject.add(notificationResponse.payload);
         }
       },
     );
 
-    /// Create an Android Notification Channel.
-    ///
-    /// We use this channel in the `AndroidManifest.xml` file to override the
-    /// default FCM channel to enable heads up notifications.
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+    await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
     await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-    /// Update the iOS foreground notification presentation options to allow
-    /// heads up notifications.
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+
     _initFirebaseListeners();
   }
 
   void _configureSelectNotificationSubject() {
     _selectNotificationSubject.stream.listen((String? payload) async {
-      if (session.userId.isEmpty) {
-        return;
-      }
+      if (session.userId.isEmpty) return;
       NotificationEntity? entity = convertStringToNotificationEntity(payload);
       print("notification _configureSelectNotificationSubject ${entity.toString()}");
       if (entity != null) {
@@ -104,9 +91,7 @@ class PushNotificationService {
   }
 
   Future? _onDidReceiveLocalNotification(int id, String? title, String? body, String? payload) {
-    if (session.userId.isEmpty) {
-      return null;
-    }
+    if (session.userId.isEmpty) return null;
     NotificationEntity? entity = convertStringToNotificationEntity(payload);
     print("notification onDidReceiveLocalNotification ${entity.toString()}");
     if (entity != null) {
@@ -116,101 +101,98 @@ class PushNotificationService {
   }
 
   void _initFirebaseListeners() {
+    // App background mein thi aur user ne notification tap ki
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (session.userId.isEmpty) {
         print("userToken is Null");
         return;
       }
-      print("IOS Foreground notification opened: ${message.data}");
+      print("Notification tapped (background): ${message.data}");
       NotificationEntity notificationEntity = NotificationEntity.fromJson(message.data);
       _pushNextScreenFromForeground(notificationEntity);
     });
+
+    // App foreground mein hai aur notification aayi
+    // *** iOS wala early return HATA DIYA — ye hi main bug tha! ***
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      if (Platform.isIOS || (session.userId.isEmpty)) {
-        return;
-      }
-      print("Foreground notification received:  ${message.data}");
+      if (session.userId.isEmpty) return;
+
+      print("Foreground notification received: ${message.data}");
+
       NotificationEntity notificationEntity = NotificationEntity.fromJson(message.data);
-      print(message.data.toString());
-      notificationEntity.title = notificationEntity.title ?? "Gatsby Driver";
-      notificationEntity.body = notificationEntity.body;
-      _showNotifications(notificationEntity);
+
+      notificationEntity.title = message.data['title'] ?? message.notification?.title ?? "Gatsby Driver";
+      notificationEntity.body = message.data['body'] ?? message.notification?.body ?? "";
+
+      print("clickAction: ${notificationEntity.clickAction}, type: ${notificationEntity.type}");
+
+      await callApi(notificationEntity);
+
+      // Bug Fix 3: iOS restriction removed — show local notifications on all platforms
+      await _showNotifications(notificationEntity);
     });
   }
 
   Future<void> clearAllNotifications() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
     if (Platform.isIOS) {
-      await _flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-          ?.cancelAll();
+      await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.cancelAll();
     }
-
   }
 
   Future<void> _showNotifications(NotificationEntity notificationEntity) async {
     Random random = Random();
     int id = random.nextInt(900) + 10;
     await _flutterLocalNotificationsPlugin.show(
-        id,
-        notificationEntity.title,
-        notificationEntity.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: "@mipmap/launcher_icon",
-            channelShowBadge: true,
-            playSound: true,
-            priority: Priority.high,
-            importance: Importance.high,
-            styleInformation: BigTextStyleInformation(notificationEntity.body!),
-          ),
+      id,
+      notificationEntity.title,
+      notificationEntity.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          icon: "@mipmap/launcher_icon",
+          channelShowBadge: true,
+          playSound: true,
+          priority: Priority.high,
+          importance: Importance.high,
+          styleInformation: BigTextStyleInformation(notificationEntity.body ?? ""),
         ),
-        payload: convertNotificationEntityToString(notificationEntity));
+      ),
+      payload: convertNotificationEntityToString(notificationEntity),
+    );
   }
 
-  void _pushNextScreenFromForeground(NotificationEntity notificationEntity) async {
-     await callApi(notificationEntity);
-   // final tuple2 = await callApi(notificationEntity);
- /*   if (tuple2 != null) {
-    *//*  if (myRouteObserver.currentRoute == Routes.notification &&
-          Getters.getContext!.mounted) {
-        Getters.getContext!.read<NotificationBloc>().add(GetNotifications());
-      } else if (myRouteObserver.currentRoute == Routes.courseDetail &&
-          Getters.getContext!.mounted) {
-        back(Getters.getContext!);
-        toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
-      } else {
-        toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
-      }*//*
-    }*/
+  Future<void> _pushNextScreenFromForeground(NotificationEntity notificationEntity) async {
+    await callApi(notificationEntity);
   }
 
   Future<(String, Object?)?> callApi(NotificationEntity entity) async {
-    if(entity.type=="CustomerBookRequest"){
-      if(locator<GlobalKey<NavigatorState>>().currentContext!.mounted){
-        final socketProvider =  Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!,listen: false);
-        await socketProvider.getOrderStatus(entity.id??"");
-      }
+    final isBookingRequest = entity.clickAction == "new_order" ||
+        entity.clickAction == "order" ||
+        entity.type == "CustomerBookRequest";
 
+    print("FCM callApi → clickAction: ${entity.clickAction}, type: ${entity.type}, isBooking: $isBookingRequest, orderId: ${entity.id}");
+
+    if (isBookingRequest) {
+      final orderId = entity.id;
+      if (orderId == null || orderId.isEmpty) {
+        print("FCM callApi: orderId null/empty, skipping getOrderStatus");
+        return null;
+      }
+      final ctx = locator<GlobalKey<NavigatorState>>().currentContext;
+      if (ctx != null && ctx.mounted) {
+        final socketProvider = Provider.of<LatestSocketProvider>(ctx, listen: false);
+        await socketProvider.getOrderStatus(orderId);
+      }
     }
     return null;
-
-
-
-
-    /*  if (entity.courseId != null) {
-      return (Routes.courseDetail, {"id": int.tryParse(entity.courseId ?? "")});
-    } else {
-      return (Routes.notification, null);
-    }*/
   }
 
   Future<(String, Object?)?> getPushNotificationRoute() async {
     RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-    const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
+
     if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
       print("RemoteMessage data ${remoteMessage.data}");
       NotificationEntity notificationEntity = NotificationEntity.fromJson(remoteMessage.data);
@@ -218,12 +200,19 @@ class PushNotificationService {
       notificationEntity.body = remoteMessage.data['body'];
       notificationEntity.type = remoteMessage.data['type'];
       notificationEntity.id = remoteMessage.data['id'];
+      notificationEntity.clickAction = remoteMessage.data['click_action'];
       return callApi(notificationEntity);
     }
+
+    // Bug Fix 4: Actually fetch launch details from plugin instead of hardcoded null
+    final notificationAppLaunchDetails =
+        await _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
     if (notificationAppLaunchDetails?.didNotificationLaunchApp == true) {
-      NotificationEntity? entity = convertStringToNotificationEntity(notificationAppLaunchDetails?.notificationResponse?.payload);
+      NotificationEntity? entity = convertStringToNotificationEntity(
+          notificationAppLaunchDetails?.notificationResponse?.payload);
       if (entity != null) {
-        print("RemoteMessage data ${entity.toJson()}");
+        print("LocalNotification launch data ${entity.toJson()}");
         return callApi(entity);
       }
     }
@@ -231,17 +220,13 @@ class PushNotificationService {
     return null;
   }
 
-  String convertNotificationEntityToString(
-      NotificationEntity? notificationEntity) {
+  String convertNotificationEntityToString(NotificationEntity? notificationEntity) {
     String value = _encoder.convert(notificationEntity);
     return value;
   }
 
   NotificationEntity? convertStringToNotificationEntity(String? value) {
-    if (value == null) {
-      return null;
-    }
-
+    if (value == null) return null;
     Map<String, dynamic> map = _decoder.convert(value);
     return NotificationEntity.fromJson(map);
   }

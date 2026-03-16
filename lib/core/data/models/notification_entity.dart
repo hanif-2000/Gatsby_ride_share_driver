@@ -18,6 +18,7 @@ class NotificationEntity {
   String? id;
   String? paymentMethod;
   String? estimatedTime;
+  String? clickAction; // ← NEW
 
   NotificationEntity(
       {this.image,
@@ -38,7 +39,8 @@ class NotificationEntity {
         this.endAddress,
         this.id,
         this.paymentMethod,
-        this.estimatedTime});
+        this.estimatedTime,
+        this.clickAction}); // ← NEW
 
   NotificationEntity.fromJson(Map<String, dynamic> json) {
     image = json['image'];
@@ -60,6 +62,7 @@ class NotificationEntity {
     id = json['id'];
     paymentMethod = json['payment_method'];
     estimatedTime = json['estimated_time'];
+    clickAction = json['click_action']; // ← NEW
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +86,7 @@ class NotificationEntity {
     data['id'] = id;
     data['payment_method'] = paymentMethod;
     data['estimated_time'] = estimatedTime;
+    data['click_action'] = clickAction; // ← NEW
     return data;
   }
 }

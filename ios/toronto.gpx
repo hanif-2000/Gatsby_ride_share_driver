@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Xcode">
+  <trk>
+    <name>Toronto, Canada</name>
+    <trkseg>
+      <trkpt lat="43.6532" lon="-79.3832">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:00Z</time>
+      </trkpt>
+      <trkpt lat="43.6533" lon="-79.3833">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:05Z</time>
+      </trkpt>
+      <trkpt lat="43.6534" lon="-79.3834">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:10Z</time>
+      </trkpt>
+      <trkpt lat="43.6535" lon="-79.3835">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:15Z</time>
+      </trkpt>
+      <trkpt lat="43.6536" lon="-79.3836">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:20Z</time>
+      </trkpt>
+      <trkpt lat="43.6537" lon="-79.3837">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:25Z</time>
+      </trkpt>
+      <trkpt lat="43.6538" lon="-79.3838">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:30Z</time>
+      </trkpt>
+      <trkpt lat="43.6539" lon="-79.3839">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:35Z</time>
+      </trkpt>
+      <trkpt lat="43.6540" lon="-79.3840">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:40Z</time>
+      </trkpt>
+      <trkpt lat="43.6541" lon="-79.3841">
+        <ele>76</ele>
+        <time>2026-01-01T00:00:45Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

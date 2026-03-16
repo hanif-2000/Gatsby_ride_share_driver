@@ -41,7 +41,7 @@ class LatestSocketProvider extends ChangeNotifier {
   String rideText = "Start Ride to Pickup Location";
   late GoogleMapController googleMapController;
   LatLng currentLatLng = const LatLng(0.0, 0.0);
-  bool isWithIn1Km =false;
+  bool isWithIn1Km = false;
   final dio = Dio();
 
   ///orderDetail
@@ -163,18 +163,46 @@ class LatestSocketProvider extends ChangeNotifier {
   //
   late WebSocket _socket;
   bool isSocketConnected = false;
+  StreamSubscription? _messagesSubscription;
 
   late WebSocketHelper _socketHelper;
 
-  void onInit() {
-    _socketHelper = WebSocketHelper();
-    if (!_socketHelper.isConnected) {
-      _socketHelper.connect();
-    }
-    _socket = _socketHelper.getSocket();
-    _connectToSocket();
-    _listenSocketRequests();
+ void onInit() {
+  _socketHelper = WebSocketHelper();
+  if (!_socketHelper.isConnected) {
+    _socketHelper.connect();
   }
+  _initSocket();
+}
+
+Future<void> _initSocket() async {
+  int retryCount = 0;
+  const maxRetries = 5;
+
+  while (retryCount < maxRetries) {
+    try {
+      _socket = _socketHelper.getSocket();
+      _connectToSocket();
+      _listenSocketRequests();
+      print('Socket initialized successfully');
+      // If socket already connected before listener attached, send location now
+      if (_socketHelper.isConnected) {
+        updateLatLngAtStarting();
+      }
+      return;
+    } catch (e) {
+      retryCount++;
+      print('Socket not ready (attempt $retryCount/$maxRetries): $e');
+      if (retryCount < maxRetries) {
+        await Future.delayed(Duration(seconds: retryCount));
+        if (!_socketHelper.isConnected) {
+          _socketHelper.connect();
+        }
+      }
+    }
+  }
+  print('Socket initialization failed after $maxRetries attempts');
+}
 
   // -----> function to connect the socket <--------- //
   Future<dynamic> _connectToSocket() async {
@@ -231,7 +259,6 @@ class LatestSocketProvider extends ChangeNotifier {
 
   void updateRideList(Booking data) {
     bookingList.insert(0, data);
-    bookingList = bookingList.toSet().toList();
     final Set<String> seenIds = {};
     final uniqueBookings = bookingList
         .where((booking) => seenIds.add(booking.id.toString()))
@@ -255,25 +282,30 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   void _listenSocketRequests() {
-    _socket.messages.listen((event)async {
+    _messagesSubscription?.cancel();
+    _messagesSubscription = _socket.messages.listen((event) async {
       var response = jsonDecode(event);
       log("socket listen :-->> $response");
       if (response['type'] == "CustomerBookRequest") {
-        bookingDataModel = BookingDataModel.fromJson(response);
-        bool checkId =
-            checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
-        logMe("check id is -> $checkId");
-        if (!checkId) {
-          bookingList.insert(0, bookingDataModel!.data);
-          bookingList.toSet().toList();
-          final Set<String> seenIds = {};
-          final uniqueBookings = bookingList
-              .where((booking) => seenIds.add(booking.id.toString()))
-              .toList();
-          bookingList.clear();
-          bookingList.addAll(uniqueBookings);
+        try {
+          bookingDataModel = BookingDataModel.fromJson(response);
+          bool checkId =
+              checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
+          logMe("check id is -> $checkId");
+          if (!checkId) {
+            bookingList.insert(0, bookingDataModel!.data);
+            bookingList.toSet().toList();
+            final Set<String> seenIds = {};
+            final uniqueBookings = bookingList
+                .where((booking) => seenIds.add(booking.id.toString()))
+                .toList();
+            bookingList.clear();
+            bookingList.addAll(uniqueBookings);
+          }
+          notifyListeners();
+        } catch (e, stack) {
+          log("ERROR parsing CustomerBookRequest: $e\nRAW JSON: $response\n$stack");
         }
-        notifyListeners();
       }
 
       // <------------------ Cancel BY Customer --------->>>>>
@@ -288,19 +320,41 @@ class LatestSocketProvider extends ChangeNotifier {
 
       // <------------------ Accept BY OTHER DRIVER --------->>>>>
       else if (response['type'] == 'AcceptByOther') {
-        log("*****----->>> RIDE ACCEPTED BY OTHER -----<<<<<");
+        log("*****----->>> RIDE ACCEPTED BY OTHER -----<<<<< -----back ");
         acceptByOtherDriverModel = AcceptByOtherDriverModel.fromJson(response);
+
+        log("Ride details new are:-->> $acceptByOtherDriverModel");
+
         log("Ride details are:-->> $acceptByOtherDriverModel");
         log("Ride details are:-->> $acceptByOtherDriverModel");
         log("Ride details are data:-->> $response");
+        logMe(
+            "Driver is same:-> diffrent ${acceptByOtherDriverModel!.driverId} , ${session.userId}");
 
+        logMe("Driver is same:-> diffrent booking list $bookingList}");
         if (acceptByOtherDriverModel!.driverId != session.userId) {
+          logMe(
+              "Driver is same:-> ${acceptByOtherDriverModel!.driverId} , ${session.userId}");
           bookingList.removeWhere((element) {
-            return element.id == acceptByOtherDriverModel!.data;
+            logMe("element id is :-> ${element.id}");
+
+            logMe("element id is :-> ${acceptByOtherDriverModel!.data}");
+
+            logMe(
+                "element id is :-> ${element.id == acceptByOtherDriverModel!.data}");
+
+            logMe("element id is :->type ${element.id.runtimeType}");
+            logMe(
+                "element id is :->type ${acceptByOtherDriverModel!.data.runtimeType}");
+
+            return element.id.toString() ==
+                acceptByOtherDriverModel!.data.toString();
           });
 
           // CustomerDetailModel(data: CustomerDataModel(name: acceptByOtherDriverModel.data., phoneNumber: phoneNumber, photo: photo, id: id, rating: rating) )
           notifyListeners();
+          notifyListeners();
+          logMe("Driver is same:-> diffrent booking list 2 $bookingList}");
         } else if (acceptByOtherDriverModel!.driverId == session.userId) {
           log("driver is mine ");
           log("driver is mine ");
@@ -372,7 +426,7 @@ class LatestSocketProvider extends ChangeNotifier {
     String? message,
     int? receiverId,
     String? messageType = 'Text',
-  })async {
+  }) async {
     try {
       await _ensureSocketConnection();
       final map = {
@@ -413,7 +467,7 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   //   //Get total number of unread message
-  void getTotalUnreadCount(int? receiverId)async {
+  void getTotalUnreadCount(int? receiverId) async {
     log("=====================get total count================");
     try {
       await _ensureSocketConnection();
@@ -435,7 +489,7 @@ class LatestSocketProvider extends ChangeNotifier {
 
   void markMessageAsRead({
     int? receiverId,
-  }) async{
+  }) async {
     try {
       await _ensureSocketConnection();
       log("mark message as read  called");
@@ -495,10 +549,10 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   void updateLatLngAtStarting() async {
-    log("update lat long at starting called");
+    print("======= updateLatLngAtStarting CALLED =======");
     Position currentLatLng = await Geolocator.getCurrentPosition();
     await _ensureSocketConnection();
-    log("current latlong:${currentLatLng.latitude},${currentLatLng.longitude}");
+    print("======= current latlong: ${currentLatLng.latitude},${currentLatLng.longitude} =======");
     session.setCurrentLat = currentLatLng.latitude;
     session.setCurrentLang = currentLatLng.longitude;
     final map = {
@@ -509,9 +563,8 @@ class LatestSocketProvider extends ChangeNotifier {
       'Longitude': currentLatLng.longitude,
       'OrderID': ''
     };
-    log('UPADTE LATLONG -- > ${map.toString()}');
+    print('======= SENDING LATLONG TO SOCKET: ${map.toString()} =======');
     _socket.send(json.encode(map));
-    log(map.toString());
     notifyListeners();
   }
 
@@ -546,7 +599,7 @@ class LatestSocketProvider extends ChangeNotifier {
   /// -------------******************      REJECT THE RIDE     ************------------------------
   Future<bool> rejectRideRequest({required orderId}) async {
     try {
-     await _ensureSocketConnection();
+      await _ensureSocketConnection();
       final map = {
         'serviceType': 'Reject',
         'UserID': session.userId,
@@ -555,7 +608,7 @@ class LatestSocketProvider extends ChangeNotifier {
       logMe('reject ride request socket -- > ${map.toString()}');
       _socket.send(jsonEncode(map));
       bookingList.removeWhere((element) {
-        return element.id == orderId;
+        return element.id.toString() == orderId.toString();
       });
       notifyListeners();
       await PushNotificationService().clearAllNotifications();
@@ -565,23 +618,21 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateOrderStatus({
-    required String status,
-    required String actualTime,
-    required String startTime,
-    required String endTime,
-    String? distance,
-    bool isWithin1km=false
-  }) async {
+  Future<bool> updateOrderStatus(
+      {required String status,
+      required String actualTime,
+      required String startTime,
+      required String endTime,
+      String? distance,
+      bool isWithin1km = false}) async {
     log("updateOrderStatus called with status: $status");
     final payload = _buildPayload(
-      status: status,
-      actualTime: actualTime,
-      startTime: startTime,
-      endTime: endTime,
-      distance: distance,
-      isWithin1KM: isWithin1km
-    );
+        status: status,
+        actualTime: actualTime,
+        startTime: startTime,
+        endTime: endTime,
+        distance: distance,
+        isWithin1KM: isWithin1km);
     log('Update Status Payload: $payload');
     try {
       await _ensureSocketConnection();
@@ -626,19 +677,23 @@ class LatestSocketProvider extends ChangeNotifier {
     return payload;
   }
 
-
 // Ensure the socket is connected before proceeding
   Future<void> _ensureSocketConnection() async {
     if (!_socketHelper.isConnected) {
-      log("Socket not connected. Attempting to connect...");
+      log("Socket not connected. Attempting to reconnect...");
       _socketHelper.connect();
+      // Update _socket reference to new instance and re-attach listener
+      _socket = _socketHelper.getSocket();
+      _connectToSocket();
+      _listenSocketRequests();
     }
   }
 
 // Update current location using the correct LatLng
   Future<void> _updateCurrentLocation() async {
     if (currentLatLng.latitude != 0 && currentLatLng.longitude != 0) {
-      _updateLatLng(latLng: LatLng(currentLatLng.latitude, currentLatLng.longitude));
+      _updateLatLng(
+          latLng: LatLng(currentLatLng.latitude, currentLatLng.longitude));
     } else {
       _updateLatLng(latLng: LatLng(session.currentLat, session.currentLang));
     }
@@ -676,7 +731,8 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _setOrderState(int orderStatus, String rideMessage, String changeOrderStatus, bool polylineDirection) async {
+  Future<void> _setOrderState(int orderStatus, String rideMessage,
+      String changeOrderStatus, bool polylineDirection) async {
     currentOrderStatus = orderStatus;
     rideText = rideMessage;
     setNewChangeOrderStatus = changeOrderStatus;
@@ -721,11 +777,10 @@ class LatestSocketProvider extends ChangeNotifier {
     }
   }
 
-
-
   /// Manage Tracking HERE
 
-  Future<void> setCurrentLocation(OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
+  Future<void> setCurrentLocation(
+      OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
     log("order details are: $orderDetail");
@@ -993,7 +1048,8 @@ class LatestSocketProvider extends ChangeNotifier {
   }
 
   Future<void> _getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
     currentLatLng = LatLng(position.latitude, position.longitude);
     notifyListeners();
@@ -1025,12 +1081,16 @@ class LatestSocketProvider extends ChangeNotifier {
     if ((session.runningOrderStatus == 1) ||
         (session.runningOrderStatus == 2)) {
       url = 'google.navigation:q=$latOrigin,$lngOrigin&mode=d';
-      googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
-      appleUrl = 'https://maps.apple.com/?saddr=&daddr=$latOrigin,$lngOrigin&directionsmode=driving';
+      googleUrl =
+          'https://www.google.com/maps/search/?api=1&query=$latOrigin,$lngOrigin';
+      appleUrl =
+          'https://maps.apple.com/?saddr=&daddr=$latOrigin,$lngOrigin&directionsmode=driving';
     } else {
       url = 'google.navigation:q=$latDestination,$lngDestination&mode=d';
-      googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latDestination,$lngDestination';
-      appleUrl = 'https://maps.apple.com/?saddr=&daddr=$latDestination,$lngDestination&directionsmode=driving';
+      googleUrl =
+          'https://www.google.com/maps/search/?api=1&query=$latDestination,$lngDestination';
+      appleUrl =
+          'https://maps.apple.com/?saddr=&daddr=$latDestination,$lngDestination&directionsmode=driving';
     }
     Uri appleUri = Uri.parse(appleUrl);
     Uri googleUri = Uri.parse(googleUrl);
@@ -1065,11 +1125,15 @@ class LatestSocketProvider extends ChangeNotifier {
           Duration throttleDuration = const Duration(seconds: 2);
           Duration throttleDurationPolyLine = const Duration(seconds: 5);
           // Listen to location updates
-          locationbackSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+          locationbackSubscription =
+              Geolocator.getPositionStream(locationSettings: locationSettings)
+                  .listen(
             (Position? position) async {
-              if (position != null && _shouldUpdateLocation(lastUpdate, throttleDuration)) {
+              if (position != null &&
+                  _shouldUpdateLocation(lastUpdate, throttleDuration)) {
                 currentLatLng = LatLng(position.latitude, position.longitude);
-                await _handleLocationUpdate(position, throttleDurationPolyLine, lastUpdatePolyLine);
+                await _handleLocationUpdate(
+                    position, throttleDurationPolyLine, lastUpdatePolyLine);
                 lastUpdate = DateTime.now();
               }
             },
@@ -1137,7 +1201,8 @@ class LatestSocketProvider extends ChangeNotifier {
           _isDistanceMoreThan1Meter(start, end)) {
         lastLatitude = position.latitude;
         lastLongitude = position.longitude;
-        await createMarker(driverLatLng: LatLng(position.latitude, position.longitude));
+        await createMarker(
+            driverLatLng: LatLng(position.latitude, position.longitude));
       }
     }
     if ((lastLatitude == 0 && lastLongitude == 0) ||
@@ -1167,10 +1232,8 @@ class LatestSocketProvider extends ChangeNotifier {
       zoom: zoomLevel,
     );
     await controller.animateCamera(
-
       CameraUpdate.newCameraPosition(
         cameraPosition,
-
       ),
     );
   }
@@ -1242,7 +1305,9 @@ class LatestSocketProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           logMe("Polylinessss destinationnnn");
-          await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination)
+          await DirectionHelper()
+              .getRouteBetweenCoordinates(coordinate.latitude,
+                  coordinate.longitude, latDestination, lngDestination)
               .then(
             (result) {
               if (result.isNotEmpty) {
@@ -1283,7 +1348,8 @@ class LatestSocketProvider extends ChangeNotifier {
         }
       });
     } else {
-      await DirectionHelper().getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
+      await DirectionHelper()
+          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude,
               latDestination, lngDestination)
           .then((result) async {
         if (result.isNotEmpty) {
@@ -1375,54 +1441,68 @@ class LatestSocketProvider extends ChangeNotifier {
     isWithIn1Km = false;
   }
 
-
-
-  Future<bool>  setActualDistance({destinationLat, destinationLong, originLat, originLong,actualDestLat, actualDestLong}) async {
+  Future<bool> setActualDistance(
+      {destinationLat,
+      destinationLong,
+      originLat,
+      originLong,
+      actualDestLat,
+      actualDestLong}) async {
     try {
-      var response = await Dio().get('https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      var response = await Dio().get(
+          'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
       log(" response of real distance:--->>> ${response.data}");
       var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
-      session.setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
-      setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
+      session.setEstimatedDistance =
+          (data.rows[0].elements[0].distance.value / 1000).toString();
+      setEstimatedDistance =
+          (data.rows[0].elements[0].distance.value / 1000).toString();
       double distanceInMeters = Geolocator.distanceBetween(
         currentLatLng.latitude,
         currentLatLng.longitude,
         actualDestLat,
         actualDestLong,
       );
-      log(distanceInMeters.toString(),name: "Distance From End Trip");
-      log(" ${currentLatLng.latitude} ${currentLatLng.longitude}",name: "Distance From End Trip");
-      return distanceInMeters<=1000;
-    } catch (e,s) {
+      log(distanceInMeters.toString(), name: "Distance From End Trip");
+      log(" ${currentLatLng.latitude} ${currentLatLng.longitude}",
+          name: "Distance From End Trip");
+      return distanceInMeters <= 1000;
+    } catch (e, s) {
       print("$e, $s");
       return false;
     }
   }
 
-  Future<void> calculateDistanceCovered2()async {
-    try{
-      if(currentLatLng.latitude==0 && currentLatLng.longitude==0){
+  Future<void> calculateDistanceCovered2() async {
+    try {
+      if (currentLatLng.latitude == 0 && currentLatLng.longitude == 0) {
         await _getCurrentLocation();
       }
-    session.setEndTime = DateTime.now().toString();
-    DateTime startTime = DateTime.parse(session.rideStartTime);
-    Duration difference = DateTime.now().difference(startTime);
-    double actualTimeInMinutes = difference.inMinutes.toDouble();
-    session.setEstimatedTime = (actualTimeInMinutes * 60).toString(); // Store estimated time in seconds
-    log("Ride Start Time: $startTime\n Actual time in minutes: $actualTimeInMinutes\n Trip end: estimated time:${session.estimatedTime},\nrip end: estimated distance: ${session.estimatedDistance}", name: "Calculate Time And Distance");
-    final latLongOrigin = _orderDetail!.startCoordinate;
-    final latLongDestination = _orderDetail!.endCoordinate;
-    final splitOrigin = latLongOrigin.split(",");
-    final splitDestination = latLongDestination.split(",");
-    final latOrigin = double.parse(splitOrigin[0]);
-    final lngOrigin = double.parse(splitOrigin[1]);
-    final latDestination = double.parse(splitDestination[0]);
-    final lngDestination = double.parse(splitDestination[1]);
-    final bool isWithIn1km = await setActualDistance(destinationLong: currentLatLng.longitude,
-        destinationLat: currentLatLng.latitude,
-        originLong: lngOrigin ,originLat: latOrigin,actualDestLat:latDestination,actualDestLong: lngDestination);
-    isWithIn1Km = isWithIn1km;
-    notifyListeners();
+      session.setEndTime = DateTime.now().toString();
+      DateTime startTime = DateTime.parse(session.rideStartTime);
+      Duration difference = DateTime.now().difference(startTime);
+      double actualTimeInMinutes = difference.inMinutes.toDouble();
+      session.setEstimatedTime = (actualTimeInMinutes * 60)
+          .toString(); // Store estimated time in seconds
+      log("Ride Start Time: $startTime\n Actual time in minutes: $actualTimeInMinutes\n Trip end: estimated time:${session.estimatedTime},\nrip end: estimated distance: ${session.estimatedDistance}",
+          name: "Calculate Time And Distance");
+      final latLongOrigin = _orderDetail!.startCoordinate;
+      final latLongDestination = _orderDetail!.endCoordinate;
+      final splitOrigin = latLongOrigin.split(",");
+      final splitDestination = latLongDestination.split(",");
+      final latOrigin = double.parse(splitOrigin[0]);
+      final lngOrigin = double.parse(splitOrigin[1]);
+      final latDestination = double.parse(splitDestination[0]);
+      final lngDestination = double.parse(splitDestination[1]);
+      final bool isWithIn1km = await setActualDistance(
+          destinationLong: currentLatLng.longitude,
+          destinationLat: currentLatLng.latitude,
+          originLong: lngOrigin,
+          originLat: latOrigin,
+          actualDestLat: latDestination,
+          actualDestLong: lngDestination);
+      isWithIn1Km = isWithIn1km;
+      notifyListeners();
     } catch (e, s) {
       log("Error calculating distance: $e $s");
     }

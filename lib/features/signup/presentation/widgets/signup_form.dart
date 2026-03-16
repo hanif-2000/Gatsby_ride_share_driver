@@ -34,7 +34,7 @@ class _SignUpFormState extends State<SignUpForm> {
     // submit() {
     //   Navigator.pushReplacementNamed(context, CreateProfilePage.routeName);
     // }
-
+ 
     void submit() {
       FocusManager.instance.primaryFocus?.unfocus();
       final provider = context.read<SignupProvider>();

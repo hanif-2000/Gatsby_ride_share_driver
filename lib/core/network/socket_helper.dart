@@ -34,6 +34,16 @@ class WebSocketHelper {
   void connect() {
     if (session.userId.isNotEmpty) {
       _updateUri(); // Update URI with the latest token and user ID
+      // Don't create new socket if already connected or reconnecting
+      try {
+        final state = _socket.connection.state;
+        if (state is Connected || state is Reconnecting) {
+          isConnected = state is Connected;
+          return;
+        }
+      } catch (_) {
+        // _socket not yet initialized, proceed to create
+      }
       _socket = WebSocket(_uri, timeout: _timeout, backoff: _backoff);
       _socket.connection.listen((event) {
         print('Websocket Connection state: "$event"',);
@@ -45,7 +55,6 @@ class WebSocketHelper {
           isConnected = false;
         }
       });
-
     }
   }
 

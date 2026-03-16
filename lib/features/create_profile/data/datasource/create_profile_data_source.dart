@@ -25,33 +25,51 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
   @override
   Future<CreateProfileResponseModel?> doCreateProfile(
       String url, Map<String, dynamic> mapData) async {
-    // String url = 'api/webservice/driver/signup';
-    // await FirebaseHelper.setupMessaging();
     final session = locator<Session>();
     String tokenDriver = session.sessionToken;
-    // String fcmToken = session.sessionFcmToken;
     dio.withToken();
-    logMe('Create profile url --> $url');
-    logMe('Create profile data --> ${mapData.toString()}');
+    
+    // Debug Logging
+    logMe('═══════════════════════════════════════');
+    logMe('🔵 CREATE PROFILE API CALL');
+    logMe('═══════════════════════════════════════');
+    logMe('🔵 URL --> $url');
+    logMe('🔵 Token --> $tokenDriver');
+    logMe('🔵 Request Data:');
+    mapData.forEach((key, value) {
+      logMe('   $key: $value');
+    });
+    logMe('═══════════════════════════════════════');
 
     FormData data = FormData.fromMap(mapData);
+    
     try {
       final response = await dio.post(
         url,
         data: data,
       );
-      print('Signup response ---> ${response.data}');
+      
+      logMe('🟢 SUCCESS Response ---> ${response.data}');
       final model = CreateProfileResponseModel.fromJson(response.data);
-      final session = locator<Session>();
+      
       if (model.success == 1) {
-        // session.setUserId = model.data!.driverId.toString();
-        // session.setToken = model.token!;
-        // session.setSessionCategoryId = model.data!.categoryId.toString();
         return model;
       } else {
+        logMe('🟡 API returned success=0');
         return null;
       }
+    } on DioException catch (e) {
+      logMe('═══════════════════════════════════════');
+      logMe('🔴 CREATE PROFILE ERROR');
+      logMe('═══════════════════════════════════════');
+      logMe('🔴 Status Code: ${e.response?.statusCode}');
+      logMe('🔴 Response Data: ${e.response?.data}');
+      logMe('🔴 Error Message: ${e.message}');
+      logMe('🔴 Error Type: ${e.type}');
+      logMe('═══════════════════════════════════════');
+      rethrow;
     } catch (e) {
+      logMe('🔴 Unknown Error: $e');
       rethrow;
     }
   }
@@ -59,25 +77,38 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
   @override
   Future<String?> doUploadProfile(String image) async {
     String url = 'api/webservice/upload';
+    
+    logMe('═══════════════════════════════════════');
+    logMe('🔵 UPLOAD IMAGE API CALL');
+    logMe('🔵 URL --> $url');
+    logMe('🔵 Image Path --> $image');
+    logMe('═══════════════════════════════════════');
+    
     FormData data = FormData.fromMap({
       "upload": await MultipartFile.fromFile(
         image,
         filename: image.split('/').last,
       ),
     });
+    
     try {
       final response = await dio.post(
         url,
         data: data,
       );
-      print('Signup response ---> ${response.data}');
+      logMe('🟢 Upload Response ---> ${response.data}');
       final model = ImageUploadResponse.fromMap(response.data);
       if (model.success == 1) {
         return model.fileName;
       } else {
         return '';
       }
+    } on DioException catch (e) {
+      logMe('🔴 Upload Error: ${e.response?.statusCode}');
+      logMe('🔴 Response: ${e.response?.data}');
+      rethrow;
     } catch (e) {
+      logMe('🔴 Unknown Upload Error: $e');
       rethrow;
     }
   }
@@ -85,18 +116,25 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
   @override
   Future<VehicleTypeResponseModel> getVehicleTypes() async {
     String url = 'api/webservice/vehicle/categories';
+    
+    logMe('═══════════════════════════════════════');
+    logMe('🔵 GET VEHICLE TYPES API CALL');
+    logMe('🔵 URL --> $url');
+    logMe('═══════════════════════════════════════');
+    
     try {
       final response = await dio.get(
         url,
       );
-      print('Signup response ---> ${response.data}');
+      logMe('🟢 Vehicle Types Response ---> ${response.data}');
       final model = VehicleTypeResponseModel.fromMap(response.data);
-      if (model.success == 1) {
-        return model;
-      } else {
-        return model;
-      }
+      return model;
+    } on DioException catch (e) {
+      logMe('🔴 Vehicle Types Error: ${e.response?.statusCode}');
+      logMe('🔴 Response: ${e.response?.data}');
+      rethrow;
     } catch (e) {
+      logMe('🔴 Unknown Error: $e');
       rethrow;
     }
   }

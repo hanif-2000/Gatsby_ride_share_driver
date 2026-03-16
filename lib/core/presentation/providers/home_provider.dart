@@ -20,8 +20,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as lctn;
-import 'package:location/location.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
 import '../../../features/order/domain/usecases/update_status_order.dart';
 import '../../../features/order/presentation/providers/update_status_order_state.dart';
@@ -46,7 +46,7 @@ class HomeProvider with ChangeNotifier {
   final DoUpdateLocation doUpdateLocation;
   final session = locator<Session>();
   late BitmapDescriptor pickUpMarker, destinationMarker;
-  Location location = Location();
+  lctn.Location location = lctn.Location();
 
 
   //Initial
@@ -574,17 +574,17 @@ class HomeProvider with ChangeNotifier {
 
   updateLocation() async {
     dev.log("Update location function called");
-    await locationService.getLocation().then((value) {
-      var bearing = value.heading;
-      var lat = value.latitude;
-      var lng = value.longitude;
-      var coordinate = "$lat,$lng";
-      submitLocation(coordinate, bearing.toString()).listen((event) {
-        if (event is UpdateLocationLoaded) {
-          logMe("Sukses Update Location");
-          logMe("curent coordinates are:-->> $coordinate");
-        }
-      });
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var bearing = position.heading;
+    var lat = position.latitude;
+    var lng = position.longitude;
+    var coordinate = "$lat,$lng";
+    submitLocation(coordinate, bearing.toString()).listen((event) {
+      if (event is UpdateLocationLoaded) {
+        logMe("Sukses Update Location");
+        logMe("curent coordinates are:-->> $coordinate");
+      }
     });
   }
 

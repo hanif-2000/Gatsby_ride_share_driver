@@ -45,7 +45,7 @@ class SignUpPage extends StatelessWidget {
                           appLoc.signup,
                           textAlign: TextAlign.center,
                           style: titleStyle,
-                        ),
+                        ), 
                       ),
                     ),
 

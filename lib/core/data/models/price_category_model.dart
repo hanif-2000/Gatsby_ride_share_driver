@@ -19,9 +19,11 @@ class PriceCategoryModel extends PriceCategory {
       PriceCategoryModel(
         categoryId: json['id'] ?? 0,
         categoryCar: json['category'] ?? '',
-        priceMin: json['min_km'] ?? "",
+        // priceMin: json['min_km'] ?? "",
+        priceMin: num.tryParse(json['min_km'].toString()) ?? 0,
+        priceKm: num.tryParse(json['price_km'].toString()) ?? 0,
         seat: json['seat'] ?? '',
-        priceKm: json['price_km'] ?? '',
+        // priceKm: json['price_km'] ?? '',
       );
 
   @override

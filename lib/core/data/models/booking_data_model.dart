@@ -12,23 +12,23 @@ String bookingDataModelToJson(BookingDataModel data) =>
 
 class BookingDataModel {
   dynamic response;
-  String message;
+  String? message;
   String type;
   Booking data;
 
   BookingDataModel({
     required this.response,
-    required this.message,
+    this.message,
     required this.type,
     required this.data,
   });
 
   factory BookingDataModel.fromJson(Map<String, dynamic> json) =>
       BookingDataModel(
-        response: json["Response"].toString(),
-        message: json["message"],
+        response: json["Response"]?.toString() ?? json["response"]?.toString(),
+        message: json["message"]?.toString(),
         type: json["type"],
-        data: Booking.fromJson(json["data"]),
+        data: Booking.fromJson(json["data"] as Map<String, dynamic>),
       );
 
   Map<String, dynamic> toJson() => {

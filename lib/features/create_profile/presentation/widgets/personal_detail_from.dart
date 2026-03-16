@@ -32,7 +32,9 @@ class FormPersonalDetail extends StatefulWidget {
 class _FormPersonalDetailState extends State<FormPersonalDetail> {
   void submit() {
     final provider = context.read<CreateProfileProvider>();
-    provider.doCreateProfileApi('api/webservice/driver/profile/details/add', {
+    
+    // === LOG: SUBMIT API BODY ===
+    final requestBody = {
       "first_name": provider.firstNameController.text.trim(),
       "last_name": provider.lastNameController.text.trim(),
       "phone": provider.mobileNumberController.text.trim(),
@@ -45,33 +47,44 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "id_number": provider.idNumberController.text.trim(),
       "driving_licence": provider.dlImageUploadNameFront,
       "driving_licence_back": provider.dlImageUploadNameBack,
-      // "profile_photo": provider.profileUploadName,
       "image": provider.profileUploadName,
       "id_proof": provider.idProofImageUploadName,
-    }).listen((state) async {
+    };
+    
+    log("╔════════════════════════════════════════════════════════════");
+    log("║ SUBMIT PROFILE API CALLED");
+    log("╠════════════════════════════════════════════════════════════");
+    log("║ Endpoint: api/webservice/driver/profile/details/add");
+    log("╠════════════════════════════════════════════════════════════");
+    log("║ REQUEST BODY:");
+    requestBody.forEach((key, value) {
+      log("║   $key: $value");
+    });
+    log("╚════════════════════════════════════════════════════════════");
+    
+    provider.doCreateProfileApi('api/webservice/driver/profile/details/add', requestBody).listen((state) async {
       switch (state.runtimeType) {
         case CreateProfileLoading:
+          log(">>> SUBMIT API: Loading...");
           showLoading();
           break;
         case CreateProfileFailure:
           final msg = (state as CreateProfileFailure).failure;
+          log(">>> SUBMIT API: FAILURE - $msg");
           dismissLoading();
           showToast(message: msg);
           break;
         case CreateProfileSuccess:
           final data = (state as CreateProfileSuccess).data;
+          log(">>> SUBMIT API: SUCCESS");
+          log(">>> Response success: ${data.success}");
+          log(">>> Response message: ${data.message}");
           dismissLoading();
           if (data.success == 1) {
             provider.setCurrentStep(2);
-            // Navigator.pushReplacementNamed(context, ChangePasswordPage.routeName);
           } else {
-            // if (data.message == '1') {
-            //   showToast(message: appLoc.emailnotmatch);
-            // } else {
             showToast(message: data.message ?? appLoc.failed);
-            // }
           }
-
           break;
       }
     });
@@ -123,28 +136,49 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () async {
-                          ///TODO: add personal image here
                           ImagePickerHelper.showPicker(
                             context: context,
                             imagePicker: provider.imagePicker,
                             successCallBack: (path) {
-                              if(path== null){
+                              if(path == null){
                                 return;
                               }
+                              
+                              // === LOG: PROFILE IMAGE UPLOAD ===
+                              log("╔════════════════════════════════════════════════════════════");
+                              log("║ PROFILE IMAGE UPLOAD");
+                              log("╠════════════════════════════════════════════════════════════");
+                              log("║ File Path: $path");
+                              try {
+                                final file = File(path);
+                                log("║ File Exists: ${file.existsSync()}");
+                                if (file.existsSync()) {
+                                  log("║ File Size: ${file.lengthSync()} bytes");
+                                  log("║ File Size (MB): ${(file.lengthSync() / (1024 * 1024)).toStringAsFixed(2)} MB");
+                                  log("║ File Extension: ${path.split('.').last}");
+                                }
+                              } catch (e) {
+                                log("║ File Check Error: $e");
+                              }
+                              log("╚════════════════════════════════════════════════════════════");
+                              
                               provider.setProfileImage(path);
                               provider.doUploadProfileApi(path).listen((state) async {
                                 switch (state.runtimeType) {
                                   case UploadLoading:
+                                    log(">>> PROFILE UPLOAD: Loading...");
                                     showLoading();
                                     break;
                                   case UploadFailure:
                                     final msg = (state as UploadFailure).failure;
+                                    log(">>> PROFILE UPLOAD: FAILURE - $msg");
                                     dismissLoading();
                                     showToast(message: msg);
                                     break;
                                   case UploadSuccess:
                                     final imageName = (state as UploadSuccess).data;
-                                    // showToast(message: appLoc.success);
+                                    log(">>> PROFILE UPLOAD: SUCCESS");
+                                    log(">>> Image Name received: $imageName");
                                     provider.setProfileUploadName(imageName!);
                                     logMe('Image Name ---> ${provider.profileUploadName}');
                                     dismissLoading();
@@ -153,7 +187,7 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                               });
                             },
                             failedCallBack: (error) {
-                            //  showToast(message: error);
+                              log(">>> PROFILE IMAGE PICKER: FAILED - $error");
                               provider.setProfileImage('');
                             },
                           );
@@ -276,22 +310,19 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                       onTap: () async {
                         logMe("-->> ON Tap Called");
                         DateTime? pickedDate = await showDatePicker(
-                            context: context, //context of current state
+                            context: context,
                             initialDate: DateTime.now(),
-                            firstDate: DateTime(
-                                1950), //DateTime.now() - not to allow to choose before today.
+                            firstDate: DateTime(1950),
                             lastDate: DateTime.now());
 
                         if (pickedDate != null) {
-                          print(
-                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                          print(pickedDate);
                           String formattedDate =
                               DateFormat('yyyy-MM-dd').format(pickedDate);
 
                           provider.setdobController = formattedDate;
 
-                          print(
-                              formattedDate); //formatted date output using intl package =>  2021-03-16
+                          print(formattedDate);
                         } else {
                           print("Date is not selected");
                         }
@@ -363,7 +394,6 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 title: "Canada",
                 isReadOnly: true,
                 controller: TextEditingController(text: "Canada"),
-                // controller: provider.countr,
                 inputType: TextInputType.number,
                 isError: provider.idNumberError,
                 fieldValidator: ValidationHelper(
@@ -372,26 +402,6 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   typeField: TypeField.idNumber,
                 ).validate(),
               ),
-
-              //Country Selection
-              // CustomDropDown(
-              //   values: const ['India', 'United State', 'England', 'Canada'],
-              //   selectedValue: provider.countryName,
-              //   hint: appLoc.country,
-              //   onChange: (value) {
-              //     if (value == "India") {
-              //       provider.setShortCountryName('IN');
-              //     } else if (value == "United State") {
-              //       provider.setShortCountryName('US');
-              //     } else if (value == "England") {
-              //       provider.setShortCountryName('EN');
-              //     } else if (value == "Canada") {
-              //       provider.setShortCountryName('CA');
-              //     }
-              //     log("value is:-->>$value");
-              //     provider.setCountryName(value);
-              //   },
-              // ),
               mediumVerticalSpacing(),
 
               //ID Number
@@ -419,42 +429,60 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     context: context,
                     imagePicker: provider.imagePicker,
                     successCallBack: (file) {
-                      if(file== null){
+                      if(file == null){
                         return;
                       }
+                      
+                      // === LOG: DL FRONT IMAGE UPLOAD ===
+                      log("╔════════════════════════════════════════════════════════════");
+                      log("║ DL FRONT IMAGE UPLOAD");
+                      log("╠════════════════════════════════════════════════════════════");
+                      log("║ File Path: $file");
+                      try {
+                        final fileObj = File(file);
+                        log("║ File Exists: ${fileObj.existsSync()}");
+                        if (fileObj.existsSync()) {
+                          log("║ File Size: ${fileObj.lengthSync()} bytes");
+                          log("║ File Size (MB): ${(fileObj.lengthSync() / (1024 * 1024)).toStringAsFixed(2)} MB");
+                          log("║ File Extension: ${file.split('.').last}");
+                        }
+                      } catch (e) {
+                        log("║ File Check Error: $e");
+                      }
+                      log("╚════════════════════════════════════════════════════════════");
+                      
                       provider.setDlImageFront(file);
-                      provider
-                          .doUploadProfileApi(file)
-                          .listen((state) async {
+                      provider.doUploadProfileApi(file).listen((state) async {
                         switch (state.runtimeType) {
                           case UploadLoading:
+                            log(">>> DL FRONT UPLOAD: Loading...");
                             showLoading();
                             break;
                           case UploadFailure:
                             final msg = (state as UploadFailure).failure;
+                            log(">>> DL FRONT UPLOAD: FAILURE - $msg");
                             dismissLoading();
                             showToast(message: msg);
                             break;
                           case UploadSuccess:
                             final imageName = (state as UploadSuccess).data;
-                            // showToast(message: appLoc.success);
+                            log(">>> DL FRONT UPLOAD: SUCCESS");
+                            log(">>> Image Name received: $imageName");
                             provider.setDlImageUploadNameFront(imageName!);
-                            logMe(
-                                'Image Name ---> ${provider.profileUploadName}');
+                            logMe('Image Name ---> ${provider.profileUploadName}');
                             dismissLoading();
                             break;
                         }
                       });
                     },
                     failedCallBack: (error) {
-                    //  showToast(message: error);
+                      log(">>> DL FRONT IMAGE PICKER: FAILED - $error");
                       provider.setProfileImage('');
                     },
                   );
                 },
                 onDelete: () {
                   provider.setDlImageFront('');
-
                   provider.setDlImageUploadNameFront('');
                 },
               ),
@@ -470,35 +498,54 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                     context: context,
                     imagePicker: provider.imagePicker,
                     successCallBack: (file) {
-                      if(file==null){
+                      if(file == null){
                         return;
                       }
+                      
+                      // === LOG: DL BACK IMAGE UPLOAD ===
+                      log("╔════════════════════════════════════════════════════════════");
+                      log("║ DL BACK IMAGE UPLOAD");
+                      log("╠════════════════════════════════════════════════════════════");
+                      log("║ File Path: $file");
+                      try {
+                        final fileObj = File(file);
+                        log("║ File Exists: ${fileObj.existsSync()}");
+                        if (fileObj.existsSync()) {
+                          log("║ File Size: ${fileObj.lengthSync()} bytes");
+                          log("║ File Size (MB): ${(fileObj.lengthSync() / (1024 * 1024)).toStringAsFixed(2)} MB");
+                          log("║ File Extension: ${file.split('.').last}");
+                        }
+                      } catch (e) {
+                        log("║ File Check Error: $e");
+                      }
+                      log("╚════════════════════════════════════════════════════════════");
+                      
                       provider.setDlImageBack(file);
-                      provider
-                          .doUploadProfileApi(file)
-                          .listen((state) async {
+                      provider.doUploadProfileApi(file).listen((state) async {
                         switch (state.runtimeType) {
                           case UploadLoading:
+                            log(">>> DL BACK UPLOAD: Loading...");
                             showLoading();
                             break;
                           case UploadFailure:
                             final msg = (state as UploadFailure).failure;
+                            log(">>> DL BACK UPLOAD: FAILURE - $msg");
                             dismissLoading();
                             showToast(message: msg);
                             break;
                           case UploadSuccess:
                             final imageName = (state as UploadSuccess).data;
-                            // showToast(message: appLoc.success);
+                            log(">>> DL BACK UPLOAD: SUCCESS");
+                            log(">>> Image Name received: $imageName");
                             provider.setDlImageUploadNameBack(imageName!);
-                            logMe(
-                                'Image Name ---> ${provider.profileUploadName}');
+                            logMe('Image Name ---> ${provider.profileUploadName}');
                             dismissLoading();
                             break;
                         }
                       });
                     },
                     failedCallBack: (error) {
-                    //  showToast(message: error);
+                      log(">>> DL BACK IMAGE PICKER: FAILED - $error");
                       provider.setProfileImage('');
                     },
                   );
@@ -510,53 +557,6 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
               ),
               mediumVerticalSpacing(),
 
-              //Upload Id Proof
-              // ImagePickerTile(
-              //   title: appLoc.uploadId,
-              //   selectedImage: provider.idProofImage,
-              //   onTap: () {
-              //     FocusScope.of(context).requestFocus(FocusNode());
-              //     ImagePickerHelper.showPicker(
-              //       context: context,
-              //       imagePicker: provider.imagePicker,
-              //       successCallBack: (file) {
-              //         provider.setIdProofImage(file!.path);
-              //         provider
-              //             .doUploadProfileApi(file.path)
-              //             .listen((state) async {
-              //           switch (state.runtimeType) {
-              //             case UploadLoading:
-              //               showLoading();
-              //               break;
-              //             case UploadFailure:
-              //               final msg = (state as UploadFailure).failure;
-              //               dismissLoading();
-              //               showToast(message: msg);
-              //               break;
-              //             case UploadSuccess:
-              //               final imageName = (state as UploadSuccess).data;
-              //               // showToast(message: appLoc.success);
-              //               provider.setIdProofImageUploadName(imageName!);
-              //               logMe(
-              //                   'Image Name ---> ${provider.profileUploadName}');
-              //               dismissLoading();
-              //               break;
-              //           }
-              //         });
-              //       },
-              //       failedCallBack: (error) {
-              //         showToast(message: error);
-              //         provider.setProfileImage('');
-              //       },
-              //     );
-              //   },
-              //   onDelete: () {
-              //     provider.setIdProofImage('');
-              //     provider.setIdProofImageUploadName('');
-              //   },
-              // ),
-              // largeVerticalSpacing(),
-
               //Next Button
               CustomButton(
                 text: Text(
@@ -564,29 +564,24 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                   style: txtButtonStyle,
                 ),
                 event: () {
-                  log(provider.countryName.toString());
-                  // provider.setCurrentStep(2);
-
+                  log("╔════════════════════════════════════════════════════════════");
+                  log("║ NEXT BUTTON PRESSED - VALIDATION CHECK");
+                  log("╠════════════════════════════════════════════════════════════");
+                  log("║ Profile Image Name: ${provider.profileUploadName}");
+                  log("║ DL Front Image Name: ${provider.dlImageUploadNameFront}");
+                  log("║ DL Back Image Name: ${provider.dlImageUploadNameBack}");
+                  log("║ ID Proof Image Name: ${provider.idProofImageUploadName}");
+                  log("╚════════════════════════════════════════════════════════════");
+                  
                   if (provider.profileUploadName == '') {
                     showToast(message: 'Please select profile image!');
                   } else if (provider.formKey.currentState!.validate()) {
-                    // if (provider.countryName == null) {
-                    //   showToast(message: 'Please select country!');
-                    // } else
-
                     if (provider.dlImageUploadNameFront == '') {
-                      showToast(
-                          message: 'Please upload Front Driving Licence!');
+                      showToast(message: 'Please upload Front Driving Licence!');
                     } else if (provider.dlImageUploadNameBack == '') {
                       showToast(message: 'Please upload Back Driving Licence!');
-                    }
-                    // else if (provider.idProofImageUploadName == '') {
-                    //   showToast(message: 'Please upload ID proof!');
-                    // }
-
-                    else {
-                      log("short country code is:==>>" +
-                          provider.shortCountryName.toString());
+                    } else {
+                      log("short country code is:==>>" + provider.shortCountryName.toString());
                       submit();
                     }
                   }
@@ -595,35 +590,6 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
                 isRounded: true,
                 bgColor: blackColor,
               ),
-//               smallVerticalSpacing(),
-
-// // Login Button
-
-//               CustomButton(
-//                 text: Text(
-//                   appLoc.login,
-//                   style: txtButtonStyle,
-//                 ),
-//                 event: () {
-//                   final session = locator<Session>();
-
-//                   session.setIsProfileCompleted = true;
-
-//                   Navigator.pushNamedAndRemoveUntil(
-//                       context, LoginPage.routeName, (route) => false);
-//                   // Navigator.push(
-//                   //   context,
-//                   //   MaterialPageRoute(
-//                   //     builder: (context) => const LoginPage(),
-//                   //   ),
-//                   // );
-//                   log("click on login button");
-//                 },
-//                 buttonHeight: 48,
-//                 isRounded: true,
-//                 bgColor: blackColor,
-//               ),
-
               largeVerticalSpacing(),
             ],
           ),

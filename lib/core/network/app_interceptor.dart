@@ -49,7 +49,7 @@ class AppInterceptor extends Interceptor {
       // session.setLoggedIn = false;
     }
     
-    if (statusCode == 404) {
+    if (statusCode == 404 || statusCode == 401) {
       dismissLoading();
       await sessionLogOut().then(
         (_) => Navigator.pushNamedAndRemoveUntil(
