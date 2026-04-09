@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import GoogleMaps
 import FirebaseCore
+import FirebaseMessaging
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -11,6 +12,7 @@ import FirebaseCore
   ) -> Bool {
      GMSServices.provideAPIKey("AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs")
      FirebaseApp.configure()
+     Messaging.messaging().delegate = self
            application.applicationIconBadgeNumber = 0
             if #available(iOS 10.0, *) {
                 UNUserNotificationCenter.current().delegate = self
@@ -24,7 +26,21 @@ import FirebaseCore
                 application.registerUserNotificationSettings(settings)
             }
 
+            application.registerForRemoteNotifications()
+
      GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    Messaging.messaging().apnsToken = deviceToken
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+}
+
+extension AppDelegate: MessagingDelegate {
+  func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+    print("FCM Token: \(fcmToken ?? "")")
   }
 }

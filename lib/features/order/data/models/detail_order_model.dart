@@ -31,18 +31,18 @@ class DetailOrderModel extends OrderDetail {
 
   factory DetailOrderModel.fromJson(Map<String, dynamic> json) =>
       DetailOrderModel(
-        orderId: json['id'],
+        orderId: json['id'] ?? 0,
         driverId: json['driver_id'] ?? 0,
-        userId: json['customer_id'],
-        distance: json['distance'],
-        totalPrice: json['total'],
-        orderStatus: json['order_status'],
-        startCoordinate: json['start_coordinate'],
-        endAddress: json['end_address'],
-        startAddress: json['start_address'],
-        endCoordinate: json['end_coordinate'],
-        pendingAmount: json['pending_amount'],
-        newTotal: json['new_total'],
+        userId: json['customer_id'] ?? 0,
+        distance: json['distance']?.toString() ?? '0',
+        totalPrice: json['total'] ?? 0,
+        orderStatus: json['order_status'] ?? 0,
+        startCoordinate: json['start_coordinate'] ?? '',
+        endAddress: json['end_address'] ?? '',
+        startAddress: json['start_address'] ?? '',
+        endCoordinate: json['end_coordinate'] ?? '',
+        pendingAmount: json['pending_amount'] ?? 0,
+        newTotal: json['new_total'] ?? 0,
       );
 
   @override

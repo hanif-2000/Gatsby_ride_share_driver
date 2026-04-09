@@ -12,15 +12,16 @@ class SignupResponseModel extends Equatable {
   @override
   List<Object?> get props => [data, success, token];
 
-  factory SignupResponseModel.fromJson(Map<String, dynamic> json) =>
-      SignupResponseModel(
-        data: json['data'] == null
-            ? null
-            : SignupDataModel.fromJson(json['data']),
-        token: json['token'] ?? '',
-        success: json['success'] ?? 1,
-        message: json['message'] ?? '',
-      );
+  factory SignupResponseModel.fromJson(Map<String, dynamic> json) {
+    final dataObj = json['data'] as Map<String, dynamic>?;
+    final userObj = dataObj?['data'] as Map<String, dynamic>?;
+    return SignupResponseModel(
+      data: userObj == null ? null : SignupDataModel.fromJson(userObj),
+      token: dataObj?['token'] ?? '',
+      success: (json['status'] == true) ? 1 : 0,
+      message: json['message'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'data': data == null ? '' : data!.toJson(),

@@ -22,17 +22,22 @@ class SignupDataSourceImplementation implements SignupDataSource {
     String url = 'api/webservice/driver/signup';
     // await FirebaseHelper.setupMessaging();
     try {
-      final fcmToken = await FirebaseMessaging.instance.getToken()??"";
+      String fcmToken = "";
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      } catch (e) {
+        print("FCM token error (may be simulator): $e");
+      }
       final session = locator<Session>();
-      session.setFcmToken=fcmToken;
-      FormData data = FormData.fromMap({
+      session.setFcmToken = fcmToken;
+      final data = {
         'email': email,
         'password': password,
         'fcm_token': fcmToken,
         'position': position,
         'device_type': Platform.isIOS ? 'ios' : 'android',
-      });
-      print('Signup data -----> ${data.fields.toString()}');
+      };
+      print('Signup data -----> $data');
       final response = await dio.post(
         url,
         data: data,
@@ -40,7 +45,7 @@ class SignupDataSourceImplementation implements SignupDataSource {
       print('Signup response ---> ${response.data}');
       final model = SignupResponseModel.fromJson(response.data);
       if (model.success == 1) {
-        // session.setUserId = model.data!.driverId.toString();
+        session.setUserId = model.data!.driverId.toString();
         session.setToken = model.token!;
         // session.setSessionCategoryId = model.data!.categoryId.toString();
         return model;

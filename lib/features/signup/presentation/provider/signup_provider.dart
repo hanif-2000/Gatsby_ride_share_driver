@@ -16,12 +16,20 @@ class SignupProvider extends FormProvider {
     // bool serviceStatus = await locationService.serviceEnabled();
     // bool serviceStatusResult = await locationService.requestService();
 
-    lctn.LocationData locationData = await locationService.getLocation();
+    String position = '0.0,0.0';
+    try {
+      lctn.LocationData locationData = await locationService
+          .getLocation()
+          .timeout(const Duration(seconds: 5));
+      position = '${locationData.latitude},${locationData.longitude}';
+    } catch (e) {
+      logMe('Location error during signup: $e');
+    }
 
     final signupResult = await doSignup.call(
         emailController.text,
         passwordConfirmController.text,
-        '${locationData.latitude},${locationData.longitude}');
+        position);
     yield* signupResult.fold((statusCode) async* {
       logMe('signup error $statusCode');
       yield SignupFailure(failure: statusCode.message);

@@ -25,10 +25,17 @@ class BookingDataModel {
 
   factory BookingDataModel.fromJson(Map<String, dynamic> json) =>
       BookingDataModel(
-        response: json["Response"].toString(),
-        message: json["message"],
-        type: json["type"],
-        data: Booking.fromJson(json["data"]),
+        response: json["Response"]?.toString() ?? '',
+        message: json["message"] ?? '',
+        type: json["type"] ?? '',
+        data: (json["data"] != null && json["data"] is Map)
+            // Merge: top-level first (fallback), then nested data overrides.
+            // Map.from() used to safely convert Map<dynamic,dynamic> from socket.
+            ? Booking.fromJson({
+                ...Map<String, dynamic>.from(json as Map),
+                ...Map<String, dynamic>.from(json["data"] as Map),
+              })
+            : Booking.fromJson(Map<String, dynamic>.from(json as Map)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,7 +92,7 @@ class Booking {
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) => Booking(
-        id: json["id"],
+        id: json["id"] ?? json["OrderID"] ?? json["order_id"],
         driver_id: json["driver_id"],
         startCoordinate: json["start_coordinate"] ?? "",
         endCoordinate: json["end_coordinate"] ?? "",
@@ -101,8 +108,8 @@ class Booking {
         customerId: json["customerID"] ?? "",
         name: json["name"] ?? "",
         image: json["image"] ?? "",
-        longitude: json["Longitude"] ?? "",
-        latitude: json["Latitude"] ?? "",
+        longitude: json["longitude"] ?? json["Longitude"] ?? "",
+        latitude: json["latitude"] ?? json["Latitude"] ?? "",  
         phone: json["phone"] ?? "",
         customerRating: json["CustomerRating"] ?? "",
       );

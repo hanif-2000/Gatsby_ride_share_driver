@@ -11,7 +11,7 @@ class VehicleTypeResponseModel {
 
   factory VehicleTypeResponseModel.fromMap(Map<String, dynamic> json) =>
       VehicleTypeResponseModel(
-        success: json["success"],
+        success: json["status"] == true ? 1 : 0,
         message: json["message"],
         data: List<VehicleTypeDataModel>.from(
           json["data"].map(

@@ -41,7 +41,6 @@ class LoggingInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     hitUrl = options.path;
-    // "${options.method.toUpperCase()} ${"" + (options.baseUrl) + (options.path)}";
     print(" API URL ✈️✈️✈️✈ ️--> $hitUrl");
     options.headers.forEach((k, v) => print('$k: $v'));
     print("queryParameters:");

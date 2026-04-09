@@ -518,12 +518,6 @@ class SessionHelper implements Session {
 
   @override
   Future<void> clearOrderSession() async {
-    // await pref.remove(ORDER_ID);
-    // await pref.remove(ORDER_STATUS);
-    // await pref.remove(DRIVER_ID);
-    // await pref.remove(SESSION_ORDER_DETAILS);
-    // await pref.remove(SESSION_CUSTOMER_DETAILS);
-    // await pref.remove(SESSION_STATUS_ORDER);
     await pref.remove(CUSTOMER_IMG);
     await pref.remove(CUSTOMER_NAME);
     await pref.remove(CUSTOMER_PHN);
@@ -532,9 +526,14 @@ class SessionHelper implements Session {
     await pref.remove(END_CO);
     await pref.remove(END_ADD);
     await pref.remove(START_CO);
-    // await pref.remove(RATING_GIVEN);
-    // await pref.remove(PAYMENT_DONE);
-    // await pref.remove(CUSTOMER_ID);
+    await pref.remove(IS_ORDER_RUNNING);
+    await pref.remove(RUNNING_ORDER_ID);
+    await pref.remove(RUNNING_ORDER_STATUS);
+    await pref.remove(CURRENT_ORDER_STATE);
+    await pref.remove(ORDER_USER_ID);
+    await pref.remove(PAYMENT_DONE);
+    await pref.remove(RATING_GIVEN);
+    await pref.remove(CUSTOMER_ID);
   }
 
 

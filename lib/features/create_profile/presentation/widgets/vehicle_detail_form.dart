@@ -28,7 +28,7 @@ class _FormVehicleDetailState extends State<FormVehicleDetail> {
   void submit() {
     final provider = context.read<CreateProfileProvider>();
     provider.doCreateProfileApi('api/webservice/driver/vehicle/details/add', {
-      "vehicle_type": provider.selectedVehicleType!.id,
+      "vehicle_category_id": provider.selectedVehicleType!.id,
       "vehicle_name": provider.vehicleNameController.text.trim(),
       "vehicle_number": provider.vehicleNumberController.text.trim(),
       "vehicle_model": provider.vehicleModelController.text.trim(),

@@ -124,29 +124,26 @@ class HomeDrawerPage extends StatelessWidget {
                           provider.updateStatus(isFromLogout: true).listen(
                             (event) async {
                               if (event is ChangeStatusLoaded) {
-                                var response = await dio.get(
-                                  logOutUrl,
-                                  options: Options(headers: {
-                                    "Authorization":
-                                        "Bearer ${session.sessionToken}"
-                                  }),
-                                );
-                                log("my response data is:  ${response.data}");
-
-                                print("status code is:${response.statusCode}");
-                                dismissLoading();
-                                if (response.statusCode == 200 &&
-                                    response.data["message"] ==
-                                        "Logout successfully") {
-                                  await sessionLogOut().then(
-                                    (_) => Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            LoginPage.routeName,
-                                            (route) => false),
+                                try {
+                                  var response = await dio.get(
+                                    logOutUrl,
+                                    options: Options(headers: {
+                                      "Authorization":
+                                          "Bearer ${session.sessionToken}"
+                                    }),
                                   );
-                                } else {
-                                  showToast(message: "Something went Wrong");
+                                  log("my response data is:  ${response.data}");
+                                  print("status code is:${response.statusCode}");
+                                } catch (e) {
+                                  log("Logout API error (ignored): $e");
                                 }
+                                dismissLoading();
+                                await sessionLogOut().then(
+                                  (_) => Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                          LoginPage.routeName,
+                                          (route) => false),
+                                );
                               }
 
                               /*    if (event is ChangeStatusLoaded) {

@@ -11,6 +11,7 @@ import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:flutter/material.dart';
 import '../../static/colors.dart';
 import 'package:provider/provider.dart';
+import '../providers/change_status_state.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -49,12 +50,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         var session = locator<Session>();
         var socketProvider = context.read<LatestSocketProvider>();
 
-
         log("app bar called in homepage");
-
-        log("app bar called in homepage isonline:-->>${provider.isOnline} ");
-
-        // provider.changeStatus = session.isOnline;
+        log("app bar called in homepage isonline:-->>${provider.isOnline}");
 
         return AppBar(
           automaticallyImplyLeading: false,
@@ -77,30 +74,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
               child: SizedBox(
                 width: 70,
                 child: AnimatedToggleSwitch<bool>.dual(
                   current: provider.isOnline,
                   first: false,
                   second: true,
-                  //  dif: 5.0,
-
                   borderWidth: 4.0,
-                  /*  customStyleBuilder: (_,__,___){
-                    return ToggleStyle(
-                      backgroundColor: provider.isOnline ? primaryColor : whiteAccentColor
-                    );
-
-                  },*/
-                  // height: 100,
                   style: ToggleStyle(
                     borderColor: provider.isOnline ? primaryColor : greyA2A0A8,
-                    backgroundColor:
-                        provider.isOnline ? whiteAccentColor : whiteAccentColor,
-                    indicatorColor:
-                        provider.isOnline ? whiteAccentColor : whiteAccentColor,
+                    backgroundColor: provider.isOnline ? whiteAccentColor : whiteAccentColor,
+                    indicatorColor: provider.isOnline ? whiteAccentColor : whiteAccentColor,
                     borderRadius: BorderRadius.circular(50.0),
                     boxShadow: const [
                       BoxShadow(
@@ -111,27 +96,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-
                   styleBuilder: (i) => ToggleStyle(
                     indicatorColor: provider.isOnline ? whiteColor : whiteColor,
-                    backgroundColor:
-                        provider.isOnline ? primaryColor : greyA2A0A8,
+                    backgroundColor: provider.isOnline ? primaryColor : greyA2A0A8,
                   ),
-                  // innerColor: provider.isOnline ? primaryColor : greyA2A0A8,
-                  onChanged: (b) {
+                  // ✅ FIX: Toggle ka sahi flow
+                  onChanged: (b) async {
+                    // Step 1: Pehle UI update karo
                     provider.changeStatus = b;
-                    provider.updateStatus().listen((event) async {
-                      session.setIsOnline = b;
-                      socketProvider.updateLatLngAtStarting();
+
+                    // Step 2: API call karo — targetOnline explicitly pass karo
+                    provider.updateStatus(targetOnline: b).listen((event) async {
+                      if (event is ChangeStatusLoaded) {
+                        // ✅ Success — session update karo
+                        session.setIsOnline = b;
+                        socketProvider.updateLatLngAtStarting();
+                        log("Status updated successfully: $b");
+                      } else if (event is ChangeStatusFailure) {
+                        // ✅ Failure — toggle wapas revert karo
+                        log("Status update failed — reverting toggle");
+                        showToast(message: "Status update failed. Try again.");
+                      }
                     });
-                    return Future.delayed(
-                      const Duration(
-                        seconds: 2,
-                      ),
-                    );
+
+                    return Future.delayed(const Duration(seconds: 2));
                   },
                   indicatorSize: const Size.fromWidth(120),
-                  //  colorBuilder: (b) => /*b ?*/ whiteColor /*: Colors.grey*/,
                   iconBuilder: (value) => Padding(
                     padding: EdgeInsets.zero,
                     child: Icon(
@@ -139,31 +129,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       color: value ? primaryColor : greyA2A0A8,
                     ),
                   ),
-                  // textBuilder: (value) => value
-                  //     ? Center(
-                  //         child: Text(
-                  //         appLoc.online,
-                  //         style: const TextStyle(
-                  //                 color: whiteColor,
-                  //                 fontSize: 15,
-                  //                 fontWeight: FontWeight.bold)
-                  //             .usePoppinsW6Font(),
-                  //       ))
-                  //     : Center(
-                  //         child: Text(appLoc.offLine,
-                  //             style: const TextStyle(
-                  //                     color: whiteColor,
-                  //                     fontSize: 15,
-                  //                     fontWeight: FontWeight.bold)
-                  //                 .usePoppinsW6Font())),
                 ),
               ),
             ),
           ],
           title: Container(
-            padding: const EdgeInsets.only(
-              left: 25,
-            ),
+            padding: const EdgeInsets.only(left: 25),
             width: App(context).appWidth(30.0),
             child: Text(
               provider.isOnline ? appLoc.online : appLoc.offLine,

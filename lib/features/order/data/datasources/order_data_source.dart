@@ -9,6 +9,7 @@ import 'package:appkey_taxiapp_driver/features/order/data/models/detail_order_re
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/driver_detail.dart';
 import 'package:appkey_taxiapp_driver/features/order/domain/entities/order_detail.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../../../core/utility/helper.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
@@ -18,7 +19,7 @@ import '../models/get_status_response.dart';
 import '../models/status_oder_response_model.dart';
 
 abstract class OrderDataSource {
-  Future<ChangeStatusesponseModel> changeStatus(FormData formData);
+  Future<ChangeStatusesponseModel> changeStatus(Map<String, dynamic> body);
 
   Future<UpdateStatusOrderResponseModel> updateStatusOrder(FormData formData);
 
@@ -43,16 +44,32 @@ class OrderDataSourceImplementation implements OrderDataSource {
   OrderDataSourceImplementation({required this.dio});
 
   @override
-  Future<ChangeStatusesponseModel> changeStatus(FormData formData) async {
+  Future<ChangeStatusesponseModel> changeStatus(
+      Map<String, dynamic> body) async {
     String url = 'api/webservice/driver/set-status';
     dio.withToken();
     try {
+      // Har baar fresh FCM token lo aur body mein add karo
+      try {
+        final fcmToken =
+            await FirebaseMessaging.instance.getToken() ?? "";
+        if (fcmToken.isNotEmpty) {
+          body['fcm_token'] = fcmToken;
+          log("✅ FCM token added to set-status: $fcmToken");
+        } else {
+          log("⚠️ FCM token empty — set-status bina token ke ja raha hai");
+        }
+      } catch (e) {
+        log("⚠️ FCM token fetch error in changeStatus: $e");
+      }
+
       final response = await dio.post(
         url,
-        data: formData,
+        data: body,
+        options: Options(contentType: 'application/json'),
       );
 
-      log("set status form data is :--> $formData");
+      log("set status body is :--> $body");
       final model = ChangeStatusesponseModel.fromJson(response.data);
       return model;
     } catch (e) {
@@ -61,13 +78,14 @@ class OrderDataSourceImplementation implements OrderDataSource {
   }
 
   @override
-  Future<RequestListDataModel> getRequestListData(FormData formData) async {
+  Future<RequestListDataModel> getRequestListData(
+      FormData formData) async {
     String url = 'api/webservice/driver/requests/new';
     dio.withToken();
     try {
       final response = await dio.post(
         url,
-        // data: formData,
+        data: formData,
       );
       final model = RequestListDataModel.fromMap(response.data);
 
@@ -76,8 +94,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
       } else if (response.data["message"] == "Account Suspended") {
         log("account suspended");
         showToast(message: "Account Suspended");
-
-        return response.data["message"];
+        throw Exception("Account Suspended");
       }
       return model;
     } catch (e) {
@@ -106,9 +123,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
     String url = 'api/webservice/driver/order';
     dio.withToken();
     try {
-      final response = await dio.get(
-        url,
-      );
+      final response = await dio.get(url);
       final model = HistoryDataModel.fromJson(response.data);
       return model;
     } catch (e) {
@@ -126,7 +141,8 @@ class OrderDataSourceImplementation implements OrderDataSource {
         url,
         data: formData,
       );
-      final model = UpdateStatusOrderResponseModel.fromJson(response.data);
+      final model =
+          UpdateStatusOrderResponseModel.fromJson(response.data);
       return model;
     } catch (e) {
       rethrow;
@@ -140,9 +156,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
     String url = 'api/webservice/driver/order-status?id=$orderId';
     dio.withToken();
     try {
-      final response = await dio.get(
-        url,
-      );
+      final response = await dio.get(url);
       final model = GetStatusResponseModel.fromJson(response.data);
       return model;
     } catch (e) {
@@ -155,9 +169,7 @@ class OrderDataSourceImplementation implements OrderDataSource {
     String url = 'api/webservice/getOrder?id=$orderId';
     dio.withToken();
     try {
-      final response = await dio.get(
-        url,
-      );
+      final response = await dio.get(url);
       final model = OrderDetailResponseModel.fromJson(response.data);
       return model.data;
     } catch (e) {
@@ -169,13 +181,13 @@ class OrderDataSourceImplementation implements OrderDataSource {
   Future<DriverDetail> getDriverDetail() async {
     final session = locator<Session>();
     String driverId = session.driverId;
-    String url = 'api/webservice//driver-profile?id_driver=$driverId';
+    String url =
+        'api/webservice/driver-profile?id_driver=$driverId';
     dio.withToken();
     try {
-      final response = await dio.get(
-        url,
-      );
-      final model = DriverDetailResponseModel.fromJson(response.data);
+      final response = await dio.get(url);
+      final model =
+          DriverDetailResponseModel.fromJson(response.data);
       return model.data;
     } catch (e) {
       rethrow;
@@ -186,13 +198,13 @@ class OrderDataSourceImplementation implements OrderDataSource {
   Future<DriverLocationResponseModel> getDriverLocation() async {
     final session = locator<Session>();
     String driverId = session.driverId;
-    String url = 'api/webservice/driver_location?id_driver=$driverId';
+    String url =
+        'api/webservice/driver_location?id_driver=$driverId';
     dio.withToken();
     try {
-      final response = await dio.get(
-        url,
-      );
-      final model = DriverLocationResponseModel.fromJson(response.data);
+      final response = await dio.get(url);
+      final model =
+          DriverLocationResponseModel.fromJson(response.data);
       return model;
     } catch (e) {
       rethrow;

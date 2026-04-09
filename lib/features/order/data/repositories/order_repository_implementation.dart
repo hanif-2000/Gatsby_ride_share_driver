@@ -21,9 +21,9 @@ class OrderRepositoryImplementation implements OrderRepository {
 
   @override
   Future<Either<Failure, ChangeStatusesponseModel>> changeStatus(
-      FormData formData) async {
+      Map<String, dynamic> body) async {
     try {
-      final data = await dataSource.changeStatus(formData);
+      final data = await dataSource.changeStatus(body);
       return Right(data);
     } on DioError catch (e) {
       logMe("Failure Order repository ${e.toString()}");

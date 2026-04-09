@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:appkey_taxiapp_driver/core/presentation/providers/latest_socket_provider.dart';
 import 'package:appkey_taxiapp_driver/core/presentation/widgets/custom_text_field.dart';
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
@@ -9,18 +8,15 @@ import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/helper.dart';
 import 'package:appkey_taxiapp_driver/features/forgot_password/presentation/pages/forgot_password_page.dart';
 import 'package:appkey_taxiapp_driver/features/signup/presentation/pages/signup_page.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/network/socket_helper.dart';
 import '../../../../core/presentation/pages/home_page/home_page.dart';
 import '../../../../core/presentation/widgets/custom_button/custom_button_widget.dart';
 import '../../../../core/static/enums.dart';
 import '../../../../core/utility/injection.dart';
 import '../../../../core/utility/session_helper.dart';
 import '../../../../core/utility/validation_helper.dart';
-import '../../../order/data/models/create_order_response_model.dart';
 import '../providers/login_provider.dart';
 import '../providers/login_state.dart';
 
@@ -32,61 +28,41 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
- // var socketProvider = locator<LatestSocketProvider>();
-  // var socketProvider = Provider.of<LatestSocketProvider>(
-  //     locator<GlobalKey<NavigatorState>>().currentContext!);
   void submit() {
-    var dio = Dio();
     FocusManager.instance.primaryFocus?.unfocus();
     final provider = context.read<LoginProvider>();
     provider.doLoginApi(context: context).listen((state) async {
       switch (state.runtimeType) {
         case LoginLoading:
-          // showLoading();
           break;
+
         case LoginFailure:
           final msg = (state as LoginFailure).failure;
           dismissLoading();
           showToast(message: msg);
           break;
+
         case LoginSuccess:
           dismissLoading();
+          final loginData = (state as LoginSuccess).data;
+
+          if (loginData == null || loginData.verificationStatus != 1) {
+            showToast(message: "Your account is under review. Please wait for admin approval.");
+            break;
+          }
+
           final session = locator<Session>();
           session.setLoggedIn = true;
           session.setIsProfileCompleted = true;
 
-          //** UPDATE  */
-
           log("session token:--->> ${session.sessionToken}");
-          print("session token:--->> ${session.sessionToken}");
 
-          final formData = FormData.fromMap({
-            'api_token': session.sessionToken,
-            'status': "0",
-          });
-
-          String url = '${BASE_URL}api/webservice/driver/set-status';
-          dio.options.headers["authorization"] =
-              "Bearer ${session.sessionToken}";
-          try {
-            final response = await dio.post(
-              url,
-              data: formData,
-            );
-
-            print("set status form data is :--> ${formData.fields}");
-            final model = ChangeStatusesponseModel.fromJson(response.data);
-
-            print("change status model is :--> ${model.message}");
-            Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false);
-            logMe("Authorization Token: ${session.sessionToken}");
-            break;
-          } catch (e) {
-            rethrow;
-          }
-
-        //  socketProvider.connectToSocket(context);
-        // showToast(message: appLoc.success);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            HomePage.routeName,
+            (route) => false,
+          );
+          break;
       }
     });
   }
@@ -103,7 +79,6 @@ class _LoginFormState extends State<LoginForm> {
           child: Column(
             children: [
               CustomTextField(
-                // prefixWidget: SvgPicture.asset('assets/icons/auth/ic_gmail.svg', height: 12, width: 12,),
                 prefixWidget: const Icon(Icons.email_outlined),
                 placeholder: appLoc.emailaddress,
                 title: appLoc.emailaddress,
@@ -147,7 +122,9 @@ class _LoginFormState extends State<LoginForm> {
                       child: Text(
                         appLoc.forgotpassword,
                         style: blactStyle.copyWith(
-                            color: grey7c7c7c, fontSize: fontMedium),
+                          color: grey7c7c7c,
+                          fontSize: fontMedium,
+                        ),
                       ),
                     ),
                   )
@@ -159,7 +136,6 @@ class _LoginFormState extends State<LoginForm> {
                   appLoc.login,
                   style: txtButtonStyle,
                 ),
-                // buttonHeight: MediaQuery.of(context).size.height * 0.080,
                 buttonHeight: 48,
                 isRounded: true,
                 event: () async {
@@ -180,21 +156,18 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   children: [
                     TextSpan(
-                        text: appLoc.signup,
-                        style: blactStyle.copyWith(fontSize: 14),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // Navigator.pushNamed(
-                            //   context,
-                            //   SignUpPage.routeName,
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignUpPage(),
-                              ),
-                            );
-                          })
+                      text: appLoc.signup,
+                      style: blactStyle.copyWith(fontSize: 14),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpPage(),
+                            ),
+                          );
+                        },
+                    )
                   ],
                 ),
               ),

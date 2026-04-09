@@ -11,9 +11,9 @@ class ImageUploadResponse {
 
   factory ImageUploadResponse.fromMap(Map<String, dynamic> json) =>
       ImageUploadResponse(
-        success: json["success"],
+        success: json["status"] == true ? 1 : (json["success"] ?? 0),
         message: json["message"],
-        fileName: json["fileName"],
+        fileName: json["filename"] ?? json["fileName"],
       );
 
   Map<String, dynamic> toMap() => {

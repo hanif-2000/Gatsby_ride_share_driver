@@ -28,7 +28,7 @@ class NotificationRideModel {
   factory NotificationRideModel.fromJson(Map<String, dynamic> json) =>
       NotificationRideModel(
         notificationTypeId: json["notificationTypeId"],
-        id: RideData.fromJson(json["id"]),
+        id: json["id"] != null && json["id"] is Map ? RideData.fromJson(json["id"]) : RideData(),
         body: json["body"],
         title: json["title"],
         message: json["message"],

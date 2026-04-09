@@ -17,9 +17,11 @@ import 'package:appkey_taxiapp_driver/features/order/domain/usecases/get_request
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/customer_detail_state.dart';
 import 'package:appkey_taxiapp_driver/features/profile/presentation/providers/order_detail_state.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location/location.dart' as lctn;
 import 'package:location/location.dart';
 import '../../../features/order/domain/entities/order_detail.dart';
@@ -36,7 +38,6 @@ import '../../utility/session_helper.dart';
 import 'change_status_state.dart';
 
 class HomeProvider with ChangeNotifier {
-  //Constructor
   final GetProfile getProfile;
   final GetOrderDetail getOrderDetail;
   final GetRequestList getRequestList;
@@ -48,8 +49,6 @@ class HomeProvider with ChangeNotifier {
   late BitmapDescriptor pickUpMarker, destinationMarker;
   Location location = Location();
 
-
-  //Initial
   final lctn.Location locationService = lctn.Location();
   CameraPosition kJapanCoordinate = const CameraPosition(
     target: DEFAULT_LATLNG,
@@ -60,11 +59,8 @@ class HomeProvider with ChangeNotifier {
   bool _isOnline = false;
   late ProjectType _projectType = ProjectType.requests;
 
-  // late bool _isOrderExist = false;
-
   late GoogleMapController googleMapController;
 
-  // Completer<GoogleMapController> mapController = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   late BitmapDescriptor driverMarker;
   late BitmapDescriptor redMarker;
@@ -75,45 +71,25 @@ class HomeProvider with ChangeNotifier {
 
   Timer? refreshRequestList;
 
-  // getter
   bool get isOnline => _isOnline;
-
   CustomerDataModel? get customerDetailModel => _customerDetailModel;
-
   OrderDetail? get orderDetail => _orderDetail;
-
   ProjectType get projectType => _projectType;
 
-  // bool get isOrderExist => _isOrderExist;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-
   GlobalKey get globalKey => _key;
-
-  //setter
-  // set changeStatusOld(val) {
-  //   _isOnline = val;
-  //   // notifyListeners();
-  // }
 
   set changeStatus(val) {
     _isOnline = val;
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
-
-    print("_isOnline is :-->> $_isOnline");
-    print("_isOnline is :-->> l $isOnline");
-
-    // });
+    dev.log("_isOnline is :-->> $_isOnline");
   }
 
-  /// UDPATE ORDER DETAILS
   set setOrderDetails(OrderDetail value) {
     _orderDetail = value;
     notifyListeners();
   }
 
-  ///UPDATE CUSTOMER DETAILS
   set setCustomerDetails(CustomerDataModel value) {
     _customerDetailModel = value;
     notifyListeners();
@@ -124,12 +100,6 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // set setOrder(val) {
-  //   _isOrderExist = val;
-  //   notifyListeners();
-  // }
-
-  //clear state
   clearState() async {
     await sessionClearOrder();
     polylines.clear();
@@ -137,15 +107,15 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //constructor
-  HomeProvider(
-      {required this.getProfile,
-      required this.getCustomerDetail,
-      required this.getRequestList,
-      required this.updateStatusOrder,
-      required this.getOrderDetail,
-      required this.doUpdateLocation,
-      required this.changeStatus}) {
+  HomeProvider({
+    required this.getProfile,
+    required this.getCustomerDetail,
+    required this.getRequestList,
+    required this.updateStatusOrder,
+    required this.getOrderDetail,
+    required this.doUpdateLocation,
+    required this.changeStatus,
+  }) {
     getBytesFromAsset(carIconAsset, 100).then((value) {
       driverMarker = BitmapDescriptor.fromBytes(value);
     });
@@ -162,30 +132,18 @@ class HomeProvider with ChangeNotifier {
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
   }
 
   setCurrentLocation() async {
     try {
-      // showLoading();
       bool serviceStatus = await locationService.serviceEnabled();
       if (serviceStatus) {
         lctn.LocationData locationData = await locationService.getLocation();
         logMe("locationData");
         logMe(locationData);
-
-        // createDriverMarker(locationData, false);
-        // fetchProfile().listen((event) {});
-
-        //onlocation change
-        // locationService.onLocationChanged.listen((event) {
-        //   createDriverMarker(event, true);
-        // });
       } else {
         try {
           bool serviceStatusResult = await locationService.requestService();
@@ -206,38 +164,89 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  Stream<UpdateStatusOrderState> submitStatusOrder(int orderStatus) async* {
+  Stream<ChangeStatusState> updateStatus(
+      {bool isFromLogout = false, bool? targetOnline}) async* {
     showLoading();
-    yield UpdateStatusOrderLoading();
-    final formData = FormData.fromMap({
-      'id': session.runningOrderId,
-      'status': orderStatus,
-    });
-    final result = await updateStatusOrder.execute(formData);
+    yield ChangeStatusLoading();
+
+    final bool resolvedOnline =
+        isFromLogout ? false : (targetOnline ?? _isOnline);
+    final String driverStatus = resolvedOnline ? '1' : '0';
+
+    dev.log("*****************************************************************************************");
+    dev.log("Is driver online (resolved): $resolvedOnline | _isOnline: $_isOnline");
+    dev.log("*****************************************************************************************");
+
+    Map<String, dynamic> fields = {'status': driverStatus};
+
+    if (driverStatus == '1') {
+      // FCM token fresh lo
+      try {
+        final fcmToken =
+            await FirebaseMessaging.instance.getToken() ?? "";
+        if (fcmToken.isNotEmpty) {
+          fields['fcm_token'] = fcmToken;
+          session.setFcmToken = fcmToken;
+          dev.log("✅ FCM token fetched for set-status: $fcmToken");
+        } else {
+          dev.log("⚠️ FCM token empty");
+        }
+      } catch (e) {
+        dev.log("⚠️ FCM token error: $e");
+      }
+
+      // Location lo
+      try {
+        geo.LocationPermission permission =
+            await geo.Geolocator.checkPermission();
+        if (permission == geo.LocationPermission.denied) {
+          permission = await geo.Geolocator.requestPermission();
+        }
+
+        if (permission == geo.LocationPermission.whileInUse ||
+            permission == geo.LocationPermission.always) {
+          final position = await geo.Geolocator.getCurrentPosition()
+              .timeout(const Duration(seconds: 5));
+          fields['latitude'] = position.latitude.toString();
+          fields['longitude'] = position.longitude.toString();
+          fields['bearing'] = position.heading.toString();
+          dev.log(
+              "✅ Location fetched: lat=${position.latitude}, lng=${position.longitude}");
+        } else {
+          dev.log("⚠️ Location permission denied");
+        }
+      } catch (e) {
+        dev.log('⚠️ Location fetch error: $e');
+      }
+    }
+
+    dev.log("set-status body: ${fields.toString()}");
+    final result = await changeStatus.execute(fields);
+
     yield* result.fold((failure) async* {
-      logMe("failure");
+      dev.log("failure is called-->>");
       logMe(failure);
+      _isOnline = !resolvedOnline;
+      notifyListeners();
       dismissLoading();
-      yield UpdateStatusOrderFailure(failure: failure);
+      yield ChangeStatusFailure(failure: failure);
     }, (data) async* {
+      dev.log("success is called-->>");
+      if (driverStatus == '1') {
+        updateLocation(); // fire-and-forget — GPS block nahi karega
+      }
       dismissLoading();
-      yield UpdateStatusOrderLoaded(data: data);
+      yield ChangeStatusLoaded(data: data);
     });
   }
-
   Stream<RequestListState> getRequestListData() async* {
-    // showLoading();
     print('========== Refresh List =============');
     yield RequestListLoading();
-    final formData = FormData.fromMap({
-      // 'id': session.orderId,
-      // 'status': orderStatus,
-    });
+    final formData = FormData.fromMap({});
     final result = await getRequestList.call(formData);
     yield* result.fold((failure) async* {
       logMe("failure");
       logMe(failure);
-      // dismissLoading();
       yield RequestListFailure(failure: failure);
     }, (data) async* {
       dismissLoading();
@@ -249,8 +258,7 @@ class HomeProvider with ChangeNotifier {
     dev.log("Check notification current state is called ");
   }
 
-  Stream<RejectRequestState> rejectRequest(
-      String orderId, String reason) async* {
+  Stream<RejectRequestState> rejectRequest(String orderId, String reason) async* {
     showLoading();
     yield RejectRequestLoading();
     final formData = FormData.fromMap({
@@ -265,7 +273,6 @@ class HomeProvider with ChangeNotifier {
       yield RejectRequestFailure(failure: failure);
     }, (data) async* {
       dismissLoading();
-      // rejectRequestSocket();
       yield RejectRequestLoaded(data: data);
     });
   }
@@ -279,8 +286,7 @@ class HomeProvider with ChangeNotifier {
         logMe("locationData");
         logMe(locationData);
         dismissLoading();
-        googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
           target: LatLng(locationData.latitude!, locationData.longitude!),
           zoom: 18,
         )));
@@ -314,22 +320,15 @@ class HomeProvider with ChangeNotifier {
         anchor: const Offset(0.5, 0.5),
         markerId: markerId,
         position: LatLng(locationData.latitude!, locationData.longitude!),
-        // icon: driverMarker,
         rotation: locationData.heading!,
         onTap: () {},
       );
-
       if (!isListen) {
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(locationData.latitude!, locationData.longitude!),
-              zoom: 18,
-            ),
-          ),
-        );
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+          target: LatLng(locationData.latitude!, locationData.longitude!),
+          zoom: 18,
+        )));
       }
-
       markers[markerId] = marker;
       notifyListeners();
     } catch (e) {
@@ -337,10 +336,7 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  createPickupAndDropMarker(
-    LatLng pickup,
-    LatLng drop,
-  ) async {
+  createPickupAndDropMarker(LatLng pickup, LatLng drop) async {
     try {
       logMe('Create in creating marker --> ');
       MarkerId pickupMarkerId = const MarkerId("pickup");
@@ -352,7 +348,6 @@ class HomeProvider with ChangeNotifier {
         icon: await getBytesFromAsset(pickupIcon, 70).then((value) {
           return pickUpMarker = BitmapDescriptor.fromBytes(value);
         }),
-        // rotation: locationData.heading!,
         onTap: () {},
       );
       final Marker dropMarker = Marker(
@@ -362,50 +357,15 @@ class HomeProvider with ChangeNotifier {
         icon: await getBytesFromAsset(destinationIcon, 100).then((value) {
           return destinationMarker = BitmapDescriptor.fromBytes(value);
         }),
-        // rotation: locationData.heading!,
         onTap: () {},
       );
-
       markers[pickupMarkerId] = marker;
       markers[dropMarkerId] = dropMarker;
       notifyListeners();
-      // googleMapController.animateCamera(
-      //   CameraUpdate.newCameraPosition(
-      //     CameraPosition(
-      //       target: pickup,
-      //       zoom: 17,
-      //     ),
-      //   ),
-      // );
-
       List<Marker> listMarker = [];
       markers.forEach((k, v) => listMarker.add(v));
-      CameraUpdate cameraUpdate =
-          CameraUpdate.newLatLngBounds(getBounds(listMarker), 75);
+      CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(getBounds(listMarker), 75);
       googleMapController.animateCamera(cameraUpdate);
-
-      // googleMapController.animateCamera(CameraUpdate.newLatLngBounds(
-      //   getBounds(markers), 75)
-      //     LatLngBounds(
-      //       southwest: LatLng(
-      //           pickup.latitude <= drop.latitude
-      //               ? pickup.latitude
-      //               : drop.latitude,
-      //           pickup.longitude <= drop.longitude
-      //               ? pickup.longitude
-      //               : drop.longitude),
-      //       northeast: LatLng(
-      //         pickup.latitude <= drop.latitude
-      //             ? drop.latitude
-      //             : pickup.latitude,
-      //         pickup.longitude <= drop.longitude
-      //             ? drop.longitude
-      //             : pickup.longitude,
-      //       ),
-      //     )
-      // )
-      // );
-
       logMe('Marker created -- --> ${markers.length}');
     } catch (e) {
       logMe('Error in creating marker --> $e');
@@ -415,51 +375,48 @@ class HomeProvider with ChangeNotifier {
   LatLngBounds getBounds(List<Marker> markers) {
     var lngs = markers.map<double>((m) => m.position.longitude).toList();
     var lats = markers.map<double>((m) => m.position.latitude).toList();
-
     double topMost = lngs.reduce(Math.max);
     double leftMost = lats.reduce(Math.min);
     double rightMost = lats.reduce(Math.max);
     double bottomMost = lngs.reduce(Math.min);
-
-    LatLngBounds bounds = LatLngBounds(
+    return LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-
-    return bounds;
   }
 
   setPolylineDirection(LatLng origin, LatLng destination) async {
     polylines.clear();
     await DirectionHelper()
-        .getRouteBetweenCoordinates(origin.latitude, origin.longitude,
-            destination.latitude, destination.longitude)
-        .then(
-      (result) {
-        logMe('Polyline ---> ${result.toString()}');
-        if (result.isNotEmpty) {
-          polylineCoordinates = [];
-          for (var point in result) {
-            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-          }
-
-          Polyline polyline = Polyline(
-              polylineId: const PolylineId("jalur"),
-              color: Colors.black,
-              points: polylineCoordinates,
-              width: 5,
-              startCap: Cap.roundCap,
-              endCap: Cap.roundCap);
-          polylines.add(polyline);
-          logMe('Polyline in the list - ${polylines.toString()}');
-          notifyListeners();
+        .getRouteBetweenCoordinates(
+          origin.latitude,
+          origin.longitude,
+          destination.latitude,
+          destination.longitude,
+        )
+        .then((result) {
+      logMe('Polyline ---> ${result.toString()}');
+      if (result.isNotEmpty) {
+        polylineCoordinates = [];
+        for (var point in result) {
+          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         }
-      },
-    );
+        Polyline polyline = Polyline(
+          polylineId: const PolylineId("jalur"),
+          color: Colors.black,
+          points: polylineCoordinates,
+          width: 5,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+        );
+        polylines.add(polyline);
+        logMe('Polyline in the list - ${polylines.toString()}');
+        notifyListeners();
+      }
+    });
   }
 
   Stream<ProfileState> fetchProfile() async* {
-    // showLoading();
     yield ProfileLoading();
     final result = await getProfile();
     yield* result.fold((failure) async* {
@@ -475,7 +432,6 @@ class HomeProvider with ChangeNotifier {
       }
       await FirebaseHelper.setTopicDriver(data.statusOrder!).then((_) {});
       dismissLoading();
-
       yield ProfileLoaded(data: data);
     });
   }
@@ -490,17 +446,12 @@ class HomeProvider with ChangeNotifier {
       yield OrderDetailFailure(failure: failure.message);
     }, (data) async* {
       _orderDetail = data;
-
       setActualDistance(
-          originLat:
-              double.parse(_orderDetail!.startCoordinate.split(',').first),
-          originLong:
-              double.parse(_orderDetail!.startCoordinate.split(',').last),
-          destinationLat:
-              double.parse(_orderDetail!.endCoordinate.split(',').first),
-          destinationLong:
-              double.parse(_orderDetail!.endCoordinate.split(',').last));
-
+        originLat: double.parse(_orderDetail!.startCoordinate.split(',').first),
+        originLong: double.parse(_orderDetail!.startCoordinate.split(',').last),
+        destinationLat: double.parse(_orderDetail!.endCoordinate.split(',').first),
+        destinationLong: double.parse(_orderDetail!.endCoordinate.split(',').last),
+      );
       notifyListeners();
       yield OrderDetailLoaded(data: data);
     });
@@ -508,7 +459,9 @@ class HomeProvider with ChangeNotifier {
 
   setActualDistance({destinationLat, destinationLong, originLat, originLong}) async {
     try {
-      var response = await Dio().get('https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs');
+      var response = await Dio().get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destinationLat,$destinationLong&origins=$originLat,$originLong&key=AIzaSyAEcqthk6N17_4Q3pyqDrKAQPpiYURZxJs',
+      );
       dev.log(" response of real distance:--->>> ${response.data}");
       var data = GoogleRouteDistanceResponseModal.fromJson(response.data);
       session.setEstimatedDistance = (data.rows[0].elements[0].distance.value / 1000).toString();
@@ -535,46 +488,13 @@ class HomeProvider with ChangeNotifier {
     });
   }
 
-  Stream<ChangeStatusState> updateStatus({bool isFromLogout = false}) async* {
-    showLoading();
-    yield ChangeStatusLoading();
-    String driverStatus;
-    if (!isFromLogout) {
-      if (_isOnline) {
-        driverStatus = '1';
-      } else {
-        driverStatus = '0';
-      }
-    } else {
-      driverStatus = '0';
-    }
-
-    final formData = FormData.fromMap({
-      'api_token': session.sessionToken,
-      'status': driverStatus,
-    });
-
-    final result = await changeStatus.execute(formData);
-    yield* result.fold((failure) async* {
-      print("failure is called-->>");
-      logMe(failure);
-      dismissLoading();
-      yield ChangeStatusFailure(failure: failure);
-    }, (data) async* {
-      print("success is called-->>");
-
-      if (driverStatus == '1') {
-        await updateLocation();
-      }
-      // await FirebaseHelper.setTopicDriver(driverStatus).then((_) {});
-      dismissLoading();
-      yield ChangeStatusLoaded(data: data);
-    });
-  }
 
   updateLocation() async {
     dev.log("Update location function called");
-    await locationService.getLocation().then((value) {
+    await locationService.getLocation().timeout(const Duration(seconds: 5), onTimeout: () {
+      dev.log("⚠️ updateLocation GPS timeout");
+      throw Exception("GPS timeout");
+    }).then((value) {
       var bearing = value.heading;
       var lat = value.latitude;
       var lng = value.longitude;
@@ -585,47 +505,26 @@ class HomeProvider with ChangeNotifier {
           logMe("curent coordinates are:-->> $coordinate");
         }
       });
+    }).catchError((e) {
+      dev.log("updateLocation error: $e");
     });
   }
 
-  Stream<UpdateLocationState> submitLocation(
-      String latLng, String bearing) async* {
+  Stream<UpdateLocationState> submitLocation(String latLng, String bearing) async* {
     dev.log("Submt location function called");
     yield UpdateLocationLoading();
-
+    final parts = latLng.split(',');
     final formData = FormData.fromMap({
-      'coordinate': latLng,
+      'lat': parts[0],
+      'lng': parts[1],
       'bearing': bearing,
     });
-
     final result = await doUpdateLocation.execute(formData);
     yield* result.fold((failure) async* {
       logMe(failure);
-
       yield UpdateLocationFailure(failure: failure);
     }, (data) async* {
       yield UpdateLocationLoaded(data: data);
     });
   }
-
-  // getDriverStatus() async {
-  //   var response = await dio.get(
-  //       'https://php.parastechnologies.in/taxi/public/api/webservice/driver/get-status',
-  //       options: Options(
-  //         headers: {"Authorization": "Bearer ${session.sessionToken}"},
-  //       ));
-
-  //   if (response.statusCode == 200) {
-  //     if (response.data["status"] == "online") {
-  //       session.setIsOnline = true;
-  //       changeStatus = true;
-  //       notifyListeners();
-  //     } else if (response.data["status"] == "offline") {
-  //       session.setIsOnline = false;
-  //       changeStatus = false;
-  //       notifyListeners();
-  //     }
-  //   }
-  //   dev.log("driver status is :--->>  ${response.data}");
-  // }
 }

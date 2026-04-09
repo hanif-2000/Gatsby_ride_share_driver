@@ -39,26 +39,15 @@ class ProfileDataSourceImplementation implements ProfileDataSource {
 
       if (response.data['message'] == "Account Suspended") {
         showToast(message: "Account Suspended");
+        throw Exception("Account Suspended");
       }
-      final model = ProfileResponseModel.fromJson(response.data);
-
-      log("get profile data is ${model.data}");
-
-      if (model.success == 1) {
-        log("success is 1");
-        return model.data;
+      final rawData = response.data['data'] ?? response.data['driver'];
+      if (rawData == null) {
+        throw Exception(response.data['message'] ?? 'Profile data not found');
       }
-      // else if ((response.data["message"] == "Account Suspended") &&
-      //     (response.data["success"] == 0)) {
-      //   log("success is 0");
-      //   log("account suspended");
-      //   showToast(message: "Account Suspended");
-
-      //   return response.data["message"];
-      // }
-      else {
-        return response.data["message"];
-      }
+      final model = ProfileDataModel.fromJson(rawData);
+      log("get profile data is $model");
+      return model;
     } catch (e) {
       rethrow;
     }

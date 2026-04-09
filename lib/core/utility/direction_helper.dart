@@ -12,15 +12,25 @@ class DirectionHelper {
 
   Future<List<PointLatLng>> getRouteBetweenCoordinates(double originLat, double originLong, double destLat, double destLong) async {
     List<PointLatLng> polylinePoints = [];
-    print("/*********\n direction poly lines origin:  -->> $originLong,$originLat\n*****\ndirection poly lines destination:  -->> $destLat,$destLong");
+    
+    print("/*********\n direction poly lines origin:  -->> $originLat,$originLong\n*****\ndirection poly lines destination:  -->> $destLat,$destLong");
+    
     try {
-    String url = "https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLong&destination=$destLat,$destLong&mode=driving&avoid=tolls&key=$googleApiKey";
-    var response = await http.get(Uri.parse(url));
+      String url = "https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLong&destination=$destLat,$destLong&mode=driving&avoid=tolls&key=$googleApiKey";
+      var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        polylinePoints = decodeEncodedPolyline(json.decode(response.body)["routes"][0]["overview_polyline"]["points"]);
+        final body = json.decode(response.body);
+        final routes = body["routes"];
+        if (routes != null && routes.isNotEmpty) {
+          polylinePoints = decodeEncodedPolyline(routes[0]["overview_polyline"]["points"]);
+        } else {
+          logMe("No routes found for: $originLat,$originLong → $destLat,$destLong");
+        }
+      } else {
+        logMe("Directions API error: ${response.statusCode}");
       }
     } catch (error) {
-      logMe(error);
+      logMe("getRouteBetweenCoordinates error: $error");
     }
     return polylinePoints;
   }
@@ -49,8 +59,8 @@ class DirectionHelper {
       } while (b >= 0x20);
       int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
       lng += dlng;
-      PointLatLng p =
-          PointLatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
+
+      PointLatLng p = PointLatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
       poly.add(p);
     }
     return poly;

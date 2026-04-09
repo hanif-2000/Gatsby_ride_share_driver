@@ -49,8 +49,8 @@ class ChatModel {
         message: json["message"],
         status: json["status"],
         messageType: json["MessageType"],
-        modifiedOn: DateTime.parse(json["modified_on"]),
-        createdOn: DateTime.parse(json["created_on"]),
+        modifiedOn: json["modified_on"] != null ? DateTime.parse(json["modified_on"]) : DateTime.now(),
+        createdOn: json["created_on"] != null ? DateTime.parse(json["created_on"]) : DateTime.now(),
       );
 
   Map<String, dynamic> toMap() => {

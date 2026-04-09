@@ -14,7 +14,9 @@ class CustomerDetailModel extends Equatable {
 
   factory CustomerDetailModel.fromJson(Map<String, dynamic> json) =>
       CustomerDetailModel(
-        data: CustomerDataModel.fromJson(json['data']),
+        data: json['data'] != null
+            ? CustomerDataModel.fromJson(json['data'])
+            : const CustomerDataModel(name: '', phoneNumber: '', photo: '', id: 0, rating: 0),
         success: json['success'] ?? 1,
       );
 

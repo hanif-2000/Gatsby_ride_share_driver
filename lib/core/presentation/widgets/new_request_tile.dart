@@ -128,7 +128,7 @@ class NewRequestTile extends StatelessWidget {
 
                         // 'CA\$ ${request.newTotal.toStringAsFixed(2)}',
 
-                        'CA\$ ${request[index].newTotal}' ?? "total",
+                        'CA\$ ${request[index].newTotal ?? request[index].total ?? "—"}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,
@@ -136,7 +136,7 @@ class NewRequestTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '${request[index].distance} Km',
+                        '${request[index].distance ?? "—"} Km',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,

@@ -16,14 +16,16 @@ class LoginResponseModel extends Equatable {
   @override
   List<Object?> get props => [data, success, token];
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
-      LoginResponseModel(
-        data:
-            json['user'] == null ? null : LoginDataModel.fromJson(json['user']),
-        token: json['token'] ?? '',
-        success: json['success'] ?? 1,
-        message: json['message'] ?? '',
-      );
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    final dataObj = json['data'] as Map<String, dynamic>?;
+    final userObj = dataObj?['user'] as Map<String, dynamic>?;
+    return LoginResponseModel(
+      data: userObj == null ? null : LoginDataModel.fromJson(userObj),
+      token: dataObj?['token'] ?? '',
+      success: (json['status'] == true) ? 1 : 0,
+      message: json['message'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'data': data == null ? '' : data!.toJson(),
@@ -40,10 +42,10 @@ class LoginDataModel extends Equatable {
   final String phoneNumber;
   final String fcmToken;
   final int status;
+  final int verificationStatus;
   final String image;
   final dynamic categoryId;
   final String chatToken;
-  // dynamic orderStatus;
 
   const LoginDataModel(
       {required this.driverId,
@@ -52,14 +54,14 @@ class LoginDataModel extends Equatable {
       required this.phoneNumber,
       required this.fcmToken,
       required this.status,
+      required this.verificationStatus,
       required this.categoryId,
       required this.chatToken,
-      // required this.orderStatus,
       required this.image});
 
   @override
   List<Object?> get props =>
-      [driverId, name, email, phoneNumber, fcmToken, status, image, categoryId];
+      [driverId, name, email, phoneNumber, fcmToken, status, verificationStatus, image, categoryId];
 
   factory LoginDataModel.fromJson(Map<String, dynamic> json) => LoginDataModel(
       driverId: json['id'],
@@ -71,8 +73,8 @@ class LoginDataModel extends Equatable {
       chatToken:
           json['chat_token'] != null ? json['chat_token'].toString() : '',
       categoryId: json['vehicle_category_id'] ?? '',
-      // orderStatus: json["order_status"] ?? '0',
-      status: json['status'] ?? '');
+      verificationStatus: json['verification_status'] ?? 0,
+      status: json['status'] is bool ? (json['status'] == true ? 1 : 0) : json['status'] ?? 0);
 
   Map<String, dynamic> toJson() => {
         'id': driverId,
@@ -84,5 +86,6 @@ class LoginDataModel extends Equatable {
         'image': image,
         'chat_token': chatToken,
         'status': status,
+        'verification_status': verificationStatus,
       };
 }

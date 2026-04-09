@@ -14,8 +14,8 @@ class OrderDetailResponseModel extends OrderDetailResponse {
 
   factory OrderDetailResponseModel.fromJson(Map<String, dynamic> json) =>
       OrderDetailResponseModel(
-          success: json['success'],
-          data: DetailOrderModel.fromJson(json["order"]));
+          success: json['success'] ?? 0,
+          data: DetailOrderModel.fromJson(json["order"] ?? json["data"] ?? {}));
   @override
   Map<String, dynamic> toJson() => {
         'success': success,

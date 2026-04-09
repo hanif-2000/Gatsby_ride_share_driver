@@ -121,15 +121,15 @@ class RequestListModel extends Equatable {
         oneWay: json["one_way"],
         pendingAmount: json["pending_amount"],
         newTotal: json["new_total"],
-        orderTime: DateTime.parse(json["order_time"]),
+        orderTime: json["order_time"] != null && json["order_time"].toString().isNotEmpty
+            ? DateTime.parse(json["order_time"])
+            : DateTime.now(),
         paymentMethod: json["payment_method"],
         status: json["status"],
         total: json["total"],
-        rating: json["rating"] != null
-            ? int.tryParse(json['rating'].toString())
-            : 0,
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        rating: json["rating"] != null ? int.tryParse(json['rating'].toString()) : 0,
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
+        updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : DateTime.now(),
         firstName: json["first_name"],
         lastName: json["last_name"],
         image: json["image"] ?? '',

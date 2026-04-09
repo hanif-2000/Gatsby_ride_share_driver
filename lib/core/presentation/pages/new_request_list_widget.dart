@@ -82,9 +82,9 @@ class _RequestListWidgetState extends State<RequestListWidget>
       builder: (context, LatestSocketProvider socketProvider, _) {
         return Consumer<HomeProvider>(
             builder: (context, HomeProvider homeProvider, _) {
-          return !session.isOnline
+          return !homeProvider.isOnline
               ? Center(
-                  child: NoProjects(isOffline: !session.isOnline, text: myText),
+                  child: NoProjects(isOffline: true, text: myText),
                 )
               : socketProvider.bookingList.isEmpty
                   ? Center(
@@ -100,68 +100,50 @@ class _RequestListWidgetState extends State<RequestListWidget>
                         itemBuilder: (context, index) {
                           return NewRequestTile(
                             onAccept: () {
-                              // Accept the Ride
-                              socketProvider.acceptRideRequest(orderId: socketProvider.bookingList[index].id).then((value) {
-                                print(
-                                    "estimated time is :-->> ${socketProvider.bookingList[index].estimatedTime}");
-                                print(
-                                    "estimated distance is :-->> ${socketProvider.bookingList[index].distance}");
-
-                                print(
-                                    "customer id is:-> ${socketProvider.bookingList[index].customerId}");
+                              // Accept the Ride — capture booking before async so index stays valid
+                              final booking = socketProvider.bookingList[index];
+                              socketProvider.acceptRideRequest(orderId: booking.id).then((value) {
                                 var session = locator<Session>();
+                                final int orderId = int.tryParse(booking.id.toString()) ?? 0;
+                                final int customerId = int.tryParse(booking.customerId.toString()) ?? 0;
                                 session.setIsOrderRunning = true;
-                                session.setEstimatedTime = socketProvider.bookingList[index].estimatedTime;
-                                session.setEstimatedDistance = socketProvider.bookingList[index].distance.toString();
-                                session.setRunningOrderId = int.parse(socketProvider.bookingList[index].id.toString());
-                                session.setCustomerId = int.parse(socketProvider.bookingList[index].customerId.toString());
+                                session.setEstimatedTime = booking.estimatedTime;
+                                session.setEstimatedDistance = booking.distance.toString();
+                                session.setRunningOrderId = orderId;
+                                session.setCustomerId = customerId;
 
-                                /*** ORDER DETAILS  */
-
-                                print("order id:-->>${socketProvider.bookingList[index].id}");
-                                print("total order id:-->>${socketProvider.bookingList[index].newTotal}");
-                                print("customerId order id:-->>${socketProvider.bookingList[index].customerId}");
-                                print("order id:-->>${socketProvider.bookingList[index].id}");
-                                print("distance order id:-->>${socketProvider.bookingList[index].distance}");
-                                print("start coordinate order id:-->>${socketProvider.bookingList[index].startCoordinate}");
-                                print("endCoordinate order id:-->>${socketProvider.bookingList[index].endCoordinate}");
-                                print("startAddress order id:-->>${socketProvider.bookingList[index].startAddress}");
-                                print("end address order id:-->>${socketProvider.bookingList[index].id}");
-                                logMe("customer id from session id:-->> ${session.customerId}");
-
+                                // newTotal empty ho to total fallback use karo
+                                final effectiveTotal = (booking.newTotal?.toString().isNotEmpty == true &&
+                                        booking.newTotal.toString() != '0')
+                                    ? booking.newTotal
+                                    : booking.total;
                                 homeProvider.setOrderDetails = OrderDetail(
-                                  orderId: int.parse(socketProvider.bookingList[index].id.toString()),
-                                  totalPrice: socketProvider.bookingList[index].total,
-                                  userId: int.parse(socketProvider.bookingList[index].customerId.toString()),
-                                  driverId: int.parse(session.userId),
-                                  distance: socketProvider.bookingList[index].distance.toString(),
+                                  orderId: orderId,
+                                  totalPrice: booking.total,
+                                  userId: customerId,
+                                  driverId: int.tryParse(session.userId) ?? 0,
+                                  distance: booking.distance.toString(),
                                   orderStatus: 0,
-                                  startCoordinate: socketProvider.bookingList[index].startCoordinate??"0.0",
-                                  endCoordinate: socketProvider.bookingList[index].endCoordinate??"0.0",
-                                  startAddress: socketProvider.bookingList[index].startAddress??"",
-                                  endAddress: socketProvider.bookingList[index].endAddress??"",
-                                  pendingAmount: socketProvider.bookingList[index].pendingAmount.toString(),
-                                  newTotal: socketProvider.bookingList[index].newTotal,
+                                  startCoordinate: booking.startCoordinate ?? "0.0",
+                                  endCoordinate: booking.endCoordinate ?? "0.0",
+                                  startAddress: booking.startAddress ?? "",
+                                  endAddress: booking.endAddress ?? "",
+                                  pendingAmount: booking.pendingAmount.toString(),
+                                  newTotal: effectiveTotal,
                                 );
                                 homeProvider.setCustomerDetails = CustomerDataModel(
-                                  name: socketProvider.bookingList[index].name??"",
-                                  phoneNumber: socketProvider.bookingList[index].phone,
-                                  photo: socketProvider.bookingList[index].image,
-                                  id: int.parse(socketProvider.bookingList[index].customerId.toString()),
-                                  rating: socketProvider.bookingList[index].customerRating,
-
+                                  name: booking.name ?? "",
+                                  phoneNumber: booking.phone,
+                                  photo: booking.image,
+                                  id: customerId,
+                                  rating: booking.customerRating,
                                 );
-
-                                print("=========\nOrder details  home provider are:-->. ${homeProvider.orderDetail!}");
-                                print("=========\nCustomer details are:-->. ${homeProvider.customerDetailModel!}");
 
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   NewOrderPage.routeName,
                                   (route) => false,
                                   arguments: NewOrderPageArguments(
-                                    // orderTotal: socketProvider
-                                    //     .bookingList[index].newTotal,
                                     orderDetail: homeProvider.orderDetail!,
                                     customerDetailModel: homeProvider.customerDetailModel!,
                                     orderStatus: 0,

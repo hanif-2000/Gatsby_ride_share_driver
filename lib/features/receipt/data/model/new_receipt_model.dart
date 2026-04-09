@@ -19,7 +19,7 @@ class NewReceiptModel {
         message: json["message"],
         type: json["type"],
         orderId: json["OrderID"],
-        receiptData: ReceiptData.fromJson(json["data"]),
+        receiptData: ReceiptData.fromJson(json["data"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,7 +117,7 @@ class ReceiptData {
         name: json["name"] ?? "",
         image: json["image"] ?? "",
         longitude: json["Longitude"] ?? "0",
-        createdAt: DateTime.parse(json["created_at"]),
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
         latitude: json["Latitude"] ?? "0",
         phone: json["phone"] ?? "0",
         priceKm: json["price_km"] ?? "0",

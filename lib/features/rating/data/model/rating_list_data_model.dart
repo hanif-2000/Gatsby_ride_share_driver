@@ -20,8 +20,9 @@ class RatingListDataModel {
         rating: json["rating"] != null
             ? double.parse(json["rating"].toString())
             : 0,
-        list: List<RatingItem>.from(
-            json["list"].map((x) => RatingItem.fromMap(x))),
+        list: json["list"] != null
+            ? List<RatingItem>.from(json["list"].map((x) => RatingItem.fromMap(x)))
+            : [],
         ratingCount: json["ratingCount"],
       );
 
@@ -59,7 +60,7 @@ class RatingItem {
             ? double.tryParse(json["rating"].toString())!
             : 0.0,
         review: json["review"] ?? '',
-        createdAt: DateTime.parse(json["created_at"]),
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
       );
 
   Map<String, dynamic> toMap() => {

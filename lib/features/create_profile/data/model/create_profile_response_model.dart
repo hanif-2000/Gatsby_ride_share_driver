@@ -11,7 +11,8 @@ class CreateProfileResponseModel extends Equatable {
 
   factory CreateProfileResponseModel.fromJson(Map<String, dynamic> json) =>
       CreateProfileResponseModel(
-          success: json['success'], message: json['message']);
+          success: json['status'] == true ? 1 : (json['success'] ?? 0),
+          message: json['message']);
 
   Map<String, dynamic> toJson() => {
         'success': success,

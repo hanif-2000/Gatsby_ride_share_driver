@@ -21,10 +21,10 @@ class HistoryResponseModel {
 
   factory HistoryResponseModel.fromJson(Map<String, dynamic> json) =>
       HistoryResponseModel(
-        success: json["success"],
-        historyOrder: json["history_order"] != null
+        success: (json["status"] == true || json["success"] == 1) ? 1 : 0,
+        historyOrder: (json["data"] ?? json["history_order"]) != null
             ? List<HistoryOrder>.from(
-                json["history_order"].map((x) => HistoryOrder.fromJson(x)))
+                (json["data"] ?? json["history_order"]).map((x) => HistoryOrder.fromJson(x)))
             : [],
       );
 
@@ -190,9 +190,12 @@ class HistoryOrder {
         taxiType: json["taxi_type"],
         paymentStatus: json["payment_status"],
         timestamp: json["timestamp"],
-        vehicleCategory: VehicleCategory.fromJson(json["vehicle_category"]),
-        ratingList: List<RatingList>.from(
-            json["rating_list"].map((x) => RatingList.fromJson(x))),
+        vehicleCategory: json["vehicle_category"] != null && json["vehicle_category"] is Map
+            ? VehicleCategory.fromJson(json["vehicle_category"])
+            : VehicleCategory.empty(),
+        ratingList: json["rating_list"] != null
+            ? List<RatingList>.from(json["rating_list"].map((x) => RatingList.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -281,8 +284,8 @@ class RatingList {
         review: json["review"] ?? '',
         type: json["type"] ?? 1,
         status: json["status"] ?? 1,
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
+        updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : DateTime.now(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -332,21 +335,27 @@ class VehicleCategory {
     required this.deletedAt,
   });
 
+  factory VehicleCategory.empty() => VehicleCategory(
+        id: 0, category: '', priceKm: 0, priceMin: 0, techFee: 0,
+        baseFare: 0, distance: 0, minKm: 0, minPrice: 0, extraKm: 0,
+        seat: '', createdAt: DateTime.now(), updatedAt: DateTime.now(), deletedAt: null,
+      );
+
   factory VehicleCategory.fromJson(Map<String, dynamic> json) =>
       VehicleCategory(
-        id: json["id"],
-        category: json["category"],
-        priceKm: json["price_km"]?.toDouble(),
-        priceMin: json["price_min"]?.toDouble(),
-        techFee: json["tech_fee"],
-        baseFare: json["base_fare"]?.toDouble(),
-        distance: json["distance"],
-        minKm: json["min_km"]?.toDouble(),
-        minPrice: json["min_price"],
-        extraKm: json["extra_km"],
-        seat: json["seat"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        id: json["id"] ?? 0,
+        category: json["category"] ?? '',
+        priceKm: (json["price_km"] ?? 0).toDouble(),
+        priceMin: (json["price_min"] ?? 0).toDouble(),
+        techFee: json["tech_fee"] ?? 0,
+        baseFare: (json["base_fare"] ?? 0).toDouble(),
+        distance: json["distance"] ?? 0,
+        minKm: (json["min_km"] ?? 0).toDouble(),
+        minPrice: json["min_price"] ?? 0,
+        extraKm: json["extra_km"] ?? 0,
+        seat: json["seat"] ?? '',
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
+        updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : DateTime.now(),
         deletedAt: json["deleted_at"],
       );
 

@@ -126,7 +126,7 @@ class PushNotificationService {
       _pushNextScreenFromForeground(notificationEntity);
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      if (Platform.isIOS || (session.userId.isEmpty)) {
+      if (session.userId.isEmpty) {
         return;
       }
       print("Foreground notification received:  ${message.data}");
@@ -136,6 +136,10 @@ class PushNotificationService {
       notificationEntity.body = notificationEntity.body;
       _showNotifications(notificationEntity);
     });
+  }
+
+  Future<void> showNewRideNotification({required String title, required String body}) async {
+    await _showNotifications(NotificationEntity(title: title, body: body, type: 'CustomerBookRequest'));
   }
 
   Future<void> clearAllNotifications() async {
@@ -165,7 +169,12 @@ class PushNotificationService {
             playSound: true,
             priority: Priority.high,
             importance: Importance.high,
-            styleInformation: BigTextStyleInformation(notificationEntity.body!),
+            styleInformation: BigTextStyleInformation(notificationEntity.body ?? ''),
+          ),
+          iOS: const DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
           ),
         ),
         payload: convertNotificationEntityToString(notificationEntity));

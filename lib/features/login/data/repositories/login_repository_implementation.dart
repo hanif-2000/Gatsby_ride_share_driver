@@ -22,9 +22,34 @@ class LoginRepositoryImplementation implements LoginRepository {
       } else {
         return Left(ServerFailure(message: data.message));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       logMe("Failure login repository ${e.toString()}");
-      return Left(ServerFailure(message: e.message));
+      final statusCode = e.response?.statusCode;
+      final responseData = e.response?.data;
+
+      // Try to extract server message from response body
+      String? serverMessage;
+      if (responseData is Map) {
+        serverMessage = responseData['message']?.toString() ??
+            responseData['error']?.toString();
+      }
+
+      if (statusCode == 422) {
+        return Left(ServerFailure(message: serverMessage ?? "Invalid email or password. Please check your credentials."));
+      }
+      if (statusCode == 403) {
+        return Left(ServerFailure(message: serverMessage ?? "Your account is under review. Please wait for admin approval."));
+      }
+      if (statusCode == 401) {
+        return Left(ServerFailure(message: serverMessage ?? "Incorrect email or password."));
+      }
+      if (statusCode != null && statusCode >= 500) {
+        return Left(ServerFailure(message: "Server error. Please try again later."));
+      }
+      return Left(ServerFailure(message: serverMessage ?? "Something went wrong. Please try again."));
+    } catch (e) {
+      logMe("Failure login repository ${e.toString()}");
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 }

@@ -21,8 +21,8 @@ class NewCustomerResponseDataModel {
 
   factory NewCustomerResponseDataModel.fromJson(Map<String, dynamic> json) =>
       NewCustomerResponseDataModel(
-        success: json["success"],
-        data: Data.fromJson(json["data"]),
+        success: json["success"] ?? 0,
+        data: json["data"] != null ? Data.fromJson(json["data"]) : Data.empty(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,9 +40,16 @@ class Data {
     required this.customerDetail,
   });
 
+  factory Data.empty() => Data(
+        driverDetail: '',
+        customerDetail: CustomerDetail.empty(),
+      );
+
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        driverDetail: json["driver_detail"],
-        customerDetail: CustomerDetail.fromJson(json["customer_detail"]),
+        driverDetail: json["driver_detail"] ?? '',
+        customerDetail: json["customer_detail"] != null
+            ? CustomerDetail.fromJson(json["customer_detail"])
+            : CustomerDetail.empty(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,31 +111,39 @@ class CustomerDetail {
     required this.pendingAmount,
   });
 
+  factory CustomerDetail.empty() => CustomerDetail(
+        id: 0, name: '', firstName: '', lastName: '', email: '', phone: '',
+        otp: null, country: '', loginType: '', socialId: null, firebaseUid: null,
+        fcmToken: '', deviceType: '', chatToken: '', verificationStatus: 0,
+        status: 0, firstOrder: 0, image: '', latitude: null, longitude: null,
+        createdAt: DateTime.now(), updatedAt: DateTime.now(), deletedAt: null, pendingAmount: 0,
+      );
+
   factory CustomerDetail.fromJson(Map<String, dynamic> json) => CustomerDetail(
-        id: json["id"],
-        name: json["name"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        email: json["email"],
-        phone: json["phone"],
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        firstName: json["first_name"] ?? '',
+        lastName: json["last_name"] ?? '',
+        email: json["email"] ?? '',
+        phone: json["phone"] ?? '',
         otp: json["otp"],
-        country: json["country"],
-        loginType: json["login_type"],
+        country: json["country"] ?? '',
+        loginType: json["login_type"] ?? '',
         socialId: json["social_id"],
         firebaseUid: json["firebase_uid"],
-        fcmToken: json["fcm_token"],
-        deviceType: json["device_type"],
-        chatToken: json["chat_token"],
-        verificationStatus: json["verification_status"],
-        status: json["status"],
-        firstOrder: json["first_order"],
-        image: json["image"],
+        fcmToken: json["fcm_token"] ?? '',
+        deviceType: json["device_type"] ?? '',
+        chatToken: json["chat_token"]?.toString() ?? '',
+        verificationStatus: json["verification_status"] ?? 0,
+        status: json["status"] is bool ? (json["status"] ? 1 : 0) : json["status"] ?? 0,
+        firstOrder: json["first_order"] ?? 0,
+        image: json["image"] ?? '',
         latitude: json["Latitude"],
         longitude: json["Longitude"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
+        updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : DateTime.now(),
         deletedAt: json["deleted_at"],
-        pendingAmount: json["pending_amount"],
+        pendingAmount: json["pending_amount"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

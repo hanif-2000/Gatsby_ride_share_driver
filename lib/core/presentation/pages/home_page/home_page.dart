@@ -25,7 +25,7 @@ import '../../providers/home_provider.dart';
 import '../new_request_list_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
   static const routeName = '/home';
 
   @override
@@ -34,28 +34,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final FcmProvider _fcmProvider = locator<FcmProvider>();
-
-  // var provider = locator<HomeProvider>();
- // var socketProvider = locator<LatestSocketProvider>();
-  // var homeProvider = locator<HomeProvider>();
-
   var session = locator<Session>();
 
   Future<void> retrieveOrderReceiptFromLocal() async {
     final socketProvider = context.read<LatestSocketProvider>();
-    // Retrieve the JSON string from local storage
     String? jsonData = session.orderReceipt;
-    // ReceiptData dataMap = json.decode(jsonData);
+    if (jsonData == null || jsonData.isEmpty || !jsonData.trimLeft().startsWith('{')) {
+      log("retrieveOrderReceiptFromLocal: no valid receipt data found — $jsonData");
+      return;
+    }
     Map<String, dynamic> jsonMap = json.decode(jsonData);
-    // Map the data to your ReceiptResponseModel
     ReceiptData receiptData = ReceiptData.fromJson(jsonMap);
     log("new ----${receiptData.newTotal}");
 
     socketProvider.updateReceiptData(data: receiptData).then((value) {
       logMe("RECEIPT DATA UPDATED SUCCESS");
       log("order receipt data from session :-->> ${socketProvider.receiptData}");
-      print(
-          "order receipt data from session :-->> ${socketProvider.receiptData!.newTotal}");
+      print("order receipt data from session :-->> ${socketProvider.receiptData!.newTotal}");
     });
   }
 
@@ -63,14 +58,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     final socketProvider = context.read<LatestSocketProvider>();
-    socketProvider.onInit();
+
+    log("🏠 HomePage initState — calling socket in 500ms");
+    Future.delayed(const Duration(milliseconds: 500), () {
+      log("🔌 Socket onInit calling — userId: ${session.userId}");
+      socketProvider.onInit();
+    });
+
     socketProvider.resetAfterRideEnd();
+
     var homeProvider = Provider.of<HomeProvider>(context, listen: false);
     print("********************* ------->>>>>. IS ORDER RUNNING :: ${session.isOrderRunning} <<<<<<<----------*****");
     print("********************* ------->>>>>. IS ORDER RUNNING STATUS:: ${session.runningOrderStatus} <<<<<<<----------*****");
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       homeProvider.changeStatus = session.isOnline;
+
       if (session.isOrderRunning) {
         log("----order running called--- ${session.runningOrderStatus}");
         showLoading();
@@ -82,7 +86,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
           if (!session.isPaymentDone) {
             log("----order running called isPaymentDone ${session.isPaymentDone}");
-            /*** Payment confirmation pending */
 
             retrieveOrderReceiptFromLocal().then((value) {
               log("----order running called retreve order receipt from local storage ---");
@@ -93,20 +96,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   socketProvider.updateOrderData(data: event.data);
                   socketProvider.setNewChangeOrderStatus = event.data.orderStatus.toString();
                   session.setRunningOrderStatus = int.parse(event.data.orderStatus.toString());
-                  socketProvider.updateCurrentStatus(status: int.parse(event.data.orderStatus.toString()));
-                  homeProvider
-                      .fetchCustomerDetail(event.data.userId.toString())
-                      .listen((event2) async {
+                  socketProvider.updateCurrentStatus(
+                    status: int.parse(event.data.orderStatus.toString()),
+                  );
+                  homeProvider.fetchCustomerDetail(event.data.userId.toString()).listen((event2) async {
                     if (event2 is CustomerDetailLoaded) {
                       log("customer details in home page checking is :--> ${event2.data}");
-                      print(
-                          "customer details in home page checking is :--> ${event2.data}");
+                      print("customer details in home page checking is :--> ${event2.data}");
 
-                      socketProvider
-                          .updateCustomerData(data: event2.data.data)
-                          .then((value) {
+                      socketProvider.updateCustomerData(data: event2.data.data).then((value) {
                         dismissLoading();
-                        /**   Navigate to receipt screen */
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           ReceiptPage.routeName,
@@ -122,28 +121,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 }
               });
 
-              print(
-                  "home provider ordetails are:==>> ${homeProvider.orderDetail}");
-              print(
-                  "home provider ordetails are:==>> ${homeProvider.orderDetail}");
+              print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
               log("session order STATUS IS :==>> ${session.runningOrderStatus}");
               log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
             });
-          }
-          else if (!session.isRatingGiven) {
-            homeProvider
-                .fetchCustomerDetail(session.customerId.toString())
-                .listen((event2) async {
+          } else if (!session.isRatingGiven) {
+            homeProvider.fetchCustomerDetail(session.customerId.toString()).listen((event2) async {
               if (event2 is CustomerDetailLoaded) {
                 log("customer details in home page checking is :--> ${event2.data}");
-                print(
-                    "customer details in home page checking is :--> ${event2.data}");
+                print("customer details in home page checking is :--> ${event2.data}");
 
-                socketProvider
-                    .updateCustomerData(data: event2.data.data)
-                    .then((value) {
+                socketProvider.updateCustomerData(data: event2.data.data).then((value) {
                   dismissLoading();
-
                   Navigator.pushNamedAndRemoveUntil(
                     locator<GlobalKey<NavigatorState>>().currentContext!,
                     GiveRatingScreen.routeName,
@@ -169,15 +158,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               socketProvider.updateOrderData(data: event.data);
               socketProvider.setNewChangeOrderStatus = event.data.orderStatus.toString();
               session.setRunningOrderStatus = int.parse(event.data.orderStatus.toString());
-              socketProvider.updateCurrentStatus(status: int.parse(event.data.orderStatus.toString()));
-              homeProvider
-                  .fetchCustomerDetail(session.customerId.toString())
-                  .listen((event2) async {
+              socketProvider.updateCurrentStatus(
+                  status: int.parse(event.data.orderStatus.toString()));
+              homeProvider.fetchCustomerDetail(session.customerId.toString()).listen((event2) async {
                 if (event2 is CustomerDetailLoaded) {
                   log("customer details in home page checking is :--> ${event2.data}");
-                  socketProvider
-                      .updateCustomerData(data: event2.data.data)
-                      .then((value) {
+                  socketProvider.updateCustomerData(data: event2.data.data).then((value) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       homeProvider.changeStatus = session.isOnline;
                       dismissLoading();
@@ -198,7 +184,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             }
           });
 
-          // print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
           print("home provider ordetails are:==>> ${homeProvider.orderDetail}");
           log("session order STATUS IS :==>> ${session.runningOrderStatus}");
           log("session order STATUS RUUNING IS :==>> ${session.runningOrderStatus}");
@@ -209,8 +194,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         });
       }
     });
-
-
   }
 
   @override
@@ -221,64 +204,55 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    log("home page build called ");
+    log("home page build called");
     return PopScope(
       canPop: false,
       child: Consumer<HomeProvider>(builder: (context, provider, _) {
         return Scaffold(
-            // key: provider.globalKey,
-            resizeToAvoidBottomInset: false,
-            appBar: const CustomAppBar(
-              centerTitle: true,
-            ),
-            drawer: const HomeDrawerPage(),
-            // body: Consumer<HomeProvider>(
-            //   builder: (context, provider, _) {
-            body: ListView(
-              children: <Widget>[
-                Container(
-                  // height: 50,
-                  padding: const EdgeInsets.all(4),
-                  margin: const EdgeInsets.all(sizeMedium),
-                  decoration: BoxDecoration(
-                    color: greyF4F4F4,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: optionTile(
-                          title: 'Requests',
-                          isSelected:
-                              provider.projectType == ProjectType.requests,
-                          onChange: () {
-                            provider.projectType = ProjectType.requests;
-                          },
-                        ),
-                      ),
-                      smallHorizontalSpacing(),
-                      Expanded(
-                        child: optionTile(
-                          title: 'History',
-                          isSelected:
-                              provider.projectType == ProjectType.history,
-                          onChange: () {
-                            provider.projectType = ProjectType.history;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+          resizeToAvoidBottomInset: false,
+          appBar: const CustomAppBar(
+            centerTitle: true,
+          ),
+          drawer: const HomeDrawerPage(),
+          body: ListView(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.all(sizeMedium),
+                decoration: BoxDecoration(
+                  color: greyF4F4F4,
+                  borderRadius: BorderRadius.circular(50),
                 ),
-                provider.projectType == ProjectType.requests
-                    ? const RequestListWidget()
-                    : const HistoryListWidget(),
-              ],
-            )
-
-            //   },
-            // ),
-            );
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: optionTile(
+                        title: 'Requests',
+                        isSelected: provider.projectType == ProjectType.requests,
+                        onChange: () {
+                          provider.projectType = ProjectType.requests;
+                        },
+                      ),
+                    ),
+                    smallHorizontalSpacing(),
+                    Expanded(
+                      child: optionTile(
+                        title: 'History',
+                        isSelected: provider.projectType == ProjectType.history,
+                        onChange: () {
+                          provider.projectType = ProjectType.history;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              provider.projectType == ProjectType.requests
+                  ? const RequestListWidget()
+                  : const HistoryListWidget(),
+            ],
+          ),
+        );
       }),
     );
   }

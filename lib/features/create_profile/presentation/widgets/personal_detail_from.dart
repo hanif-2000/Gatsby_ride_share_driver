@@ -45,9 +45,9 @@ class _FormPersonalDetailState extends State<FormPersonalDetail> {
       "id_number": provider.idNumberController.text.trim(),
       "driving_licence": provider.dlImageUploadNameFront,
       "driving_licence_back": provider.dlImageUploadNameBack,
-      // "profile_photo": provider.profileUploadName,
       "image": provider.profileUploadName,
       "id_proof": provider.idProofImageUploadName,
+      "profile_status": 2,
     }).listen((state) async {
       switch (state.runtimeType) {
         case CreateProfileLoading:

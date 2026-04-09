@@ -34,21 +34,26 @@ class LoginDataSourceImplementation implements LoginDataSource {
 
     try {
       final session = locator<Session>();
-      final fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      String fcmToken = "";
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+      } catch (e) {
+        print("FCM token error (may be simulator): $e");
+      }
       session.setFcmToken = fcmToken;
       print("fcmToken==> $fcmToken");
-      FormData data = FormData.fromMap({
+      final data = {
         'email': email,
         'password': password,
         'fcm_token': fcmToken,
         'position': position,
         'device_type': Platform.isIOS ? 'ios' : 'android',
-      });
-      print('Sign in data ----> ${data.fields.toString()}');
+      };
+      print('Sign in data ----> $data');
       final response = await dio.post(
         url,
         data: data,
-      );
+      ); 
       print('Login response ---> ${response.data}');
       final model = LoginResponseModel.fromJson(response.data);
       if (model.success == 1) {

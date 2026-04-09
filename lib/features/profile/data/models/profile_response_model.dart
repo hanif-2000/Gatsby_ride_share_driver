@@ -72,20 +72,25 @@ class ProfileDataModel extends Equatable {
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
-          driverId: json['id'] ?? '',
+          driverId: json['id']?.toString() ?? '',
           name: json['name'] ?? '',
           email: json['email'] ?? '',
           phoneNumber: json['phone'] ?? '',
-          image: json['image'] ?? '',
+          image: json['image'] ?? json['profile_photo'] ?? '',
           vehicleName: json['vehicle_name'] ?? '',
           insuranceNumber: json['insurance_number'] ?? '',
           statusOrder: json['order_status'] ?? '',
           plateNumber: json['plate_number'] ?? '',
           carModel: json['car_model'] ?? '',
-          bankDetails: BankDetails.fromMap(json["bank_details"]),
-          // bankDetails: List<dynamic>.from(json["bank_details"].map((x) => x)),
-          vehicleCategory: CategoryModel.fromJson(json["vehicle_category"]),
-          status: json['status'] ?? '');
+          bankDetails: json["bank_details"] != null && json["bank_details"] is Map
+              ? BankDetails.fromMap(json["bank_details"])
+              : BankDetails.empty(),
+          vehicleCategory: json["vehicle_category"] != null && json["vehicle_category"] is Map
+              ? CategoryModel.fromJson(json["vehicle_category"])
+              : CategoryModel.empty(json['vehicle_category_id']),
+          status: json['status'] is bool
+              ? (json['status'] == true ? 1 : 0)
+              : json['status'] ?? 0);
 
   Map<String, dynamic> toJson() => {
         'id': driverId,
@@ -130,11 +135,19 @@ class CategoryModel extends Equatable {
       ];
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-        categoryName: json['category'],
+        categoryName: json['category'] ?? '',
         seat: json['seat'] ?? '',
-        categoryId: json['id'],
-        priceMin: json['min_km'],
-        priceKm: json['price_km'],
+        categoryId: json['id'] ?? 0,
+        priceMin: json['min_km'] ?? 0,
+        priceKm: json['price_km'] ?? 0,
+      );
+
+  factory CategoryModel.empty([dynamic id]) => CategoryModel(
+        categoryName: '',
+        seat: '',
+        categoryId: id ?? 0,
+        priceMin: 0,
+        priceKm: 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -173,6 +186,19 @@ class BankDetails {
     required this.updatedAt,
   });
 
+  factory BankDetails.empty() => BankDetails(
+        id: 0,
+        driverId: 0,
+        accountHolderName: '',
+        bankName: '',
+        accountNumber: '',
+        transitNumber: '',
+        institutionNumber: '',
+        status: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
   factory BankDetails.fromMap(Map<String, dynamic> json) => BankDetails(
         id: json["id"],
         driverId: json["driver_id"],
@@ -182,9 +208,9 @@ class BankDetails {
         // ifscCode: json["ifsc_code"] ?? "",
         transitNumber: json["transit_number"] ?? "",
         institutionNumber: json["institution_number"] ?? '',
-        status: json["status"] ?? "",
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        status: json["status"] ?? 0,
+        createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
+        updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : DateTime.now(),
       );
 
   Map<String, dynamic> toMap() => {

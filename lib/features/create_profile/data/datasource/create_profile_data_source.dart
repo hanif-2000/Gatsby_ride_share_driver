@@ -59,8 +59,9 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
   @override
   Future<String?> doUploadProfile(String image) async {
     String url = 'api/webservice/upload';
+    final session = locator<Session>();
     FormData data = FormData.fromMap({
-      "upload": await MultipartFile.fromFile(
+      "file": await MultipartFile.fromFile(
         image,
         filename: image.split('/').last,
       ),
@@ -69,6 +70,9 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
       final response = await dio.post(
         url,
         data: data,
+        options: Options(headers: {
+          "Authorization": "Bearer ${session.sessionToken}",
+        }),
       );
       print('Signup response ---> ${response.data}');
       final model = ImageUploadResponse.fromMap(response.data);
@@ -84,7 +88,7 @@ class CreateProfileDataSourceImplementation implements CreateProfileDataSource {
 
   @override
   Future<VehicleTypeResponseModel> getVehicleTypes() async {
-    String url = 'api/webservice/vehicle/categories';
+    String url = 'api/webservice/vehicleCategories';
     try {
       final response = await dio.get(
         url,
