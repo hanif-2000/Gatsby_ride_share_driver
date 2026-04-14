@@ -36,7 +36,12 @@ class LoginDataSourceImplementation implements LoginDataSource {
       final session = locator<Session>();
       String fcmToken = "";
       try {
-        fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+        for (int i = 0; i < 3 && fcmToken.isEmpty; i++) {
+          fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+          if (fcmToken.isEmpty && i < 2) {
+            await Future.delayed(const Duration(seconds: 1));
+          }
+        }
       } catch (e) {
         print("FCM token error (may be simulator): $e");
       }
@@ -53,8 +58,10 @@ class LoginDataSourceImplementation implements LoginDataSource {
       final response = await dio.post(
         url,
         data: data,
-      ); 
-      print('Login response ---> ${response.data}');
+      );
+      print('Login response status ---> ${response.statusCode}');
+      print('Login response body  ---> ${response.data}');
+
       final model = LoginResponseModel.fromJson(response.data);
       if (model.success == 1) {
         session.setUserId = model.data!.driverId.toString();

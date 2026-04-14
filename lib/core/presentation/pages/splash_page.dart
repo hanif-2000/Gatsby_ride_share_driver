@@ -48,10 +48,6 @@ class _SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
     Timer(const Duration(seconds: 3), () async {
       bool requestPermission = await checkLocationAndPermission();
       log("Request permission value: $requestPermission");
-      if (!requestPermission) {
-        requestPermission = await checkLocationAndPermission();
-        logMe("Rechecked location and permission value: $requestPermission");
-      }
       await _getDataFromNotification();
       await sessionClearOrder();
       bool isSessionValid = await checkUserSession();

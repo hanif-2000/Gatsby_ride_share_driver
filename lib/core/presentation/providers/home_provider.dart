@@ -180,7 +180,6 @@ class HomeProvider with ChangeNotifier {
     Map<String, dynamic> fields = {'status': driverStatus};
 
     if (driverStatus == '1') {
-      // FCM token fresh lo
       try {
         final fcmToken =
             await FirebaseMessaging.instance.getToken() ?? "";
@@ -195,7 +194,6 @@ class HomeProvider with ChangeNotifier {
         dev.log("⚠️ FCM token error: $e");
       }
 
-      // Location lo
       try {
         geo.LocationPermission permission =
             await geo.Geolocator.checkPermission();
@@ -233,7 +231,7 @@ class HomeProvider with ChangeNotifier {
     }, (data) async* {
       dev.log("success is called-->>");
       if (driverStatus == '1') {
-        updateLocation(); // fire-and-forget — GPS block nahi karega
+        updateLocation();
       }
       dismissLoading();
       yield ChangeStatusLoaded(data: data);

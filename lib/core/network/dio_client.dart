@@ -12,10 +12,14 @@ class DioClient {
     _dio.interceptors.addAll([appInterceptor, LoggingInterceptors()]);
   }
 
-  DioClient({String base = BASE_URL}) {
+ DioClient({String base = BASE_URL}) {
     _dio = Dio(BaseOptions(
       baseUrl: base,
-      validateStatus: (status) => (status! >= 200) && (status <= 400),
+      contentType: Headers.jsonContentType,
+      headers: {
+        'Accept': 'application/json',
+      },
+      validateStatus: (status) => (status! >= 200) && (status <= 500),
     ));
     addInterception();
   }

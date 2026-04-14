@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import 'core/network/socket_helper.dart';
 import 'core/presentation/pages/splash_page.dart';
+import 'core/utility/push_notification_helper.dart';
 import 'core/presentation/providers/place_picker_provider.dart';
 import 'core/routes/route.dart';
 import 'core/static/colors.dart';
@@ -26,8 +27,15 @@ import 'core/utility/session_helper.dart';
 import 'features/profile/presentation/providers/profile_edit_provider.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await PushNotificationService().init();
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   try {
     await init();

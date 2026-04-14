@@ -13,7 +13,7 @@ class ContactUsProvider extends FormProvider {
       {String? email, String? message}) async* {
     yield ContactUsLoading();
 
-    final loginResult = await doContactUs.call('api/webservice/contactUs',
+    final loginResult = await doContactUs.call('api/webservice/contact-us',
         FormData.fromMap({'email': email, 'message': message, 'type': '2'}));
     yield* loginResult.fold((statusCode) async* {
       logMe(statusCode);
