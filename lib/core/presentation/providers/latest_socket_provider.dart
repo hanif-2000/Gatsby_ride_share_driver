@@ -273,6 +273,7 @@ class LatestSocketProvider extends ChangeNotifier {
         log("📦 total: ${response['total']} | new_total: ${response['new_total']} | distance: ${response['distance']}");
         log("📦 name: ${response['name']} | customerID: ${response['customerID']}");
         bookingDataModel = BookingDataModel.fromJson(response);
+        log("📦 PARSED → total: ${bookingDataModel!.data.total} | newTotal: ${bookingDataModel!.data.newTotal}");
         bool checkId = checkRideWithSameId(orderId: bookingDataModel!.data.id.toString());
         if (!checkId) {
           bookingList.insert(0, bookingDataModel!.data);
@@ -893,14 +894,19 @@ class LatestSocketProvider extends ChangeNotifier {
   FutureOr<void> setNewPolylineDirection(bool isFromOrigin) async {
     newPolylines.clear();
     showLoading();
-    var latLongOrigin = orderDetail!.startCoordinate;
-    var latLongDestination = orderDetail!.endCoordinate;
+    // _orderDetail has actual booking coords, orderDetail is fallback
+    final activeOrder = _orderDetail ?? orderDetail;
+    if (activeOrder == null) { dismissLoading(); return; }
+    var latLongOrigin = activeOrder.startCoordinate;
+    var latLongDestination = activeOrder.endCoordinate;
     var splitOrigin = latLongOrigin.split(",");
     var splitDestination = latLongDestination.split(",");
-    var latOrigin = double.parse(splitOrigin[0]);
-    var lngOrigin = double.parse(splitOrigin[1]);
-    var latDestination = double.parse(splitDestination[0]);
-    var lngDestination = double.parse(splitDestination[1]);
+    if (splitOrigin.length < 2 || splitDestination.length < 2) { dismissLoading(); return; }
+    var latOrigin = double.tryParse(splitOrigin[0]) ?? 0.0;
+    var lngOrigin = double.tryParse(splitOrigin[1]) ?? 0.0;
+    var latDestination = double.tryParse(splitDestination[0]) ?? 0.0;
+    var lngDestination = double.tryParse(splitDestination[1]) ?? 0.0;
+    if (latOrigin == 0.0 || latDestination == 0.0) { dismissLoading(); return; }
     await _getCurrentLocation();
     var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
 

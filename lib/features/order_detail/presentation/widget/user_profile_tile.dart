@@ -10,13 +10,34 @@ import '../../../../core/static/colors.dart';
 import '../../../../core/static/styles.dart';
 import '../../../../core/utility/convert_one_decimal_helper.dart';
 import '../../../../core/utility/helper.dart';
+import '../../../../core/utility/injection.dart';
+import '../../../../core/utility/session_helper.dart';
 
 class UserProfileTile extends StatelessWidget {
   final CustomerDataModel? customerDataModel;
   final OrderDetail? orderDetails;
+  final String? estimatedDistance;
 
   const UserProfileTile(
-      {super.key, required this.customerDataModel, required this.orderDetails});
+      {super.key,
+      required this.customerDataModel,
+      required this.orderDetails,
+      this.estimatedDistance});
+
+  String _getDistance(dynamic rawDistance) {
+    final d = double.tryParse(rawDistance.toString()) ?? 0.0;
+    if (d < 0.1) {
+      // 1. Try provider-passed estimatedDistance (most up-to-date)
+      final providerDist = double.tryParse(estimatedDistance ?? '') ?? 0.0;
+      if (providerDist > 0) return providerDist.toStringAsFixed(2);
+      // 2. Fallback to session
+      final session = locator<Session>();
+      final sessionDist = double.tryParse(session.estimatedDistance) ?? 0.0;
+      if (sessionDist > 0) return sessionDist.toStringAsFixed(2);
+      return '—';
+    }
+    return d.toStringAsFixed(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +118,7 @@ class UserProfileTile extends StatelessWidget {
                         )
                         .usePoppinsW6Font(),
                   ),
-                  Text('${orderDetails!.distance} Km',
+                  Text('${_getDistance(orderDetails!.distance)} Km',
                     textAlign: TextAlign.center,
                     style: titleStyle
                         .copyWith(

@@ -70,6 +70,7 @@ class ButtonOrder extends StatelessWidget {
               UserProfileTile(
                 customerDataModel: socketProvider.customerDetail,
                 orderDetails: socketProvider.orderDetail,
+                estimatedDistance: socketProvider.setEstimatedDistance,
               ),
               mediumVerticalSpacing(),
 

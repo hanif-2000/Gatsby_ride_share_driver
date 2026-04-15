@@ -2,15 +2,12 @@ import 'dart:developer';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../../firebase_options.dart';
 import 'injection.dart';
 import 'push_notification_helper.dart';
 
 class FirebaseHelper {
   static Future<void> init() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -18,11 +15,30 @@ class FirebaseHelper {
     );
     await PushNotificationService().init();
 
+    // Save token on startup (after login session is ready)
+    _sendTokenWhenReady();
+
     // Refresh token whenever it changes
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       log("FCM Token refreshed: $newToken");
       await updateFcmToken(token: newToken);
     });
+  }
+
+  // Waits up to 5s for APNS token, then sends FCM token to server
+  static Future<void> _sendTokenWhenReady() async {
+    String token = '';
+    for (int i = 0; i < 5; i++) {
+      try {
+        token = await FirebaseMessaging.instance.getToken() ?? '';
+      } catch (_) {}
+      if (token.isNotEmpty) break;
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    if (token.isNotEmpty) {
+      log("FCM Token on startup: $token");
+      await updateFcmToken(token: token);
+    }
   }
 
   static Future<void> setTopicDriver(String statusOrder) async {

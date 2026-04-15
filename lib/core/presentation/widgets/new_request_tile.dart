@@ -25,6 +25,12 @@ class NewRequestTile extends StatelessWidget {
   final int index;
   final List<Booking> request;
 
+  String _formatDistance(dynamic raw) {
+    final d = double.tryParse(raw?.toString() ?? '') ?? 0.0;
+    if (d < 0.1) return '—';
+    return d.toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -136,7 +142,7 @@ class NewRequestTile extends StatelessWidget {
                         ).usePoppinsW6Font(),
                       ),
                       Text(
-                        '${request[index].distance ?? "—"} Km',
+                        '${_formatDistance(request[index].distance)} Km',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
