@@ -197,7 +197,7 @@ class ButtonOrder extends StatelessWidget {
                       try {
                          await socketProvider.calculateDistanceCovered2();
                          await Future.delayed(const Duration(milliseconds: 200));
-                          socketProvider.updateOrderStatus(
+                          await socketProvider.updateOrderStatus(
                           status: "7",
                           actualTime: session.estimatedTime,
                           startTime: session.rideStartTime,
@@ -214,11 +214,9 @@ class ButtonOrder extends StatelessWidget {
                           ),
                         );
 
-                        // Log ride completion time
                         log("Ride complete end time is: ${DateTime.now()}");
                       } catch (e) {
                         dismissLoading();
-                        // Handle any errors here
                         print('Error: $e');
                       }
                     }

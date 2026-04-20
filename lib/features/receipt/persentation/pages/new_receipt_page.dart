@@ -21,18 +21,40 @@ import '../../../order/presentation/pages/new_order_page.dart';
 import '../../../rating/presentation/page/give_rating_screen.dart';
 import 'new_detailed_payment_screen.dart';
 
-class ReceiptPage extends StatelessWidget {
-  ReceiptPage({super.key,
-      this.id,
-      required this.customerId});
+class ReceiptPage extends StatefulWidget {
+  const ReceiptPage({super.key, this.id, required this.customerId});
   static const routeName = '/ReceiptPage';
   final String? id;
   final int customerId;
+
+  @override
+  State<ReceiptPage> createState() => _ReceiptPageState();
+}
+
+class _ReceiptPageState extends State<ReceiptPage> {
   String actualTimeTaken = "0 Min";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final provider = context.read<LatestSocketProvider>();
+      if (provider.receiptData == null) {
+        log("ReceiptPage: receiptData null, fetching from API...");
+        await provider.fetchAndSetReceiptData();
+        // agar abhi bhi null hai to 3 sec baad retry
+        if (provider.receiptData == null) {
+          log("ReceiptPage: retry after 3s...");
+          await Future.delayed(const Duration(seconds: 3));
+          if (mounted) await provider.fetchAndSetReceiptData();
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var session = locator<Session>();
-    print("ride start time from local storage is :-->${session.orderDetails}");
     return Scaffold(
       body: Consumer<LatestSocketProvider>(
         builder: (context, provider, _) {
@@ -76,36 +98,29 @@ class ReceiptPage extends StatelessWidget {
                                     img: provider.receiptData!.image ?? '',
                                     size: 50),
                                 mediumHorizontalSpacing(),
-                                Column(
-                                  children: [
-                                    Text(
-                                      provider.receiptData!.name! ?? '',
-                                      textAlign: TextAlign.center,
-                                      style: titleStyle
-                                          .copyWith(
-                                            fontSize: 16,
-                                          )
-                                          .usePoppinsW5Font(),
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Text(
+                                    provider.receiptData!.name ?? '',
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: titleStyle
+                                        .copyWith(fontSize: 16)
+                                        .usePoppinsW5Font(),
+                                  ),
                                 ),
-                                const Spacer(),
 
                                 /**rating */
                                 Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     SvgPicture.asset(
                                         'assets/icons/home/ic_start.svg'),
                                     smallHorizontalSpacing(),
                                     Text(
-                                      convertToTwoDecimal(provider
-                                          .receiptData!.customerRating
-                                          .toString()),
+                                      double.tryParse(provider.receiptData!.customerRating.toString())?.toStringAsFixed(2) ?? '0.00',
                                       textAlign: TextAlign.center,
                                       style: titleStyle
-                                          .copyWith(
-                                            fontSize: 14,
-                                          )
+                                          .copyWith(fontSize: 14)
                                           .usePoppinsW6Font(),
                                     ),
                                   ],
@@ -337,8 +352,7 @@ class ReceiptPage extends StatelessWidget {
                                     children: [
                                       smallHorizontalSpacing(),
                                       Text(
-                                        getPaymentType(int.parse(provider
-                                            .receiptData!.paymentMethod)),
+                                        getPaymentType(int.tryParse(provider.receiptData!.paymentMethod.toString()) ?? 1),
                                         textAlign: TextAlign.center,
                                         style: titleStyle
                                             .copyWith(

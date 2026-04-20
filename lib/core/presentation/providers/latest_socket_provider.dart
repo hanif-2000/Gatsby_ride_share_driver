@@ -346,6 +346,12 @@ class LatestSocketProvider extends ChangeNotifier {
               .toList();
           bookingList.clear();
           bookingList.addAll(uniqueBookings);
+          PushNotificationService().showNewRideNotification(
+            title: "New Ride Request",
+            body: bookingDataModel!.data.name?.isNotEmpty == true
+                ? "New request from ${bookingDataModel!.data.name}"
+                : "You have a new ride request",
+          );
         }
         notifyListeners();
       } catch (e) {
@@ -600,6 +606,12 @@ class LatestSocketProvider extends ChangeNotifier {
       _emitMessage(payload);
       dismissLoading();
       await _handleOrderStatusChange(status);
+      if (status == "7") {
+        buildReceiptFromLocalData(
+          actualTime: actualTime,
+          distance: distance ?? setEstimatedDistance,
+        );
+      }
       notifyListeners();
       return true;
     } catch (e, stackTrace) {
@@ -674,7 +686,6 @@ class LatestSocketProvider extends ChangeNotifier {
       await _setOrderState(5, "End Trip", "5", true);
       break;
     case "7":
-      // ✅ Fixed
       locationbackSubscription?.cancel();
       currentOrderStatus = 7;
       rideText = "Ride Completed";
@@ -685,15 +696,6 @@ class LatestSocketProvider extends ChangeNotifier {
       resetAfterRideEnd();
       dismissLoading();
       notifyListeners();
-      await Future.delayed(const Duration(milliseconds: 500));
-      final ctx = locator<GlobalKey<NavigatorState>>().currentContext;
-      if (ctx != null) {
-        Navigator.pushNamedAndRemoveUntil(
-          ctx,
-          '/DriverReceiptPage', 
-          (route) => false,
-        );
-      }
       break;
     default:
       log("Ride canceled by the driver");
@@ -736,6 +738,61 @@ class LatestSocketProvider extends ChangeNotifier {
     } catch (e) {
       log("getOrderStatus error: $e");
     }
+  }
+
+  void buildReceiptFromLocalData({
+    String actualTime = '0',
+    String distance = '0',
+  }) {
+    if (_orderDetail == null || _customerDetail == null) {
+      log("buildReceiptFromLocalData: orderDetail or customerDetail is null");
+      return;
+    }
+    final receiptJson = {
+      'id': session.runningOrderId,
+      'start_address': _orderDetail!.startAddress,
+      'end_address': _orderDetail!.endAddress,
+      'distance': distance,
+      'distance1': distance,
+      'payment_method': 1,
+      'estimated_time': session.estimatedTime,
+      'actual_time': actualTime,
+      'actualTime': actualTime,
+      'total': _orderDetail!.totalPrice?.toString() ?? '0',
+      'pending_amount': '0',
+      'customerID': _customerDetail!.id.toString(),
+      'name': _customerDetail!.name,
+      'image': _customerDetail!.photo ?? '',
+      'Longitude': '0',
+      'Latitude': '0',
+      'phone': _customerDetail!.phoneNumber,
+      'created_at': DateTime.now().toIso8601String(),
+      'price_km': '0',
+      'price_min': '0',
+      'base_fare': '0',
+      'tech_fee': '0',
+      'min_km': '0',
+      'min_price': '0',
+      'CustomerRating': _customerDetail!.rating?.toString() ?? '0',
+      'extra_distance': '0',
+      'extra_distance_price': '0',
+      'extra_time': '0',
+      'extra_time_price': '0',
+      'new_total': _orderDetail!.newTotal?.toString() ?? _orderDetail!.totalPrice?.toString() ?? '0',
+      'tip': '0',
+    };
+    receiptData = ReceiptData.fromJson(receiptJson);
+    _saveOrderReceipt();
+    notifyListeners();
+    log("buildReceiptFromLocalData: receiptData set successfully");
+  }
+
+  Future<void> fetchAndSetReceiptData({int? orderId}) async {
+    log("fetchAndSetReceiptData: falling back to local data");
+    buildReceiptFromLocalData(
+      actualTime: session.estimatedTime,
+      distance: session.estimatedDistance.toString(),
+    );
   }
 
   Future<void> setCurrentLocation(

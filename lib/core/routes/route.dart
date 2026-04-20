@@ -101,7 +101,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as RatingPageArguments;
       return MaterialPageRoute(
           builder: (_) => ReceiptPage(
-                // customerDataModel: args.customerDataModel,
                 customerId: args.customerId!,
               ));
     case OtherUserProfile.routeName:
