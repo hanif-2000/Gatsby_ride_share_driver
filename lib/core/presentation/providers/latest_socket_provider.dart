@@ -225,16 +225,23 @@ class LatestSocketProvider extends ChangeNotifier {
       if (type == 'Join') {
         isLoading = true;
         notifyListeners();
+        Future.delayed(const Duration(seconds: 3), () {
+          if (isLoading) {
+            isLoading = false;
+            notifyListeners();
+          }
+        });
       } else if (type == 'unJoin') {
         getTotalUnreadCount(receiverId);
       }
+      final roomValue = (int.parse(session.userId) > receiverId!)
+          ? '$receiverId-${session.userId}'
+          : '${session.userId}-$receiverId';
       final map = {
         'type': 'Driver',
         'serviceType': type,
         'UserID': session.userId,
-        'roomID': (int.parse(session.userId) > receiverId!)
-            ? '$receiverId-${session.userId}'
-            : '${session.userId}-$receiverId',
+        'roomID': roomValue,
       };
       _emitMessage(map);
     } catch (e) {
@@ -799,7 +806,6 @@ class LatestSocketProvider extends ChangeNotifier {
       OrderDetail orderDetail, CustomerDataModel customerDataModel) async {
     polylineCoordinates.clear();
     newPolylines.clear();
-    showLoading();
     try {
       _customerDetail = customerDataModel;
       _orderDetail = orderDetail;
@@ -862,11 +868,8 @@ class LatestSocketProvider extends ChangeNotifier {
           CameraUpdate.newCameraPosition(CameraPosition(target: coordinate, zoom: zoom)),
         );
         notifyListeners();
-        dismissLoading();
       }
-      dismissLoading();
-    } on PlatformException catch (e) {
-      dismissLoading();
+    } catch (e) {
       log("setCurrentLocation error: ${e.toString()}");
     }
   }
@@ -950,69 +953,41 @@ class LatestSocketProvider extends ChangeNotifier {
 
   FutureOr<void> setNewPolylineDirection(bool isFromOrigin) async {
     newPolylines.clear();
-    showLoading();
-    // _orderDetail has actual booking coords, orderDetail is fallback
-    final activeOrder = _orderDetail ?? orderDetail;
-    if (activeOrder == null) { dismissLoading(); return; }
-    var latLongOrigin = activeOrder.startCoordinate;
-    var latLongDestination = activeOrder.endCoordinate;
-    var splitOrigin = latLongOrigin.split(",");
-    var splitDestination = latLongDestination.split(",");
-    if (splitOrigin.length < 2 || splitDestination.length < 2) { dismissLoading(); return; }
-    var latOrigin = double.tryParse(splitOrigin[0]) ?? 0.0;
-    var lngOrigin = double.tryParse(splitOrigin[1]) ?? 0.0;
-    var latDestination = double.tryParse(splitDestination[0]) ?? 0.0;
-    var lngDestination = double.tryParse(splitDestination[1]) ?? 0.0;
-    if (latOrigin == 0.0 || latDestination == 0.0) { dismissLoading(); return; }
-    await _getCurrentLocation();
-    var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    try {
+      final activeOrder = _orderDetail ?? orderDetail;
+      if (activeOrder == null) return;
+      var latLongOrigin = activeOrder.startCoordinate;
+      var latLongDestination = activeOrder.endCoordinate;
+      var splitOrigin = latLongOrigin.split(",");
+      var splitDestination = latLongDestination.split(",");
+      if (splitOrigin.length < 2 || splitDestination.length < 2) return;
+      var latOrigin = double.tryParse(splitOrigin[0]) ?? 0.0;
+      var lngOrigin = double.tryParse(splitOrigin[1]) ?? 0.0;
+      var latDestination = double.tryParse(splitDestination[0]) ?? 0.0;
+      var lngDestination = double.tryParse(splitDestination[1]) ?? 0.0;
+      if (latOrigin == 0.0 || latDestination == 0.0) return;
+      await _getCurrentLocation();
+      var coordinate = LatLng(currentPosition!.latitude, currentPosition!.longitude);
 
-    if (isFromOrigin) {
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latDestination, lngDestination)
-          .then((result) {
-        if (result.isNotEmpty) {
-          polylineCoordinates = [];
-          for (var point in result) {
-            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-          }
-          Polyline polyline = Polyline(
-            polylineId: const PolylineId("jalur"),
-            color: Colors.black,
-            points: polylineCoordinates,
-            width: 5,
-            startCap: Cap.roundCap,
-            endCap: Cap.roundCap,
-          );
-          newPolylines.add(polyline);
-          notifyListeners();
-          dismissLoading();
-        }
-      });
-      dismissLoading();
-    } else {
-      await DirectionHelper()
-          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, latOrigin, lngOrigin)
-          .then((result) {
-        if (result.isNotEmpty) {
-          polylineCoordinates = [];
-          for (var point in result) {
-            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-          }
-          Polyline polyline = Polyline(
-            polylineId: const PolylineId("jalur"),
-            color: Colors.black,
-            points: polylineCoordinates,
-            width: 5,
-            startCap: Cap.roundCap,
-            endCap: Cap.roundCap,
-          );
-          newPolylines.add(polyline);
-          notifyListeners();
-          dismissLoading();
-        }
-      });
-      dismissLoading();
+      final target = isFromOrigin
+          ? [latDestination, lngDestination]
+          : [latOrigin, lngOrigin];
+      final result = await DirectionHelper()
+          .getRouteBetweenCoordinates(coordinate.latitude, coordinate.longitude, target[0], target[1]);
+      if (result.isNotEmpty) {
+        polylineCoordinates = result.map((p) => LatLng(p.latitude, p.longitude)).toList();
+        newPolylines.add(Polyline(
+          polylineId: const PolylineId("jalur"),
+          color: Colors.black,
+          points: polylineCoordinates,
+          width: 5,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+        ));
+        notifyListeners();
+      }
+    } catch (e) {
+      log("setNewPolylineDirection error: ${e.toString()}");
     }
   }
 

@@ -168,31 +168,32 @@ class ButtonOrder extends StatelessWidget {
                     print("**********--------->>>>>>. ${socketProvider.currentOrderStatus} <<<<<<-----------***********");
                     if ((socketProvider.currentOrderStatus == 0) || socketProvider.currentOrderStatus == 1) {
                       /** start ride to customer place */
-                      socketProvider.updateOrderStatus(
+                      await socketProvider.updateOrderStatus(
                         status: "2",
                         actualTime: "0",
                         startTime: '',
                         endTime: '',
                       );
+                      dismissLoading();
                     } else if (socketProvider.currentOrderStatus == 2) {
                       /** reached customer place */
-
-                      socketProvider.updateOrderStatus(
+                      await socketProvider.updateOrderStatus(
                         status: "3",
                         actualTime: "0",
                         startTime: '',
                         endTime: '',
                       );
+                      dismissLoading();
                     } else if (socketProvider.currentOrderStatus == 3) {
                       /** START TRIP */
-
                       session.setStartTime = DateTime.now().toString();
-                      socketProvider.updateOrderStatus(
+                      await socketProvider.updateOrderStatus(
                         status: "5",
                         actualTime: "0",
                         startTime: DateTime.now().toString(),
                         endTime: '',
                       );
+                      dismissLoading();
                     } else if (socketProvider.currentOrderStatus == 5) {
                       try {
                          await socketProvider.calculateDistanceCovered2();

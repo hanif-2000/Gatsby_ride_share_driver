@@ -45,7 +45,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     log("didChangeAppLifecycleState  >>>>>>>>>>>------->>>>>>>>>>>>>>   $state");
     if(context.mounted){
     //  final socketProvider = context.read<LatestSocketProvider>();
-      if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      if (state == AppLifecycleState.paused) {
         socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
       } else if (state == AppLifecycleState.resumed) {
         socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: "Join");
