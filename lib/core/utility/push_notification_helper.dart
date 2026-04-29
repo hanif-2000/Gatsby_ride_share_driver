@@ -198,12 +198,12 @@ class PushNotificationService {
   }
 
   Future<(String, Object?)?> callApi(NotificationEntity entity) async {
-    if(entity.type=="CustomerBookRequest"){
-      if(locator<GlobalKey<NavigatorState>>().currentContext!.mounted){
-        final socketProvider =  Provider.of<LatestSocketProvider>(locator<GlobalKey<NavigatorState>>().currentContext!,listen: false);
-        await socketProvider.getOrderStatus(entity.id??"");
+    if (entity.type == "CustomerBookRequest") {
+      final ctx = locator<GlobalKey<NavigatorState>>().currentContext;
+      if (ctx != null && ctx.mounted) {
+        final socketProvider = Provider.of<LatestSocketProvider>(ctx, listen: false);
+        await socketProvider.getOrderStatus(entity.id ?? "");
       }
-
     }
     return null;
 
@@ -219,7 +219,8 @@ class PushNotificationService {
 
   Future<(String, Object?)?> getPushNotificationRoute() async {
     RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-    const NotificationAppLaunchDetails? notificationAppLaunchDetails = null;
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     if (remoteMessage != null && remoteMessage.data.isNotEmpty) {
       print("RemoteMessage data ${remoteMessage.data}");
       NotificationEntity notificationEntity = NotificationEntity.fromJson(remoteMessage.data);
