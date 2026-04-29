@@ -191,7 +191,7 @@ class LatestSocketProvider extends ChangeNotifier {
       final double lat = session.currentLat != 0.0 ? session.currentLat : 0.0;
       final double lng = session.currentLang != 0.0 ? session.currentLang : 0.0;
 
-      // join_driver emit — server driver ko identify kare
+
       final joinMap = {
         'driver_id': session.userId,
         'latitude': lat,
@@ -200,7 +200,6 @@ class LatestSocketProvider extends ChangeNotifier {
       log('🚗 join_driver emit => $joinMap');
       _socket?.emit('join_driver', joinMap);
 
-      // UpdatedLatLong bhi bhejo
       final map = {
         'serviceType': 'UpdatedLatLong',
         'UserID': session.userId,
