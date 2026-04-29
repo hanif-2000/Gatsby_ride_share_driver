@@ -326,7 +326,7 @@ class LatestSocketProvider extends ChangeNotifier {
           _addChatAll(
             List<ChatModel>.from(
               response["data"].map((x) => ChatModel.fromMap(x)),
-            ),
+            ).reversed.toList(),
           );
         } else {
           _addChatAll([]);

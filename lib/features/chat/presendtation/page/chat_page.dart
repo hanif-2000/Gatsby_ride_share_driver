@@ -149,17 +149,14 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                               reverse: true,
                               itemCount: socketProvider.chatMessageList.length,
                               itemBuilder: (context, index) {
-                                return socketProvider.chatMessageList[index]
-                                            .senderType ==
-                                        'Customer'
-                                    ? ReceiverTile(
-                                        title: socketProvider
-                                            .chatMessageList[index].message,
-                                      )
-                                    : SenderTile(
-                                        title: socketProvider
-                                            .chatMessageList[index].message,
-                                      );
+                                final msg = socketProvider.chatMessageList[index];
+                                final customerUserId = widget.chatDetail!.userId.toString();
+final isCustomer =
+                                    msg.senderType?.toLowerCase() == 'customer' ||
+                                    msg.sourceUserId == customerUserId;
+                                return isCustomer
+                                    ? ReceiverTile(title: msg.message)
+                                    : SenderTile(title: msg.message);
                               },
                             ),
                     ),

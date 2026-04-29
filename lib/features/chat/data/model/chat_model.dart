@@ -40,17 +40,19 @@ class ChatModel {
   });
 
   factory ChatModel.fromMap(Map<String, dynamic> json) => ChatModel(
-        id: json["id"],
-        roomId: json["roomID"],
-        sourceUserId: json["source_user_id"],
-        targetUserId: json["target_user_id"],
-        senderType: json["senderType"],
-        recieverType: json["recieverType"],
-        message: json["message"],
-        status: json["status"],
-        messageType: json["MessageType"],
+        id: json["id"]?.toString(),
+        roomId: (json["roomID"] ?? json["room"])?.toString(),
+        sourceUserId: (json["source_user_id"] ?? json["userID"] ?? json["sender_id"])?.toString(),
+        targetUserId: (json["target_user_id"] ?? json["recieverID"])?.toString(),
+        senderType: (json["senderType"] ?? json["SenderType"] ?? json["sender_type"])?.toString(),
+        recieverType: (json["recieverType"] ?? json["RecieverType"])?.toString(),
+        message: (json["message"] ?? json["msg"])?.toString(),
+        status: json["status"]?.toString(),
+        messageType: (json["MessageType"] ?? json["messageType"])?.toString(),
         modifiedOn: json["modified_on"] != null ? DateTime.parse(json["modified_on"]) : DateTime.now(),
-        createdOn: json["created_on"] != null ? DateTime.parse(json["created_on"]) : DateTime.now(),
+        createdOn: (json["created_on"] ?? json["created_at"]) != null
+            ? DateTime.parse(json["created_on"] ?? json["created_at"])
+            : DateTime.now(),
       );
 
   Map<String, dynamic> toMap() => {
