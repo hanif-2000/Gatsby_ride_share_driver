@@ -30,7 +30,7 @@ class CancelByUserModel {
         response: json["Response"] ?? "",
         message: json["message"] ?? "",
         type: json["type"] ?? "",
-        orderId: json["OrderID"] ?? "",
+        orderId: json["OrderID"] ?? json["order_id"] ?? json["orderId"] ?? json["data"] ?? "",
         data: json["data"] ?? "",
       );
 

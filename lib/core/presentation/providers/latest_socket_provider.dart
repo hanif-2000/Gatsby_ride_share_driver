@@ -109,6 +109,10 @@ class LatestSocketProvider extends ChangeNotifier {
 
   List<ChatModel> get chatMessageList => _chatMessagesList;
   List<Booking> bookingList = [];
+  final Set<String> _cancelledOrderIds = {};
+  String? orderCancelledMessage;
+  bool isChatPageOpen = false;
+
 
   clearBookingList() {
     bookingList.clear();
@@ -296,13 +300,26 @@ class LatestSocketProvider extends ChangeNotifier {
                 ? "New request from ${bookingDataModel!.data.name}"
                 : "You have a new ride request",
           );
+          _joinOrderRoom(bookingDataModel!.data.id.toString());
         }
         notifyListeners();
-      } else if (response['type'] == 'CancelByUser') {
-        cancelByUserModel = CancelByUserModel.fromJson(response);
-        bookingList.removeWhere((element) {
-          return element.id.toString() == cancelByUserModel!.orderId.toString();
-        });
+      } else if (response['type'] == 'CancelByUser' || response['type'] == 'CancelOrder') {
+        log("🚫 Cancel event received (${response['type']}): $response");
+        // CancelOrder: data.order_id | CancelByUser: OrderID
+        final nested = response['data'];
+        final cancelOrderId = (
+          (nested is Map ? nested['order_id'] : null) ??
+          response['OrderID'] ??
+          response['order_id'] ??
+          response['orderId'] ??
+          ''
+        ).toString();
+        log("🚫 Cancel orderId: $cancelOrderId | bookingList ids: ${bookingList.map((e) => e.id).toList()}");
+        if (cancelOrderId.isNotEmpty && cancelOrderId != 'null') {
+          _cancelledOrderIds.add(cancelOrderId);
+          bookingList.removeWhere((element) => element.id.toString() == cancelOrderId);
+        }
+        orderCancelledMessage = 'Ride request cancelled by customer';
         notifyListeners();
         await PushNotificationService().clearAllNotifications();
       } else if (response['type'] == 'AcceptByOther') {
@@ -331,11 +348,26 @@ class LatestSocketProvider extends ChangeNotifier {
           _addChatAll([]);
         }
       } else if (response['type'] == 'Chat') {
-        addSingleChat(ChatModel.fromMap(response['data']));
+        final chatData = response['data'] ?? response;
+        addSingleChat(ChatModel.fromMap(chatData is Map ? Map<String, dynamic>.from(chatData) : {}));
+        print('💬💬💬 CHAT RECEIVED — isChatPageOpen: $isChatPageOpen');
+        if (!isChatPageOpen) {
+          final msg = (chatData['message'] ?? chatData['msg'] ?? 'New message').toString();
+          print('💬💬💬 CALLING showChatNotification: $msg');
+          PushNotificationService().showChatNotification(title: 'New Message', body: msg);
+        }
       } else if (response['type'] == 'UnreadCount') {
         updateUnReadMessages(count: response['data']);
       }
     });
+
+    // Cancel events — server alag event name use kar sakta hai
+    for (final eventName in ['cancelRide', 'rideCancelled', 'rideCancel', 'cancel', 'CancelByUser', 'cancelByUser', 'cancelRideByCustomer']) {
+      _socket?.on(eventName, (data) {
+        log("🚫 Cancel event received on '$eventName': $data");
+        _handleCancelEvent(data);
+      });
+    }
 
     // newRideRequest event — server direct is event se bhi bhej sakta hai
     _socket?.on('newRideRequest', (data) {
@@ -739,7 +771,8 @@ class LatestSocketProvider extends ChangeNotifier {
       );
       if (response.statusCode == 200 && response.data["data"] != null) {
         final bookingModel = Booking.fromJson(response.data["data"]);
-        if (bookingModel.driver_id == null) {
+        final orderId = bookingModel.id?.toString() ?? '';
+        if (bookingModel.driver_id == null && !_cancelledOrderIds.contains(orderId)) {
           updateRideList(bookingModel);
         }
       }
@@ -1230,6 +1263,33 @@ class LatestSocketProvider extends ChangeNotifier {
     lastLatitude = 0;
     lastLongitude = 0;
     isWithIn1Km = false;
+  }
+
+  void _handleCancelEvent(dynamic data) {
+    try {
+      var response = data is String ? jsonDecode(data) : data;
+      if (response is! Map) return;
+      final orderId = (response['OrderID'] ?? response['order_id'] ?? response['orderId'] ?? response['data'] ?? '').toString();
+      if (orderId.isEmpty || orderId == 'null') return;
+      log("🚫 Handling cancel for orderId: $orderId");
+      _cancelledOrderIds.add(orderId);
+      bookingList.removeWhere((e) => e.id.toString() == orderId);
+      notifyListeners();
+      PushNotificationService().clearAllNotifications();
+    } catch (e) {
+      log("_handleCancelEvent error: $e");
+    }
+  }
+
+  void _joinOrderRoom(String orderId) {
+    final map = {
+      'serviceType': 'Join',
+      'UserID': session.userId,
+      'type': 'Driver',
+      'roomID': orderId,
+    };
+    log("🚪 Joining order room: $orderId");
+    _emitMessage(map);
   }
 
   Future<bool> setActualDistance({

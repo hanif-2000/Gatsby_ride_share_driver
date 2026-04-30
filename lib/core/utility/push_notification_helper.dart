@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -83,9 +84,9 @@ class PushNotificationService {
     /// Update the iOS foreground notification presentation options to allow
     /// heads up notifications.
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
+      alert: false,
+      badge: false,
+      sound: false,
     );
     _initFirebaseListeners();
   }
@@ -140,6 +141,33 @@ class PushNotificationService {
 
   Future<void> showNewRideNotification({required String title, required String body}) async {
     await _showNotifications(NotificationEntity(title: title, body: body, type: 'CustomerBookRequest'));
+  }
+
+  Future<void> showChatNotification({required String title, required String body}) async {
+    try {
+      await _flutterLocalNotificationsPlugin.show(
+        DateTime.now().millisecondsSinceEpoch % 100000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'chat_channel',
+            'Chat Notifications',
+            channelDescription: 'Notifications for new chat messages',
+            importance: Importance.max,
+            priority: Priority.high,
+            playSound: true,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentSound: true,
+            presentBadge: true,
+          ),
+        ),
+      );
+    } catch (e) {
+      dev.log('showChatNotification error: $e');
+    }
   }
 
   Future<void> clearAllNotifications() async {

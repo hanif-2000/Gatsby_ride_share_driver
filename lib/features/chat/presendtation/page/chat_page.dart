@@ -33,7 +33,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-     socketProvider = context.read<LatestSocketProvider>();
+    socketProvider = context.read<LatestSocketProvider>();
+    socketProvider.isChatPageOpen = true;
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'Join');
@@ -55,7 +56,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-   // final socketProvider = context.read<LatestSocketProvider>();
+    socketProvider.isChatPageOpen = false;
     socketProvider.joinExitRoom(receiverId: widget.chatDetail!.userId, type: 'unJoin');
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
