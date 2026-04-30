@@ -611,11 +611,13 @@ class LatestSocketProvider extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 300));
       _emitMessage(payload);
       dismissLoading();
+      // Capture distance before _handleOrderStatusChange resets setEstimatedDistance to "0.0"
+      final capturedDistance = distance ?? setEstimatedDistance;
       await _handleOrderStatusChange(status);
       if (status == "7") {
         buildReceiptFromLocalData(
           actualTime: actualTime,
-          distance: distance ?? setEstimatedDistance,
+          distance: capturedDistance,
         );
       }
       notifyListeners();
@@ -1266,8 +1268,7 @@ class LatestSocketProvider extends ChangeNotifier {
       session.setEndTime = DateTime.now().toString();
       DateTime startTime = DateTime.parse(session.rideStartTime);
       Duration difference = DateTime.now().difference(startTime);
-      double actualTimeInMinutes = difference.inMinutes.toDouble();
-      session.setEstimatedTime = (actualTimeInMinutes * 60).toString();
+      session.setEstimatedTime = difference.inSeconds.toString();
       final latLongOrigin = _orderDetail!.startCoordinate;
       final latLongDestination = _orderDetail!.endCoordinate;
       final splitOrigin = latLongOrigin.split(",");
