@@ -294,12 +294,6 @@ class LatestSocketProvider extends ChangeNotifier {
               .toList();
           bookingList.clear();
           bookingList.addAll(uniqueBookings);
-          PushNotificationService().showNewRideNotification(
-            title: "New Ride Request",
-            body: bookingDataModel!.data.name?.isNotEmpty == true
-                ? "New request from ${bookingDataModel!.data.name}"
-                : "You have a new ride request",
-          );
           _joinOrderRoom(bookingDataModel!.data.id.toString());
         }
         notifyListeners();
@@ -384,12 +378,6 @@ class LatestSocketProvider extends ChangeNotifier {
               .toList();
           bookingList.clear();
           bookingList.addAll(uniqueBookings);
-          PushNotificationService().showNewRideNotification(
-            title: "New Ride Request",
-            body: bookingDataModel!.data.name?.isNotEmpty == true
-                ? "New request from ${bookingDataModel!.data.name}"
-                : "You have a new ride request",
-          );
         }
         notifyListeners();
       } catch (e) {

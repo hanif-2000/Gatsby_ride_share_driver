@@ -5,7 +5,9 @@ import 'dart:developer' as dev;
 import 'package:appkey_taxiapp_driver/core/static/colors.dart';
 import 'package:appkey_taxiapp_driver/core/static/dimens.dart';
 import 'package:appkey_taxiapp_driver/core/utility/app_settings.dart';
+import 'package:appkey_taxiapp_driver/core/utility/firebase_helper.dart';
 import 'package:appkey_taxiapp_driver/core/utility/session_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -339,6 +341,16 @@ void showToast({required String message, Color? color}) {
 
 Future<void> sessionLogOut() async {
   final session = locator<Session>();
+  // Server par FCM token clear karo taaki logout ke baad notifications na aayein
+  if (session.sessionToken.isNotEmpty) {
+    try {
+      await updateFcmToken(token: '');
+    } catch (_) {}
+  }
+  // Firebase token delete karo - next login par naya token generate hoga
+  try {
+    await FirebaseMessaging.instance.deleteToken();
+  } catch (_) {}
   await session.clearSession();
 }
 

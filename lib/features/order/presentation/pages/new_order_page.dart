@@ -140,6 +140,23 @@ class _NewOrderPageState extends State<NewOrderPage> with WidgetsBindingObserver
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && session.isOrderRunning) {
+      final socketProvider = context.read<LatestSocketProvider>();
+      socketProvider.updateLatLngAtStarting();
+      if (!socketProvider.isSocketConnected) {
+        socketProvider.onInit();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     log("order page build widget called");
 

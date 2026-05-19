@@ -84,9 +84,9 @@ class PushNotificationService {
     /// Update the iOS foreground notification presentation options to allow
     /// heads up notifications.
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: false,
-      badge: false,
-      sound: false,
+      alert: true,
+      badge: true,
+      sound: true,
     );
     _initFirebaseListeners();
   }
@@ -127,20 +127,30 @@ class PushNotificationService {
       _pushNextScreenFromForeground(notificationEntity);
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      if (session.userId.isEmpty) {
-        return;
-      }
-      print("Foreground notification received:  ${message.data}");
+      if (session.userId.isEmpty) return;
+      // Agar FCM message mein notification field hai to iOS already system notification dikha raha hai
+      // Dobara local notification mat banao — duplicate hogi
+      if (message.notification != null) return;
+      // Ride request FCM data-only messages bhi ignore karo
+      final type = (message.data['type'] ?? message.data['serviceType'] ?? '').toString();
+      if (type == 'CustomerBookRequest') return;
+      print("Foreground data-only notification: ${message.data}");
       NotificationEntity notificationEntity = NotificationEntity.fromJson(message.data);
-      print(message.data.toString());
       notificationEntity.title = notificationEntity.title ?? "Gatsby Driver";
-      notificationEntity.body = notificationEntity.body;
       _showNotifications(notificationEntity);
     });
   }
 
-  Future<void> showNewRideNotification({required String title, required String body}) async {
-    await _showNotifications(NotificationEntity(title: title, body: body, type: 'CustomerBookRequest'));
+  final Set<String> _shownRideOrderIds = {};
+
+  Future<void> showNewRideNotification({required String title, required String body, String? orderId}) async {
+    // Same order ke liye ek baar se zyada notification nahi
+    if (orderId != null && orderId.isNotEmpty) {
+      if (_shownRideOrderIds.contains(orderId)) return;
+      _shownRideOrderIds.add(orderId);
+      Future.delayed(const Duration(minutes: 10), () => _shownRideOrderIds.remove(orderId));
+    }
+    await _showNotifications(NotificationEntity(title: title, body: body, type: 'CustomerBookRequest', id: orderId));
   }
 
   Future<void> showChatNotification({required String title, required String body}) async {
@@ -209,20 +219,12 @@ class PushNotificationService {
   }
 
   void _pushNextScreenFromForeground(NotificationEntity notificationEntity) async {
-     await callApi(notificationEntity);
-   // final tuple2 = await callApi(notificationEntity);
- /*   if (tuple2 != null) {
-    *//*  if (myRouteObserver.currentRoute == Routes.notification &&
-          Getters.getContext!.mounted) {
-        Getters.getContext!.read<NotificationBloc>().add(GetNotifications());
-      } else if (myRouteObserver.currentRoute == Routes.courseDetail &&
-          Getters.getContext!.mounted) {
-        back(Getters.getContext!);
-        toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
-      } else {
-        toNamed(Getters.getContext!, tuple2.$1, args: tuple2.$2);
-      }*//*
-    }*/
+    await callApi(notificationEntity);
+    if (notificationEntity.type == "CustomerBookRequest" && !session.isOrderRunning) {
+      locator<GlobalKey<NavigatorState>>()
+          .currentState
+          ?.pushNamedAndRemoveUntil('/home', (route) => false);
+    }
   }
 
   Future<(String, Object?)?> callApi(NotificationEntity entity) async {

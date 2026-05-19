@@ -203,6 +203,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!context.mounted) return;
+      final socketProvider = context.read<LatestSocketProvider>();
+      if (session.isOnline) {
+        socketProvider.updateLatLngAtStarting();
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     log("home page build called");
     return PopScope(
