@@ -51,16 +51,6 @@ class HistoryListWidget extends StatelessWidget {
                       ],
                     ),
                   );
-                  // return Column(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     SizedBox(height: MediaQuery.sizeOf(context).height/3.5,),
-                  //     Text(
-                  //       appLoc.therearenopastorders,
-                  //       style: formLabelHeaderStyle,
-                  //     ),
-                  //   ],
-                  // );
                 }
                 return Column(
                   children: List.generate(

@@ -77,32 +77,7 @@ class JobCompletedPage extends StatelessWidget {
                       bgColor: blackColor,
                     ),
                     largeVerticalSpacing(),
-                    // CustomButton(
-                    //   text: Text(
-                    //     appLoc.getReceipt,
-                    //     style: txtButtonStyle.copyWith(color: blackColor),
-                    //   ),
-                    //   event: () {
-                    //     // Navigator.pushNamedAndRemoveUntil(
-                    //     //   context,
-                    //     //   GiveRatingScreen.routeName,
-                    //     //   (route) => false,
-                    //     //   arguments: RatingPageArguments(
-                    //     //     customerDataModel: provider.customerDetail!.data,
-                    //     //     customerId: provider.orderDetail!.userId,
-                    //     //   ),
-                    //     // );
-                    //     // bubh
-
-                    //     //   ///TODO: receipt
-                    //     //   Navigator.pushNamed(context, ReceiptPage.routeName);
-                    //   },
-                    //   showBorder: true,
-                    //   buttonHeight: 48,
-                    //   isRounded: true,
-                    //   bgColor: Colors.white,
-                    // ),
-                    // largeVerticalSpacing(),
+                    
                   ],
                 ),
               ),

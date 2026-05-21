@@ -152,7 +152,6 @@ class LatestSocketProvider extends ChangeNotifier {
     _socketHelper = WebSocketHelper();
     log("SOCKET INIT => userId: ${session.userId}");
 
-    // Connect/Reconnect callbacks set karo
     _socketHelper.onConnectCallback = () {
       isSocketConnected = true;
       log("************ Socket State: Connect ***********");
